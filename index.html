@@ -3,8 +3,10 @@
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Realm of Equality - The Quest Begins</title>
-<link href="./Realm of Equality - The Quest Begins_files/css2" rel="stylesheet">
+<title>Power & Social Stratification Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
 <style>
   :root {
     --parchment: #f3e5c3;
@@ -620,6 +622,90 @@
     border-radius: 50%;
   }
 
+
+  .learning-targets {
+    background: rgba(255,255,255,0.45);
+    border: 2px solid var(--accent-gold);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 22px 0;
+  }
+  .learning-targets h3 { text-align: center; margin-top: 0; }
+  .target-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+    list-style: none;
+  }
+  .target-grid li {
+    background: rgba(255,255,255,0.55);
+    border-left: 5px solid var(--accent-blue);
+    border-radius: 7px;
+    padding: 10px 12px;
+    line-height: 1.35;
+  }
+
+  .mini-game {
+    background: linear-gradient(135deg, rgba(74,59,92,0.18), rgba(197,160,0,0.16));
+    border: 3px double var(--ink-light);
+    border-radius: 12px;
+    padding: 18px;
+    margin: 24px 0;
+    text-align: center;
+  }
+  .mini-game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .mini-game-header h3 { margin: 0; }
+  .token-counter {
+    background: var(--ink);
+    color: var(--parchment);
+    border: 2px solid var(--accent-gold);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+  }
+  .challenge-card {
+    min-height: 138px;
+    background: rgba(255,255,255,0.55);
+    border: 2px solid var(--ink-light);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: left;
+  }
+  .challenge-card h4 {
+    font-family: 'Cinzel', serif;
+    color: var(--accent-purple);
+    margin-bottom: 8px;
+  }
+  .answer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .answer-btn {
+    font-family: 'Lora', serif;
+    font-weight: 700;
+    padding: 10px;
+  }
+  .answer-btn.correct-choice { background: linear-gradient(180deg, #d8edcf, #a8d39a); }
+  .answer-btn.wrong-choice { background: linear-gradient(180deg, #f2c9c9, #dfa0a0); }
+  .answer-btn:disabled { cursor: default; opacity: 0.88; transform: none; }
+  .mini-feedback {
+    min-height: 28px;
+    margin-top: 12px;
+    font-weight: 700;
+  }
+  .mini-feedback.good { color: var(--accent-green); }
+  .mini-feedback.try { color: var(--accent-red); }
+
   .footer-banner {
     text-align: center;
     font-family: 'MedievalSharp', cursive;
@@ -634,7 +720,7 @@
 <body>
 
 <div class="xp-bar">
-  <span>🏰 Realm of Equality</span>
+  <span>🏰 Power & Stratification Quest</span>
   <div class="xp-progress"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
   <span>XP: <span id="xpText">0</span></span>
 </div>
@@ -645,10 +731,10 @@
 
 <!-- TITLE SCREEN -->
 <div class="section active" id="screen-title">
-  <div class="banner"><div class="d20">20</div> The Realm of Equality <div class="d20">20</div></div>
+  <div class="banner"><div class="d20">20</div> Power & Social Stratification Quest <div class="d20">20</div></div>
   <div class="intro-text">
-    <p>In the realm of society, not all adventurers begin their journey with the same gear, gold, or opportunities.</p>
-    <p>Will you rise to understand the forces that shape our world—and become the hero the realm needs?</p>
+    <p>In the realm of society, power can influence people, control resources, and shape decisions—and not all adventurers begin with the same gear, gold, or opportunities.</p>
+    <p>Will you explore political power, economic power, social stratification, institutions, and life chances to become the hero the realm needs?</p>
   </div>
   <svg class="hero-svg" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -690,10 +776,39 @@
   </div>
   <div style="text-align:center; margin-top:20px;">
     <span class="badge">4 Quests</span>
+    <span class="badge">Power Token Dash</span>
     <span class="badge">Knowledge is Power</span>
     <span class="badge">Empathy is Strength</span>
     <span class="badge">Justice is Treasure</span>
   </div>
+
+  <div class="learning-targets">
+    <h3>🎯 Learning Targets</h3>
+    <ul class="target-grid">
+      <li>I can explain what power is in society.</li>
+      <li>I can identify examples of social stratification in the United States and around the world.</li>
+      <li>I can analyze how inequality affects opportunities and life chances.</li>
+      <li>I can explain how institutions and social systems influence inequality.</li>
+    </ul>
+  </div>
+
+  <div class="mini-game" aria-labelledby="miniGameTitle">
+    <div class="mini-game-header">
+      <h3 id="miniGameTitle">⚡ Power Token Dash</h3>
+      <div class="token-counter">Tokens: <span id="powerTokens">0</span> / 6</div>
+    </div>
+    <p>Warm up for the quest! Read each card, choose the best answer, and collect power tokens.</p>
+    <div class="challenge-card" id="challengeCard">
+      <h4 id="challengeTitle">Challenge 1</h4>
+      <p id="challengePrompt">Press Start to draw your first card.</p>
+      <div class="answer-grid" id="answerGrid"></div>
+      <p class="mini-feedback" id="miniFeedback" aria-live="polite"></p>
+    </div>
+    <div class="nav-buttons center" style="margin-top:16px;">
+      <button onclick="startPowerDash()">🎲 Start / Restart Power Dash</button>
+    </div>
+  </div>
+
 </div>
 
 <!-- QUEST 1 -->
@@ -1225,6 +1340,121 @@
 </div>
 
 <script>
+
+const powerDashChallenges = [
+  {
+    title: 'Power in Society',
+    prompt: 'A mayor helps decide local laws and budgets. Which kind of power is this?',
+    answers: ['Political power', 'A hobby', 'Only popularity'],
+    correct: 'Political power',
+    explain: 'Political power means influence over government decisions and laws.'
+  },
+  {
+    title: 'Economic Power',
+    prompt: 'A company controls many jobs, wages, and resources in a town. What kind of power is being shown?',
+    answers: ['Economic power', 'Weather power', 'Sports power'],
+    correct: 'Economic power',
+    explain: 'Economic power comes from wealth and control of resources.'
+  },
+  {
+    title: 'Social Stratification',
+    prompt: 'A society is arranged into upper, middle, working, and lower classes. What is this called?',
+    answers: ['Social stratification', 'A field trip', 'Random teams'],
+    correct: 'Social stratification',
+    explain: 'Social stratification is the ranking of people into social levels.'
+  },
+  {
+    title: 'Life Chances',
+    prompt: 'Two kids have different access to safe housing, healthcare, tutors, and schools. These differences shape their...',
+    answers: ['life chances', 'shoe sizes', 'favorite colors'],
+    correct: 'life chances',
+    explain: 'Life chances are the opportunities people have based on where they start in society.'
+  },
+  {
+    title: 'Institutions',
+    prompt: 'Schools, government, family, media, healthcare, religion, and the economy are examples of...',
+    answers: ['social institutions', 'board game pieces', 'snacks'],
+    correct: 'social institutions',
+    explain: 'Social institutions are organized systems that help society function and distribute resources.'
+  },
+  {
+    title: 'Global Stratification',
+    prompt: 'Some countries have more wealth, technology, healthcare, and global influence than others. This is an example of...',
+    answers: ['global stratification', 'a spelling bee', 'a local bus route'],
+    correct: 'global stratification',
+    explain: 'Global stratification describes inequality between countries around the world.'
+  }
+];
+let powerDashIndex = 0;
+let powerDashTokens = 0;
+let powerDashAnswered = false;
+
+function startPowerDash() {
+  powerDashIndex = 0;
+  powerDashTokens = 0;
+  powerDashAnswered = false;
+  document.getElementById('powerTokens').textContent = powerDashTokens;
+  renderPowerDashCard();
+}
+
+function renderPowerDashCard() {
+  const challenge = powerDashChallenges[powerDashIndex];
+  document.getElementById('challengeTitle').textContent = `Challenge ${powerDashIndex + 1}: ${challenge.title}`;
+  document.getElementById('challengePrompt').textContent = challenge.prompt;
+  document.getElementById('miniFeedback').textContent = '';
+  document.getElementById('miniFeedback').className = 'mini-feedback';
+  powerDashAnswered = false;
+  const grid = document.getElementById('answerGrid');
+  grid.innerHTML = '';
+  challenge.answers.forEach(answer => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.type = 'button';
+    btn.textContent = answer;
+    btn.onclick = () => answerPowerDash(answer, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function answerPowerDash(answer, clickedButton) {
+  if (powerDashAnswered) return;
+  powerDashAnswered = true;
+  const challenge = powerDashChallenges[powerDashIndex];
+  const buttons = document.querySelectorAll('#answerGrid button');
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === challenge.correct) btn.classList.add('correct-choice');
+  });
+  const feedback = document.getElementById('miniFeedback');
+  if (answer === challenge.correct) {
+    powerDashTokens += 1;
+    document.getElementById('powerTokens').textContent = powerDashTokens;
+    feedback.className = 'mini-feedback good';
+    feedback.textContent = `✅ Token earned! ${challenge.explain}`;
+  } else {
+    clickedButton.classList.add('wrong-choice');
+    feedback.className = 'mini-feedback try';
+    feedback.textContent = `Not quite. ${challenge.explain}`;
+  }
+  setTimeout(() => {
+    powerDashIndex += 1;
+    if (powerDashIndex < powerDashChallenges.length) {
+      renderPowerDashCard();
+    } else {
+      showPowerDashResult();
+    }
+  }, 1700);
+}
+
+function showPowerDashResult() {
+  document.getElementById('challengeTitle').textContent = 'Power Dash Complete!';
+  document.getElementById('challengePrompt').textContent = `You collected ${powerDashTokens} of 6 power tokens. Now enter the realm and use what you learned in the quests!`;
+  document.getElementById('answerGrid').innerHTML = '';
+  const feedback = document.getElementById('miniFeedback');
+  feedback.className = powerDashTokens >= 4 ? 'mini-feedback good' : 'mini-feedback try';
+  feedback.textContent = powerDashTokens >= 4 ? '🌟 Great work, Stratification Scholar!' : '🧭 Replay the dash to practice the key terms.';
+}
+
 let currentQuest = -1;
 let xp = 0;
 const questXP = [100, 150, 200, 250];
