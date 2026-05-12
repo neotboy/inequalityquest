@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)file:///C:/Users/fynnley.toppert/inequality_quest.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Realm of Equality - The Quest Begins</title>
+<link href="./Realm of Equality - The Quest Begins_files/css2" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #f3e5c3;
+    --parchment-dark: #e0d0a8;
+    --ink: #2c1810;
+    --ink-light: #5c3a2a;
+    --accent-blue: #3b5998;
+    --accent-red: #8b0000;
+    --accent-gold: #c5a000;
+    --accent-green: #2d5a27;
+    --accent-purple: #5a2d72;
+    --accent-brown: #6b4226;
+    --banner-blue: #2e3a59;
+    --banner-green: #2a4a2e;
+    --banner-red: #6b1c1c;
+    --banner-gold: #7a6218;
+    --banner-purple: #4a2a5c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lora', serif;
+    background: linear-gradient(135deg, #2c1810, #4a2c1a, #2c1810);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .paper {
+    background: var(--parchment);
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(139,69,19,0.05) 31px, rgba(139,69,19,0.05) 32px),
+      radial-gradient(ellipse at 20% 50%, rgba(139,69,19,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 50%, rgba(139,69,19,0.08) 0%, transparent 50%);
+    border: 3px solid #8b6914;
+    border-radius: 8px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5), inset 0 0 80px rgba(139,69,19,0.1);
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px;
+    position: relative;
+  }
+
+  .paper::before {
+    content: '';
+    position: absolute;
+    top: 10px; left: 10px; right: 10px; bottom: 10px;
+    border: 1px dashed rgba(139,69,19,0.3);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+
+  .banner {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    color: #f3e5c3;
+    text-align: center;
+    padding: 15px 40px;
+    position: relative;
+    margin: -30px -30px 20px -30px;
+    background: var(--banner-blue);
+    border-bottom: 4px solid #1a2035;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+
+  .banner::after {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 10px solid var(--banner-blue);
+  }
+
+  .banner-red { background: var(--banner-red); border-bottom-color: #3a1010; }
+  .banner-red::after { border-top-color: var(--banner-red); }
+  .banner-green { background: var(--banner-green); border-bottom-color: #1a2a1a; }
+  .banner-green::after { border-top-color: var(--banner-green); }
+  .banner-gold { background: var(--banner-gold); border-bottom-color: #3a3010; }
+  .banner-gold::after { border-top-color: var(--banner-gold); }
+  .banner-purple { background: var(--banner-purple); border-bottom-color: #2a1a35; }
+  .banner-purple::after { border-top-color: var(--banner-purple); }
+
+  h1 { font-family: 'Cinzel', serif; font-size: 2.2em; text-align: center; margin-bottom: 10px; color: var(--ink); }
+  h2 { font-family: 'MedievalSharp', cursive; font-size: 1.8em; margin: 20px 0 10px; color: var(--ink); }
+  h3 { font-family: 'MedievalSharp', cursive; font-size: 1.3em; margin: 15px 0 8px; color: var(--ink-light); }
+
+  .subtitle {
+    text-align: center;
+    font-style: italic;
+    color: var(--ink-light);
+    margin-bottom: 25px;
+    font-size: 1.1em;
+  }
+
+  .d20 {
+    display: inline-block;
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, #4a3b5c, #2d1b4e);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    color: #c5a000;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 1.2em;
+    text-align: center;
+    line-height: 40px;
+    margin: 0 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  .quest-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .section {
+    display: none;
+  }
+  .section.active { display: block; }
+
+  .character-card {
+    background: rgba(255,255,255,0.4);
+    border: 2px solid var(--ink-light);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px 0;
+    position: relative;
+  }
+
+  .character-card h3 {
+    background: var(--banner-blue);
+    color: #f3e5c3;
+    padding: 8px 20px;
+    margin: -20px -20px 15px -20px;
+    border-radius: 6px 6px 0 0;
+    text-align: center;
+    font-family: 'Cinzel', serif;
+  }
+
+  .character-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+
+  @media (max-width: 700px) {
+    .character-grid { grid-template-columns: 1fr; }
+  }
+
+  .trait-list {
+    list-style: none;
+  }
+  .trait-list li {
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(44,24,16,0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .trait-list li::before {
+    content: '⚔';
+    color: var(--accent-gold);
+  }
+
+  .stat-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    background: rgba(255,255,255,0.3);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .stat-table th {
+    background: var(--ink-light);
+    color: var(--parchment);
+    padding: 10px;
+    font-family: 'Cinzel', serif;
+  }
+  .stat-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid rgba(44,24,16,0.1);
+  }
+  .stat-table input[type="checkbox"] {
+    width: 22px; height: 22px;
+    accent-color: var(--accent-gold);
+    cursor: pointer;
+  }
+
+  .text-input, .textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid var(--ink-light);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.6);
+    font-family: 'Lora', serif;
+    font-size: 1em;
+    color: var(--ink);
+    margin: 8px 0;
+  }
+  .textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+
+  .question-block {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(139,69,19,0.08);
+    border-left: 4px solid var(--accent-gold);
+    border-radius: 0 8px 8px 0;
+  }
+  .question-block label {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .match-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 6px;
+  }
+  .match-row select {
+    padding: 8px 12px;
+    border: 2px solid var(--ink-light);
+    border-radius: 6px;
+    font-family: 'Lora', serif;
+    font-size: 1em;
+    background: rgba(255,255,255,0.7);
+    min-width: 300px;
+  }
+
+  .ladder {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 20px 0;
+    padding: 20px;
+    background: linear-gradient(180deg, rgba(92,58,42,0.1), rgba(44,24,16,0.15));
+    border-radius: 8px;
+    border: 2px solid var(--ink-light);
+  }
+  .ladder-rung {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 6px;
+    border-left: 5px solid var(--accent-gold);
+  }
+  .ladder-rung .rung-label {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    min-width: 120px;
+    color: var(--ink-light);
+  }
+
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 15px 0;
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 6px;
+    border: 1px solid rgba(44,24,16,0.2);
+  }
+  .checkbox-item input { width: 20px; height: 20px; accent-color: var(--accent-gold); }
+
+  .scenario-card {
+    background: rgba(255,255,255,0.4);
+    border: 2px solid var(--ink-light);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+  }
+  .scenario-card .scenario-text { margin-bottom: 12px; font-style: italic; }
+  .scenario-card select {
+    padding: 8px 12px;
+    border: 2px solid var(--ink-light);
+    border-radius: 6px;
+    font-family: 'Lora', serif;
+    font-size: 1em;
+    background: rgba(255,255,255,0.7);
+  }
+
+  .sort-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 15px 0;
+  }
+  @media (max-width: 700px) { .sort-grid { grid-template-columns: 1fr; } }
+  .sort-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 6px;
+    border: 1px solid rgba(44,24,16,0.2);
+  }
+  .sort-item select {
+    padding: 6px 10px;
+    border: 2px solid var(--ink-light);
+    border-radius: 6px;
+    font-family: 'Lora', serif;
+    background: rgba(255,255,255,0.7);
+  }
+
+  .inequality-card {
+    background: rgba(255,255,255,0.4);
+    border: 2px solid;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+  }
+  .inequality-card.racial { border-color: var(--accent-blue); }
+  .inequality-card.gender { border-color: var(--accent-purple); }
+  .inequality-card.economic { border-color: var(--accent-gold); }
+  .inequality-card.education { border-color: var(--accent-red); }
+  .inequality-card.health { border-color: var(--accent-green); }
+  .inequality-card h3 {
+    font-family: 'Cinzel', serif;
+    margin: -20px -20px 15px -20px;
+    padding: 10px 20px;
+    color: #f3e5c3;
+    border-radius: 6px 6px 0 0;
+  }
+  .inequality-card.racial h3 { background: var(--accent-blue); }
+  .inequality-card.gender h3 { background: var(--accent-purple); }
+  .inequality-card.economic h3 { background: var(--accent-gold); color: var(--ink); }
+  .inequality-card.education h3 { background: var(--accent-red); }
+  .inequality-card.health h3 { background: var(--accent-green); }
+
+  .path-choice {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+  }
+  .path-card {
+    background: rgba(255,255,255,0.5);
+    border: 2px solid var(--ink-light);
+    border-radius: 8px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .path-card:hover { background: rgba(255,255,255,0.8); transform: translateY(-2px); }
+  .path-card.selected {
+    border-color: var(--accent-gold);
+    background: rgba(197,160,0,0.15);
+    box-shadow: 0 0 10px rgba(197,160,0,0.3);
+  }
+  .path-card h4 { font-family: 'Cinzel', serif; margin-bottom: 8px; }
+  .path-card p { font-size: 0.95em; }
+
+  .fill-blank {
+    margin: 12px 0;
+    padding: 12px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 6px;
+  }
+  .fill-blank select {
+    padding: 6px 10px;
+    border: 2px solid var(--ink-light);
+    border-radius: 4px;
+    font-family: 'Lora', serif;
+    background: rgba(255,255,255,0.7);
+    margin: 0 4px;
+  }
+
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 15px;
+  }
+  .nav-buttons.center { justify-content: center; }
+
+  button {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 1em;
+    padding: 12px 28px;
+    border: 2px solid var(--ink-light);
+    border-radius: 6px;
+    background: linear-gradient(180deg, #e0d0a8, #c5b080);
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  }
+  button:hover {
+    background: linear-gradient(180deg, #f0e0b8, #d5c090);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.3);
+  }
+  button:active { transform: translateY(1px); }
+  button.primary {
+    background: linear-gradient(180deg, #4a3b5c, #2d1b4e);
+    color: #f3e5c3;
+    border-color: #1a1025;
+  }
+  button.primary:hover { background: linear-gradient(180deg, #5a4b6c, #3d2b5e); }
+
+  .xp-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: linear-gradient(90deg, #2c1810, #4a2c1a);
+    color: #f3e5c3;
+    padding: 8px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    font-family: 'Cinzel', serif;
+  }
+  .xp-progress {
+    flex: 1;
+    max-width: 300px;
+    height: 12px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 6px;
+    margin: 0 15px;
+    overflow: hidden;
+    border: 1px solid #c5a000;
+  }
+  .xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #c5a000, #e8c84d);
+    transition: width 0.5s ease;
+    border-radius: 6px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85em;
+    margin: 4px;
+    background: var(--accent-gold);
+    color: var(--ink);
+    border: 1px solid #8b6914;
+  }
+
+  .scroll-box {
+    background: rgba(255,255,255,0.5);
+    border: 2px solid var(--ink-light);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    position: relative;
+  }
+  .scroll-box::before {
+    content: '📜';
+    position: absolute;
+    top: -15px;
+    left: 20px;
+    font-size: 1.5em;
+    background: var(--parchment);
+    padding: 0 8px;
+  }
+
+  .completion-screen {
+    text-align: center;
+  }
+  .completion-screen h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+  }
+  .completion-screen .big-d20 {
+    width: 80px; height: 80px;
+    line-height: 80px;
+    font-size: 2.5em;
+    margin: 20px auto;
+    display: block;
+  }
+
+  .hidden { display: none !important; }
+
+  .error { border-color: var(--accent-red) !important; }
+  .success { border-color: var(--accent-green) !important; }
+  .feedback { font-style: italic; margin-top: 6px; font-size: 0.95em; }
+  .feedback.correct { color: var(--accent-green); }
+  .feedback.incorrect { color: var(--accent-red); }
+
+  .intro-text {
+    text-align: center;
+    font-size: 1.2em;
+    margin: 30px 0;
+    line-height: 1.6;
+  }
+
+  .hero-svg {
+    display: block;
+    margin: 20px auto;
+    max-width: 280px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  }
+  .character-avatar {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 12px;
+    display: block;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
+  }
+  .shield-icon {
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  }
+  .torch-icon {
+    width: 36px;
+    height: 36px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  .scroll-icon {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  .path-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 10px;
+    display: block;
+  }
+  .inequality-shield {
+    width: 56px;
+    height: 56px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  .completion-medal {
+    width: 120px;
+    height: 120px;
+    margin: 10px auto;
+    display: block;
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .sparkle {
+    display: inline-block;
+    animation: sparkle 2s ease-in-out infinite;
+  }
+  @keyframes sparkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.3); }
+  }
+  .divider-line {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+    margin: 25px 0;
+    border: none;
+  }
+  .card-decoration {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 40px;
+    height: 40px;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+  .character-card, .scenario-card, .inequality-card {
+    position: relative;
+    overflow: hidden;
+  }
+  .character-card::after, .scenario-card::after, .inequality-card::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(197,160,0,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    border-radius: 50%;
+  }
+
+  .footer-banner {
+    text-align: center;
+    font-family: 'MedievalSharp', cursive;
+    font-size: 1.1em;
+    margin-top: 30px;
+    padding: 15px;
+    border-top: 2px dashed var(--ink-light);
+    color: var(--ink-light);
+  }
+</style>
+</head>
+<body>
+
+<div class="xp-bar">
+  <span>🏰 Realm of Equality</span>
+  <div class="xp-progress"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+  <span>XP: <span id="xpText">0</span></span>
+</div>
+
+<div style="height:50px"></div>
+
+<div class="paper">
+
+<!-- TITLE SCREEN -->
+<div class="section active" id="screen-title">
+  <div class="banner"><div class="d20">20</div> The Realm of Equality <div class="d20">20</div></div>
+  <div class="intro-text">
+    <p>In the realm of society, not all adventurers begin their journey with the same gear, gold, or opportunities.</p>
+    <p>Will you rise to understand the forces that shape our world—and become the hero the realm needs?</p>
+  </div>
+  <svg class="hero-svg" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <lineargradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#2d1b4e"></stop>
+        <stop offset="100%" stop-color="#4a3b5c"></stop>
+      </lineargradient>
+      <lineargradient id="towerGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#5c4a3a"></stop>
+        <stop offset="50%" stop-color="#7a6a5a"></stop>
+        <stop offset="100%" stop-color="#5c4a3a"></stop>
+      </lineargradient>
+    </defs>
+    <rect width="280" height="180" fill="url(#skyGrad)" rx="8"></rect>
+    <circle cx="220" cy="40" r="25" fill="#e8c84d" opacity="0.9"></circle>
+    <circle cx="200" cy="30" r="2" fill="#fff" opacity="0.6"></circle>
+    <circle cx="240" cy="25" r="1.5" fill="#fff" opacity="0.5"></circle>
+    <circle cx="50" cy="35" r="1.5" fill="#fff" opacity="0.4"></circle>
+    <circle cx="30" cy="50" r="1" fill="#fff" opacity="0.5"></circle>
+    <polygon points="40,160 60,100 80,160" fill="#2d5a27"></polygon>
+    <polygon points="70,160 100,80 130,160" fill="#3a7a35"></polygon>
+    <polygon points="110,160 140,90 170,160" fill="#2d5a27"></polygon>
+    <polygon points="150,160 180,100 210,160" fill="#3a7a35"></polygon>
+    <polygon points="190,160 220,85 250,160" fill="#2d5a27"></polygon>
+    <rect x="100" y="60" width="80" height="100" fill="url(#towerGrad)" rx="4"></rect>
+    <polygon points="90,60 140,10 190,60" fill="#4a3b5c"></polygon>
+    <rect x="115" y="75" width="18" height="25" fill="#1a1025" rx="2"></rect>
+    <rect x="147" y="75" width="18" height="25" fill="#1a1025" rx="2"></rect>
+    <rect x="115" y="110" width="18" height="25" fill="#1a1025" rx="2"></rect>
+    <rect x="147" y="110" width="18" height="25" fill="#1a1025" rx="2"></rect>
+    <rect x="125" y="145" width="30" height="15" fill="#3a3010" rx="2"></rect>
+    <rect x="110" y="155" width="60" height="5" fill="#5c4a3a" rx="2"></rect>
+    <rect x="0" y="160" width="280" height="20" fill="#3a3010" rx="2"></rect>
+    <path d="M 20 160 Q 40 145 60 160" stroke="#2d5a27" stroke-width="3" fill="none"></path>
+    <path d="M 200 160 Q 220 140 240 160" stroke="#2d5a27" stroke-width="3" fill="none"></path>
+  </svg>
+  <div class="nav-buttons center">
+    <button class="primary" onclick="goToQuest(0)">⚔ Enter the Realm</button>
+  </div>
+  <div style="text-align:center; margin-top:20px;">
+    <span class="badge">4 Quests</span>
+    <span class="badge">Knowledge is Power</span>
+    <span class="badge">Empathy is Strength</span>
+    <span class="badge">Justice is Treasure</span>
+  </div>
+</div>
+
+<!-- QUEST 1 -->
+<div class="section" id="screen-quest0">
+  <div class="quest-header">
+    <div class="d20">1</div>
+    <h2>Quest 1: Different Starts</h2>
+    <div class="d20">1</div>
+  </div>
+  <p class="subtitle">Meet two adventurers. Their stories are just beginning...</p>
+
+  <div class="character-grid">
+    <div class="character-card">
+      <h3>🛡 Alex of Eastvale</h3>
+      <svg class="character-avatar" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="40" r="38" fill="#4a7c9b" opacity="0.2"></circle>
+        <circle cx="40" cy="28" r="14" fill="#d4a574"></circle>
+        <rect x="26" y="42" width="28" height="32" rx="6" fill="#3b5998"></rect>
+        <rect x="30" y="46" width="20" height="20" rx="3" fill="#2a4a7a"></rect>
+        <circle cx="35" cy="26" r="2" fill="#2c1810"></circle>
+        <circle cx="45" cy="26" r="2" fill="#2c1810"></circle>
+        <path d="M36 32 Q40 35 44 32" stroke="#2c1810" stroke-width="1.5" fill="none"></path>
+        <rect x="22" y="50" width="8" height="20" rx="3" fill="#d4a574"></rect>
+        <rect x="50" y="50" width="8" height="20" rx="3" fill="#d4a574"></rect>
+        <polygon points="28,14 40,8 52,14 48,22 32,22" fill="#8b6914"></polygon>
+      </svg>
+      <ul class="trait-list">
+        <li>Lives in a safe, clean neighborhood</li>
+        <li>Parents went to college</li>
+        <li>Has reliable transportation</li>
+        <li>Has high-speed internet</li>
+        <li>Goes to a well-funded school</li>
+        <li>Has time for hobbies and clubs</li>
+        <li>Has health insurance</li>
+        <li>Works a part-time job for extra money</li>
+      </ul>
+    </div>
+    <div class="character-card">
+      <h3>⚔ Jordyn of Riverford</h3>
+      <svg class="character-avatar" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="40" r="38" fill="#8b6914" opacity="0.2"></circle>
+        <circle cx="40" cy="28" r="14" fill="#c4956a"></circle>
+        <rect x="26" y="42" width="28" height="32" rx="6" fill="#6b4226"></rect>
+        <rect x="30" y="46" width="20" height="20" rx="3" fill="#5a3620"></rect>
+        <circle cx="35" cy="26" r="2" fill="#2c1810"></circle>
+        <circle cx="45" cy="26" r="2" fill="#2c1810"></circle>
+        <path d="M36 32 Q40 34 44 32" stroke="#2c1810" stroke-width="1.5" fill="none"></path>
+        <rect x="22" y="50" width="8" height="20" rx="3" fill="#c4956a"></rect>
+        <rect x="50" y="50" width="8" height="20" rx="3" fill="#c4956a"></rect>
+        <path d="M28 12 L40 18 L52 12 L48 24 L32 24 Z" fill="#4a3b2a"></path>
+        <rect x="24" y="55" width="10" height="15" rx="2" fill="#8b6914"></rect>
+      </svg>
+      <ul class="trait-list">
+        <li>Lives in a crowded apartment and moves often</li>
+        <li>Helps care for younger siblings</li>
+        <li>Limited or unreliable transportation</li>
+        <li>Limited access to internet</li>
+        <li>Goes to an under-resourced school</li>
+        <li>Works to help pay bills at home</li>
+        <li>Limited access to healthcare</li>
+        <li>Sometimes misses school</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>📜 Your Quest Log</h3>
+  <div class="question-block">
+    <label>1. Who has more advantages at the start of their journey? Why?</label>
+    <textarea class="textarea" id="q1-1"></textarea>
+  </div>
+  <div class="question-block">
+    <label>2. What challenges might Jordyn face that Alex does not?</label>
+    <textarea class="textarea" id="q1-2"></textarea>
+  </div>
+  <div class="question-block">
+    <label>3. Do you think both Alex and Jordyn can succeed in their quest? Why or why not?</label>
+    <textarea class="textarea" id="q1-3"></textarea>
+  </div>
+
+  <h3>📊 Check Your Stats</h3>
+  <p>Place an X in the boxes to show which adventurer has more of each stat.</p>
+  <table class="stat-table">
+    <tbody><tr><th>Stat</th><th>Alex</th><th>Jordyn</th></tr>
+    <tr><td>📚 Access to Education</td><td><input type="checkbox" id="stat1-alex"></td><td><input type="checkbox" id="stat1-jordyn"></td></tr>
+    <tr><td>❤️ Health &amp; Healthcare</td><td><input type="checkbox" id="stat2-alex"></td><td><input type="checkbox" id="stat2-jordyn"></td></tr>
+    <tr><td>💰 Money &amp; Resources</td><td><input type="checkbox" id="stat3-alex"></td><td><input type="checkbox" id="stat3-jordyn"></td></tr>
+    <tr><td>⏳ Time &amp; Freedom</td><td><input type="checkbox" id="stat4-alex"></td><td><input type="checkbox" id="stat4-jordyn"></td></tr>
+    <tr><td>🛡 Safety &amp; Stability</td><td><input type="checkbox" id="stat5-alex"></td><td><input type="checkbox" id="stat5-jordyn"></td></tr>
+    <tr><td>🤝 Support System</td><td><input type="checkbox" id="stat6-alex"></td><td><input type="checkbox" id="stat6-jordyn"></td></tr>
+    <tr><td>⭐ Opportunities</td><td><input type="checkbox" id="stat7-alex"></td><td><input type="checkbox" id="stat7-jordyn"></td></tr>
+  </tbody></table>
+
+  <div class="scroll-box">
+    <h3>⭐ Bonus XP</h3>
+    <p>If you were the dungeon master, what is one event or challenge that could help level the playing field for both adventurers?</p>
+    <textarea class="textarea" id="q1-bonus"></textarea>
+  </div>
+
+  <div class="footer-banner">
+    Remember: In society, your starting point can affect your path, but it doesn't determine your destiny. 💀❤️
+  </div>
+
+  <div class="nav-buttons">
+    <button onclick="goToQuest(-1)">⬅ Back</button>
+    <button class="primary" onclick="submitQuest(0)">Submit Quest ➡</button>
+  </div>
+</div>
+
+<!-- QUEST 2 -->
+<div class="section" id="screen-quest1">
+  <div class="quest-header">
+    <div class="d20">2</div>
+    <h2>Quest 2: The Realm's Hierarchy</h2>
+    <div class="d20">2</div>
+  </div>
+  <p class="subtitle">In every realm, people are not all equal. Some have more power, wealth, and respect than others.</p>
+
+  <svg class="shield-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M24 4 L40 10 L40 24 Q40 38 24 44 Q8 38 8 24 L8 10 Z" fill="#4a3b5c" stroke="#c5a000" stroke-width="2"></path>
+    <path d="M24 10 L34 14 L34 24 Q34 34 24 38 Q14 34 14 24 L14 14 Z" fill="#5a4b6c"></path>
+    <text x="24" y="26" text-anchor="middle" fill="#c5a000" font-size="14" font-family="Cinzel" font-weight="bold">II</text>
+  </svg>
+  <h3>1. What is Social Stratification?</h3>
+  <p>Match each term with the best definition.</p>
+  <div class="match-row">
+    <span><strong>A. Social Stratification</strong></span>
+    <select id="q2-match-a">
+      <option value="">-- Select Definition --</option>
+      <option>The ability to move up or down the social ladder.</option>
+      <option>Unequal access to resources, opportunities, and privileges.</option>
+      <option>The grouping of people into different levels based on factors like wealth, power, or status.</option>
+      <option>The advantages some people have that others do not.</option>
+      <option>A group of people who share similar income, education, occupation, and lifestyle.</option>
+    </select>
+  </div>
+  <div class="match-row">
+    <span><strong>B. Social Class</strong></span>
+    <select id="q2-match-b">
+      <option value="">-- Select Definition --</option>
+      <option>The ability to move up or down the social ladder.</option>
+      <option>Unequal access to resources, opportunities, and privileges.</option>
+      <option>The grouping of people into different levels based on factors like wealth, power, or status.</option>
+      <option>The advantages some people have that others do not.</option>
+      <option>A group of people who share similar income, education, occupation, and lifestyle.</option>
+    </select>
+  </div>
+  <div class="match-row">
+    <span><strong>C. Privilege</strong></span>
+    <select id="q2-match-c">
+      <option value="">-- Select Definition --</option>
+      <option>The ability to move up or down the social ladder.</option>
+      <option>Unequal access to resources, opportunities, and privileges.</option>
+      <option>The grouping of people into different levels based on factors like wealth, power, or status.</option>
+      <option>The advantages some people have that others do not.</option>
+      <option>A group of people who share similar income, education, occupation, and lifestyle.</option>
+    </select>
+  </div>
+  <div class="match-row">
+    <span><strong>D. Social Mobility</strong></span>
+    <select id="q2-match-d">
+      <option value="">-- Select Definition --</option>
+      <option>The ability to move up or down the social ladder.</option>
+      <option>Unequal access to resources, opportunities, and privileges.</option>
+      <option>The grouping of people into different levels based on factors like wealth, power, or status.</option>
+      <option>The advantages some people have that others do not.</option>
+      <option>A group of people who share similar income, education, occupation, and lifestyle.</option>
+    </select>
+  </div>
+  <div class="match-row">
+    <span><strong>E. Inequality</strong></span>
+    <select id="q2-match-e">
+      <option value="">-- Select Definition --</option>
+      <option>The ability to move up or down the social ladder.</option>
+      <option>Unequal access to resources, opportunities, and privileges.</option>
+      <option>The grouping of people into different levels based on factors like wealth, power, or status.</option>
+      <option>The advantages some people have that others do not.</option>
+      <option>A group of people who share similar income, education, occupation, and lifestyle.</option>
+    </select>
+  </div>
+
+  <svg class="shield-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M24 4 L40 10 L40 24 Q40 38 24 44 Q8 38 8 24 L8 10 Z" fill="#6b1c1c" stroke="#c5a000" stroke-width="2"></path>
+    <path d="M24 10 L34 14 L34 24 Q34 34 24 38 Q14 34 14 24 L14 14 Z" fill="#8b2c2c"></path>
+    <text x="24" y="26" text-anchor="middle" fill="#c5a000" font-size="14" font-family="Cinzel" font-weight="bold">II</text>
+  </svg>
+  <h3>2. The Social Ladder</h3>
+  <p>Look at the rungs below. Write one example of a person or group at each level.</p>
+  <div class="ladder">
+    <div class="ladder-rung">
+      <span class="rung-label">👑 Highest Status</span>
+      <input class="text-input" type="text" id="q2-ladder-high" placeholder="Example here...">
+    </div>
+    <div class="ladder-rung">
+      <span class="rung-label">⚔ Middle Status</span>
+      <input class="text-input" type="text" id="q2-ladder-mid" placeholder="Example here...">
+    </div>
+    <div class="ladder-rung">
+      <span class="rung-label">🍞 Lowest Status</span>
+      <input class="text-input" type="text" id="q2-ladder-low" placeholder="Example here...">
+    </div>
+  </div>
+
+  <svg class="shield-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M24 4 L40 10 L40 24 Q40 38 24 44 Q8 38 8 24 L8 10 Z" fill="#2a4a2e" stroke="#c5a000" stroke-width="2"></path>
+    <path d="M24 10 L34 14 L34 24 Q34 34 24 38 Q14 34 14 24 L14 14 Z" fill="#3a5a3e"></path>
+    <text x="24" y="26" text-anchor="middle" fill="#c5a000" font-size="14" font-family="Cinzel" font-weight="bold">III</text>
+  </svg>
+  <h3>3. Factors That Create Inequality</h3>
+  <p>Check the boxes of factors that can lead to social inequality in a society.</p>
+  <div class="checkbox-grid">
+    <label class="checkbox-item"><input type="checkbox" id="q2-f1"> 💰 Wealth</label>
+    <label class="checkbox-item"><input type="checkbox" id="q2-f2"> 🎓 Education</label>
+    <label class="checkbox-item"><input type="checkbox" id="q2-f3"> 🧑‍🤝‍🧑 Race / Ethnicity</label>
+    <label class="checkbox-item"><input type="checkbox" id="q2-f4"> ⚧ Gender</label>
+    <label class="checkbox-item"><input type="checkbox" id="q2-f5"> 🙏 Religion</label>
+    <label class="checkbox-item"><input type="checkbox" id="q2-f6"> 📍 Where you are born</label>
+    <label class="checkbox-item"><input type="checkbox" id="q2-f7"> 👑 Family Background</label>
+  </div>
+  <p>Pick TWO factors you checked and explain how each can lead to inequality:</p>
+  <textarea class="textarea" id="q2-factors-explain" placeholder="1. ...
+2. ..."></textarea>
+
+  <svg class="shield-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M24 4 L40 10 L40 24 Q40 38 24 44 Q8 38 8 24 L8 10 Z" fill="#7a6218" stroke="#c5a000" stroke-width="2"></path>
+    <path d="M24 10 L34 14 L34 24 Q34 34 24 38 Q14 34 14 24 L14 14 Z" fill="#8a7228"></path>
+    <text x="24" y="26" text-anchor="middle" fill="#c5a000" font-size="14" font-family="Cinzel" font-weight="bold">IV</text>
+  </svg>
+  <h3>4. Think Like an Adventurer!</h3>
+  <p>Read each scenario and decide which level of the social ladder the character is most likely on.</p>
+  <div class="scenario-card">
+    <p class="scenario-text"><strong>1. Kai</strong> is the son of a duke. He attends the best schools, will inherit land, and never has to worry about money.</p>
+    <label>Level: <select id="q2-s1"><option value="">--</option><option>High</option><option>Middle</option><option>Low</option></select></label>
+    <label style="display:block;margin-top:8px;">Why? <input class="text-input" type="text" id="q2-s1-why" placeholder="Explain..."></label>
+  </div>
+  <div class="scenario-card">
+    <p class="scenario-text"><strong>2. Mira</strong> works as a nurse. She has a steady income, went to college with student loans, and lives comfortably.</p>
+    <label>Level: <select id="q2-s2"><option value="">--</option><option>High</option><option>Middle</option><option>Low</option></select></label>
+    <label style="display:block;margin-top:8px;">Why? <input class="text-input" type="text" id="q2-s2-why" placeholder="Explain..."></label>
+  </div>
+  <div class="scenario-card">
+    <p class="scenario-text"><strong>3. Tomas</strong> is homeless and struggles to find food. He has little education and no steady job.</p>
+    <label>Level: <select id="q2-s3"><option value="">--</option><option>High</option><option>Middle</option><option>Low</option></select></label>
+    <label style="display:block;margin-top:8px;">Why? <input class="text-input" type="text" id="q2-s3-why" placeholder="Explain..."></label>
+  </div>
+
+  <div class="scroll-box">
+    <h3>⭐ Bonus Quest (Optional)</h3>
+    <p>If you could change one thing in the realm to make it more fair for everyone, what would it be?</p>
+    <textarea class="textarea" id="q2-bonus"></textarea>
+  </div>
+
+  <div class="nav-buttons">
+    <button onclick="goToQuest(0)">⬅ Back</button>
+    <button class="primary" onclick="submitQuest(1)">Submit Quest ➡</button>
+  </div>
+</div>
+
+<!-- QUEST 3 -->
+<div class="section" id="screen-quest2">
+  <div class="quest-header">
+    <div class="d20">3</div>
+    <h2>Quest 3: The Impact of Inequality</h2>
+    <div class="d20">3</div>
+  </div>
+  <p class="subtitle">Inequality affects more than just money. It shapes opportunities, choices, and quality of life.</p>
+
+  <svg class="torch-icon" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+    <rect x="15" y="20" width="6" height="14" rx="2" fill="#5c4a3a"></rect>
+    <circle cx="18" cy="18" r="6" fill="#e8c84d" opacity="0.8"></circle>
+    <circle cx="16" cy="14" r="4" fill="#f0e0b8" opacity="0.6"></circle>
+    <circle cx="20" cy="16" r="3" fill="#f0e0b8" opacity="0.5"></circle>
+    <circle cx="18" cy="10" r="2" fill="#fff" opacity="0.4"></circle>
+  </svg>
+  <h3>1. Fill in the Blank</h3>
+  <p>Choose a word from the box to complete each sentence.</p>
+  <div style="background:rgba(255,255,255,0.5);padding:12px;border-radius:6px;text-align:center;margin-bottom:15px;">
+    <strong>Word Bank:</strong> health · education · stress · crime · poverty · opportunities · communities · hope
+  </div>
+  <div class="fill-blank">
+    1. When people have unequal access to <select id="q3-fb1"><option value="">--</option><option>health</option><option>education</option><option>stress</option><option>crime</option><option>poverty</option><option>opportunities</option><option>communities</option><option>hope</option></select>, it can lead to unequal outcomes.
+  </div>
+  <div class="fill-blank">
+    2. Lack of resources can create <select id="q3-fb2"><option value="">--</option><option>health</option><option>education</option><option>stress</option><option>crime</option><option>poverty</option><option>opportunities</option><option>communities</option><option>hope</option></select> and limit future choices.
+  </div>
+  <div class="fill-blank">
+    3. Inequality can cause more <select id="q3-fb3"><option value="">--</option><option>health</option><option>education</option><option>stress</option><option>crime</option><option>poverty</option><option>opportunities</option><option>communities</option><option>hope</option></select> in communities.
+  </div>
+  <div class="fill-blank">
+    4. People living in poverty often experience more <select id="q3-fb4"><option value="">--</option><option>health</option><option>education</option><option>stress</option><option>crime</option><option>poverty</option><option>opportunities</option><option>communities</option><option>hope</option></select> and worse physical and mental <select id="q3-fb4b"><option value="">--</option><option>health</option><option>education</option><option>stress</option><option>crime</option><option>poverty</option><option>opportunities</option><option>communities</option><option>hope</option></select>.
+  </div>
+  <div class="fill-blank">
+    5. Inequality can make it harder for people to feel <select id="q3-fb5"><option value="">--</option><option>health</option><option>education</option><option>stress</option><option>crime</option><option>poverty</option><option>opportunities</option><option>communities</option><option>hope</option></select> about the future.
+  </div>
+  <div class="fill-blank">
+    6. Strong, supported <select id="q3-fb6"><option value="">--</option><option>health</option><option>education</option><option>stress</option><option>crime</option><option>poverty</option><option>opportunities</option><option>communities</option><option>hope</option></select> can help reduce inequality.
+  </div>
+
+  <h3>2. Scenario: Choose Your Path</h3>
+  <p>You are the leader of your adventuring party. Choose ONE path to help your kingdom become more fair.</p>
+  <div class="path-choice" id="q3-path-choice">
+    <div class="path-card" data-path="education" onclick="selectPath(this)">
+      <svg class="path-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect x="12" y="20" width="40" height="30" rx="4" fill="#3b5998" opacity="0.3"></rect>
+        <rect x="16" y="24" width="32" height="22" rx="2" fill="#3b5998"></rect>
+        <rect x="20" y="28" width="8" height="8" rx="1" fill="#1a1025"></rect>
+        <rect x="36" y="28" width="8" height="8" rx="1" fill="#1a1025"></rect>
+        <rect x="20" y="38" width="8" height="4" rx="1" fill="#1a1025"></rect>
+        <rect x="36" y="38" width="8" height="4" rx="1" fill="#1a1025"></rect>
+        <polygon points="8,20 32,4 56,20" fill="#8b6914"></polygon>
+        <rect x="26" y="12" width="12" height="10" rx="2" fill="#1a1025"></rect>
+      </svg>
+      <h4>🛡 Path of Education</h4>
+      <p>You invest in schools, libraries, and training for all.</p>
+    </div>
+    <div class="path-card" data-path="resources" onclick="selectPath(this)">
+      <svg class="path-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="28" fill="#2a4a2e" opacity="0.2"></circle>
+        <rect x="20" y="24" width="24" height="20" rx="3" fill="#8b6914"></rect>
+        <circle cx="32" cy="18" r="10" fill="#c5a000"></circle>
+        <text x="32" y="22" text-anchor="middle" fill="#2c1810" font-size="10" font-weight="bold">$</text>
+        <rect x="24" y="32" width="16" height="8" rx="2" fill="#6b5014"></rect>
+        <rect x="28" y="28" width="8" height="6" rx="1" fill="#a08030"></rect>
+      </svg>
+      <h4>💰 Path of Resources</h4>
+      <p>You create fair wages and make sure basic needs (food, housing, healthcare) are available to everyone.</p>
+    </div>
+    <div class="path-card" data-path="equality" onclick="selectPath(this)">
+      <svg class="path-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="28" fill="#4a3b5c" opacity="0.2"></circle>
+        <rect x="12" y="30" width="40" height="4" rx="2" fill="#4a3b5c"></rect>
+        <rect x="30" y="12" width="4" height="40" rx="2" fill="#4a3b5c"></rect>
+        <circle cx="32" cy="32" r="6" fill="#c5a000"></circle>
+        <circle cx="20" cy="20" r="4" fill="#c5a000"></circle>
+        <circle cx="44" cy="20" r="4" fill="#c5a000"></circle>
+        <circle cx="20" cy="44" r="4" fill="#c5a000"></circle>
+        <circle cx="44" cy="44" r="4" fill="#c5a000"></circle>
+      </svg>
+      <h4>⚖ Path of Equality</h4>
+      <p>You create laws and rules to protect people from discrimination and unfair treatment.</p>
+    </div>
+  </div>
+  <input type="hidden" id="q3-path-selected">
+  <p>Here is my plan and why it will help:</p>
+  <textarea class="textarea" id="q3-plan"></textarea>
+
+  <svg class="scroll-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="4" width="24" height="32" rx="4" fill="#d4c4a0" stroke="#8b6914" stroke-width="1.5"></rect>
+    <rect x="12" y="8" width="16" height="2" rx="1" fill="#8b6914"></rect>
+    <rect x="12" y="12" width="16" height="2" rx="1" fill="#8b6914"></rect>
+    <rect x="12" y="16" width="12" height="2" rx="1" fill="#8b6914"></rect>
+    <rect x="12" y="20" width="16" height="2" rx="1" fill="#8b6914"></rect>
+    <rect x="12" y="24" width="10" height="2" rx="1" fill="#8b6914"></rect>
+    <circle cx="32" cy="32" r="6" fill="#c5a000"></circle>
+    <text x="32" y="34" text-anchor="middle" fill="#2c1810" font-size="8" font-weight="bold">?</text>
+  </svg>
+  <h3>3. Sort the Examples</h3>
+  <p>Decide whether each example shows social inequality (I), social stratification (S), or both (B).</p>
+  <div class="sort-grid">
+    <div class="sort-item">
+      <span>A king lives in a castle while peasants live in small huts.</span>
+      <select id="q3-sort1"><option value="">--</option><option value="I">I</option><option value="S">S</option><option value="B">B</option></select>
+    </div>
+    <div class="sort-item">
+      <span>Two students work equally hard, but one has access to tutors and the other does not.</span>
+      <select id="q3-sort2"><option value="">--</option><option value="I">I</option><option value="S">S</option><option value="B">B</option></select>
+    </div>
+    <div class="sort-item">
+      <span>Some schools have advanced classes and technology; others don't.</span>
+      <select id="q3-sort3"><option value="">--</option><option value="I">I</option><option value="S">S</option><option value="B">B</option></select>
+    </div>
+    <div class="sort-item">
+      <span>Nobles are born into power and have more privileges than commoners.</span>
+      <select id="q3-sort4"><option value="">--</option><option value="I">I</option><option value="S">S</option><option value="B">B</option></select>
+    </div>
+    <div class="sort-item">
+      <span>People with more money have access to better healthcare.</span>
+      <select id="q3-sort5"><option value="">--</option><option value="I">I</option><option value="S">S</option><option value="B">B</option></select>
+    </div>
+    <div class="sort-item">
+      <span>A law treats one group unfairly because of their race or gender.</span>
+      <select id="q3-sort6"><option value="">--</option><option value="I">I</option><option value="S">S</option><option value="B">B</option></select>
+    </div>
+    <div class="sort-item">
+      <span>Jobs with higher pay and respect are harder for some people to reach.</span>
+      <select id="q3-sort7"><option value="">--</option><option value="I">I</option><option value="S">S</option><option value="B">B</option></select>
+    </div>
+    <div class="sort-item">
+      <span>Different social classes exist in a society, with a clear order from highest to lowest.</span>
+      <select id="q3-sort8"><option value="">--</option><option value="I">I</option><option value="S">S</option><option value="B">B</option></select>
+    </div>
+  </div>
+
+  <h3>4. Reflection</h3>
+  <div class="question-block">
+    <label>How does social stratification create inequality?</label>
+    <textarea class="textarea" id="q3-ref1"></textarea>
+  </div>
+  <div class="question-block">
+    <label>What can individuals and communities do to create a more just and fair society?</label>
+    <textarea class="textarea" id="q3-ref2"></textarea>
+  </div>
+
+  <div class="footer-banner">
+    You've made it through Part 3! Your choices matter. A fairer realm is possible when we understand inequality and work together to change it.
+  </div>
+
+  <div class="nav-buttons">
+    <button onclick="goToQuest(1)">⬅ Back</button>
+    <button class="primary" onclick="submitQuest(2)">Submit Quest ➡</button>
+  </div>
+</div>
+
+<!-- QUEST 4 -->
+<div class="section" id="screen-quest3">
+  <div class="quest-header">
+    <div class="d20">4</div>
+    <h2>Quest 4: Types of Inequality</h2>
+    <div class="d20">4</div>
+  </div>
+  <p class="subtitle">Inequality shows up in many different ways. Each type can create barriers that make the journey harder for certain people.</p>
+
+  <div class="question-block">
+    <label><strong>Did You Know?</strong> These types of inequality can overlap. Someone might face more than one barrier at the same time. Can you think of a real-world example for each?</label>
+  </div>
+
+  <div class="inequality-card racial">
+    <h3><svg class="inequality-shield" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M28 4 L48 12 L48 28 Q48 44 28 52 Q8 44 8 28 L8 12 Z" fill="#3b5998" stroke="#c5a000" stroke-width="2"></path><text x="28" y="32" text-anchor="middle" fill="#f3e5c3" font-size="16" font-family="Cinzel" font-weight="bold">R</text></svg>Racial Inequality</h3>
+    <p>When people are treated unfairly or have fewer opportunities because of their race or the color of their skin.</p>
+    <label><strong>Example in the Real World:</strong></label>
+    <textarea class="textarea" id="q4-racial"></textarea>
+  </div>
+
+  <div class="inequality-card gender">
+    <h3><svg class="inequality-shield" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M28 4 L48 12 L48 28 Q48 44 28 52 Q8 44 8 28 L8 12 Z" fill="#5a2d72" stroke="#c5a000" stroke-width="2"></path><text x="28" y="32" text-anchor="middle" fill="#f3e5c3" font-size="16" font-family="Cinzel" font-weight="bold">G</text></svg>Gender Inequality</h3>
+    <p>When people are treated unfairly or have fewer opportunities because of their gender or gender identity.</p>
+    <label><strong>Example in the Real World:</strong></label>
+    <textarea class="textarea" id="q4-gender"></textarea>
+  </div>
+
+  <div class="inequality-card economic">
+    <h3><svg class="inequality-shield" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M28 4 L48 12 L48 28 Q48 44 28 52 Q8 44 8 28 L8 12 Z" fill="#7a6218" stroke="#c5a000" stroke-width="2"></path><text x="28" y="32" text-anchor="middle" fill="#2c1810" font-size="16" font-family="Cinzel" font-weight="bold">E</text></svg>Economic Inequality</h3>
+    <p>When some people have a lot of money and resources while others struggle to meet their basic needs.</p>
+    <label><strong>Example in the Real World:</strong></label>
+    <textarea class="textarea" id="q4-economic"></textarea>
+  </div>
+
+  <div class="inequality-card education">
+    <h3><svg class="inequality-shield" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M28 4 L48 12 L48 28 Q48 44 28 52 Q8 44 8 28 L8 12 Z" fill="#6b1c1c" stroke="#c5a000" stroke-width="2"></path><text x="28" y="32" text-anchor="middle" fill="#f3e5c3" font-size="16" font-family="Cinzel" font-weight="bold">Ed</text></svg>Education Inequality</h3>
+    <p>When some people have access to better schools, resources, and learning opportunities than others.</p>
+    <label><strong>Example in the Real World:</strong></label>
+    <textarea class="textarea" id="q4-education"></textarea>
+  </div>
+
+  <div class="inequality-card health">
+    <h3><svg class="inequality-shield" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><path d="M28 4 L48 12 L48 28 Q48 44 28 52 Q8 44 8 28 L8 12 Z" fill="#2a4a2e" stroke="#c5a000" stroke-width="2"></path><text x="28" y="32" text-anchor="middle" fill="#f3e5c3" font-size="16" font-family="Cinzel" font-weight="bold">H</text></svg>Health Inequality</h3>
+    <p>When some people have better access to healthcare, medicine, and healthy living conditions than others.</p>
+    <label><strong>Example in the Real World:</strong></label>
+    <textarea class="textarea" id="q4-health"></textarea>
+  </div>
+
+  <h3>🌟 Final Reflection</h3>
+  <div class="question-block">
+    <label>Which type of inequality do you think has the biggest impact on people's lives? Why?</label>
+    <textarea class="textarea" id="q4-ref1"></textarea>
+  </div>
+  <div class="question-block">
+    <label>How can we work together to build a more fair and equitable realm for everyone?</label>
+    <textarea class="textarea" id="q4-ref2"></textarea>
+  </div>
+
+  <div class="scroll-box">
+    <h3>📜 Anonymous Quest (Optional)</h3>
+    <p>Write one action that YOU can take to help reduce inequality in your school, community, or the world.</p>
+    <textarea class="textarea" id="q4-anon"></textarea>
+  </div>
+
+  <div class="nav-buttons">
+    <button onclick="goToQuest(2)">⬅ Back</button>
+    <button class="primary" onclick="submitQuest(3)">Submit Quest ➡</button>
+  </div>
+</div>
+
+<!-- COMPLETION SCREEN -->
+<div class="section" id="screen-complete">
+  <div class="banner banner-gold"><div class="d20">20</div> Level Up! <div class="d20">20</div></div>
+  <div class="completion-screen">
+    <svg class="completion-medal" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <lineargradient id="medalGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#e8c84d"></stop>
+          <stop offset="50%" stop-color="#c5a000"></stop>
+          <stop offset="100%" stop-color="#8b6914"></stop>
+        </lineargradient>
+      </defs>
+      <circle cx="60" cy="60" r="55" fill="url(#medalGrad)" stroke="#7a6218" stroke-width="3"></circle>
+      <circle cx="60" cy="60" r="42" fill="none" stroke="#f0e0b8" stroke-width="2" opacity="0.6"></circle>
+      <polygon points="60,20 68,45 95,45 73,60 81,85 60,70 39,85 47,60 25,45 52,45" fill="#f0e0b8" opacity="0.9"></polygon>
+      <text x="60" y="100" text-anchor="middle" fill="#2c1810" font-size="10" font-family="Cinzel" font-weight="bold">HERO</text>
+    </svg>
+    <h1>Congratulations, Adventurer!</h1>
+    <p class="subtitle">You've learned about inequality and how it shapes our world.</p>
+    <p>The more you understand, the more powerful you become in creating change.</p>
+
+    <div style="margin: 30px 0;">
+      <span class="badge" id="badge-q1">Quest 1 Complete</span>
+      <span class="badge" id="badge-q2">Quest 2 Complete</span>
+      <span class="badge" id="badge-q3">Quest 3 Complete</span>
+      <span class="badge" id="badge-q4">Quest 4 Complete</span>
+    </div>
+
+    <div class="scroll-box" style="text-align:left;">
+      <h3>📊 Your Adventure Stats</h3>
+      <p><strong>Total XP Earned:</strong> <span id="final-xp">0</span></p>
+      <p><strong>Quests Completed:</strong> <span id="final-quests">0</span> / 4</p>
+      <p id="final-message">The realm needs heroes like you.</p>
+    </div>
+
+    <div class="footer-banner">
+      Knowledge is power. Empathy is strength. Justice is the true treasure.
+    </div>
+
+    <div class="nav-buttons center">
+      <button onclick="restartGame()">🔄 Play Again</button>
+      <button class="primary" onclick="downloadAnswers()">📥 Download My Answers</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+let currentQuest = -1;
+let xp = 0;
+const questXP = [100, 150, 200, 250];
+let completed = [false, false, false, false];
+
+const storageKey = 'realmOfEquality_save';
+
+function init() {
+  const saved = localStorage.getItem(storageKey);
+  if (saved) {
+    const data = JSON.parse(saved);
+    xp = data.xp || 0;
+    completed = data.completed || [false,false,false,false];
+    if (data.inputs) restoreInputs(data.inputs);
+    if (data.currentQuest !== undefined && data.currentQuest >= 0) {
+      goToQuest(data.currentQuest);
+      return;
+    }
+  }
+  updateXP();
+}
+
+function saveProgress() {
+  const data = {
+    xp, completed, currentQuest,
+    inputs: gatherInputs()
+  };
+  localStorage.setItem(storageKey, JSON.stringify(data));
+}
+
+function gatherInputs() {
+  const inputs = {};
+  document.querySelectorAll('input[type="text"], textarea, select').forEach(el => {
+    if (el.id) inputs[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+  document.querySelectorAll('input[type="checkbox"]').forEach(el => {
+    if (el.id) inputs[el.id] = el.checked;
+  });
+  return inputs;
+}
+
+function restoreInputs(inputs) {
+  Object.entries(inputs).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.type === 'checkbox') el.checked = !!val;
+    else el.value = val || '';
+  });
+  const pathVal = inputs['q3-path-selected'];
+  if (pathVal) {
+    document.querySelectorAll('.path-card').forEach(c => {
+      c.classList.toggle('selected', c.dataset.path === pathVal);
+    });
+  }
+}
+
+function goToQuest(n) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  if (n === -1) {
+    document.getElementById('screen-title').classList.add('active');
+    currentQuest = -1;
+  } else if (n >= 0 && n <= 3) {
+    document.getElementById('screen-quest' + n).classList.add('active');
+    currentQuest = n;
+    // Update banner color per quest
+    const banners = document.querySelectorAll('.paper > .section.active .banner');
+    const colors = ['', '', 'banner-green', 'banner-red', 'banner-purple'];
+    banners.forEach(b => {
+      b.classList.remove('banner-red','banner-green','banner-gold','banner-purple');
+      if (n === 1) b.classList.add('banner-purple');
+      if (n === 2) b.classList.add('banner-green');
+      if (n === 3) b.classList.add('banner-red');
+    });
+  } else if (n === 4) {
+    document.getElementById('screen-complete').classList.add('active');
+    currentQuest = 4;
+    showCompletion();
+  }
+  saveProgress();
+  window.scrollTo(0,0);
+}
+
+function updateXP() {
+  document.getElementById('xpText').textContent = xp;
+  const maxXP = questXP.reduce((a,b)=>a+b,0);
+  const pct = Math.min(100, Math.round((xp / maxXP) * 100));
+  document.getElementById('xpFill').style.width = pct + '%';
+}
+
+function submitQuest(n) {
+  if (!completed[n]) {
+    completed[n] = true;
+    xp += questXP[n];
+    updateXP();
+  }
+  saveProgress();
+  if (n < 3) {
+    goToQuest(n + 1);
+  } else {
+    goToQuest(4);
+  }
+}
+
+function selectPath(card) {
+  document.querySelectorAll('.path-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  document.getElementById('q3-path-selected').value = card.dataset.path;
+  saveProgress();
+}
+
+function showCompletion() {
+  document.getElementById('final-xp').textContent = xp;
+  let count = completed.filter(Boolean).length;
+  document.getElementById('final-quests').textContent = count;
+  ['badge-q1','badge-q2','badge-q3','badge-q4'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (completed[i]) el.style.opacity = '1';
+    else el.style.opacity = '0.3';
+  });
+  const msg = document.getElementById('final-message');
+  if (count === 4) msg.textContent = 'You have become a true Champion of Equality!';
+  else if (count >= 2) msg.textContent = 'You are well on your way to becoming a realm hero.';
+  else msg.textContent = 'The journey continues. Every step toward understanding matters.';
+}
+
+function restartGame() {
+  if (confirm('Start a new adventure? Your current progress will be reset.')) {
+    localStorage.removeItem(storageKey);
+    location.reload();
+  }
+}
+
+function downloadAnswers() {
+  const inputs = gatherInputs();
+  let text = '═══ REALM OF EQUALITY - MY QUEST LOG ═══\n\n';
+  const questNames = ['Quest 1: Different Starts', 'Quest 2: The Realm\'s Hierarchy', 'Quest 3: The Impact of Inequality', 'Quest 4: Types of Inequality'];
+  questNames.forEach((name, i) => {
+    text += `\n【 ${name} 】\n`;
+    Object.entries(inputs).forEach(([id, val]) => {
+      if (id.startsWith('q' + (i+1) + '-') || id.startsWith('stat') && i === 0 || id.startsWith('q2-') && i === 1) {
+        let label = id;
+        if (id.startsWith('q1-')) label = id.replace('q1-', 'Q1 ');
+        if (id.startsWith('q2-')) label = id.replace('q2-', 'Q2 ');
+        if (id.startsWith('q3-')) label = id.replace('q3-', 'Q3 ');
+        if (id.startsWith('q4-')) label = id.replace('q4-', 'Q4 ');
+        if (id.startsWith('stat')) label = id;
+        let value = typeof val === 'boolean' ? (val ? '✓' : ' ') : (val || '(no answer)');
+        text += `${label}: ${value}\n`;
+      }
+    });
+  });
+  text += `\nTotal XP: ${xp}\n`;
+  const blob = new Blob([text], {type: 'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'My_Realm_of_Equality_Quest.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Auto-save on input changes
+document.addEventListener('input', saveProgress);
+
+init();
+</script>
+
+
+</body></html>
