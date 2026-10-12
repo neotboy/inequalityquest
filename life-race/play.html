@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Life Race — Unequal Starting Line</title><style>*{box-sizing:border-box}body{margin:0;background:#10172c;color:#f3f6ff;font:16px system-ui}header{padding:20px 5%;background:#1b2544;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}h1{margin:0;font-size:28px}main{max-width:1250px;margin:auto;padding:22px}button{cursor:pointer;background:#ffc857;color:#1b2544;font-size:16px;font-weight:800;border:0;border-radius:13px;padding:13px 17px;margin:5px}button:hover{filter:brightness(1.12);transform:translateY(-1px)}button:disabled{opacity:.35;cursor:not-allowed}input{padding:14px;border-radius:12px;border:2px solid #6478b6;background:#1b2544;color:white;font-size:18px;max-width:100%}.panel{background:#1d294b;border:1px solid #334677;border-radius:22px;padding:22px;margin:13px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}.tile{background:linear-gradient(140deg,#344a82,#222d57);border:2px solid #526ab3;border-radius:22px;padding:18px;min-height:155px;display:flex;flex-direction:column;justify-content:space-between}.tile strong{font-size:22px}.cash{color:#83f6ae}.warn{color:#ff9da7}.muted{color:#c0cae7}#banner{background:#593b95;padding:14px 20px;border-radius:16px;font-size:20px;font-weight:850;margin:14px 0}.pill{padding:8px 13px;background:#111a35;border-radius:30px;display:inline-block;margin:5px}.big{font-size:37px;font-weight:950}#leader article{display:flex;justify-content:space-between;border-bottom:1px solid #45547a;padding:11px;gap:14px}.hide{display:none}#status{font-size:14px;color:#c7ceea}.actions{display:flex;flex-wrap:wrap;align-items:center}.finish{background:linear-gradient(140deg,#175e63,#2d306d)}@media(max-width:600px){header{padding:16px}h1{font-size:22px}main{padding:10px}.panel{padding:14px}} </style><header><h1>🏁 LIFE RACE <span class="muted">/ The Unequal Starting Line</span></h1><span id="status">Loading…</span></header><main><div id="setup" class="panel"><div class="big">Your life. Your choices. An unequal race.</div><p class="muted">A visual sociology game about money, time, education, healthcare and privilege. 10 weeks. 3 actions per week.</p><div class="actions"><input id="nickname" maxlength="18" placeholder="Nickname (not real name)"><button id="host">🎓 Host classroom</button><input id="roomcode" maxlength="6" placeholder="Room code"><button id="join">🎮 Join room</button><button id="demo">▶ Play solo demo</button></div><p id="notice" class="warn"></p></div><section id="game" class="hide"><div id="banner"></div><div class="panel"><span id="roomtag" class="pill"></span><span id="weektag" class="pill"></span><span id="actiontag" class="pill"></span><span id="roletag" class="pill"></span><div id="stats"></div><div class="actions" id="hostcontrols"></div></div><h2>🌆 Make your move</h2><div id="town" class="grid"></div><div class="panel"><h2>🏆 Live standings</h2><div id="leader"></div></div><div class="panel finish" id="debrief"><h3>🔎 The sociology behind the game</h3><p>Did income and wealth start at the same level? How did housing, inherited money, health, and transportation change your life chances?</p><button id="restart">Restart</button></div></section></main><script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>
+<script>
+const $=q=>document.querySelector(q);
+const roles=[
+{role:"TRUST FUND HEIR",icon:"👑",cash:80000,debt:0,property:250000,wage:1800,rent:0,energy:95,health:95,joy:90,education:2,network:4},
+{role:"SUPPORTED STARTER",icon:"🚗",cash:4000,debt:0,property:3000,wage:750,rent:400,energy:85,health:90,joy:80,education:1,network:2},
+{role:"WORKING STUDENT",icon:"🧰",cash:200,debt:9000,property:0,wage:560,rent:580,energy:78,health:82,joy:65,education:0,network:0},
+{role:"HOUSING INSECURE",icon:"🚌",cash:35,debt:600,property:0,wage:380,rent:690,energy:70,health:75,joy:60,education:0,network:0}];
+const places=[["💼","WORK","Earn money; use energy","work"],["🎓","COLLEGE","Study today to earn more later","study"],["🥫","GROCERIES","Food and energy","food"],["🏥","HOSPITAL","Pay to get healthy","health"],["🏘️","HOUSING","Pay off some debt","housing"],["🤝","NETWORK","Build connections","network"],["📈","INVEST","Buy assets if you have cash","invest"],["🏛️","CITY HALL","Apply for support","aid"],["🛌","REST","Restore your energy","rest"]];
+const headlines=["THE RACE BEGINS","THE LANDLORDS RAISE RENT","HIRING BOOM","SURPRISE MEDICAL BILLS","THE STOCK MARKET SOARS","NEW SCHOLARSHIP FUND","TRANSPORT COSTS INCREASE","FAMILY INHERITANCE","FACTORY LAYOFFS","EMERGENCY HOUSING AID"];
+const fmt=x=>(x<0?"−":"")+"$"+Math.abs(Math.round(x)).toLocaleString();
+const clean=x=>String(x??"").replace(/[&<>"']/g,"").slice(0,25);
+let peer,connection,clients={},room="",mine="",host=false,demo=false,game=null,online=false,pending=false;
+const peerId=code=>"life-race-classroom-"+code.toLowerCase();
+const code=()=>Math.random().toString(36).slice(2,8).toUpperCase();
+const uid=()=>Math.random().toString(36).slice(2,11);
+const newPlayer=(id,name,role)=>({...JSON.parse(JSON.stringify(roles[role])),id,name:clean(name)||"Student",actions:3,activity:"Waiting"});
+const net=p=>p.cash+p.property-p.debt;
+function msg(t){$("#notice").textContent=t;$("#status").textContent=t}
+function startView(){
+ $("#setup").classList.add("hide");$("#game").classList.remove("hide");
+ render();
+}
+function render(){
+ if(!game)return;
+ const p=game.players[mine];
+ $("#roomtag").textContent="ROOM "+room;
+ $("#weektag").textContent="WEEK "+(game.week+1)+"/10";
+ $("#actiontag").textContent=p?p.actions+" MOVES LEFT":"TEACHER";
+ $("#roletag").textContent=p?p.icon+" "+p.role:"HOST DASHBOARD";
+ $("#banner").textContent=(game.finished?"🏆 FINAL RESULTS":game.started?"⚡ "+headlines[game.week]:"⌛ WAITING FOR TEACHER TO START")+(game.started&&!game.finished?" — 3 MOVES THIS WEEK":"");
+ $("#stats").innerHTML=p?["cash","debt","property","wage","rent","energy","health","joy","education","network"].map(k=>'<span class="pill">'+k.toUpperCase()+': <b class="'+(k==="debt"?"warn":"")+'">'+(["cash","debt","property","wage","rent"].includes(k)?fmt(p[k]):p[k])+"</b></span>").join(""):"";
+ $("#town").innerHTML=places.map(([emoji,title,desc,key])=>'<div class="tile"><div><div style="font-size:36px">'+emoji+'</div><strong>'+title+'</strong><p class="muted">'+desc+'</p></div><button data-move="'+key+'" '+(!game.started||game.finished||!p||p.actions<1?"disabled":"")+'>GO →</button></div>').join("");
+ document.querySelectorAll("[data-move]").forEach(b=>b.onclick=()=>move(b.dataset.move));
+ $("#leader").innerHTML=Object.values(game.players).sort((a,b)=>net(b)-net(a)).map((q,i)=>'<article><span><b>'+(i+1)+'. '+q.icon+' '+clean(q.name)+'</b><small class="muted"> '+q.actions+'/3 moves · '+clean(q.activity)+'</small></span><b class="'+(net(q)<0?"warn":"cash")+'">'+fmt(net(q))+'</b></article>').join("");
+ $("#hostcontrols").innerHTML=host?'<button id="startRound">▶ START</button><button id="nextWeek">⏭ NEXT WEEK</button><button id="resetRoom">↻ RESTART</button><span class="pill">👁 Monitor moves and balances on the leaderboard</span>':"";
+ if(host){
+ $("#startRound").onclick=()=>{game.started=true;sendState()};
+ $("#nextWeek").onclick=()=>{if(!game.started||game.finished)return;game.week++;if(game.week>=10){game.week=9;game.finished=true}else for(const p of Object.values(game.players)){p.actions=3;p.cash+=p.wage-p.rent;if(game.week===1&&p.rent)p.rent+=180;if(game.week===3)p.cash-=p.role==="TRUST FUND HEIR"?150:650;if(game.week===4&&p.property)p.cash+=Math.round(p.property*.08);if(game.week===7&&p.role==="TRUST FUND HEIR")p.cash+=28000;if(game.week===8&&p.role==="HOUSING INSECURE")p.cash-=450;if(game.week===9&&p.cash<3000)p.cash+=900;p.activity="New week: income and bills posted"}sendState()};
+ $("#resetRoom").onclick=()=>{game.week=0;game.started=false;game.finished=false;let n=0;for(const [id,p] of Object.entries(game.players))game.players[id]=newPlayer(id,p.name,(n++)%4);sendState()};
+ }
+ $("#debrief").style.display=game.finished?"block":"none";
+ $("#status").textContent=demo?"● Offline solo demo":host?"● Room online · "+Object.keys(clients).length+" student connections":online?"● Connected to teacher":"⚠ Waiting for connection";
+}
+function applyMove(p,a){
+ if(!p||p.actions<1)return;
+ switch(a){
+ case"work":p.cash+=Math.round(p.wage*.5);p.energy-=16;break;
+ case"study":p.cash-=400;p.education++;p.wage+=180;p.energy-=13;break;
+ case"food":p.cash-=85;p.energy+=28;p.health+=4;break;
+ case"health":p.cash-=420;p.health+=30;break;
+ case"housing":p.cash-=250;p.debt=Math.max(0,p.debt-350);break;
+ case"network":p.network++;p.joy+=6;break;
+ case"invest":if(p.cash<500)return;p.cash-=500;p.property+=game.week%2?680:350;break;
+ case"aid":if(net(p)>5000)return;p.cash+=700;break;
+ case"rest":p.energy+=32;p.joy+=13;break;
+ default:return;
+ }
+ p.energy=Math.max(0,Math.min(100,p.energy));p.joy=Math.max(0,Math.min(100,p.joy));p.health=Math.max(0,Math.min(100,p.health));p.actions--;p.activity=places.find(x=>x[3]===a)?.[1]||"Played";
+}
+function sendState(){
+ if(!game)return;
+ if(host&&!demo){for(const c of Object.values(clients)){if(c.open)try{c.send({type:"state",state:game})}catch(e){}}}
+ render();
+}
+function move(a){
+ if(!game?.started||game.finished||!game.players[mine]?.actions)return;
+ if(host||demo){applyMove(game.players[mine],a);sendState();return}
+ if(!connection?.open||pending)return;
+ pending=true;
+ connection.send({type:"move",action:a});
+ setTimeout(()=>pending=false,700);
+}
+function accept(c){
+ const id=c.peer;
+ c.on("data",d=>{
+ if(!d||typeof d!=="object")return;
+ if(d.type==="join"&&!game.started){
+ const name=clean(d.name)||"Player";if(!game.players[id])game.players[id]=newPlayer(id,name,Object.keys(game.players).length%4);
+ clients[id]=c;sendState();
+ }else if(d.type==="move"&&game.started&&!game.finished&&game.players[id]){
+ applyMove(game.players[id],String(d.action));sendState();
+ }});
+ c.on("close",()=>{delete clients[id];render()});
+ c.on("error",()=>{delete clients[id];render()});
+}
+$("#host").onclick=()=>{
+ if(typeof Peer==="undefined")return msg("The school network blocked the free connection service. Try a different browser or network.");
+ if(peer)return;
+ host=true;mine="teacher";room=code();game={week:0,started:false,finished:false,players:{}};
+ peer=new Peer(peerId(room),{debug:0});
+ peer.on("open",()=>{online=true;startView()});
+ peer.on("connection",accept);
+ peer.on("error",e=>msg("Room connection error: "+e.message+". Try refreshing."));
+ msg("Opening your free classroom room…");
+};
+$("#join").onclick=()=>{
+ if(typeof Peer==="undefined")return msg("The school network blocked the free connection service.");
+ room=$("#roomcode").value.trim().toUpperCase();
+ if(!/^[A-Z0-9]{6}$/.test(room))return msg("Enter the six-letter room code.");
+ if(peer)return;
+ host=false;mine=uid();peer=new Peer(mine,{debug:0});
+ peer.on("open",()=>{
+ connection=peer.connect(peerId(room),{reliable:true});
+ connection.on("open",()=>{mine=peer.id;connection.send({type:"join",name:$("#nickname").value||"Student"});online=true;msg("Connected. Joining your class…")});
+ connection.on("data",d=>{if(d.type==="state"){game=d.state;pending=false;startView()}});
+ connection.on("close",()=>{online=false;render();msg("Teacher room disconnected. Ask your teacher to keep their browser tab open.")});
+ connection.on("error",e=>msg("Could not connect: "+e.message));
+ setTimeout(()=>{if(!game)msg("Room not found or teacher tab closed. Check the code and try again.")},10000);
+ });
+ peer.on("error",e=>msg("Connection error: "+e.message));
+ msg("Connecting to teacher…");
+};
+$("#demo").onclick=()=>{demo=true;host=true;mine="solo";room="DEMO";game={week:0,started:true,finished:false,players:{solo:newPlayer("solo",$("#nickname").value||"Player",3)}};startView()};
+$("#restart").onclick=()=>{if(host)$("#resetRoom")?.click();else location.reload()};
+window.addEventListener("beforeunload",()=>{if(peer)peer.destroy()});
+</script></html>
