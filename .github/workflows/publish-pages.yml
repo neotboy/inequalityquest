@@ -1,4 +1,4 @@
-name: Publish Life Race to GitHub Pages
+name: Publish Classroom Games to GitHub Pages
 on:
   push:
     branches: [main]
