@@ -30,3 +30,11 @@ If your GitHub username is `ms-smith` and your repository is named `power-game`,
 ## Updating the game later
 
 Edit `index.html`, commit the change to the `main` branch, and GitHub Pages will automatically republish the updated version.
+
+
+## Day 4: Major Sociological Theories
+
+The Sociology Casebook is a 20–25 minute team activity applying functionalism, conflict theory, and symbolic interactionism to three real cases.
+
+- [Open the Day 4 activity](https://neotboy.github.io/inequalityquest/day-4-theory-casebook/)
+- [Teacher answer dashboard](https://sociology-theory-showdown.neotboy.chatgpt.site/teacher.html)
