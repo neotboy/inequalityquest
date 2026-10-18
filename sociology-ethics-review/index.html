@@ -1,83 +1,115 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Seahaven Ethics Review Board | Sociology</title>
-<style>
-:root{--navy:#102b3f;--ink:#172d3c;--cream:#f6f2e9;--paper:#fffdf8;--teal:#167b78;--gold:#e9b85d;--muted:#667782;--line:#d9ded9;--red:#a94a40;--green:#28745c}
-*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 Arial,Helvetica,sans-serif}
-header{background:var(--navy);color:#f8f5ee;padding:36px max(22px,calc((100% - 1040px)/2));border-bottom:6px solid var(--gold)}
-.kicker{text-transform:uppercase;letter-spacing:.16em;font-weight:700;font-size:.76rem;color:#f3c96f}
-h1{font-family:Georgia,serif;font-size:clamp(2.1rem,5vw,3.5rem);line-height:1.02;margin:.45rem 0 .7rem}
-header p{max-width:720px;margin:0;color:#dce7e9}
-.wrap{max-width:1040px;margin:24px auto;padding:0 18px 48px}
-.toprow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);padding:14px 16px;border-radius:12px;margin:0 0 18px}
-.toprow label{font-weight:bold}.toprow input{min-width:190px;border:1px solid #aebbb9;border-radius:7px;padding:10px;font:inherit}
-.progressbox{margin-left:auto;min-width:190px;flex:1;max-width:320px}.progresslabel{display:flex;justify-content:space-between;font-size:.82rem;font-weight:bold;color:var(--muted)}.track{height:9px;background:#e4e8e3;border-radius:9px;overflow:hidden}.fill{height:100%;width:0;background:var(--teal);transition:width .25s}
-.notice{background:#e8f2ef;border-left:4px solid var(--teal);padding:12px 15px;border-radius:7px;margin-bottom:20px}
-.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;margin:15px 0;padding:20px 22px;box-shadow:0 4px 14px #1835440a}
-.cardhead{display:flex;gap:12px;align-items:flex-start}.num{width:36px;height:36px;flex:none;display:grid;place-items:center;background:var(--navy);color:white;border-radius:50%;font-weight:bold}
-h2{font:700 1.35rem Georgia,serif;margin:2px 0 4px}.tag{font-size:.73rem;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);font-weight:bold}.scene{background:#f1eee6;border-radius:8px;padding:12px 14px;margin:14px 0}
-.prompt{font-weight:700;margin:.8rem 0}.choices{display:grid;gap:8px}.choice{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);padding:10px 12px;border-radius:8px;cursor:pointer;background:white}.choice:hover{border-color:var(--teal)}.choice input{margin-top:5px;accent-color:var(--teal)}
-button{border:0;border-radius:8px;background:var(--teal);color:white;padding:10px 15px;font:700 .95rem Arial;cursor:pointer;margin-top:12px}button:hover{background:#105e5b}.secondary{background:#e5ece9;color:var(--navy)}.secondary:hover{background:#d1dfda}
-.feedback{padding:11px 13px;border-radius:8px;margin-top:12px;display:none}.feedback.show{display:block}.good{background:#e6f2ec;color:#205b48}.try{background:#fff0e8;color:#773f31}.written{display:grid;gap:12px;margin-top:12px}.written label{font-weight:bold}.written input,.written textarea{width:100%;padding:10px;border:1px solid #aebbb9;border-radius:7px;font:inherit;background:#fff}.written textarea{min-height:76px;resize:vertical}.answerline{display:none}
-.final{border:2px solid var(--gold);background:#fff9e8}.score{font:700 1.2rem Georgia,serif;color:var(--navy)}
-footer{text-align:center;color:var(--muted);font-size:.82rem;padding:12px}
-@media(max-width:620px){.progressbox{margin-left:0;max-width:none;width:100%}.card{padding:16px}.toprow input{width:100%}}
-@media print{body{background:white;font-size:11pt}header{background:white!important;color:#111;padding:0 0 14px;border-bottom:2px solid #111}header p,.kicker{color:#111}.wrap{max-width:none;margin:12px 0;padding:0}.toprow,.notice button,button,.feedback,.progressbox{display:none!important}.toprow{display:none}.card{box-shadow:none;border:1px solid #888;break-inside:avoid;margin:10px 0;padding:12px}.num{background:white;color:#111;border:1px solid #333}.scene{background:#f4f4f4}.answerline{display:block;border-bottom:1px solid #555;height:28px;margin:5px 0}.answerline.tall{height:54px}.choice{border:0;padding:4px 2px}.choice input{appearance:none;border:1px solid #333;width:13px;height:13px;border-radius:2px}.final{border:2px solid #555}footer{display:none}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#08111f">
+  <title>Escape from Seahaven | Sociology Game</title>
+  <meta name="description" content="A story-driven sociology review game inspired by The Truman Show.">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header>
-<div class="kicker">Sociology • Unit Review</div>
-<h1>The Seahaven Ethics<br>Review Board</h1>
-<p>Seahaven says it is a perfect town. Your job is to examine how it works, how it studies Truman, and whether the research is fair. Use the sociology tools you have learned to make a reasoned decision.</p>
-</header>
-<main class="wrap">
-<div class="toprow">
-<label for="student">Investigator/team:</label><input id="student" placeholder="Type your name or team">
-<div class="progressbox"><div class="progresslabel"><span>Board review progress</span><span id="progressText">0 / 8 checked</span></div><div class="track"><div class="fill" id="fill"></div></div></div>
-<button class="secondary" onclick="window.print()">Print review</button>
-</div>
-<div class="notice"><strong>Your task:</strong> Complete each case file, then write a short board verdict. Online answers are saved on this device. Use <em>Print review</em> for a paper copy. Be ready to explain your reasoning; several answers can be defensible if your evidence is clear.</div>
-<div id="cards"></div>
-<section class="card final" id="verdict">
-<div class="cardhead"><span class="num">★</span><div><div class="tag">Final decision • Board ruling</div><h2>Should the Seahaven study continue?</h2></div></div>
-<p>Write a 4–6 sentence ruling. Use at least <strong>two sociology concepts</strong>, name an ethical problem, and recommend one change that would protect Truman or improve the research.</p>
-<div class="written">
-<label for="ruling">Our ruling and evidence:</label><textarea id="ruling" placeholder="The board rules that…"></textarea>
-<label for="concepts">Concepts used (for example: conflict theory, social context, informed consent):</label><input id="concepts" placeholder="List at least two">
-</div>
-<div class="answerline tall"></div><div class="answerline tall"></div>
-<p class="score" id="score">Complete the eight case checks to see your review score.</p>
-<button class="secondary" onclick="finishReview()">Finish board review</button>
-<button class="secondary" onclick="window.print()">Print completed review</button>
-</section>
-<footer>Built for classroom review • Discuss the fictional study respectfully and support claims with evidence.</footer>
-</main>
-<script>
-const cases=[
-{tag:"1 · Sociological perspective",title:"The person and the system",scene:"Truman becomes anxious after noticing strange events around town. The producers also control his job, relationships, news, and access to information.",q:"Which question best uses a sociological perspective?",opts:["What individual fear might explain Truman’s anxiety?","How do Seahaven’s institutions and social rules shape Truman’s choices and anxiety?","Which personality trait makes Truman suspicious?","What treatment would reduce Truman’s symptoms?"],a:1,why:"Sociology examines how groups, institutions, culture, and social context shape behavior. Psychology can focus on an individual’s thoughts and feelings; both can help, but the question here is sociological."},
-{tag:"2 · Sociological imagination",title:"A private trouble or a public issue?",scene:"Truman feels trapped and thinks something is wrong with him. In Seahaven, many people follow scripts and depend on the show for work.",q:"Which response best connects a personal trouble to a larger public issue?",opts:["Truman is nervous because he is naturally cautious.","His distress may connect to a system that limits his choices, while workers’ livelihoods depend on keeping that system running.","Truman should simply try to relax.","Only Truman’s family can explain how he feels."],a:1,why:"The sociological imagination connects an individual experience to wider patterns and institutions. It does not erase Truman’s personal feelings; it adds social context."},
-{tag:"3 · Founders",title:"Four ways to read Seahaven",scene:"Early sociologists asked different questions about society. Match the thinker’s central idea to the Seahaven case.",q:"Which pairing is accurate?",opts:["Comte—study society systematically; Marx—focus on power and class; Durkheim—social bonds and shared rules; Weber—meaning and people’s motives.","Comte—only individual feelings; Marx—shared rituals; Durkheim—class conflict; Weber—biology determines society.","Comte—social bonds; Marx—meaning; Durkheim—science is impossible; Weber—class conflict only.","All four argued that people act without influence from society."],a:0,why:"These are useful starting points: Comte promoted a scientific study of society; Marx examined power and class; Durkheim studied social order and bonds; Weber examined meaning and social action."},
-{tag:"4 · Sociological theories",title:"Three lenses on one show",scene:"The show gives workers jobs, creates entertainment for viewers, and lets producers control what Truman can see. Viewers use phrases and symbols from the show to talk about him.",q:"Which set of theory-to-example matches is strongest?",opts:["Functionalism—jobs and shared entertainment; conflict theory—producers’ power over Truman; symbolic interactionism—shared meanings built through signs and everyday interactions.","Functionalism—Truman’s private anxiety; conflict theory—shared greetings; symbolic interactionism—the show’s job system.","Functionalism—producer control; conflict theory—social bonding only; symbolic interactionism—research variables.","All three theories mean the same thing, so the examples can’t be sorted."],a:0,why:"Functionalism looks at how parts of society work together; conflict theory examines unequal power; symbolic interactionism focuses on meanings created through interaction."},
-{tag:"5 · Scientific method",title:"Turn a concern into a test",scene:"The review board wants to study whether access to outside information changes how often Seahaven residents question the town’s rules.",q:"Which plan has a testable hypothesis and correctly identifies the variables?",opts:["Hypothesis: Residents with more access to outside news will question town rules more often. Independent variable: access to outside news. Dependent variable: how often rules are questioned.","Hypothesis: Seahaven is unfair. Independent variable: fairness. Dependent variable: society.","Hypothesis: People are complicated. Independent variable: residents. Dependent variable: news.","Hypothesis: Residents who read news are better people. Independent variable: goodness. Dependent variable: truth."],a:0,why:"A testable hypothesis predicts a relationship that can be measured. The independent variable is the factor being compared or changed; the dependent variable is the outcome measured."},
-{tag:"6 · Research methods",title:"Choose evidence that fits",scene:"The board has several questions: What do residents think? How does Truman describe his experience? How do workers behave? What patterns appear in the show’s scripts?",q:"Which method set best fits those questions?",opts:["Survey residents’ opinions; interview Truman about his experience; observe worker interactions; analyze scripts for repeated messages.","Run one experiment for every question, even if it would expose Truman to harm.","Use only a survey to learn what every person thinks, feels, and does.","Choose a method first, then change the question to fit it."],a:0,why:"Surveys can measure reported views, interviews explore experiences, observation records behavior, and content analysis finds patterns in texts or media. Methods should fit the research question."},
-{tag:"7 · Research ethics",title:"The consent problem",scene:"The producers secretly film Truman from birth, mislead him about his world, and give him no meaningful way to leave the study. They also broadcast private moments.",q:"Which ethical review is most accurate?",opts:["The study has major problems: no informed consent or right to withdraw, deception, risks of harm, and no confidentiality.","It is ethical because millions of viewers agree to watch.","It is ethical if the producers keep good notes and do not change the script.","Only confidentiality matters; the other protections are optional."],a:0,why:"Ethical research requires meaningful informed consent, protection from harm, appropriate confidentiality, careful limits on deception, and a real right to withdraw. The show fails several protections."},
-{tag:"8 · Researcher bias and review",title:"Who gets to tell the story?",scene:"The producers select which moments viewers see. A researcher who studies only those edited episodes may describe Truman as irrational and ignore the production system.",q:"What is the best response from the review board?",opts:["Treat the edited episodes as complete evidence because they are popular.","Name the possible selection bias, seek evidence from more than one source, and explain limits before making a claim.","Remove every episode that makes producers look bad.","Assume the researcher’s conclusion is correct if it sounds scientific."],a:1,why:"Researchers should notice how choices about sampling, recording, and interpretation can create bias. Triangulating sources and stating limitations make conclusions more responsible."}
-];
-const savedKey="seahaven-sociology-review-v1";
-let state={answers:{},name:"",ruling:"",concepts:""};
-try{state={...state,...JSON.parse(localStorage.getItem(savedKey)||"{}")}}catch(e){}
-function save(){state.name=document.getElementById("student").value;state.ruling=document.getElementById("ruling").value;state.concepts=document.getElementById("concepts").value;localStorage.setItem(savedKey,JSON.stringify(state));updateProgress()}
-function render(){const root=document.getElementById("cards");root.innerHTML=cases.map((c,i)=>'<section class="card"><div class="cardhead"><span class="num">'+(i+1)+'</span><div><div class="tag">'+c.tag+'</div><h2>'+c.title+'</h2></div></div><div class="scene">'+c.scene+'</div><p class="prompt">'+c.q+'</p><div class="choices">'+c.opts.map((o,j)=>'<label class="choice"><input type="radio" name="c'+i+'" value="'+j+'" onchange="selectAnswer('+i+','+j+')"><span>'+o+'</span></label>').join('')+'</div><button onclick="checkAnswer('+i+')">Check this case</button><div class="feedback" id="fb'+i+'"></div><div class="answerline"></div></section>').join('');
-document.querySelectorAll('input[name^="c"]').forEach(el=>{const i=+el.name.slice(1);if(state.answers[i]!==undefined&&+el.value===state.answers[i])el.checked=true});
-document.getElementById("student").value=state.name||"";document.getElementById("ruling").value=state.ruling||"";document.getElementById("concepts").value=state.concepts||"";updateProgress()}
-function selectAnswer(i,j){state.answers[i]=j;save()}
-function checkAnswer(i){const v=state.answers[i];const box=document.getElementById("fb"+i);box.className="feedback show "+(v===cases[i].a?"good":"try");box.innerHTML=(v===cases[i].a?"<strong>Board note: solid analysis.</strong> ":"<strong>Revisit this one.</strong> ")+cases[i].why;save()}
-function updateProgress(){const n=Object.keys(state.answers).length;document.getElementById("progressText").textContent=n+" / 8 checked";document.getElementById("fill").style.width=(n/8*100)+"%"}
-function finishReview(){save();const got=cases.reduce((n,c,i)=>n+(state.answers[i]===c.a?1:0),0);const hasText=state.ruling.trim().length>=40&&state.concepts.trim().length>0;document.getElementById("score").textContent="Case check score: "+got+" / 8. "+(hasText?"Your written ruling is saved on this device.":"Add a 4–6 sentence ruling and list two concepts before submitting your board decision.");document.getElementById("verdict").scrollIntoView({behavior:"smooth",block:"center"})}
-document.getElementById("student").addEventListener("input",save);document.getElementById("ruling").addEventListener("input",save);document.getElementById("concepts").addEventListener("input",save);render();
-</script>
-</body></html>
+  <div class="noise" aria-hidden="true"></div>
+  <main id="app">
+    <section id="start-screen" class="screen start-screen active" aria-labelledby="game-title">
+      <div class="broadcast-tag"><span></span> LIVE FROM SEAHEAVEN</div>
+      <div class="start-grid">
+        <div class="title-wrap">
+          <p class="eyebrow">A sociology story game</p>
+          <h1 id="game-title">ESCAPE<br><em>FROM</em><br>SEAHAVEN</h1>
+          <p class="intro">Everything looks perfect. Everyone is smiling. And every choice has already been made for you. Break the patterns, collect evidence, and escape before Christof takes back control.</p>
+          <div class="start-facts"><span>SOLO GAME</span><span>25–35 MINUTES</span><span>TEST REVIEW</span></div>
+          <label class="name-field">Investigator name
+            <input id="player-name" maxlength="24" autocomplete="off" placeholder="Enter your name">
+          </label>
+          <button id="start-btn" class="primary-btn">Start the Broadcast <span>→</span></button>
+        </div>
+        <div class="tv-stage" aria-hidden="true">
+          <div class="tv-frame">
+            <div class="tv-screen">
+              <div class="sun"></div><div class="cloud c1"></div><div class="cloud c2"></div>
+              <div class="house h1"></div><div class="house h2"></div><div class="road"></div>
+              <div class="truman"><div class="head"></div><div class="body"></div></div>
+              <div class="scanlines"></div>
+              <div class="camera-label"><b>CAM 04</b><span>● REC</span></div>
+            </div>
+            <div class="tv-controls"><i></i><i></i><i></i></div>
+          </div>
+          <p class="hand-note">Find the pattern.<br>Question the world.<br>Reach the door.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="game-screen" class="screen" aria-live="polite">
+      <header class="game-header">
+        <button id="home-btn" class="icon-btn" aria-label="Return to start">⌂</button>
+        <div class="chapter-info">
+          <span id="chapter-kicker">CHAPTER 1 OF 7</span>
+          <strong id="chapter-title">Good Morning, Seahaven</strong>
+        </div>
+        <div class="meter-wrap escape-wrap">
+          <div class="meter-label"><span>ESCAPE METER</span><b id="meter-value">0%</b></div>
+          <div class="meter"><div id="meter-fill"></div></div>
+        </div>
+        <div class="time-box"><span>TIME</span><b id="time-value">00:00</b></div>
+        <button id="sound-btn" class="icon-btn" aria-label="Toggle sound">♪</button>
+      </header>
+
+      <div class="game-layout">
+        <aside class="case-file">
+          <div class="file-heading"><span>CONFIDENTIAL</span><h2>CASE FILE</h2></div>
+          <div class="stat-row"><span>Evidence</span><b id="evidence-count">0</b></div>
+          <div class="stat-row"><span>Correct</span><b id="correct-count">0</b></div>
+          <div class="control-wrap">
+            <div class="control-label"><span>CHRISTOF'S CONTROL</span><b id="control-value">15%</b></div>
+            <div class="control-meter"><div id="control-fill"></div></div>
+          </div>
+          <div class="evidence-board" id="evidence-board">
+            <p id="empty-evidence">Clues you uncover will appear here.</p>
+          </div>
+          <div class="abilities" id="abilities"></div>
+          <button id="hint-btn" class="hint-btn hidden">⚡ Use Glitch Card (<span id="hint-count">0</span>)</button>
+        </aside>
+
+        <section class="scene-card">
+          <div class="scene-visual" id="scene-visual">
+            <div class="scene-number" id="scene-number">01</div>
+            <div class="scene-icon" id="scene-icon">☀</div>
+            <div class="scene-caption" id="scene-caption">MORNING ROUTINE • 6:30 AM</div>
+          </div>
+          <div class="scene-content">
+            <div id="story-text" class="story-text"></div>
+            <div id="challenge-area" class="challenge-area"></div>
+            <div id="feedback" class="feedback" role="status"></div>
+            <button id="continue-btn" class="primary-btn continue-btn hidden">Continue <span>→</span></button>
+          </div>
+        </section>
+
+        <nav class="chapter-map" aria-label="Game chapters">
+          <h2>THE ROUTE</h2>
+          <ol id="chapter-list"></ol>
+        </nav>
+      </div>
+    </section>
+
+    <section id="end-screen" class="screen end-screen">
+      <div class="door-light"></div>
+      <div class="end-card">
+        <p class="eyebrow">Transmission ended</p>
+        <h1>YOU FOUND<br>THE EXIT.</h1>
+        <p id="end-message"></p>
+        <div class="result-stamp" id="result-stamp"></div>
+        <div class="final-stats">
+          <div><b id="final-correct">0</b><span>Correct</span></div>
+          <div><b id="final-evidence">0</b><span>Evidence</span></div>
+          <div><b id="final-score">0%</b><span>Mastery</span></div>
+          <div><b id="final-time">0:00</b><span>Time</span></div>
+        </div>
+        <div id="mastery-report" class="mastery-report"></div>
+        <button id="restart-btn" class="primary-btn">Play Again <span>↻</span></button>
+      </div>
+    </section>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
