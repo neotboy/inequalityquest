@@ -78,3 +78,16 @@ header{position:relative;border-bottom:0}header::after{content:"";position:absol
  .decision-top{align-items:flex-start;flex-direction:column;gap:8px}
  .progress-track{width:100%}
 }
+
+@media(min-width:901px){
+ .main-govern .governance-meters{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .main-govern .meter-heading{grid-column:1/-1}
+ .main-govern #countryName{font-size:clamp(20px,2vw,29px)}
+}
+@media(max-width:1100px){
+ .main-govern .governance-meters{grid-template-columns:1fr}
+ .main-govern .meter-heading{grid-column:auto}
+}
+@media(max-width:650px){
+ .main-govern #tools{max-height:none;overflow:visible}
+}
