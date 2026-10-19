@@ -91,3 +91,23 @@ header{position:relative;border-bottom:0}header::after{content:"";position:absol
 @media(max-width:650px){
  .main-govern #tools{max-height:none;overflow:visible}
 }
+
+/* Government-first decisions, practical map places, and plain-language law choices */
+.governance-meters{grid-template-columns:repeat(5,minmax(0,1fr))}
+.meter-approval{background:#c8a76a}.meter-budget{background:#6fa393}
+.map-categories{display:flex;gap:6px;overflow-x:auto;padding:2px 0 9px;scrollbar-width:thin}
+.map-categories button{white-space:nowrap;font-size:10px;padding:8px 10px;background:#1c3039;border:1px solid #52656a;color:#d7e0d8}
+.map-categories button.selected{background:#c8a76a;border-color:#e5c989;color:#14232a}
+.sticker-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.sticker small{font-size:9px;line-height:1.2}
+.law-subhead{font-size:9px;letter-spacing:.12em;color:#c8a76a;font-weight:800;margin:16px 0 7px}
+.law-ideas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:12px}
+.law-idea{display:flex;flex-direction:column;gap:5px;text-align:left;padding:10px;background:#1c3039;border:1px solid #52656a;color:#e9e3d2}
+.law-idea b{font-size:11px;color:#f0d49c}
+.law-idea span{font-size:10px;line-height:1.4;font-weight:400;color:#c4cec7}
+.law-idea:hover,.law-idea:focus-visible{border-color:#c8a76a}
+#addLaw:disabled{opacity:.55;cursor:not-allowed}
+.crisis-kicker{font-size:9px;letter-spacing:.15em;font-weight:800;color:#dc8a76;margin-top:15px}
+.choice-impact{display:block;border-top:1px solid #43585e;padding-top:7px;margin-top:8px;font-size:9px;letter-spacing:.02em;color:#c8a76a;line-height:1.5}
+@media(max-width:1000px){.governance-meters{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.governance-meters{grid-template-columns:repeat(2,minmax(0,1fr))}.meter-heading{grid-column:1/-1}.law-ideas{grid-template-columns:1fr}.sticker-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
