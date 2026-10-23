@@ -53,10 +53,10 @@
 const events=[
  {id:"assassination",date:"June 28, 1914",title:"Killing in Sarajevo",text:"Gavrilo Princip killed Franz Ferdinand and Sophie. Some Black Hand members helped the attackers get weapons. Serbia’s government did not order the killing."},
  {id:"ultimatum",date:"July 5–25, 1914",title:"A deadline for Serbia",text:"Germany promised to help Austria-Hungary. Austria-Hungary gave Serbia 48 hours to agree to its demands. Serbia agreed to most, but said no to Austrian officials investigating in Serbia."},
- {id:"serbia-war",date:"July 28–30, 1914",title:"Austria-Hungary declares war",text:"Austria-Hungary declared war on Serbia. Russia chose to help Serbia and called up its army on July 30. No deal forced Russia to fight."},
+ {id:"serbia-war",date:"July 28–30, 1914",title:"Austria-Hungary declares war",text:"Austria-Hungary declared war on Serbia. Russia chose to help Serbia and called up its army on July 30."},
  {id:"germany-war",date:"August 1–3, 1914",title:"Germany declares war",text:"Germany declared war on Russia, then France. Germany planned to attack France through Belgium."},
  {id:"belgium",date:"August 4, 1914",title:"Germany enters Belgium",text:"Germany invaded Belgium, a country that had promised to stay out of wars. Britain declared war on Germany that day, partly to protect Belgium."},
- {id:"world",date:"1914–1916",title:"The war spreads overseas",text:"Japan joined the Allies. The Ottoman Empire joined Germany and Austria-Hungary. Italy stayed out in 1914, then joined the Allies. Empires sent colonial soldiers."},
+ {id:"world",date:"1914–1916",title:"The war spreads overseas",text:"Japan joined the Allies. The Ottoman Empire joined Germany and Austria-Hungary. Italy stayed out in 1914, then joined the Allies. Soldiers from colonies fought in the war."},
  {id:"united-states",date:"April 6, 1917",title:"The U.S. joins the war",text:"Germany restarted submarine attacks. The Zimmermann Telegram was a secret message asking Mexico to fight the U.S. The U.S. joined in 1917. The Lusitania sank in 1915, but the U.S. stayed out then."}
 ];
 const orderIds=events.map(e=>e.id);
@@ -137,15 +137,15 @@ function renderFinalChain(){
  $("finalChain").innerHTML=orderIds.map((id,i)=>{const e=events.find(x=>x.id===id);return '<div class="slot filled"><span class="slot-num">'+(i+1)+'</span><span class="slot-text">'+e.title+'</span></div>'}).join("");
 }
 function finishGame(){
- gameComplete=true;$("toppleMessage").textContent="Chain complete!";
+ gameComplete=true;$("toppleMessage").textContent="Chain complete!";$("topple").hidden=true;
  $("finalChain").querySelectorAll(".slot").forEach((e,i)=>{e.classList.add("falling");e.style.animationDelay=(i*.18)+"s"});
- $("finishResult").innerHTML='<strong>You finished all three tasks!</strong><p>Alliances helped spread the war. Leaders still made separate choices; no one treaty forced every country to fight.</p><button class="btn secondary" id="restart" style="margin-top:8px">Play again</button>';
+ $("finishResult").innerHTML='<strong>You finished all three tasks!</strong><p>Alliances helped spread the war. Each country’s leaders chose whether to join. No single alliance made every country fight.</p><button class="btn secondary" id="restart" style="margin-top:8px">Play again</button>';
  $("finishResult").classList.add("show");$("topple").disabled=true;
  $("restart").addEventListener("click",restart);
 }
 function restart(){
  shuffled=shuffle(events);placed=Array(events.length).fill(null);selected=null;orderComplete=false;matched=new Set();selectedFirst=null;gameComplete=false;rightOrder=shuffle(pairs);
- $("matchResult").classList.remove("show");$("matchResult").innerHTML="";$("finishResult").classList.remove("show");$("finishResult").innerHTML="";$("topple").disabled=false;
+ $("matchResult").classList.remove("show");$("matchResult").innerHTML="";$("finishResult").classList.remove("show");$("finishResult").innerHTML="";$("topple").disabled=false;$("topple").hidden=false;
  $("orderTask").classList.remove("hidden");$("matchTask").classList.add("hidden");$("toppleTask").classList.add("hidden");
  $("orderMessage").textContent="Fill spots 1–7, from first event to last.";$("matchMessage").textContent="Match all four pairs to finish this step.";$("orderResult").classList.remove("show");$("orderResult").innerHTML="";
  setStep(1);renderOrder();renderFinalChain();
