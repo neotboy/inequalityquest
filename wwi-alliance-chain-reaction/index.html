@@ -3,77 +3,103 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="A short World War I domino-chain activity about what happened in 1914–1917.">
-<title>Dominoes to World War | A WWI History Game</title>
+<meta name="description" content="Arrange the real events that widened World War I into a domino chain.">
+<title>Build the WWI Domino Chain</title>
 <style>
-:root{--ink:#172733;--navy:#173344;--navy2:#102936;--paper:#f6f2e8;--card:#fffdf8;--line:#ded7c9;--muted:#58666d;--red:#b34236;--gold:#e5b850;--green:#39755b;--shadow:0 12px 30px #14293613}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}button{font:inherit}h1,h2,h3,p{margin-top:0}.top{max-width:900px;margin:auto;padding:16px 22px;display:flex;justify-content:space-between;align-items:center}.brand{font-size:.78rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.tag{font-size:.75rem;color:var(--muted);font-weight:800}main{max-width:900px;margin:auto;padding:8px 22px 40px}.intro,.game{background:var(--navy2);color:white;border-radius:24px;padding:clamp(23px,5vw,44px);box-shadow:var(--shadow)}.eyebrow{color:var(--gold);font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:900}.intro h1{font:700 clamp(2.5rem,7vw,4.5rem)/.98 Georgia,serif;margin:10px 0 15px;max-width:680px}.intro p{max-width:680px;color:#e3ebeb;margin-bottom:18px}.btn{border:0;border-radius:999px;background:var(--red);color:white;font-weight:900;padding:13px 20px;cursor:pointer;box-shadow:0 4px 0 #792e27;transition:transform .15s}.btn:hover{transform:translateY(-2px)}.caution{margin-top:16px;background:#ffffff10;border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 14px;color:#e7eeee;font-size:.88rem}.causes{margin:16px 0;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:19px 20px}.causes h2{font:700 1.35rem Georgia,serif;margin:0 0 12px}.cause-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.cause{background:#f0ece2;border-radius:12px;padding:11px}.cause b{display:block;color:var(--red);font-size:.73rem;text-transform:uppercase;letter-spacing:.06em}.cause span{font-size:.82rem;color:#394a53}.game{display:none}.game.active{display:block;animation:rise .25s ease}.game-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:17px}.game-label{font-size:.75rem;color:var(--gold);font-weight:900;letter-spacing:.08em;text-transform:uppercase}.count{background:#ffffff14;border:1px solid #ffffff28;border-radius:999px;padding:6px 11px;font-size:.75rem;font-weight:900}.progress{height:8px;background:#ffffff20;border-radius:99px;overflow:hidden;margin:0 0 22px}.progress span{display:block;height:100%;width:0;background:var(--gold);transition:width .35s}.domino{position:relative;background:var(--card);color:var(--ink);border-radius:18px;padding:clamp(20px,4vw,31px);min-height:245px;transform-origin:bottom center;box-shadow:0 8px 0 #d1c8b8;transition:opacity .2s}.domino.fall{animation:fall .45s ease}.domino .date{display:inline-block;color:var(--red);font-weight:900;font-size:.77rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}.domino h2{font:700 clamp(1.6rem,4vw,2.3rem)/1.1 Georgia,serif;margin:0 0 12px}.domino p{max-width:740px;margin:0;color:#364851}.link{border-top:1px solid var(--line);margin-top:18px;padding-top:13px;color:#58666d;font-size:.88rem}.link b{color:var(--red)}.controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:24px}.controls .hint{font-size:.82rem;color:#dbe5e5;margin:0}.finish{display:none;margin-top:16px;border-radius:14px;background:#ffffff12;padding:14px 16px;color:#eef2ef}.finish.show{display:block}.finish strong{color:var(--gold)}.foot{max-width:900px;margin:0 auto;padding:0 22px 18px;color:#65737a;font-size:.75rem;display:flex;justify-content:space-between;gap:10px}.hidden{display:none!important}
-@keyframes rise{from{opacity:.4;transform:translateY(5px)}to{opacity:1;transform:none}}@keyframes fall{0%{transform:rotate(0) translateY(0);opacity:.75}45%{transform:rotate(2deg) translateY(7px)}100%{transform:rotate(0) translateY(0);opacity:1}}
-@media(max-width:650px){main{padding:6px 14px 30px}.top{padding:13px 14px}.cause-grid{grid-template-columns:repeat(2,1fr)}.controls{align-items:flex-start;flex-direction:column}.tag{font-size:.65rem}}
+:root{--ink:#172733;--navy:#173344;--navy2:#102936;--paper:#f6f2e8;--card:#fffdf8;--line:#ded7c9;--muted:#58666d;--red:#b34236;--gold:#e5b850;--green:#39755b;--green-bg:#e5f0e7;--wrong:#aa392e;--wrong-bg:#fae9e5;--shadow:0 12px 30px #14293613}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}button{font:inherit}h1,h2,h3,p{margin-top:0}.top{max-width:1050px;margin:auto;padding:15px 22px;display:flex;justify-content:space-between;align-items:center}.brand{font-size:.76rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.tag{font-size:.75rem;color:var(--muted);font-weight:800}main{max-width:1050px;margin:auto;padding:8px 22px 35px}.hero{background:var(--navy2);color:white;border-radius:22px;padding:clamp(21px,4vw,34px);box-shadow:var(--shadow)}.eyebrow{color:var(--gold);font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;font-weight:900}.hero h1{font:700 clamp(2.15rem,5vw,3.4rem)/1.02 Georgia,serif;margin:8px 0 10px}.hero p{max-width:750px;color:#e3ebeb;margin:0}.causebar{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 15px;color:var(--muted);font-size:.84rem}.causebar b{color:var(--red)}.causebar span{color:var(--ink);font-weight:800}.game{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:clamp(17px,3vw,25px);box-shadow:var(--shadow)}.game-head{display:flex;justify-content:space-between;gap:12px;align-items:start}.game-head h2{font:700 1.55rem Georgia,serif;margin:0 0 3px}.game-head p{color:var(--muted);font-size:.86rem;margin:0}.counter{border-radius:999px;background:#e6edf0;color:var(--navy);font-weight:900;padding:7px 11px;font-size:.76rem;white-space:nowrap}.playarea{display:grid;grid-template-columns:.95fr 1.05fr;gap:14px;margin-top:16px}.panel{border:1px solid var(--line);border-radius:15px;padding:14px;background:#f5f1e8}.panel h3{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin:0 0 10px}.slots{display:grid;gap:7px}.slot{display:grid;grid-template-columns:33px 1fr;align-items:center;gap:9px;width:100%;min-height:55px;text-align:left;border:1px dashed #b9b2a5;background:#fffdf8;color:var(--muted);border-radius:10px;padding:7px;cursor:pointer}.slot:hover,.slot:focus-visible{border-color:var(--red)}.slot-num{width:28px;height:28px;display:grid;place-items:center;background:#e9e4d8;border-radius:50%;font-weight:900;color:var(--ink);font-size:.76rem}.slot-text{font-size:.81rem;line-height:1.25}.slot.filled{border-style:solid;border-color:#aeb8bb;color:var(--ink)}.slot.selected-target{outline:2px solid var(--gold)}.slot.correct{border-color:#91b69b;background:var(--green-bg)}.slot.incorrect{border-color:#d38e82;background:var(--wrong-bg)}.pile{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.tile{border:1px solid var(--line);background:white;border-radius:11px;text-align:left;padding:10px;cursor:pointer;color:var(--ink);min-height:115px;transition:transform .12s,border-color .12s}.tile:hover{transform:translateY(-2px);border-color:var(--navy)}.tile.selected{outline:3px solid var(--gold);border-color:var(--gold)}.tile.placed{display:none}.tile-date{display:block;font-size:.66rem;font-weight:900;color:var(--red);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}.tile strong{display:block;font-size:.86rem;line-height:1.15;margin-bottom:5px}.tile span:last-child{display:block;color:#4d5a60;font-size:.74rem;line-height:1.3}.actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}.message{font-size:.86rem;color:var(--muted);margin:0;min-height:1.3em}.btn{border:0;border-radius:999px;background:var(--red);color:white;font-weight:900;padding:11px 17px;cursor:pointer;box-shadow:0 3px 0 #792e27}.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}.btn.secondary{background:var(--navy);box-shadow:0 3px 0 #0d202b}.result{display:none;margin-top:14px;border-radius:13px;padding:14px;background:var(--green-bg);border:1px solid #b1cfb8}.result.show{display:block}.result strong{color:var(--green)}.result p{margin:4px 0 0;color:#33463c;font-size:.88rem}.domino-row{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:13px}.falling{animation:tip .45s ease both}.foot{max-width:1050px;margin:auto;padding:0 22px 16px;color:#65737a;font-size:.73rem;display:flex;justify-content:space-between;gap:10px}
+@keyframes tip{0%{transform:rotate(0);opacity:.6}60%{transform:rotate(9deg);opacity:1}100%{transform:rotate(0);opacity:1}}
+@media(max-width:760px){main{padding:7px 14px 28px}.top{padding:12px 14px}.playarea{grid-template-columns:1fr}.slots{grid-template-columns:repeat(2,minmax(0,1fr))}.slot{min-height:60px}.pile{grid-template-columns:repeat(2,minmax(0,1fr))}.domino-row{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:420px){.game-head{flex-direction:column}.actions{align-items:stretch;flex-direction:column}.actions .btn{width:100%}.tile{min-height:130px;padding:8px}.tile strong{font-size:.8rem}}
 </style>
 </head>
 <body>
 <header class="top"><div class="brand">World History · Day 4</div><div class="tag">SS.9–12.WH.29</div></header>
 <main>
-<section class="intro" id="intro">
-  <span class="eyebrow">A history domino game</span>
-  <h1>How did a local crisis become a world war?</h1>
-  <p>Follow what happened from the 1914 assassination to the wider war. Tap once to topple each next domino.</p>
-  <button class="btn" id="start">Start the chain →</button>
-  <div class="caution"><b>Keep in mind:</b> The dominoes show the order of events. They do not mean war was automatic. Leaders made separate choices.</div>
+<section class="hero">
+ <span class="eyebrow">Build the real domino chain</span>
+ <h1>Put the events of World War I in order.</h1>
+ <p>Tap a history tile, then tap the spot where it belongs. Check your chain, fix any mix-ups, and watch the real events topple.</p>
 </section>
-<section class="causes" aria-label="Why Europe was tense">
-  <h2>Europe was already tense</h2>
-  <div class="cause-grid">
-    <div class="cause"><b>Nationalism</b><span>Some people wanted self-rule.</span></div>
-    <div class="cause"><b>Militarism</b><span>Countries built up their armies.</span></div>
-    <div class="cause"><b>Alliances</b><span>Countries made support deals.</span></div>
-    <div class="cause"><b>Imperialism</b><span>Countries competed for land and power.</span></div>
-  </div>
-</section>
-<section class="game" id="game" aria-live="polite">
-  <div class="game-top"><span class="game-label">The real events</span><span class="count" id="count">Domino 1 of 7</span></div>
-  <div class="progress" aria-hidden="true"><span id="progress"></span></div>
-  <article class="domino" id="domino">
-    <span class="date" id="date"></span>
-    <h2 id="title"></h2>
-    <p id="detail"></p>
-    <p class="link" id="link"></p>
-  </article>
-  <div class="controls">
-    <p class="hint" id="hint">Read this tile, then topple the next one.</p>
-    <button class="btn" id="next">Topple the next domino →</button>
-  </div>
-  <div class="finish" id="finish"><strong>Chain complete.</strong> Alliances helped spread the war, but leaders’ choices kept widening it.</div>
+<div class="causebar"><b>Why Europe was tense:</b> <span>nationalism</span> (self-rule) · <span>militarism</span> (bigger armies) · <span>alliances</span> (support deals) · <span>imperialism</span> (land and power)</div>
+<section class="game" aria-labelledby="gameTitle">
+ <div class="game-head"><div><h2 id="gameTitle">Build the chain</h2><p>Fill spots 1–7, from first event to last.</p></div><span class="counter" id="counter">0 of 7 placed</span></div>
+ <div class="playarea">
+  <div class="panel"><h3>Event order</h3><div class="slots" id="slots"></div></div>
+  <div class="panel"><h3>Mixed-up history tiles</h3><div class="pile" id="pile"></div></div>
+ </div>
+ <div class="actions"><p class="message" id="message" aria-live="polite">Choose a tile, then choose a numbered spot.</p><button class="btn" id="check" disabled>Check the chain</button></div>
+ <div class="result" id="result" aria-live="polite"></div>
 </section>
 </main>
-<footer class="foot"><span>Follow the real timeline · No decisions to guess</span><span>World War I · 1914–1917</span></footer>
+<footer class="foot"><span>Real events · No what-if decisions</span><span>World War I · 1914–1917</span></footer>
 <script>
 const events=[
- {date:"June 28, 1914",title:"The assassination",detail:"Gavrilo Princip, a Bosnian Serb nationalist, killed Archduke Franz Ferdinand and his wife Sophie in Sarajevo. Some Serbian army officers linked to the Black Hand helped the plotters get weapons. There is no evidence Serbia’s government ordered the killing.",link:"Austria-Hungary blamed Serbia, and the crisis began."},
- {date:"July 5–25, 1914",title:"A promise, then a demand",detail:"Germany promised to support Austria-Hungary. On July 23, Austria-Hungary gave Serbia 48 hours to accept its demands. Serbia said yes to most, but no to Austrian officials helping investigate inside Serbia.",link:"Austria-Hungary said Serbia’s answer was not enough."},
- {date:"July 28–30, 1914",title:"Austria-Hungary attacks Serbia",detail:"Austria-Hungary declared war on Serbia on July 28. Russia chose to support Serbia and ordered a general call-up of troops on July 30. Russia was not forced to fight for Serbia by a treaty.",link:"Germany saw Russia’s call-up as a threat and acted."},
- {date:"August 1–3, 1914",title:"Germany declares war",detail:"Germany declared war on Russia on August 1 and France on August 3. German leaders followed a plan to attack France through Belgium while also preparing to fight Russia.",link:"The plan brought the fighting into Belgium."},
- {date:"August 4, 1914",title:"War reaches Belgium and Britain",detail:"German troops entered neutral Belgium on their way to France. Britain declared war on Germany that day. Belgium’s neutrality was a major reason; Britain’s own security also mattered.",link:"More countries joined, and empires brought the war overseas."},
- {date:"1914–1916",title:"The war spreads overseas",detail:"Japan joined the Allies in 1914. The Ottoman Empire joined Germany and Austria-Hungary later that year. Britain and France also brought soldiers from their colonies into the war.",link:"Fighting spread through Africa, the Middle East, Asia, and the Pacific."},
- {date:"April 6, 1917",title:"The United States joins",detail:"Germany restarted submarine attacks on ships in 1917. A secret message, the Zimmermann Telegram, asked Mexico to join a war against the U.S. The U.S. declared war on Germany on April 6.",link:"The Lusitania sank in 1915 and increased U.S. anger, but the U.S. did not enter the war then."}
+ {id:"assassination",date:"June 28, 1914",title:"Assassination in Sarajevo",text:"Gavrilo Princip, a Bosnian Serb nationalist, killed Franz Ferdinand and Sophie. Some Serbian officers linked to the Black Hand helped the plotters get weapons. There is no proof Serbia’s government ordered it."},
+ {id:"ultimatum",date:"July 5–25, 1914",title:"Germany backs Austria-Hungary",text:"Germany promised support to Austria-Hungary. Serbia accepted most Austro-Hungarian demands but rejected Austrian officials investigating inside Serbia."},
+ {id:"serbia-war",date:"July 28–30, 1914",title:"Austria-Hungary declares war",text:"Austria-Hungary declared war on Serbia. Russia chose to support Serbia and called up its army. No treaty forced Russia to fight."},
+ {id:"germany-war",date:"August 1–3, 1914",title:"Germany declares war",text:"Germany declared war on Russia, then France. Its plan sent troops through Belgium to attack France."},
+ {id:"belgium",date:"August 4, 1914",title:"Britain joins the war",text:"Germany invaded neutral Belgium. Britain declared war that day. Belgium and Britain’s own security were both reasons."},
+ {id:"world",date:"1914–1916",title:"The war spreads overseas",text:"Japan joined the Allies. The Ottoman Empire joined Germany. Italy stayed neutral, then joined the Allies. Empires brought colonial soldiers into the war."},
+ {id:"united-states",date:"April 6, 1917",title:"The United States joins",text:"Germany restarted submarine attacks and sent the Zimmermann Telegram, asking Mexico to fight the U.S. The Lusitania sank earlier, but the U.S. did not join then."}
 ];
-let current=-1;
+const chronological=events.map(e=>e.id);
+let shuffled=shuffleTiles();
+let placed=Array(events.length).fill(null);
+let selected=null;
+let attempts=0;
+let complete=false;
 const $=id=>document.getElementById(id);
-function showEvent(i){
- const e=events[i];current=i;
- $("game").classList.add("active");
- if(i===0) $("game").scrollIntoView({behavior:"smooth",block:"start"});
- $("count").textContent="Domino "+(i+1)+" of "+events.length;
- $("progress").style.width=((i+1)/events.length*100)+"%";
- $("date").textContent=e.date;$("title").textContent=e.title;$("detail").textContent=e.detail;
- $("link").innerHTML="<b>Next:</b> "+e.link;
- $("domino").classList.remove("fall");void $("domino").offsetWidth;$("domino").classList.add("fall");
- if(i===events.length-1){$("next").textContent="Start again ↻";$("hint").textContent="You reached the end of the real timeline.";$("finish").classList.add("show")}
- else{$("next").textContent="Topple the next domino →";$("hint").textContent="Read this tile, then topple the next one.";$("finish").classList.remove("show")}
+function shuffleTiles(){const a=[...events];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}if(a.every((e,i)=>e.id===chronological[i]))[a[0],a[1]]=[a[1],a[0]];return a}
+function render(){
+ const used=new Set(placed.filter(Boolean));
+ $("counter").textContent=placed.filter(Boolean).length+" of "+events.length+" placed";
+ $("slots").innerHTML=placed.map((id,i)=>{
+  const e=events.find(x=>x.id===id);
+  const mark=complete?" correct":(attempts&&id? (id===chronological[i]?" correct":" incorrect"):"");
+  return '<button class="slot'+(id?" filled":"")+(selected===id&&id?" selected-target":"")+mark+'" data-slot="'+i+'"><span class="slot-num">'+(i+1)+'</span><span class="slot-text">'+(e?e.date+"<br><b>"+e.title+"</b>":"Tap to place tile")+'</span></button>'
+ }).join("");
+ $("pile").innerHTML=shuffled.map(e=>{
+  const inSlot=placed.includes(e.id);
+  return '<button class="tile'+(inSlot?" placed":"")+(selected===e.id?" selected":"")+'" data-tile="'+e.id+'"><span class="tile-date">'+e.date+'</span><strong>'+e.title+'</strong><span>'+e.text+'</span></button>'
+ }).join("");
+ $("check").disabled=complete||placed.some(x=>!x);
+ $("slots").querySelectorAll("[data-slot]").forEach(b=>b.addEventListener("click",()=>tapSlot(Number(b.dataset.slot))));
+ $("pile").querySelectorAll("[data-tile]").forEach(b=>b.addEventListener("click",()=>tapTile(b.dataset.tile)));
 }
-$("start").addEventListener("click",()=>showEvent(0));
-$("next").addEventListener("click",()=>{if(current===events.length-1){current=-1;$("finish").classList.remove("show");showEvent(0)}else showEvent(current+1)});
+function tapTile(id){
+ if(complete)return;
+ if(placed.includes(id)){
+  const i=placed.indexOf(id);placed[i]=null;selected=id;
+ }else selected=selected===id?null:id;
+ attempts=0;$("result").classList.remove("show");$("message").textContent=selected?"Now tap a numbered spot.":"Choose a tile, then choose a numbered spot.";
+ render();
+}
+function tapSlot(i){
+ if(complete)return;
+ if(placed[i]){selected=placed[i];placed[i]=null}
+ else if(selected){placed[i]=selected;selected=null}
+ else{$("message").textContent="Choose a tile first, then tap this spot.";return}
+ attempts=0;$("result").classList.remove("show");$("message").textContent=selected?"Now tap a numbered spot.":"Choose a tile, then choose a numbered spot.";
+ render();
+}
+$("check").addEventListener("click",()=>{
+ attempts++;
+ const wrong=placed.findIndex((id,i)=>id!==chronological[i]);
+ if(wrong>=0){
+  $("message").textContent="Not quite. Check spot "+(wrong+1)+" and try again.";
+  $("result").classList.remove("show");render();return;
+ }
+ complete=true;$("message").textContent="That’s the real order!";
+ $("result").innerHTML='<strong>Chain complete!</strong><p>Alliances mattered, but no treaty forced every country to fight. Leaders made choices that widened the war.</p><div class="domino-row">'+events.map((e,i)=>'<span class="slot filled falling" style="animation-delay:'+(.18*i)+'s"><span class="slot-num">'+(i+1)+'</span><span class="slot-text">'+e.title+'</span></span>').join("")+'</div><button class="btn secondary" id="again" style="margin-top:12px">Shuffle and play again</button>';
+ $("result").classList.add("show");render();
+ $("again").addEventListener("click",restart);
+});
+function restart(){
+ shuffled=shuffleTiles();placed=Array(events.length).fill(null);selected=null;attempts=0;complete=false;
+ $("result").classList.remove("show");$("result").innerHTML="";$("message").textContent="Choose a tile, then choose a numbered spot.";render();
+}
+render();
 </script>
 </body>
 </html>
