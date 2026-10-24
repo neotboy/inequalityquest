@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Make a Peace Plan</title><style>
+:root{--navy:#19364b;--red:#a33d36;--gold:#e6bd64;--paper:#f4efe4;--card:#fffdf8;--ink:#22313b;--muted:#526571;--line:#d8cfbd}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.45 system-ui,Segoe UI,Arial,sans-serif}
+header{background:var(--navy);color:white;border-bottom:7px solid var(--gold);padding:24px 18px}.wrap{max-width:850px;margin:auto;padding:0 16px}
+.kicker{font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#f1d991;font-size:.8rem}
+h1{font-size:clamp(2.1rem,5vw,3.2rem);line-height:1.03;margin:6px 0}header p{margin:6px 0;color:#e8eff2}
+main{padding:18px 0 48px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:13px 0;box-shadow:0 4px 12px #19364b0a}
+h2{margin:0 0 8px;color:var(--navy);font-size:1.45rem}h3{margin:0;color:var(--navy);font-size:1.15rem}
+p{margin:7px 0}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin:12px 0}.step{background:#f3eee3;border-radius:8px;padding:10px;font-weight:750}
+.callout{background:#edf3ef;border-left:5px solid #59816e;padding:11px 13px;border-radius:7px;margin:10px 0}
+.prompt{border-top:1px solid var(--line);padding:15px 0}.prompt:first-of-type{border-top:0}
+.options{display:grid;gap:8px;margin:10px 0}.choice{display:flex;gap:9px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:#fff;cursor:pointer}.choice:hover{border-color:var(--red)}input[type=radio]{margin-top:5px;accent-color:var(--red);transform:scale(1.15)}
+label{font-weight:800;display:block;color:var(--navy);margin:8px 0 5px}
+textarea,input[type=text]{width:100%;font:inherit;color:var(--ink);padding:10px 11px;border:2px solid #cfc5b3;border-radius:8px;background:white}
+textarea{min-height:65px;resize:vertical}input[type=text]{min-height:44px}
+textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
+.hint{font-size:.92rem;color:var(--muted);background:#f3eee3;padding:8px 10px;border-radius:7px;margin:7px 0}
+button{font:inherit;font-weight:800;border:0;border-radius:8px;padding:11px 15px;cursor:pointer}.primary{background:var(--red);color:white}.secondary{background:#e6dfd0;color:var(--navy)}.actions{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}.small{font-size:.9rem;color:var(--muted)}
+details{border:1px solid var(--line);border-radius:8px;padding:11px 13px;background:white;margin:10px 0}summary{font-weight:850;color:var(--navy);cursor:pointer}
+ul{margin:7px 0;padding-left:22px}
+@media print{body{background:white;font-size:14pt}header{background:white;color:black;border-bottom:2px solid black;padding:10px 0}header p,.kicker{color:black}.actions,.no-print{display:none!important}.card{box-shadow:none;border:1px solid #888;break-inside:avoid}.wrap{max-width:none}}
+</style></head><body>
+<header><div class="wrap"><div class="kicker">World War I • 1919</div><h1>Make a Peace Plan</h1><p>Choose rules. Write why your team chose them.</p></div></header>
+<main class="wrap">
+<section class="card"><h2>What is happening?</h2>
+<p>World War I is over. France, Britain, and the United States are writing rules for Germany. These rules are called a <b>peace treaty</b>. Germany lost the war. It was not invited to help write the real treaty.</p>
+<div class="callout"><b>Your goal:</b> Make rules that help stop another war. Try to be fair, too.</div>
+<div class="steps"><div class="step">1. Read A and B.</div><div class="step">2. Pick one plan.</div><div class="step">3. Write why you picked it.</div></div>
+<div class="hint"><b>Example:</b> We picked A because a smaller army may help keep France safe.</div>
+<div class="callout"><b>War clue:</b> New weapons made fighting worse. People at home also faced food shortages and worked to support the war.</div>
+</section>
+
+<section class="card"><h2>Choose and write</h2>
+<div class="prompt"><h3>1. Germany's army</h3><p>France feared another attack.</p>
+<div class="options"><label class="choice"><input type="radio" name="c1" value="A"><span><b>A.</b> Germany can have a small army, but no planes or submarines.</span></label><label class="choice"><input type="radio" name="c1" value="B"><span><b>B.</b> Germany can keep a larger army and more weapons.</span></label></div>
+<label for="w1">Why did you pick A or B?</label><textarea id="w1" placeholder="We picked ___ because..."></textarea></div>
+<div class="prompt"><h3>2. Paying for damage</h3><p>The war damaged homes, farms, and towns.</p>
+<div class="options"><label class="choice"><input type="radio" name="c2" value="A"><span><b>A.</b> Germany pays to help rebuild the damaged places.</span></label><label class="choice"><input type="radio" name="c2" value="B"><span><b>B.</b> All countries share the cost of rebuilding.</span></label></div>
+<label for="w2">Why did you pick A or B?</label><textarea id="w2" placeholder="We picked ___ because..."></textarea></div>
+<div class="prompt"><h3>3. Changing borders</h3><p>A <b>border</b> is a line between countries. Some people wanted a country of their own.</p>
+<div class="options"><label class="choice"><input type="radio" name="c3" value="A"><span><b>A.</b> Change borders so more groups can have their own country.</span></label><label class="choice"><input type="radio" name="c3" value="B"><span><b>B.</b> Keep more old borders to avoid making new problems.</span></label></div>
+<label for="w3">Why did you pick A or B?</label><textarea id="w3" placeholder="We picked ___ because..."></textarea></div>
+<div class="prompt"><h3>4. Stopping another war</h3><p>The leaders planned a group called the <b>League of Nations</b>. Countries in the League could meet when there was a problem.</p>
+<div class="options"><label class="choice"><input type="radio" name="c4" value="A"><span><b>A.</b> League members promise to help if one country is attacked.</span></label><label class="choice"><input type="radio" name="c4" value="B"><span><b>B.</b> League members meet, but each country decides whether to help.</span></label></div>
+<label for="w4">Why did you pick A or B?</label><textarea id="w4" placeholder="We picked ___ because..."></textarea></div>
+<div class="prompt"><h3>5. Should Germany help write the rules?</h3>
+<div class="options"><label class="choice"><input type="radio" name="c5" value="A"><span><b>A.</b> Yes. Let Germany help write the treaty.</span></label><label class="choice"><input type="radio" name="c5" value="B"><span><b>B.</b> No. The winning countries write the treaty.</span></label></div>
+<label for="w5">Why did you pick A or B?</label><textarea id="w5" placeholder="We picked ___ because..."></textarea></div>
+</section>
+<section class="card"><h2>Now check the real treaty</h2>
+<details><summary>Open after you finish all five answers</summary><ul>
+<li>Germany had a small army. It could not have planes or submarines.</li>
+<li>Germany had to pay money to help rebuild.</li>
+<li>Germany lost land.</li>
+<li>The League of Nations was created. Germany could not join at first. The United States did not join.</li>
+<li>Germany did not help write the treaty. Many Germans felt the rules were unfair. Anger about the treaty later helped Hitler, but it was not the only cause of World War II.</li>
+</ul></details>
+<label for="w6">Write one way your plan was like or unlike the real treaty.</label><textarea id="w6" placeholder="Our plan was like / unlike the real treaty because..."></textarea>
+<label for="w7">Do you think your plan would help keep peace? Why?</label><textarea id="w7" placeholder="I think it would / would not because..."></textarea>
+<label for="studentName">Your first and last name:</label><input id="studentName" type="text" maxlength="100" autocomplete="name" placeholder="First and last name" required>
+<div class="actions no-print"><button class="primary" id="submitWork">Turn in work</button><button class="secondary" onclick="window.print()">Print answers</button><button class="secondary" onclick="clearWork()">Clear answers</button></div><p id="submitStatus" class="small" aria-live="polite"></p><span id="saved" class="small" aria-live="polite"></span>
+<p class="small">Answers save on this device. Print this page to turn it in.</p>
+</section></main>
+<script>
+const ids=['w1','w2','w3','w4','w5','w6','w7','studentName'];const groups=['c1','c2','c3','c4','c5'];const saved=document.getElementById('saved');
+ids.forEach(id=>{const e=document.getElementById(id);e.value=localStorage.getItem('peace3-'+id)||'';e.addEventListener('input',()=>{localStorage.setItem('peace3-'+id,e.value);saved.textContent='Saved';setTimeout(()=>saved.textContent='',700)})});
+groups.forEach(g=>{document.querySelectorAll('input[name="'+g+'"]').forEach(e=>{e.checked=localStorage.getItem('peace3-'+g)===e.value;e.addEventListener('change',()=>localStorage.setItem('peace3-'+g,e.value))})});
+async function submitWork(){const status=document.getElementById('submitStatus'),name=document.getElementById('studentName').value.trim(),button=document.getElementById('submitWork');const picks=groups.map(g=>document.querySelector('input[name="'+g+'"]:checked')?.value||'');const textIds=['w1','w2','w3','w4','w5','w6','w7'];const answers={};groups.forEach((g,i)=>answers['Plan '+(i+1)]=picks[i]);textIds.forEach((id,i)=>answers['Writing '+(i+1)]=document.getElementById(id).value.trim());if(!name){status.textContent='Write your first and last name first.';document.getElementById('studentName').focus();return}if(picks.some(x=>!x)||textIds.some(id=>!document.getElementById(id).value.trim())){status.textContent='Finish each answer before turning in your work.';return}button.disabled=true;status.textContent='Sending your work…';try{const response=await fetch('https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({studentName:name,assignmentId:'write-the-peace-treaty',answers})});const result=await response.json();if(!response.ok)throw new Error(result.error||'Could not send your work.');status.textContent='Turned in! Your work was sent to your teacher.';button.textContent='Turned in ✓'}catch(error){status.textContent=error instanceof Error?error.message:'Could not send your work. Try again.';button.disabled=false}}document.getElementById('submitWork').addEventListener('click',submitWork);
+function clearWork(){if(confirm('Clear all answers on this device?')){[...ids,...groups].forEach(id=>localStorage.removeItem('peace3-'+id));location.reload()}}
+</script></body></html>
