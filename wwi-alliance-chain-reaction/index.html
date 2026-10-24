@@ -11,6 +11,8 @@
 @keyframes tip{0%{transform:rotate(0);opacity:1}100%{transform:rotate(68deg);opacity:.72}}
 @media(max-width:760px){main{padding:7px 14px 28px}.top{padding:12px 14px}.playarea{grid-template-columns:1fr}.slots{grid-template-columns:repeat(2,minmax(0,1fr))}.match-board{grid-template-columns:1fr}.domino-row{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:430px){.task-head{flex-direction:column}.actions{align-items:stretch;flex-direction:column}.actions .btn{width:100%}.tile{min-height:124px;padding:8px}.steps{gap:5px}.step{font-size:.68rem;padding:6px 8px}}
+
+.turnin-box{margin-top:14px;padding:12px;border-radius:12px;background:#fffdf7;color:#172733}.turnin-box label{display:block;color:#173344;font-weight:800;margin:8px 0 4px}.turnin-box input,.turnin-box textarea{display:block;width:100%;padding:9px;border:1px solid #b9b2a5;border-radius:8px;font:inherit}.turnin-box textarea{min-height:66px}.turnin-status{min-height:1.2em;color:#39755b;font-size:.82rem;margin:7px 0 0}
 </style>
 </head>
 <body>
@@ -139,10 +141,11 @@ function renderFinalChain(){
 function finishGame(){
  gameComplete=true;$("toppleMessage").textContent="Chain complete!";$("topple").hidden=true;
  $("finalChain").querySelectorAll(".slot").forEach((e,i)=>{e.classList.add("falling");e.style.animationDelay=(i*.18)+"s"});
- $("finishResult").innerHTML='<strong>You finished all three tasks!</strong><p>Alliances helped spread the war. Each country’s leaders chose whether to join. No single alliance made every country fight.</p><button class="btn secondary" id="restart" style="margin-top:8px">Play again</button>';
+ $("finishResult").innerHTML='<strong>You finished all three tasks!</strong><p>Alliances helped spread the war. Each country’s leaders chose whether to join. No single alliance made every country fight.</p><div class="turnin-box"><b>Turn in your work</b><label for="studentName">Your first and last name</label><input id="studentName" maxlength="100" autocomplete="name" placeholder="First and last name"><label for="warReflection">What made the war spread to more countries?</label><textarea id="warReflection" placeholder="The war spread because..."></textarea><button class="btn" id="submitAlliance" style="margin-top:8px">Turn in assignment</button><p class="turnin-status" id="submitStatus" role="status" aria-live="polite"></p></div><button class="btn secondary" id="restart" style="margin-top:8px">Play again</button>';
  $("finishResult").classList.add("show");$("topple").disabled=true;
- $("restart").addEventListener("click",restart);
+ $("restart").addEventListener("click",restart);$("submitAlliance").addEventListener("click",submitAlliance);
 }
+async function submitAlliance(){const name=$("studentName").value.trim(),reflection=$("warReflection").value.trim(),button=$("submitAlliance"),status=$("submitStatus");if(!name){status.textContent="Write your first and last name.";return}if(!reflection){status.textContent="Write one sentence before turning in your work.";return}button.disabled=true;status.textContent="Sending your work…";const sequence=placed.map((id,i)=>{const event=events.find(e=>e.id===id);return {position:i+1,date:event?.date||"",event:event?.title||""}});const matches=[...matched].map(id=>{const pair=pairs.find(p=>p.id===id);return {event:pair?.first||id,happenedNext:pair?.next||""}});try{const response=await fetch("https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"wwi-alliance-chain-reaction",answers:{sequence,matches,reflection,completed:gameComplete}})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not turn in your work.");status.textContent="Turned in! Your teacher has your work.";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not turn in your work. Try again.";button.disabled=false}}
 function restart(){
  shuffled=shuffle(events);placed=Array(events.length).fill(null);selected=null;orderComplete=false;matched=new Set();selectedFirst=null;gameComplete=false;rightOrder=shuffle(pairs);
  $("matchResult").classList.remove("show");$("matchResult").innerHTML="";$("finishResult").classList.remove("show");$("finishResult").innerHTML="";$("topple").disabled=false;$("topple").hidden=false;
