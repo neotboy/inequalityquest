@@ -17,7 +17,7 @@ h2{font-size:1.33rem;color:var(--navy);margin:0 0 7px}h3{font-size:1.1rem;color:
 .maps{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.mapbox{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#eee9dd}.mapbox img{width:100%;height:250px;object-fit:contain;display:block;background:#e7e0d2}.mapbox p{padding:8px 10px;font-size:.86rem;color:var(--muted);margin:0}.mapbox a,.caption a{color:var(--navy);font-weight:750}
 .decision{border-top:1px solid var(--line);padding:16px 0}.decision:first-child{border-top:0}.decision-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.75fr);gap:14px;align-items:start}
 .photo{margin:0;background:#eee9dd;border:1px solid var(--line);border-radius:10px;overflow:hidden}.photo img{width:100%;height:220px;object-fit:contain;display:block;background:#e7e0d2}.caption{font-size:.82rem;color:var(--muted);line-height:1.3;padding:8px 10px}
-.clue{background:#f2eee4;border-radius:7px;padding:8px 10px;color:var(--muted);font-size:.93rem;margin:8px 0}
+.map-note{border:1px solid var(--line);border-radius:10px;padding:14px;background:#f2eee4;color:var(--navy);font-weight:750}.map-note p{font-weight:500;color:var(--muted);font-size:.92rem}\n.clue{background:#f2eee4;border-radius:7px;padding:8px 10px;color:var(--muted);font-size:.93rem;margin:8px 0}
 label{display:block;font-weight:800;color:var(--navy);margin:9px 0 5px}select,input{width:100%;font:inherit;color:var(--ink);padding:10px 11px;border:2px solid #cfc6b7;border-radius:8px;background:white}select:focus,input:focus{outline:3px solid #73a9bb;border-color:#28657e}
 button{font:inherit;font-weight:800;border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.primary{background:var(--red);color:#fff}.secondary{background:#e6dfd0;color:var(--navy)}.actions{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
 .reveal{display:none;background:var(--green);border-left:5px solid #4e805d;border-radius:7px;padding:10px 12px;margin:10px 0}.reveal.show{display:block}.reveal strong{color:#275437}
@@ -33,38 +33,38 @@ footer{max-width:980px;padding:0 16px 20px;margin:auto;font-size:.83rem;color:va
 <section class="card">
 <h2>Your mission · about 8 minutes</h2>
 <p class="intro"><b>At each stop:</b> Read the event, choose what leaders should do, then open the history card to see what they actually did. There are no written answers.</p>
-<div class="steps"><div class="step">1 · Follow the maps</div><div class="step">2 · Make four choices</div><div class="step">3 · Enter your name and turn it in</div></div>
+<div class="steps"><div class="step">1 · Follow the maps</div><div class="step">2 · Make four choices</div><div class="step">3 · Enter your name and turn it in</div></div>\n<div class="intro"><b>Choice words:</b> Negotiate = try to make a deal. Sanctions = limit trade to pressure a country. Defend allies = help a country you promised to protect. Declare war = officially join the fighting.</div>
 <div class="maps">
-<figure class="mapbox"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Poland1939_GermanPlanMap.jpg?width=900" alt="Map of Germany's planned invasion of Poland in 1939" loading="lazy"><p><b>Europe:</b> Germany attacks Poland in 1939. <a href="https://commons.wikimedia.org/wiki/File:Poland1939_GermanPlanMap.jpg" target="_blank" rel="noopener">Map source</a></p></figure>
-<figure class="mapbox"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Second_world_war_asia_1937-1942_map_en6.png?width=900" alt="Map showing Japanese expansion in Asia and the Pacific from 1937 to 1942" loading="lazy"><p><b>Asia and the Pacific:</b> Japan expands from 1937 to 1942. <a href="https://commons.wikimedia.org/wiki/File:Second_world_war_asia_1937-1942_map_en6.png" target="_blank" rel="noopener">Map source</a></p></figure>
+<figure class="mapbox"><img src="https://www.facinghistory.org/sites/default/files/2022-06/Map_71_Nazi_Germany_1933_39.jpg" alt="Color-coded map of Germany's expansion from 1933 to 1939" loading="lazy"><p><b>Europe:</b> The colors show Germany's expansion before the war. <a href="https://www.facinghistory.org/resource-library/growth-nazi-germany" target="_blank" rel="noopener">Map source: Facing History &amp; Ourselves</a></p></figure>
+<figure class="mapbox"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Japanese_expansion_april_1942.svg?width=900" alt="Simple shaded map of Japanese expansion in Asia and the Pacific by April 1942" loading="lazy"><p><b>Asia and the Pacific:</b> Orange marks Japan's reach in 1942. <a href="https://commons.wikimedia.org/wiki/File:Japanese_expansion_april_1942.svg" target="_blank" rel="noopener">Map source</a></p></figure>
 </div>
 </section>
 <section class="card">
 <h2>Make four decisions</h2>
 <div class="decision"><div class="decision-grid"><div>
 <h3>1. Germany attacks Poland · September 1939</h3>
-<p>Germany invaded Poland. Britain and France had promised to protect Poland.</p>
+<p>Germany invaded Poland. Britain and France had promised to protect it. If they kept that promise, they could enter a wider war.</p>
 <label for="choice1">What should Britain and France do?</label><select id="choice1"><option value="">Choose an action</option><option>Declare war on Germany</option><option>Try to negotiate a deal</option><option>Impose economic sanctions</option><option>Stay out of the conflict</option></select>
 <div class="actions"><button class="secondary revealBtn" data-reveal="outcome1">See what happened</button></div>
 <div class="reveal" id="outcome1"><strong>History:</strong> Britain and France declared war on Germany on September 3. They could not stop Poland from being conquered. The war had begun in Europe.</div>
-</div><figure class="photo"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Poland1939_GermanPlanMap.jpg?width=800" alt="German plan map for invading Poland in 1939" loading="lazy"><figcaption class="caption">German invasion plan for Poland. <a href="https://commons.wikimedia.org/wiki/File:Poland1939_GermanPlanMap.jpg" target="_blank" rel="noopener">View map source</a></figcaption></figure></div></div>
+</div><aside class="map-note">Use the Europe map above.<p>Find Germany and Poland.</p></aside></div></div>
 <div class="decision"><div class="decision-grid"><div>
 <h3>2. France falls · June 1940</h3>
-<p>Germany used fast attacks with planes, tanks, and soldiers to defeat France. Britain now faced a possible German invasion.</p>
+<p><b>Blitzkrieg</b> means “lightning war.” German planes and tanks attacked quickly, and France surrendered. Britain was now the main European country still fighting Germany.</p>
 <label for="choice2">What should Britain do?</label><select id="choice2"><option value="">Choose an action</option><option>Keep fighting and defend Britain</option><option>Negotiate a peace deal with Hitler</option><option>Impose new sanctions</option><option>Declare war on France</option></select>
 <div class="actions"><button class="secondary revealBtn" data-reveal="outcome2">See what happened</button></div>
 <div class="reveal" id="outcome2"><strong>History:</strong> Britain's new prime minister, Winston Churchill, chose to keep fighting. Germany bombed Britain, but could not force it to surrender.</div>
-</div><figure class="photo"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Greater_German_Reich.jpg?width=800" alt="Historical map showing German-controlled territory in Europe around 1939–1940" loading="lazy"><figcaption class="caption">A 1939–1940 German atlas map. <a href="https://commons.wikimedia.org/wiki/File:Greater_German_Reich.jpg" target="_blank" rel="noopener">View map source</a></figcaption></figure></div></div>
+</div><aside class="map-note">Use the Europe map above.<p>Notice how Germany grew before the war.</p></aside></div></div>
 <div class="decision"><div class="decision-grid"><div>
 <h3>3. Japan expands in Asia · 1937–1941</h3>
-<p>Japan invaded parts of China and moved into Southeast Asia. The United States wanted Japan to stop expanding, but the countries were not at war yet.</p>
+<p>Japan had invaded parts of China and moved into Southeast Asia. It wanted land and supplies. The United States wanted Japan to stop, but the countries were not at war yet.</p>
 <label for="choice3">What should the United States do?</label><select id="choice3"><option value="">Choose an action</option><option>Impose economic sanctions, including an oil ban</option><option>Keep negotiating with Japan</option><option>Declare war on Japan</option><option>Do nothing</option></select>
 <div class="actions"><button class="secondary revealBtn" data-reveal="outcome3">See what happened</button></div>
 <div class="reveal" id="outcome3"><strong>History:</strong> The United States froze Japanese money and stopped oil sales. The U.S. also kept negotiating. Japan attacked Pearl Harbor after talks failed.</div>
-</div><figure class="photo"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Second_world_war_asia_1937-1942_map_en6.png?width=800" alt="Map of Japanese expansion through Asia and the Pacific" loading="lazy"><figcaption class="caption">Japanese expansion, 1937–1942. <a href="https://commons.wikimedia.org/wiki/File:Second_world_war_asia_1937-1942_map_en6.png" target="_blank" rel="noopener">View map source</a></figcaption></figure></div></div>
+</div><aside class="map-note">Use the Asia and Pacific map above.<p>Find Japan, China, and Pearl Harbor.</p></aside></div></div>
 <div class="decision"><div class="decision-grid"><div>
 <h3>4. Japan attacks Pearl Harbor · December 7, 1941</h3>
-<p>Japanese planes surprised the U.S. Navy in Hawaii. Ships were damaged or destroyed, and more than 2,400 Americans were killed.</p>
+<p>Japanese planes surprised the U.S. Navy at Pearl Harbor in Hawaii. Ships were damaged or destroyed, and more than 2,400 Americans were killed. Japan hoped to weaken the U.S. fleet so it could keep expanding.</p>
 <label for="choice4">What should the United States do?</label><select id="choice4"><option value="">Choose an action</option><option>Declare war on Japan</option><option>Ask Japan to negotiate</option><option>Wait and stay out of the war</option><option>Impose more sanctions</option></select>
 <div class="actions"><button class="secondary revealBtn" data-reveal="outcome4">See what happened</button></div>
 <div class="reveal" id="outcome4"><strong>History:</strong> The U.S. Congress declared war on Japan the next day. Germany and Italy then declared war on the United States. The U.S. fought in both Europe and the Pacific.</div>
