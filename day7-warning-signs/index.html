@@ -75,24 +75,22 @@ footer{max-width:940px;margin:auto;padding:0 16px 22px;color:var(--muted);font-s
 </section>
 
 <section class="card">
-<h2>Compare two leaders</h2>
-<p>Pick two: Mussolini, Hitler, or Stalin. Write one sentence.</p>
-<label for="compare">How were the two leaders alike or different?</label>
-<textarea id="compare" placeholder="Both ___ and ___ used ___. One difference is ___."></textarea>
+<h2>Turn in your choices</h2>
 <label for="studentName">Your first and last name</label><input id="studentName" type="text" maxlength="100" autocomplete="name" placeholder="First and last name">
-<div class="actions no-print"><button class="primary" id="submitWork">Turn in my writing</button><button class="secondary" onclick="window.print()">Print</button><button class="secondary" id="clearWork">Clear answers</button></div>
+<div class="actions no-print"><button class="primary" id="submitWork">Turn in my choices</button><button class="secondary" onclick="window.print()">Print</button><button class="secondary" id="clearWork">Clear answers</button></div>
 <p id="submitStatus" class="small" role="status" aria-live="polite"></p><p id="saved" class="small" aria-live="polite"></p>
 </section>
 </main>
 <footer>Historical images are linked to their source pages. They are shown to study propaganda and government actions, not to endorse them.</footer>
 <script>
 const API="https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit";
-const textIds=["write1","write2","write3","write4","compare","studentName"];
-const choiceIds=["method1","method2","method3","method4"];
-const allIds=[...textIds,...choiceIds],saved=document.getElementById("saved");
-allIds.forEach(id=>{const e=document.getElementById(id);e.value=localStorage.getItem("day7-warning-"+id)||"";e.addEventListener("input",save);e.addEventListener("change",save)});
+const choiceIds=["method1","method2","method3","method4"],studentName=document.getElementById("studentName"),saved=document.getElementById("saved");
+const allIds=[...choiceIds,"studentName"];
+choiceIds.forEach(id=>{const e=document.getElementById(id);e.value=localStorage.getItem("day7-warning-"+id)||"";e.addEventListener("change",save)});
+studentName.value=localStorage.getItem("day7-warning-studentName")||"";
+studentName.addEventListener("input",save);
 function save(){allIds.forEach(id=>localStorage.setItem("day7-warning-"+id,document.getElementById(id).value));saved.textContent="Saved on this device.";setTimeout(()=>saved.textContent="",900)}
-async function submitWork(){const status=document.getElementById("submitStatus"),name=document.getElementById("studentName").value.trim(),button=document.getElementById("submitWork");if(!name){status.textContent="Write your first and last name first.";document.getElementById("studentName").focus();return}if(choiceIds.some(id=>!document.getElementById(id).value)||textIds.slice(0,5).some(id=>!document.getElementById(id).value.trim())){status.textContent="Finish the four case sentences and the comparison before turning in your work.";return}const answers={};choiceIds.forEach((id,i)=>answers["Case "+(i+1)+" method"]=document.getElementById(id).value);textIds.slice(0,5).forEach((id,i)=>answers[i<4?"Case "+(i+1)+" evidence":"Leader comparison"]=document.getElementById(id).value.trim());button.disabled=true;status.textContent="Sending your work…";try{const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"day7-warning-signs",answers})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not send your work.");status.textContent="Turned in! Your writing was sent to your teacher.";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not turn in your work. Try again.";button.disabled=false}}
+async function submitWork(){const status=document.getElementById("submitStatus"),name=studentName.value.trim(),button=document.getElementById("submitWork");if(!name){status.textContent="Write your first and last name first.";studentName.focus();return}if(choiceIds.some(id=>!document.getElementById(id).value)){status.textContent="Choose a warning sign for all four cases before turning in your choices.";return}const answers={};choiceIds.forEach((id,i)=>answers["Case "+(i+1)+" warning sign"]=document.getElementById(id).value);button.disabled=true;status.textContent="Sending your choices…";try{const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"day7-warning-signs",answers})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not send your choices.");status.textContent="Turned in! Your choices were sent to your teacher.";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not turn in your choices. Try again.";button.disabled=false}}
 document.getElementById("submitWork").addEventListener("click",submitWork);
 document.getElementById("clearWork").addEventListener("click",()=>{if(confirm("Clear all answers on this device?")){allIds.forEach(id=>localStorage.removeItem("day7-warning-"+id));location.reload()}});
 </script>
