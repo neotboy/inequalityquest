@@ -5,16 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Day 9 · Anne Frank</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f5f1e8;color:#24323b;font:18px/1.5 system-ui,Arial,sans-serif}header{background:#243c50;color:#fff;padding:20px}main{max-width:650px;margin:24px auto;padding:0 16px}.card{background:#fffdf8;border:1px solid #d9d0c1;border-radius:12px;padding:22px}h1{font-size:1.8rem;margin:0}p{margin:10px 0}label{display:block;font-weight:700;margin:14px 0 5px}input,textarea{width:100%;font:inherit;padding:10px;border:2px solid #cfc6b7;border-radius:7px}textarea{min-height:120px}button{margin-top:14px;padding:11px 18px;border:0;border-radius:7px;background:#a33d36;color:#fff;font:inherit;font-weight:700;cursor:pointer}.status{min-height:1.5em;color:#52616a}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f1e8;color:#24323b;font:17px/1.45 system-ui,Arial,sans-serif}
+header{background:#243c50;color:#fff;padding:16px 20px}
+main{max-width:700px;margin:18px auto;padding:0 14px}
+.card{background:#fffdf8;border:1px solid #d9d0c1;border-radius:12px;padding:20px}
+h1{font-size:1.6rem;margin:0}
+h2{font-size:1.1rem;margin:18px 0 6px}
+p{margin:8px 0}
+.notice{background:#fff2e5;border-left:5px solid #a33d36;padding:12px 14px;border-radius:6px}
+label{display:block;font-weight:700;margin:12px 0 4px}
+input,textarea{width:100%;font:inherit;padding:9px;border:2px solid #cfc6b7;border-radius:7px}
+textarea{min-height:155px}
+button{margin-top:12px;padding:10px 17px;border:0;border-radius:7px;background:#a33d36;color:#fff;font:inherit;font-weight:700;cursor:pointer}
+button:disabled{opacity:.7;cursor:default}
+.status{min-height:1.4em;color:#52616a}
+@media print{body{background:#fff;font-size:12pt}header{padding:8px 14px}main{max-width:none;margin:10px auto;padding:0}.card{border:0;padding:8px}.notice{padding:8px 10px}textarea{min-height:110px}button{display:none}}
 </style>
 </head>
 <body>
-<header><h1>Day 9 · Anne Frank</h1></header>
+<header><h1>Day 9 · Anne Frank’s Diary</h1></header>
 <main><section class="card">
-<p><b>Read:</b> Friday, October 9, 1942, in your copy of <i>The Diary of a Young Girl</i>. (1969 edition: pages 35–36.)</p>
-<p><b>Write one paragraph:</b> What does this entry show about what Jewish people faced? Use details from the entry.</p>
+<p><b>Read:</b> Friday, October 9, 1942, in your copy of <i>The Diary of a Young Girl</i>. (In the 1969 edition: pages 35–36.)</p>
+<p class="notice"><b>Before you read:</b> Anne’s diary describes Nazi persecution and the danger faced by Jewish people. The assigned pages refer to deportation, death, and gassing. Other parts of the diary may include executions or hangings, hateful antisemitic language, and upsetting descriptions. This assignment page has no graphic images. Take a moment or speak with your teacher if you need to.</p>
+<h2>One-page response</h2>
+<p>Write <b>one paragraph of 5–7 sentences</b>. How does this diary entry show what Jewish people faced under Nazi rule? Use <b>two details from the entry</b> and explain what each detail helps you understand.</p>
+<p><b>Keep your work on this page.</b> You do not need to complete a separate worksheet.</p>
 <label for="studentName">Your name</label><input id="studentName" maxlength="100" autocomplete="name" placeholder="First and last name">
-<label for="response">Your answer</label><textarea id="response" maxlength="700" placeholder="Write your paragraph here."></textarea>
+<label for="response">Your paragraph</label><textarea id="response" maxlength="900" placeholder="In this entry, Anne shows that Jewish people faced…"></textarea>
 <button id="submit">Turn in</button><p id="status" class="status" role="status" aria-live="polite"></p>
 </section></main>
 <script>
@@ -24,7 +42,7 @@ nameInput.value=localStorage.getItem("anne-diary-name")||"";
 responseInput.value=localStorage.getItem("anne-diary-response")||"";
 nameInput.addEventListener("input",()=>localStorage.setItem("anne-diary-name",nameInput.value));
 responseInput.addEventListener("input",()=>localStorage.setItem("anne-diary-response",responseInput.value));
-button.addEventListener("click",async()=>{const studentName=nameInput.value.trim(),answer=responseInput.value.trim();if(!studentName){status.textContent="Enter your name.";nameInput.focus();return}if(!answer){status.textContent="Write your answer.";responseInput.focus();return}button.disabled=true;status.textContent="Sending…";try{const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName,assignmentId:"day9-anne-frank-quick-write",answers:{"Written response":answer}})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not send your work.");status.textContent="Turned in!";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not send your work. Try again.";button.disabled=false}});
+button.addEventListener("click",async()=>{const studentName=nameInput.value.trim(),answer=responseInput.value.trim();if(!studentName){status.textContent="Enter your name.";nameInput.focus();return}if(!answer){status.textContent="Write your paragraph.";responseInput.focus();return}button.disabled=true;status.textContent="Sending…";try{const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName,assignmentId:"day9-anne-frank-quick-write",answers:{"Written response":answer}})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not send your work.");status.textContent="Turned in!";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not send your work. Try again.";button.disabled=false}});
 </script>
 </body>
 </html>
