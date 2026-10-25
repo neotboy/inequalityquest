@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A short writing activity using Anne Frank's diary.">
+<title>Anne Frank’s Diary · Quick Write</title>
+<style>
+:root{--navy:#243c50;--gold:#d9ad58;--paper:#f5f1e8;--card:#fffdf8;--ink:#24323b;--muted:#52616a;--line:#d9d0c1;--blue:#edf3f5}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.5 system-ui,Segoe UI,Arial,sans-serif}
+header{background:var(--navy);color:white;border-bottom:6px solid var(--gold);padding:22px 18px}.wrap{max-width:740px;margin:auto;padding:0 16px}
+.kicker{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;font-weight:850;color:#f3d98d}h1{font-size:clamp(1.9rem,5vw,2.6rem);line-height:1.1;margin:5px 0}header p{margin:5px 0;color:#e5edf1}
+main{padding:22px 0 44px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:14px 0;box-shadow:0 4px 12px #19364b0a}
+h2{font-size:1.25rem;color:var(--navy);margin:0 0 8px}p{margin:7px 0}.context{background:var(--blue);border-left:5px solid var(--navy);border-radius:7px;padding:12px 14px}
+blockquote{margin:13px 0;background:#f7f0df;border-left:5px solid var(--gold);border-radius:6px;padding:15px 17px;font-size:1.15rem;font-family:Georgia,serif}
+.small{font-size:.88rem;color:var(--muted)}a{color:var(--navy);font-weight:700}
+label{display:block;font-weight:800;color:var(--navy);margin:12px 0 5px}input,textarea{width:100%;font:inherit;color:var(--ink);padding:11px 12px;border:2px solid #cfc6b7;border-radius:8px;background:white}textarea{min-height:96px;resize:vertical}input:focus,textarea:focus{outline:3px solid #83b1be;border-color:#28657e}
+.starter{background:#f2eee4;border-radius:7px;padding:10px 12px;color:#394d58}
+button{font:inherit;font-weight:800;border:0;border-radius:8px;padding:11px 16px;cursor:pointer;background:#a33d36;color:white}.actions{margin-top:14px}.status{min-height:1.4em;color:var(--muted);font-size:.92rem}
+footer{padding:0 16px 22px;text-align:center;color:var(--muted);font-size:.82rem}
+@media(max-width:600px){.card{padding:16px}body{font-size:17px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="kicker">World History · Quick Write</div><h1>Anne Frank’s Diary</h1><p>Read one line. Explain what it tells you.</p></div></header>
+<main class="wrap">
+<section class="card">
+<h2>Read</h2>
+<p class="context">Anne Frank was a Jewish teenager hiding with her family from the Nazis. In a diary entry from March 1944, she wrote about having her own thoughts and opinions.</p>
+<blockquote>“I know what I want, I know who’s right and who’s wrong.”</blockquote>
+<p class="small">Excerpt from Anne Frank’s diary, 17 March 1944 · <a href="https://www.annefrank.org/media/filer_public/8a/9c/8a9c28d2-484c-4c16-ae66-0d5d93085d1e/resource_9_uk-v02.pdf" target="_blank" rel="noopener">Source: Anne Frank House</a></p>
+</section>
+<section class="card">
+<h2>Write one sentence</h2>
+<p><b>What does this line show about how Anne thinks for herself?</b> Use a phrase from the line and explain what it means.</p>
+<p class="starter">Sentence starter: Anne thinks for herself because she says “___,” which shows ___.</p>
+<label for="studentName">Your first and last name</label>
+<input id="studentName" maxlength="100" autocomplete="name" placeholder="First and last name">
+<label for="response">Your one-sentence answer</label>
+<textarea id="response" maxlength="500" placeholder="Anne thinks for herself because she says…"></textarea>
+<div class="actions"><button id="submit">Turn in</button></div>
+<p id="status" class="status" role="status" aria-live="polite"></p>
+</section>
+</main>
+<footer>Read the line, write one sentence, and turn it in.</footer>
+<script>
+const API="https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit";
+const nameInput=document.getElementById("studentName"),responseInput=document.getElementById("response"),status=document.getElementById("status"),button=document.getElementById("submit");
+nameInput.value=localStorage.getItem("anne-diary-name")||"";
+responseInput.value=localStorage.getItem("anne-diary-response")||"";
+nameInput.addEventListener("input",()=>localStorage.setItem("anne-diary-name",nameInput.value));
+responseInput.addEventListener("input",()=>localStorage.setItem("anne-diary-response",responseInput.value));
+button.addEventListener("click",async()=>{const studentName=nameInput.value.trim(),answer=responseInput.value.trim();if(!studentName){status.textContent="Write your first and last name first.";nameInput.focus();return}if(!answer){status.textContent="Write your one-sentence answer first.";responseInput.focus();return}button.disabled=true;status.textContent="Sending your work…";try{const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName,assignmentId:"day9-anne-frank-quick-write",answers:{"Written response":answer}})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not send your work.");status.textContent="Turned in! Your answer was sent to your teacher.";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not send your work. Try again.";button.disabled=false}});
+</script>
+</body>
+</html>
