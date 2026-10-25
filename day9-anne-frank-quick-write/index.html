@@ -25,24 +25,26 @@ footer{padding:0 16px 22px;text-align:center;color:var(--muted);font-size:.82rem
 <header><div class="wrap"><div class="kicker">World History · Day 9</div><h1>Anne Frank’s Diary · Day 9</h1><p>Read one line. Explain what it tells you.</p></div></header>
 <main class="wrap">
 <section class="card">
-<h2>Read</h2>
-<p class="context">Anne Frank was a Jewish teenager hiding with her family from the Nazis. In her March 17, 1944 entry, Anne writes about wanting more independence from the adults around her.</p>
+<h2>Read four pages from Anne’s diary</h2>
+<p class="context">Anne Frank was a Jewish teenager hiding with her family from the Nazis. These pages are from March 16–19, 1944. They show parts of daily life in hiding and Anne’s wish to make more choices for herself.</p>
+<p><b>Read pages 157–160</b> in the digitized 1969 edition. Page numbers can be different in other editions. As you read, look for the rules Anne describes, how she feels, and what she shares with Peter.</p>
+<p><a href="https://archive.org/details/in.ernet.dli.2015.201940" target="_blank" rel="noopener">Open the digitized book on Internet Archive</a></p>
 <blockquote>“Although I’m only fourteen, I know quite well what I want, I know who is right and who is wrong.”</blockquote>
-<p class="small">Excerpt from Anne Frank, <i>The Diary of a Young Girl</i>, translated by B. M. Mooyaart-Doubleday, 1969 edition, p. 159 · <a href="https://archive.org/details/in.ernet.dli.2015.201940" target="_blank" rel="noopener">Open this digitized edition</a></p>
+<p class="small">This line is from page 159 of <i>The Diary of a Young Girl</i>, translated by B. M. Mooyaart-Doubleday, 1969 edition.</p>
 </section>
 <section class="card">
-<h2>Write one sentence</h2>
-<p><b>What does this line show about how Anne thinks for herself?</b> Use a phrase from the line and explain what it means.</p>
-<p class="starter">Sentence starter: Anne wants adults to understand that “___.” This shows ___.</p>
+<h2>Write 2–3 sentences</h2>
+<p><b>Why does Anne want more independence, and how does hiding affect her daily life?</b> Use at least one detail from pages 157–160.</p>
+<p class="starter">Sentence starter: Anne wants more independence because ___. Hiding affects her daily life by ___. One detail that shows this is ___.</p>
 <label for="studentName">Your first and last name</label>
 <input id="studentName" maxlength="100" autocomplete="name" placeholder="First and last name">
-<label for="response">Your one-sentence answer</label>
-<textarea id="response" maxlength="500" placeholder="Anne thinks for herself because she says…"></textarea>
+<label for="response">Your answer</label>
+<textarea id="response" maxlength="700" placeholder="Anne wants more independence because…"></textarea>
 <div class="actions"><button id="submit">Turn in</button></div>
 <p id="status" class="status" role="status" aria-live="polite"></p>
 </section>
 </main>
-<footer>Read the line, write one sentence, and turn it in.</footer>
+<footer>Read four pages, write your answer, and turn it in.</footer>
 <script>
 const API="https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit";
 const nameInput=document.getElementById("studentName"),responseInput=document.getElementById("response"),status=document.getElementById("status"),button=document.getElementById("submit");
@@ -50,7 +52,7 @@ nameInput.value=localStorage.getItem("anne-diary-name")||"";
 responseInput.value=localStorage.getItem("anne-diary-response")||"";
 nameInput.addEventListener("input",()=>localStorage.setItem("anne-diary-name",nameInput.value));
 responseInput.addEventListener("input",()=>localStorage.setItem("anne-diary-response",responseInput.value));
-button.addEventListener("click",async()=>{const studentName=nameInput.value.trim(),answer=responseInput.value.trim();if(!studentName){status.textContent="Write your first and last name first.";nameInput.focus();return}if(!answer){status.textContent="Write your one-sentence answer first.";responseInput.focus();return}button.disabled=true;status.textContent="Sending your work…";try{const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName,assignmentId:"day9-anne-frank-quick-write",answers:{"Written response":answer}})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not send your work.");status.textContent="Turned in! Your answer was sent to your teacher.";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not send your work. Try again.";button.disabled=false}});
+button.addEventListener("click",async()=>{const studentName=nameInput.value.trim(),answer=responseInput.value.trim();if(!studentName){status.textContent="Write your first and last name first.";nameInput.focus();return}if(!answer){status.textContent="Write your answer first.";responseInput.focus();return}button.disabled=true;status.textContent="Sending your work…";try{const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName,assignmentId:"day9-anne-frank-quick-write",answers:{"Written response":answer}})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not send your work.");status.textContent="Turned in! Your answer was sent to your teacher.";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not send your work. Try again.";button.disabled=false}});
 </script>
 </body>
 </html>
