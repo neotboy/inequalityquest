@@ -1,5 +1,5 @@
 'use strict';
-const E=CountryCreator,$=q=>document.querySelector(q),KEY='country-creator-v4';let state=E.fresh(),view='build',mode='move',stickerGroup='government',showAllPlaces=false,ink='#d8b36a',draft='',editingId=null,timer,posterUrl='';
+const E=CountryCreator,$=q=>document.querySelector(q),KEY='country-creator-v4';let state=E.fresh(),view='build',mode='move',stickerGroup='government',showAllPlaces=false,govOpenTopic=0,ink='#d8b36a',draft='',editingId=null,timer,posterUrl='';
 try{const data=JSON.parse(localStorage.getItem(KEY));if(data?.version===4)state={...state,...data};}catch{}
 if(state.name==='My absolutely normal country')state.name='';if(state.leader==='Me, obviously')state.leader='';if(['Duck District|Drama District|Snack District','North District|Central District|Coastal District'].includes(state.regions.join('|')))state.regions=['State One','State Two','State Three'];if(!state.approach)state.approach='consult';if(!Array.isArray(state.decisions))state.decisions=[];if(state.govRoundVersion!==3){state.decisions=[];state.revealed=null;state.govRoundVersion=3;}if(!state.revealed)state.revealed=null;
 const map=$('#countryMap'),ctx=map.getContext('2d'),flag=$('#flagPaint'),fc=flag.getContext('2d'),thumb=$('#flagThumb'),tc=thumb.getContext('2d');
