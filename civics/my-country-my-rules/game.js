@@ -94,17 +94,17 @@ const shownItems=showAllPlaces?activeGroup.items:activeGroup.items.slice(0,6);co
 document.querySelectorAll('[data-map-group]').forEach(b=>b.onclick=()=>{stickerGroup=b.dataset.mapGroup;showAllPlaces=false;renderTools();});document.querySelectorAll('[data-sticker]').forEach(b=>b.onclick=()=>buildPlace(activeGroup.items[+b.dataset.sticker][0],activeGroup.items[+b.dataset.sticker][1],activeGroup.id));$('#morePlaces')?.addEventListener('click',()=>{showAllPlaces=!showAllPlaces;renderTools();});$('#addLabel').onclick=()=>{const text=$('#mapLabel').value.trim();if(text){addMark(text,'text');renderTools();}else toast('Give your place a name.');};$('#mapLabel').onkeydown=e=>{if(e.key==='Enter')$('#addLabel').click();};document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;renderTools();setHint();});$('#mapInk').oninput=e=>{ink=e.target.value;mode='pen';document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('selected',b.dataset.mode==='pen'));setHint();};$('#mapUndo').onclick=()=>{if(undoStack.length){Object.assign(state,JSON.parse(undoStack.pop()));drawMap();save();}};$('#drawFlagBtn').onclick=openFlag;document.querySelectorAll('[data-region]').forEach(input=>input.oninput=()=>{state.regions[+input.dataset.region]=input.value;drawMap();save();});
 }else if(view==='laws'){
 const lawIdeas=[
-['Housing','The government will build affordable homes and help families facing eviction.'],
-['Gun safety','Gun sellers must check buyers’ records, and people in crisis can get help before a court hearing.'],
+['Housing','The government will build affordable homes and help families facing eviction (being forced to leave home).'],
+['Gun safety','Gun sellers must run background checks. People in a mental health crisis can get help before a court hearing.'],
 ['Abortion and pregnancy care','Doctors can give urgent care during a medical emergency.'],
-['Immigration','People asking to stay safe get a fair hearing, and border towns get help.'],
-['Health care','The government can negotiate medicine prices and help families afford health coverage.'],
-['Energy','The government will repair the power grid and help families pay for cleaner electricity.'],
-['Voting','Every eligible voter can use secure early voting, and election results get a public audit.'],
+['Immigration','People asking for safety get a fair hearing. Border towns get help.'],
+['Health care','The government can ask for lower medicine prices and help families get health coverage.'],
+['Energy','The government will repair the power grid (power lines) and help families pay for clean energy.'],
+['Voting','Every eligible voter can vote early. The public can audit (check) election results.'],
 ['Privacy','Companies must ask before selling private details and explain how they use them.'],
-['Workers','Workers receive paid sick leave, and small businesses get time and help to adjust.'],
-['Schools','Public schools get more counselors, safe buildings, and clear protection for student rights.'],
-['Protest','Peaceful protests are protected, with the same fair safety rules for everyone.'],
+['Workers','Workers get paid sick leave. Small businesses get time to adjust.'],
+['Schools','Public schools get more counselors, safe buildings, and clear rules to protect student rights.'],
+['Protest','The law protects peaceful protests. The same fair safety rules apply to everyone.'],
 ['Emergency rules','Emergency rules end after 30 days unless Congress votes to keep them.']
 ];
 const starters=['The government will…','People can…','Companies must…','Each state will…'];
