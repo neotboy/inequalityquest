@@ -2,7 +2,7 @@
 /* Required tasks are saved separately from the creative work already on the map. */
 (() => {
 const freeTools=renderTools,originalFinish=$('#finishBtn').onclick,originalFlagDone=$('#flagDone').onclick,originalSave=save;
-const titles=['Name your country','Name your leader','Make your flag','Build place 1','Build place 2','Build place 3','Choose who rules','Choose how power is shared','Choose how you will lead','Choose who owns resources','Rule through 9 crises','Make law 1','Make law 2','Make law 3','Review your country'];
+const titles=['Name your country','Name your leader','Make your flag','Build place 1','Build place 2','Build place 3','Choose who rules','Choose how power is shared','Choose how you will lead','Choose your economic system','Rule through 9 crises','Make law 1','Make law 2','Make law 3','Review your country'];
 const stageAt=i=>i<6?'build':i<10?'power':i===10?'crisis':'laws';
 const starts={build:0,power:6,crisis:10,laws:11};
 const G=state.guide&&state.guide.version===1?state.guide:{version:1,task:0,furthest:0,done:{},picks:{},meanings:{},places:[],round:0,readRounds:[],lawReasons:{},flagConfirmed:false,flagPurpose:''};
@@ -12,30 +12,62 @@ const longEnough=t=>String(t||'').trim().split(/\s+/).filter(Boolean).length>=3&
 const hasFlag=()=>state.flag.length>0||state.flagBg!=='#16364a';
 const hasName=t=>String(t||'').trim().length>=2;
 const placeFor=i=>G.places[i]&&state.marks.find(m=>m.id===G.places[i].id);
+const K=CountryKnowledge;
 const checks={
-polity:{democracy:'People vote on laws themselves.',republic:'Elected leaders make laws within constitutional limits.',oligarchy:'A small group holds most political power.',autocracy:'One leader holds most political power.',totalitarian:'The government tries to control politics and daily life.'},
-division:{federal:'National and state governments share power.',unitary:'The national government holds most power.',confederate:'States hold most power.'},
-approach:{consult:'Hear from Congress, states, and the public.',firm:'Move quickly while keeping checks and legal limits.',hard:'Concentrate power in the leader.'},
-ownership:{mixed:'Private owners run some businesses; the public runs others.',socialism:'The public or government owns or runs major resources.',communism:'Shared ownership and no social classes are the idea.'}
+ polity:{democracy:'People vote on laws themselves.',republic:'Voters elect leaders. The Constitution limits their power.',oligarchy:'A small group holds most power.',autocracy:'One leader holds most power.',totalitarian:'Government tries to control politics and daily life.'},
+ division:{federal:'National and state governments share power.',unitary:'The national government holds most power.',confederate:'States keep most power.'},
+ approach:{consult:'Hear from Congress, states, and the public.',firm:'Act quickly while keeping legal limits.',hard:'Put more decisions under the leader’s control.'},
+ ownership:{capitalism:'Private owners run businesses and sell for profit.',mixed:'Private businesses, public services, and government rules.',socialism:'The public or workers own major businesses and resources.',communism:'An idea of shared ownership and no social classes.'}
 };
-const outcomes=[
-['Families get help, but the plan costs money.','More homes may lower rent later, but some towns sue.','Courts stop some plans, and people protest.'],
-['People get fair hearings, and towns get help.','Families may be split apart, and courts may review the rules.','People lose fair hearings; states and Congress challenge you.'],
-['Congress hears from the public before a vote.','Some families feel safer, but students may feel watched.','Courts challenge taking guns without fair hearings.'],
-['Rules get clearer across states, but courts may review them.','The care people can get may differ by state.','Courts may stop the order; another president could change it.'],
-['Cooling centers save lives, but the plan costs money.','The palace stays cool, but seven people die.','Hospitals get power, but workers strike and a court steps in.'],
-['More people may afford care, but the plan costs money.','Some families get help; others still face high prices.','Prices drop fast, but hospitals and Congress push back.'],
-['More people can vote and see how the count was checked.','Some trust the count more, but extra steps may block voters.','Congress starts impeachment, and you lose your job.'],
-['People get more control over their private information.','Companies can change fast, but people have fewer ways to fix problems.','Private details leak, the director quits, and Congress investigates.'],
-['Students get the same basic protection in every state.','School rules and support may differ across state lines.','Schools get a rule fast, but courts may block it.']
-];
+if(!G.knowledge||G.knowledge.version!==1){
+ G.knowledge={version:1,seed:Math.floor(Math.random()*4294967295),log:{}};
+ G.round=0;G.reviewStep=0;G.readRounds=[];
+ for(let i=6;i<=10;i++)delete G.done[i];
+ if(G.task>6){G.task=6;G.furthest=6;}
+}
+G.reviewStep=Number(G.reviewStep)||0;
+const passed=id=>G.knowledge.log[id]?.passed===true;
+function shuffled(id,variant,size){
+ let seed=G.knowledge.seed>>>0;
+ for(const c of id+':'+variant)seed=(Math.imul(seed,31)+c.charCodeAt(0))>>>0;
+ const result=Array.from({length:size},(_,i)=>i);
+ for(let i=size-1;i>0;i--){seed=(Math.imul(seed,1664525)+1013904223)>>>0;const j=seed%(i+1);[result[i],result[j]]=[result[j],result[i]];}
+ return result;
+}
+function quizRecord(id,bank){
+ if(!G.knowledge.log[id])G.knowledge.log[id]={variant:0,attempts:[],selected:null,status:'answer',passed:false,order:shuffled(id,0,bank[0].choices.length)};
+ return G.knowledge.log[id];
+}
+function quizMarkup(id,bank){
+ const r=quizRecord(id,bank),q=bank[r.variant%bank.length];
+ if(r.status==='correct')return `<section class="guided-check quiz-right" role="status"><b>✓ Knowledge check passed</b><p>${esc(q.why)}</p></section>`;
+ if(r.status==='wrong')return `<section class="guided-check quiz-retry"><b>Let’s work through it.</b><p>${esc(q.why)}</p><p class="guided-help">Try this idea in a new example.</p><button id="quizRetry" class="primary wide">Try a new example →</button></section>`;
+ return `<section class="guided-check"><div class="step-kicker">USE WHAT YOU KNOW</div><p class="quiz-scene">${esc(q.scene)}</p><h3 class="quiz-question">${esc(q.ask)}</h3>${pickButtons(r.order.map((n,i)=>[String(i),q.choices[n]]),r.selected===null?null:String(r.selected),'data-quiz-answer')}<p class="guided-help">Pick one answer. Then click Check my answer.</p><button id="quizSubmit" class="primary wide" ${r.selected===null?'disabled':''}>Check my answer</button><details id="quizClue"><summary>Need a clue?</summary><p>${esc(q.why)}</p></details></section>`;
+}
+function bindQuiz(id,bank,onPass=()=>{}){
+ const r=quizRecord(id,bank),q=bank[r.variant%bank.length];
+ document.querySelectorAll('[data-quiz-answer]').forEach(b=>b.onclick=()=>{if(r.status!=='answer')return;r.selected=+b.dataset.quizAnswer;refresh();});
+ if($('#quizSubmit'))$('#quizSubmit').onclick=()=>{
+  if(r.status!=='answer'||r.selected===null)return;
+  const answer=q.choices[r.order[r.selected]],correct=answer===q.answer;
+  r.attempts.push({question:q.id,answer,correct,helpUsed:!!r.helpUsed});
+  r.status=correct?'correct':'wrong';r.passed=correct;
+  if(correct)onPass();refresh();
+ };
+ if($('#quizRetry'))$('#quizRetry').onclick=()=>{if(r.status!=='wrong')return;r.variant++;r.status='answer';r.selected=null;r.helpUsed=false;r.order=shuffled(id,r.variant,bank[r.variant%bank.length].choices.length);refresh();};
+ if($('#quizClue'))$('#quizClue').addEventListener('toggle',e=>{if(e.target.open){r.helpUsed=true;save();}});
+}
+function activeCheckIds(){return ['polity','division','approach','ownership'].map(k=>'system.'+k+'.'+state[k]).concat(K.rounds.map((_,i)=>'round.'+i),K.review.map((_,i)=>'review.'+i));}
+function checkLabel(id){const parts=id.split('.');if(parts[0]==='round')return 'Round '+(+parts[1]+1)+': '+E.governanceEvents[+parts[1]].title;if(parts[0]==='review')return 'Final check '+(+parts[1]+1);return ({polity:'Who rules',division:'How power is shared',approach:'Leadership style',ownership:'Economic system'}[parts[1]])+': '+(parts[1]==='approach'?({consult:'Build agreement',firm:'Lead firmly',hard:'Rule by command'}[parts[2]]):E.words[parts[2]].name);}
+function learningStats(){const ids=activeCheckIds(),records=ids.map(id=>G.knowledge.log[id]);return {total:ids.length,passed:records.filter(r=>r?.passed).length,firstTry:records.filter(r=>r?.attempts[0]?.correct).length,retries:records.reduce((n,r)=>n+Math.max(0,(r?.attempts.length||0)-1),0),clues:records.filter(r=>r?.attempts.some(a=>a.helpUsed)).length};}
+function learningReport(){const stats=learningStats();return `<section class="guided-check"><h3>Knowledge check record</h3><p>${stats.passed} of ${stats.total} checks passed.<br>${stats.firstTry} correct on the first try.<br>Extra attempts: ${stats.retries}.<br>Checks with a clue: ${stats.clues}.</p><p class="guided-help">These checks assess civics ideas. Political choices do not count as right or wrong answers.</p></section>`;}
 function taskValid(i){
  if(i===0)return hasName(state.name);
  if(i===1)return hasName(state.leader);
  if(i===2)return hasFlag()&&G.flagConfirmed&&!!G.flagPurpose;
  if(i>=3&&i<=5)return !!placeFor(i-3)&&!!G.places[i-3].purpose;
- if(i>=6&&i<=9){const key=['polity','division','approach','ownership'][i-6];return G.picks[key]===state[key]&&G.meanings[key]===state[key];}
- if(i===10)return G.round===E.governanceEvents.length&&E.governanceEvents.every((e,n)=>G.readRounds[n]&&state.decisions.some(d=>d.event===n&&e.choices[d.choice]));
+ if(i>=6&&i<=9){const key=['polity','division','approach','ownership'][i-6];return G.picks[key]===state[key]&&passed('system.'+key+'.'+state[key]);}
+ if(i===10)return G.round===E.governanceEvents.length&&G.reviewStep===K.review.length&&E.governanceEvents.every((e,n)=>passed('round.'+n)&&state.decisions.some(d=>d.event===n&&e.choices[d.choice]))&&K.review.every((_,i)=>passed('review.'+i));
  if(i>=11&&i<=13){const r=state.rules[i-11];return !!r&&longEnough(r.text)&&longEnough(G.lawReasons[r.id])&&state.rules.filter(x=>x.text.trim().toLowerCase()===r.text.trim().toLowerCase()).length===1;}
  return false;
 }
@@ -87,26 +119,56 @@ function mapTask(){
  if($('#buildGuidedPlace'))$('#buildGuidedPlace').onclick=()=>{if(!chosenPlace||!(mapPurpose||record?.purpose))return;const chosen=chosenPlace,purpose=mapPurpose||record.purpose;let id=chosen.saved;if(!id){const before=state.marks.length;buildPlace(chosen.icon,chosen.name,chosen.category);if(state.marks.length===before)return;id=state.marks.at(-1).id;}G.places[slot]={id,purpose};replacingSlot=-1;chosenPlace=null;mapPurpose='';refresh();};
  bindFooter();
 }
-function government(){const key=['polity','division','approach','ownership'][G.task-6];const keys=Object.keys(checks[key]);const label=k=>key==='approach'?({consult:'Build agreement',firm:'Lead firmly',hard:'Rule by command'}[k]):key==='ownership'&&k==='mixed'?'Mixed public and private ownership':E.words[k].name;
- const explanation={polity:'Who gets the final say? Read the choices. Choose the system you want to try.',division:'Who holds power: national leaders, state leaders, or both?',approach:'How will your leader use power? Choose an approach.',ownership:'Who owns major businesses and resources? This is a different question from who rules.'}[key];
- const selected=G.picks[key];const options=keys.map(k=>[k,label(k),key==='approach'?checks[key][k]:key==='polity'||key==='division'?short[k]:k==='mixed'?checks.ownership.mixed:E.words[k].text]);
- // A rotated order keeps the correct meaning from always being the first button.
- const meanings=selected?keys.map(k=>[k,checks[key][k]]):[];if(meanings.length){const shift=(G.task+1)%meanings.length;meanings.push(...meanings.splice(0,shift));}
- $('#tools').innerHTML=intro(explanation)+(selected?`<p class="guided-success"><b>Your choice:</b> ${esc(label(selected))}<br>${esc(options.find(o=>o[0]===selected)[2])}</p><button id="changeSystem" class="wide">Choose a different system</button>`:pickButtons(options,selected,'data-gov-select'))+(selected?`<div class="guided-check"><p class="guided-question">Quick check: what does ${esc(label(selected))} mean?</p>${pickButtons(meanings,G.meanings[key]===selected?selected:null,'data-gov-meaning')}<p id="meaningHelp" role="status">${G.meanings[key]===selected?'✓ You have it. Save this choice.':'Choose the meaning that matches your system.'}</p></div>`:'')+footer(taskValid(G.task),selected?'Use this system →':'Choose a system first');
- if($('#changeSystem'))$('#changeSystem').onclick=()=>{delete G.picks[key];delete G.meanings[key];refresh();};document.querySelectorAll('[data-gov-select]').forEach(b=>b.onclick=()=>{state[key]=b.dataset.govSelect;G.picks[key]=state[key];delete G.meanings[key];refresh();});document.querySelectorAll('[data-gov-meaning]').forEach(b=>b.onclick=()=>{if(b.dataset.govMeaning===selected){G.meanings[key]=selected;refresh();}else{$('#meaningHelp').textContent='Try again. Read the description under the system you chose.';}});bindFooter();}
-function crisis(){const n=G.round,total=E.governanceEvents.length;if(n>=total){$('#tools').innerHTML=intro('You made it through your first year. You chose a response and checked its result in every round.')+`<p class="guided-success">✓ ${total} crises completed. ${total} consequences checked.</p><p>${esc(yearEnding())}</p><p>Now use what happened to make three laws for your country.</p>`+footer(taskValid(10),'Next: make law 1 →');bindFooter();return;}
+function government(){
+ const key=['polity','division','approach','ownership'][G.task-6],keys=Object.keys(checks[key]);
+ const label=k=>key==='approach'?({consult:'Build agreement',firm:'Lead firmly',hard:'Rule by command'}[k]):E.words[k].name;
+ const explanation={polity:'Who gets the final say? Choose a system to try.',division:'Who holds power: national leaders, states, or both?',approach:'How will your leader use power?',ownership:'Compare four economic systems. Who owns major businesses?'}[key];
+ const selected=G.picks[key],options=keys.map(k=>[k,label(k),checks[key][k]]);
+ const id=selected?'system.'+key+'.'+selected:null,bank=selected?K.systems[key][selected]:null;
+ $('#tools').innerHTML=intro(explanation)+(selected?`<p class="guided-success"><b>Your choice:</b> ${esc(label(selected))}</p><button id="changeSystem" class="wide guide-back">Change my system</button>`:pickButtons(options,null,'data-gov-select'))+(key==='ownership'?'<p class="guided-help">This labels your economy. No choice here earns more country points.</p>':'')+(selected?quizMarkup(id,bank):'')+footer(taskValid(G.task),selected?'Save my system →':'Choose a system first');
+ if($('#changeSystem'))$('#changeSystem').onclick=()=>{delete G.picks[key];refresh();};
+ document.querySelectorAll('[data-gov-select]').forEach(b=>b.onclick=()=>{state[key]=b.dataset.govSelect;G.picks[key]=state[key];refresh();});
+ if(selected)bindQuiz(id,bank);
+ bindFooter();
+}
+function scoreGuide(){return '<details class="score-guide"><summary>What do the country scores mean?</summary><p><b>Approval:</b> support for your government.<br><b>Budget room:</b> money left to spend.<br><b>Order:</b> safety and whether laws are followed.<br><b>Trust:</b> belief in your leaders.<br><b>Civil liberties:</b> freedoms such as speech and privacy.</p></details>';}
+function crisis(){
+ const n=G.round,total=E.governanceEvents.length;
+ if(n>=total){
+  const i=G.reviewStep;
+  if(i<K.review.length){const id='review.'+i,bank=K.review[i];$('#tools').innerHTML=intro(`Final knowledge check ${i+1} of ${K.review.length}. Use the ideas you learned.`)+quizMarkup(id,bank)+`<button id="nextReview" class="primary wide step-next" ${passed(id)?'':'disabled'}>${i===K.review.length-1?'Finish the checks →':'Next short check →'}</button>`;bindQuiz(id,bank);$('#nextReview').onclick=()=>{if(!passed(id))return;G.reviewStep++;refresh();$('#guideTitle')?.focus();};return;}
+  $('#tools').innerHTML=intro('Your first year is over. You checked your knowledge in every round.')+`<p class="guided-success">✓ 9 crises finished. All knowledge checks passed.</p><p>${esc(yearEnding())}</p>`+learningReport()+footer(taskValid(10),'Next: make law 1 →');bindFooter();return;
+ }
  const event=E.governanceEvents[n],decision=state.decisions.find(d=>d.event===n),picked=decision&&event.choices[decision.choice];
- if(picked){const choices=outcomes[n].map((t,i)=>[String(i),t]);const shift=(n+1)%3;choices.push(...choices.splice(0,shift));$('#tools').innerHTML=intro(`Round ${n+1} of ${total} · Read your result, then check what happened.`)+`<section class="decision-feedback"><div class="outcome-kicker">WHAT HAPPENED</div><h3>${esc(event.title)}</h3><b>You chose: ${esc(picked.title)}</b><p>${esc(picked.result)}</p><p class="concept-callout"><b>Civics connection:</b> ${esc(event.concept)}</p></section><div class="guided-check"><p class="guided-question">Which result followed your choice?</p>${pickButtons(choices,G.readRounds[n]?String(decision.choice):null,'data-outcome-answer')}<p id="outcomeHelp" role="status">${G.readRounds[n]?'✓ Correct. You connected the choice to its result.':'Use the result above to answer.'}</p></div><button id="nextRound" class="primary wide step-next" ${G.readRounds[n]?'':'disabled'}>${n===total-1?'Finish this year →':'Next crisis →'}</button>`;document.querySelectorAll('[data-outcome-answer]').forEach(b=>b.onclick=()=>{if(+b.dataset.outcomeAnswer===decision.choice){G.readRounds[n]=true;refresh();}else{$('#outcomeHelp').textContent='That result belongs to another choice. Read your result and try again.';}});$('#nextRound').onclick=()=>{if(!G.readRounds[n])return;G.round++;pendingChoice=null;choiceGoal='';refresh();$('#guideTitle')?.focus();};return;}
- const goals=[['help','Help people now'],['money','Protect the budget'],['rights','Protect rights'],['speed','Act fast'],['power','Gain more control'],['chaos','Try a wild idea and face the result']];
- $('#tools').innerHTML=intro(`Round ${n+1} of ${total} · Read the problem. Pick a response, then say what you hope it will do. ${n===0?'These are fictional crises. Some choices cause serious harm or cost your leader the job.':''}`)+`<section class="decision-game"><div class="crisis-kicker">THE PROBLEM</div><h3>${esc(event.title)}</h3><p class="decision-prompt">${esc(event.prompt)}</p>${pendingChoice===null?pickButtons(event.choices.map((c,i)=>[String(i),c.title,c.text]),null,'data-crisis-pick'):`<p class="guided-success"><b>Your choice:</b> ${esc(event.choices[pendingChoice].title)}<br>${esc(event.choices[pendingChoice].text)}</p><button id="changeResponse" class="wide">Choose a different response</button>`}</section>`+(pendingChoice!==null?`<p class="guided-question">Why are you choosing this response?</p>${pickButtons(goals,choiceGoal,'data-choice-goal')}<button id="commitDecision" class="primary wide step-next" ${choiceGoal?'':'disabled'}>Make this decision. Show the result →</button><p class="guided-help">This choice becomes part of your country's story.</p>`:'');
- if($('#changeResponse'))$('#changeResponse').onclick=()=>{pendingChoice=null;choiceGoal='';refresh();};document.querySelectorAll('[data-crisis-pick]').forEach(b=>b.onclick=()=>{pendingChoice=+b.dataset.crisisPick;choiceGoal='';refresh();});document.querySelectorAll('[data-choice-goal]').forEach(b=>b.onclick=()=>{choiceGoal=b.dataset.choiceGoal;refresh();});if($('#commitDecision'))$('#commitDecision').onclick=()=>{if(pendingChoice===null||!choiceGoal||state.decisions.some(d=>d.event===n))return;state.decisions.push({event:n,choice:pendingChoice,goal:choiceGoal});state.revealed={event:n,choice:pendingChoice};pendingChoice=null;choiceGoal='';refresh();$('#guideTitle')?.focus();};}
+ if(picked){
+  const id='round.'+n,bank=K.rounds[n];
+  $('#tools').innerHTML=intro(`Round ${n+1} of ${total}. See the result, then use a civics idea.`)+`<section class="decision-feedback"><div class="outcome-kicker">YOUR RESULT</div><b>${esc(picked.title)}</b><p>${esc(picked.result)}</p></section>`+quizMarkup(id,bank)+`<button id="nextRound" class="primary wide step-next" ${passed(id)?'':'disabled'}>${n===total-1?'Finish this year →':'Next crisis →'}</button>`+scoreGuide();
+  bindQuiz(id,bank,()=>{G.readRounds[n]=true;});
+  $('#nextRound').onclick=()=>{if(!passed(id))return;G.round++;pendingChoice=null;choiceGoal='';refresh();$('#guideTitle')?.focus();};return;
+ }
+ const goals=[['help','Help people now'],['money','Save public money'],['rights','Protect rights'],['speed','Act fast'],['power','Gain more control'],['chaos','Try a wild idea']];
+ $('#tools').innerHTML=intro(`Round ${n+1} of ${total}. Read the problem. Choose your move.`)+`<section class="decision-game"><div class="crisis-kicker">THE PROBLEM</div><h3>${esc(event.title)}</h3><p class="decision-prompt">${esc(event.prompt)}</p>${pendingChoice===null?pickButtons(event.choices.map((c,i)=>[String(i),c.title,c.text]),null,'data-crisis-pick'):`<p class="guided-success"><b>Your move:</b> ${esc(event.choices[pendingChoice].title)}</p><button id="changeResponse" class="wide guide-back">Change my move</button>`}</section>`+(pendingChoice!==null?`<label for="choiceGoal">What is your goal?</label><select id="choiceGoal"><option value="">Choose a goal…</option>${goals.map(([k,t])=>`<option value="${k}" ${choiceGoal===k?'selected':''}>${t}</option>`).join('')}</select><button id="commitDecision" class="primary wide step-next" ${choiceGoal?'':'disabled'}>Make my decision. Show the result →</button>`:'')+(n===0?'<p class="guided-help">These crises are fictional. Some choices cause death or cost your leader the job.</p>':'');
+ if($('#changeResponse'))$('#changeResponse').onclick=()=>{pendingChoice=null;choiceGoal='';refresh();};
+ document.querySelectorAll('[data-crisis-pick]').forEach(b=>b.onclick=()=>{pendingChoice=+b.dataset.crisisPick;choiceGoal='';refresh();});
+ if($('#choiceGoal'))$('#choiceGoal').onchange=e=>{choiceGoal=e.target.value;$('#commitDecision').disabled=!choiceGoal;};
+ if($('#commitDecision'))$('#commitDecision').onclick=()=>{if(pendingChoice===null||!choiceGoal||state.decisions.some(d=>d.event===n))return;state.decisions.push({event:n,choice:pendingChoice,goal:choiceGoal});state.revealed={event:n,choice:pendingChoice};pendingChoice=null;choiceGoal='';refresh();$('#guideTitle')?.focus();};
+}
 const lawIdeas=[['Rights','People can criticize the government and hold peaceful protests.'],['Emergency powers','Emergency rules end after 30 days unless Congress votes to keep them.'],['Voting','Every eligible voter can vote. The public can check election results.'],['Health and safety','The government will keep hospitals and cooling centers ready for emergencies.'],['My own idea','']];
-function law(){const slot=G.task-11,existing=state.rules[slot];if(lawTask!==G.task){lawTask=G.task;lawDraft=G.lawDrafts[slot]?.text??existing?.text??'';lawReason=G.lawDrafts[slot]?.reason??(existing?G.lawReasons[existing.id]||'':'');}const ready=()=>longEnough(lawDraft)&&longEnough(lawReason)&&!state.rules.some((r,i)=>i!==slot&&r.text.trim().toLowerCase()===lawDraft.trim().toLowerCase());$('#tools').innerHTML=intro(`Make law ${slot+1} of 3. Think about the crises you faced. Choose an idea or write your own law. Then explain why it matters.`)+pickButtons(lawIdeas.map(([k,t],i)=>[String(i),k,t]),null,'data-law-idea')+`<label for="guidedLaw">Your law</label><textarea id="guidedLaw" maxlength="120" placeholder="People can… / The government must…">${esc(lawDraft)}</textarea><label for="guidedLawReason">Why does this law matter?</label><textarea id="guidedLawReason" maxlength="160" placeholder="This law matters because…">${esc(lawReason)}</textarea><p class="guided-help">Use at least 3 words in each box. Make each law different.</p>`+footer(ready(),`Save law ${slot+1} and continue →`);document.querySelectorAll('[data-law-idea]').forEach(b=>b.onclick=()=>{lawDraft=lawIdeas[+b.dataset.lawIdea][1];G.lawDrafts[slot]={text:lawDraft,reason:lawReason};save();$('#guidedLaw').value=lawDraft;$('#guidedLaw').focus();updateNext(ready());});$('#guidedLaw').oninput=e=>{lawDraft=e.target.value;G.lawDrafts[slot]={text:lawDraft,reason:lawReason};save();updateNext(ready());};$('#guidedLawReason').oninput=e=>{lawReason=e.target.value;G.lawDrafts[slot]={text:lawDraft,reason:lawReason};save();updateNext(ready());};$('#guideNext').onclick=()=>{if(!ready()){toast('Write a different law and explain why it matters.');return;}if(existing)existing.text=lawDraft.trim();else E.addRule(state,lawDraft);G.lawReasons[state.rules[slot].id]=lawReason.trim();advance();};if($('#guideBack'))$('#guideBack').onclick=()=>moveTask(G.task-1);}
+function law(){const slot=G.task-11,existing=state.rules[slot];if(lawTask!==G.task){lawTask=G.task;lawDraft=G.lawDrafts[slot]?.text??existing?.text??'';lawReason=G.lawDrafts[slot]?.reason??(existing?G.lawReasons[existing.id]||'':'');}const ready=()=>longEnough(lawDraft)&&longEnough(lawReason)&&!state.rules.some((r,i)=>i!==slot&&r.text.trim().toLowerCase()===lawDraft.trim().toLowerCase());$('#tools').innerHTML=intro(`Make law ${slot+1} of 3. Choose an idea or write your own law. Explain how it would help your country.`)+pickButtons(lawIdeas.map(([k,t],i)=>[String(i),k,t]),null,'data-law-idea')+`<label for="guidedLaw">Your law</label><textarea id="guidedLaw" maxlength="120" placeholder="People can… / The government must…">${esc(lawDraft)}</textarea><label for="guidedLawReason">Why does this law matter?</label><textarea id="guidedLawReason" maxlength="160" placeholder="This law matters because…">${esc(lawReason)}</textarea><p class="guided-help">Use at least 3 words in each box. Make each law different.</p>`+footer(ready(),`Save law ${slot+1} and continue →`);document.querySelectorAll('[data-law-idea]').forEach(b=>b.onclick=()=>{lawDraft=lawIdeas[+b.dataset.lawIdea][1];G.lawDrafts[slot]={text:lawDraft,reason:lawReason};save();$('#guidedLaw').value=lawDraft;$('#guidedLaw').focus();updateNext(ready());});$('#guidedLaw').oninput=e=>{lawDraft=e.target.value;G.lawDrafts[slot]={text:lawDraft,reason:lawReason};save();updateNext(ready());};$('#guidedLawReason').oninput=e=>{lawReason=e.target.value;G.lawDrafts[slot]={text:lawDraft,reason:lawReason};save();updateNext(ready());};$('#guideNext').onclick=()=>{if(!ready()){toast('Write a different law and explain why it matters.');return;}if(existing)existing.text=lawDraft.trim();else E.addRule(state,lawDraft);G.lawReasons[state.rules[slot].id]=lawReason.trim();advance();};if($('#guideBack'))$('#guideBack').onclick=()=>moveTask(G.task-1);}
 function yearEnding(){const score=indicators();return score.trust<18&&score.liberty<18?'Your government lost trust and rights. Congress removes your leader from office.':score.budget<18?'The treasury is empty. Your next government needs a rescue plan.':score.approval<18?'People have stopped supporting your leader. A vote to remove you is coming.':score.liberty>=62&&score.trust>=57?'You protected rights and public trust through a rough year.':'Your country made it through a hard year, but people are divided.';}
-function review(){if(!finished()){moveTask(Math.max(0,firstUnfinished()));return;}const ending=yearEnding();$('#tools').innerHTML=intro('Every required task is complete. Read your country’s story, then download your country profile.')+`<p class="guided-success">✓ Country and leader named<br>✓ Flag designed with a meaning<br>✓ Three places built with a purpose<br>✓ Four government choices checked<br>✓ Nine decisions and nine results checked<br>✓ Three laws explained</p><section class="decision-feedback"><h3>Your first year</h3><p>${esc(ending)}</p></section><div class="guided-review">${state.rules.slice(0,3).map((r,i)=>`<article><h3>Law ${i+1}</h3><p>${esc(r.text)}</p><p><b>Why it matters:</b> ${esc(G.lawReasons[r.id])}</p></article>`).join('')}</div><button id="guidedReview" class="primary wide step-next">Open my finished country →</button><button id="decorateMore" class="wide">Keep decorating my map and flag ✎</button><button id="guideBack" class="wide guide-back">← Review law 3</button>`;$('#guidedReview').onclick=()=>$('#finishBtn').click();$('#decorateMore').onclick=()=>{G.decorating=true;undoStack=[];refresh();};$('#guideBack').onclick=()=>moveTask(13);}
+function review(){if(!finished()){moveTask(Math.max(0,firstUnfinished()));return;}const ending=yearEnding();$('#tools').innerHTML=intro('Every required task is complete. Read your country’s story, then download your country profile.')+`<p class="guided-success">✓ Country and leader named<br>✓ Flag designed with a meaning<br>✓ Three places built with a purpose<br>✓ Four government choices checked<br>✓ Nine decisions and all knowledge checks passed<br>✓ Three laws explained</p><section class="decision-feedback"><h3>Your first year</h3><p>${esc(ending)}</p></section>${learningReport()}<div class="guided-review">${state.rules.slice(0,3).map((r,i)=>`<article><h3>Law ${i+1}</h3><p>${esc(r.text)}</p><p><b>Why it matters:</b> ${esc(G.lawReasons[r.id])}</p></article>`).join('')}</div><button id="guidedReview" class="primary wide step-next">Open my finished country →</button><button id="decorateMore" class="wide">Keep decorating my map and flag ✎</button><button id="guideBack" class="wide guide-back">← Review law 3</button>`;$('#guidedReview').onclick=()=>$('#finishBtn').click();$('#decorateMore').onclick=()=>{G.decorating=true;undoStack=[];refresh();};$('#guideBack').onclick=()=>moveTask(13);}
 renderTools=function(){shell();if(G.decorating&&finished()){view='build';freeTools();$('#tools').querySelector('.step-intro').innerHTML='<h2>Keep decorating</h2><p>Your required work is complete. Add places, draw, or edit your flag.</p>';$('#tools').querySelector('[data-next-step]')?.remove();const b=document.createElement('button');b.className='primary wide step-next';b.textContent='Return to my finished country →';b.onclick=()=>{G.decorating=false;moveTask(14);};$('#tools').append(b);return;}if(G.task<2)names();else if(G.task===2)flagTask();else if(G.task<=5)mapTask();else if(G.task<=9)government();else if(G.task===10)crisis();else if(G.task<=13)law();else review();};
 $('#flagDone').onclick=()=>{if(G.task===2&&!hasFlag()){toast('Draw a symbol or change the flag background first.');return;}G.flagConfirmed=hasFlag();originalFlagDone();save();};
-$('#finishBtn').onclick=()=>{if(!finished()){toast('Finish every required task before reviewing.');return;}originalFinish();};
+let profileDownloadUrl='';
+$('#saveImage').onclick=null;
+$('#finishBtn').onclick=()=>{
+ if(!finished()){toast('Finish every required task before reviewing.');return;}
+ originalFinish();
+ if(profileDownloadUrl)URL.revokeObjectURL(profileDownloadUrl);
+ const binary=atob(posterUrl.split(',')[1]),bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));
+ profileDownloadUrl=URL.createObjectURL(new Blob([bytes],{type:'image/png'}));
+ $('#saveImage').href=profileDownloadUrl;$('#saveImage').download='my-country-my-rules.png';
+};
 // Include the reasons and the decision log in the student's downloaded work.
 makePoster=function(){
  drawFlag();drawMap();const c=document.createElement('canvas'),p=c.getContext('2d');c.width=1200;
@@ -115,18 +177,19 @@ makePoster=function(){
  const goalNames={help:'Help people now',money:'Protect the budget',rights:'Protect rights',speed:'Act fast',power:'Gain more control',chaos:'Try a wild idea and face the result'};
  line('THE MEANING OF MY FLAG',true);line(G.flagPurpose==='own'?'My own meaning':G.flagPurpose);
  line('THREE PLACES WITH A PURPOSE',true);G.places.forEach((record,i)=>{const place=placeFor(i);if(place)line(place.text+': '+(purposeNames[record.purpose]||record.purpose));});
- line('MY THREE LAWS',true);state.rules.slice(0,3).forEach((r,i)=>{line((i+1)+'. '+r.text,true);line('Why it matters: '+G.lawReasons[r.id]);});
+ line('KNOWLEDGE CHECK RECORD',true);const stats=learningStats();line(stats.passed+' of '+stats.total+' checks passed. '+stats.firstTry+' correct on the first try. '+'Extra attempts: '+stats.retries+'. Checks with a clue: '+stats.clues+'.');activeCheckIds().forEach(id=>{const record=G.knowledge.log[id];if(record)line(checkLabel(id)+': '+record.attempts.length+' attempt(s); first try '+(record.attempts[0]?.correct?'correct':'needed another example')+(record.attempts.some(a=>a.helpUsed)?'; clue used':''));});line('MY THREE LAWS',true);state.rules.slice(0,3).forEach((r,i)=>{line((i+1)+'. '+r.text,true);line('Why it matters: '+G.lawReasons[r.id]);});
  line('MY FIRST YEAR: '+yearEnding(),true);
- E.governanceEvents.forEach((event,i)=>{const decision=state.decisions.find(d=>d.event===i);if(!decision)return;const choice=event.choices[decision.choice];line('ROUND '+(i+1)+': '+event.title,true);line('My choice: '+choice.title);if(decision.goal)line('My goal: '+(goalNames[decision.goal]||decision.goal));line('What happened: '+choice.result);line('Consequence check: '+(G.readRounds[i]?'completed':'not completed'));});
+ E.governanceEvents.forEach((event,i)=>{const decision=state.decisions.find(d=>d.event===i);if(!decision)return;const choice=event.choices[decision.choice];line('ROUND '+(i+1)+': '+event.title,true);line('My choice: '+choice.title);if(decision.goal)line('My goal: '+(goalNames[decision.goal]||decision.goal));line('What happened: '+choice.result);line('Knowledge check: '+(passed('round.'+i)?'passed':'not passed')); });
  c.height=1140+rows.length*32;p.fillStyle='#fff9ed';p.fillRect(0,0,c.width,c.height);p.strokeStyle='#302342';p.lineWidth=8;p.strokeRect(6,6,1188,c.height-12);
  p.drawImage(flag,55,45,200,120);p.fillStyle='#302342';p.font='bold 36px Arial';wrapped(p,state.name,820).slice(0,2).forEach((t,i)=>p.fillText(t,290,80+i*42));p.font='21px Arial';p.fillText('LEADER: '+state.leader,290,170);
- p.font='bold 23px Arial';p.fillText(E.words[state.polity].name+' · '+E.words[state.division].name,55,225);p.font='20px Arial';p.fillText('Approach: '+({consult:'Build agreement',firm:'Lead firmly',hard:'Rule by command'}[state.approach]),55,262);p.fillText('Ownership: '+(state.ownership==='mixed'?'Mixed public and private':E.words[state.ownership].name),55,294);
+ p.font='bold 23px Arial';p.fillText(E.words[state.polity].name+' · '+E.words[state.division].name,55,225);p.font='20px Arial';p.fillText('Approach: '+({consult:'Build agreement',firm:'Lead firmly',hard:'Rule by command'}[state.approach]),55,262);p.fillText('Ownership: '+(E.words[state.ownership].name),55,294);
  const scores=indicators();p.font='18px Arial';p.fillText('Approval '+scores.approval+' · Budget '+scores.budget+' · Order '+scores.order+' · Trust '+scores.trust+' · Civil liberties '+scores.liberty,55,328);p.drawImage(map,55,350,1090,700);
  rows.forEach((r,i)=>{p.fillStyle=r.bold?'#302342':'#46554f';p.font=(r.bold?'bold ':'')+'23px Arial';p.fillText(r.text,55,1100+i*32);});p.font='15px Arial';p.fillText('The American Experiment · Fictional country · All required tasks completed',55,c.height-25);return c.toDataURL('image/png');
 };
 map.addEventListener('pointerdown',e=>{if(mode!=='erase')return;const [x,y]=point(map,e),m=hit(x,y);if(m&&G.places.some(p=>p.id===m.id)){e.stopImmediatePropagation();e.preventDefault();toast('Keep this required place. You can move it or add more.');}},true);
 // Restore the exact task after refresh. Existing creative work stays available.
 if(G.furthest>0){const missing=firstUnfinished();if(missing>=0&&missing<G.task){G.task=missing;G.furthest=missing;}}
+$('#words').innerHTML=Object.values(E.words).map(w=>`<details class="vocab-term"><summary>${esc(w.name)}</summary><p>${esc(w.text)}</p></details>`).join('')+'<p class="note">Economic terms compare ownership. They do not tell us everything about who rules.</p><p class="note">Term sources: <a href="https://www.imf.org/en/publications/fandd/issues/series/back-to-basics/capitalism" target="_blank" rel="noopener">IMF</a> · <a href="https://www.bu.edu/eci/2024/08/23/comparative-economic-systems/" target="_blank" rel="noopener">Boston University</a></p>';
 refresh();
 document.body.classList.remove('guided-loading');$('#guideLoading')?.remove();
 })();

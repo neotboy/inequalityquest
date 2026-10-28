@@ -37,4 +37,13 @@
 .guided .decision-feedback{margin:12px 0;padding:17px}
 .guided #tools details summary{padding:12px 0;font-size:14px;color:#edc978;cursor:pointer}
 .guided .country-heading input{pointer-events:none}
+.guided .quiz-scene{background:#213b43;padding:12px;border-left:3px solid #e6bf70;border-radius:4px;color:#eff4ed}
+.guided .quiz-question{font-size:18px;line-height:1.4;margin:15px 0 8px;color:#f1d28d}
+.guided .quiz-right{border-color:#76ad86;background:#18382f}
+.guided .quiz-retry{border-color:#d6b16b;background:#352e23}
+.guided .quiz-right>b,.guided .quiz-retry>b{font-size:17px;color:#f4e8c9}
+.vocab-term{border-bottom:1px solid #677a7b;padding:10px 0}
+.vocab-term summary{font-weight:700;cursor:pointer;padding:8px 0}
+.vocab-term p{font-size:16px;line-height:1.5}
+.poster-actions #saveImage{display:inline-block;border:2px solid #302342;border-radius:10px;padding:11px 14px;font:700 15px/1.4 Arial,sans-serif;text-align:center;text-decoration:none;color:#fff;cursor:pointer}
 @media(max-width:950px){.guided main,.guided main.main-govern{grid-template-columns:minmax(0,1fr);gap:18px}.guided .world{grid-column:1;grid-row:2;position:static}.guided .studio,.guided .main-govern .studio{grid-column:1;grid-row:1}.guided #tools,.guided .main-govern #tools{padding:18px}.guided .studio nav{position:static}.guided .step-intro h2{font-size:24px}}
