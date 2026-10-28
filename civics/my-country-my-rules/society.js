@@ -37,9 +37,26 @@ function changeDecision(state,events,round,choice,goal){
  const old=decisions(state,events).find(d=>d.event===round),changed=!!old&&(old.choice!==choice||old.goal!==goal);
  state.decisions=decisions(state,events).filter(d=>d.event!==round).concat({event:round,choice,goal,revisions:(old?.revisions||0)+(changed?1:0)}).sort((a,b)=>a.event-b.event);return true;
 }
+function unrest(state,events,through=Infinity){
+ const n=scores(state,events,through),moves=decisions(state,events).filter(d=>d.event<=through);
+ const abuses=moves.filter(d=>{const p=events[d.event].choices[d.choice].power||{};return p.rights||p.bypass||p.cancelElection;}).length;
+ return ['Rights','Services','Voice'].map((priority,i)=>{
+  const weights=[[.45,.45,.1],[.45,.2,.35],[.65,.25,.1]][i];
+  const pressure=Math.round((100-n.trust)*weights[0]+(100-n.liberty)*weights[1]+(100-n.budget)*weights[2]);
+  const rebellion=abuses>=2&&n.trust<35&&pressure>=[70,76,72][i];
+  return {index:i,name:state.regions[i],priority,pressure,phase:rebellion?'insurrection':pressure>=55&&moves.length?'protests':'calm',reason:i===0?'People say the leader is taking their rights.':i===1?'People say their needs are being ignored.':'People say the leader will not hear them.'};
+ });
+}
 function consequences(state,events,through=Infinity){
- const result={deaths:0,injuries:0,resignations:[],strike:false,removed:false};
- for(const d of decisions(state,events))if(d.event<=through){const h=events[d.event].choices[d.choice].harm||{};result.deaths+=h.deaths||0;result.injuries+=h.injuries||0;if(h.resigned)result.resignations.push(h.resigned);result.strike=result.strike||!!h.strike;result.removed=result.removed||!!h.removed;}
+ const result={deaths:0,injuries:0,resignations:[],strike:false,removed:false,rebellion:[],uprisingDeaths:0,uprisingInjuries:0};
+ const seen=new Set();
+ for(const d of decisions(state,events))if(d.event<=through){
+  const h=events[d.event].choices[d.choice].harm||{};result.deaths+=h.deaths||0;result.injuries+=h.injuries||0;if(h.resigned)result.resignations.push(h.resigned);result.strike=result.strike||!!h.strike;result.removed=result.removed||!!h.removed;
+  const rebels=unrest(state,events,d.event).filter(r=>r.phase==='insurrection');
+  for(const r of rebels)if(!seen.has(r.index)){seen.add(r.index);result.rebellion.push(r.name);result.uprisingDeaths++;result.uprisingInjuries+=4;}
+  if(rebels.length===3)result.removed=true;
+ }
+ result.deaths+=result.uprisingDeaths;result.injuries+=result.uprisingInjuries;
  return result;
 }
 function alignment(state,events,round,choice){
@@ -57,5 +74,5 @@ function alignment(state,events,round,choice){
  if(p.rights&&state.oversight==='courts')add('Checks and balances','You chose court review. Expect a legal challenge if people’s rights are harmed.');
  return {warnings,authoritarian:!!(p.rights||p.cancelElection||p.bypass)};
 }
-const api={consequences,alignment,scores,decisions,impact,residents,purposeOptions,changeDecision,stories};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CountrySociety=api;
+const api={unrest,consequences,alignment,scores,decisions,impact,residents,purposeOptions,changeDecision,stories};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CountrySociety=api;
 })(typeof window!=='undefined'?window:this);

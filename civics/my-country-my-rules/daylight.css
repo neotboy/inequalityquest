@@ -118,3 +118,8 @@ body.guided{color:#263b50;background:radial-gradient(ellipse at 8% 5%,#ffe4ab88,
 .society-toll{display:grid;gap:7px;margin:10px 0;font-size:13px;background:#fff4de;border:1px solid #ddc39d;border-radius:10px;padding:10px}
 .society-toll span{display:flex;justify-content:space-between;gap:8px}.society-toll b{color:#804027}.society-toll small{line-height:1.4;color:#705847}
 .harm-result{background:#ffeadf;border-left:4px solid #bd5638;padding:9px 12px;border-radius:6px;color:#823b29}
+
+.state-unrest{display:grid;gap:7px;margin:10px 0}.unrest-row{display:grid;grid-template-columns:1fr auto;gap:3px 6px;font-size:11px;background:#fffdf5;border:1px solid #b5ccc2;padding:7px;border-radius:7px}.unrest-row b{overflow-wrap:anywhere}.unrest-row meter{width:100%;height:9px;grid-column:1/-1}.unrest-row.protests{border-color:#c99545;background:#fff1d6}.unrest-row.insurrection{border-color:#b4503d;background:#ffe7dc;color:#843c2b}
+.uprising-alert{padding:15px;margin:14px 0;background:#ffe9df;color:#743825;border:2px solid #b34e39;border-radius:12px}.uprising-alert h3{font-size:19px;margin:6px 0}.uprising-alert p{font-size:15px;line-height:1.4;margin:8px 0}.uprising-alert .step-kicker{color:#9a4531}
+
+.unrest-row.protests meter::-webkit-meter-optimum-value{background:#cc9233}.unrest-row.insurrection meter::-webkit-meter-optimum-value{background:#b74e3a}.unrest-row.protests meter::-moz-meter-bar{background:#cc9233}.unrest-row.insurrection meter::-moz-meter-bar{background:#b74e3a}
