@@ -1,0 +1,16 @@
+/* Start with directions before showing the map or task choices. */
+.guided.guide-welcome main{display:block;max-width:780px;padding:24px}
+.guide-welcome .world,.guide-welcome .studio nav,.guide-welcome .studio-foot,.guide-welcome #stageStatus,.guide-welcome .head-actions{display:none!important}
+.guided.guide-welcome .studio{position:static;width:100%;max-width:none;margin:0;overflow:visible}
+.guide-welcome #tools{padding:28px 32px;max-height:none;overflow:visible}
+.directions-intro .step-kicker{color:#2e7976;font-size:12px;letter-spacing:1.3px;font-weight:bold;margin-bottom:9px}
+.directions-intro h2{font-size:32px;line-height:1.15;color:#274b53;margin:0 0 10px}
+.directions-intro>p{font-size:17px;line-height:1.4;margin:0;color:#506873}
+.country-directions{list-style:none;counter-reset:country-step;display:grid;gap:9px;padding:0;margin:21px 0}
+.country-directions li{counter-increment:country-step;position:relative;padding:11px 13px 11px 51px;background:#f2f7f1;border:1px solid #c7dbd0;border-radius:11px;font-size:16px;line-height:1.4;color:#294d57}
+.country-directions li::before{content:counter(country-step);position:absolute;left:12px;top:12px;width:27px;height:27px;border-radius:50%;background:#277c7a;color:#fff;text-align:center;font-weight:bold;line-height:27px;font-size:15px}
+.country-directions b{color:#254c54}
+.directions-reminder{padding:12px 14px;border-left:4px solid #ce9e4a;border-radius:7px;background:#fff4db;color:#5e5135;font-size:15px;line-height:1.5}
+.directions-reminder p{margin:0}
+.guide-welcome #startCountry{font-size:17px;padding:14px;margin-top:18px}
+@media(max-width:650px){.guided.guide-welcome main{padding:14px}.guide-welcome #tools{padding:22px 18px}.directions-intro h2{font-size:27px}.country-directions li{font-size:15px;padding-right:10px}.directions-intro>p{font-size:16px}}
