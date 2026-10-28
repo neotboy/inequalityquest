@@ -108,3 +108,13 @@ body.guided{color:#263b50;background:radial-gradient(ellipse at 8% 5%,#ffe4ab88,
 @media(max-width:1100px){.resident-grid{grid-template-columns:1fr}.guided .governance-meters{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:950px){.resident-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.society-heading{align-items:flex-start}.guided .world{position:static}}
 @media(max-width:500px){.resident-grid{grid-template-columns:1fr}.society-life{padding:12px}.guided .governance-meters{padding:12px;gap:8px}.guided .meter>div:first-child{font-size:10px}.impact-numbers{gap:4px}.impact-change>b{font-size:10px}.impact-change>span{font-size:16px}.society-heading{display:block}.society-heading>span{display:block;margin-top:3px}}
+
+/* An alert explains a power shift before a student commits to it. */
+.power-alert{background:#fff0d2;border:2px solid #bc612c;border-left-width:6px;border-radius:14px;padding:16px;margin:16px 0;color:#553621}
+.power-alert h3{font-size:19px;margin:5px 0 10px;color:#753c22}
+.power-alert p{font-size:15px;line-height:1.45;margin:9px 0}
+.power-alert .step-kicker{color:#88451f}
+
+.society-toll{display:grid;gap:7px;margin:10px 0;font-size:13px;background:#fff4de;border:1px solid #ddc39d;border-radius:10px;padding:10px}
+.society-toll span{display:flex;justify-content:space-between;gap:8px}.society-toll b{color:#804027}.society-toll small{line-height:1.4;color:#705847}
+.harm-result{background:#ffeadf;border-left:4px solid #bd5638;padding:9px 12px;border-radius:6px;color:#823b29}

@@ -9,58 +9,14 @@ function scores(state,events,through=Infinity){
  else{n.order-=7;n.trust+=12;n.liberty+=13;n.approval+=7;n.budget-=5;}
  const changes={democracy:{trust:8,liberty:10,approval:8},republic:{trust:8,liberty:10,approval:7},oligarchy:{order:8,trust:-14,liberty:-8,approval:-8},autocracy:{order:12,trust:-10,liberty:-17,approval:-8},totalitarian:{order:18,trust:-18,liberty:-28,approval:-15}}[state.polity]||{};
  for(const key in changes)n[key]+=changes[key];
+ const checks={courts:{liberty:3,trust:2,budget:-1},congress:{budget:3,trust:1,approval:-1},time:{order:-2,liberty:3,trust:2}}[state.oversight]||{};
+ for(const key in checks)n[key]+=checks[key];
  const bound=()=>{for(const key in n)n[key]=Math.max(5,Math.min(95,n[key]));};
  bound();
  for(const d of decisions(state,events))if(d.event<=through){for(const key in events[d.event].choices[d.choice].effect)n[key]+=events[d.event].choices[d.choice].effect[key]*3;bound();}
  return n;
 }
-const stories=[
-[
-{scene:'homes',voices:[['Maya · renter','My family gets help with rent while new homes are built.'],['Eli · builder','More homes are coming, but building takes time and public money.']]},
-{scene:'building',voices:[['Eli · builder','We can start more homes. Rent may fall later.'],['Sam · neighbor','Some towns disagree about where the new buildings should go.']]},
-{scene:'protest',voices:[['Sam · neighbor','Our town lost a say. People are protesting.'],['Jordan · judge','Some building plans must stop while courts review your order.']]}
-],
-[
-{scene:'shelter',voices:[['Rae · parent','My family has a safe place and a fair hearing.'],['Alex · town worker','We have more help, but the plan uses public money.']]},
-{scene:'border',voices:[['Alex · town worker','More officers arrive to manage the border.'],['Rae · parent','Families may be split apart while officials review their cases.']]},
-{scene:'protest',voices:[['Rae · parent','People lose a chance to explain their need for safety.'],['Jordan · judge','States and Congress challenge the leader’s power.']]}
-],
-[
-{scene:'hearing',voices:[['Taylor · parent','Families can speak at public hearings. A vote takes time.'],['Ari · student','Congress is debating safety rules instead of one leader deciding alone.']]},
-{scene:'school',voices:[['Taylor · parent','More officers may help some families feel safer.'],['Ari · student','More officers also make some students feel watched.']]},
-{scene:'protest',voices:[['Sam · resident','People lose a fair hearing before guns are taken.'],['Jordan · judge','Courts challenge the order. Trust in leaders falls.']]}
-],
-[
-{scene:'hospital',voices:[['Taylor · patient','The law gives clearer rules for emergency care.'],['Jordan · judge','Some states may challenge the law in court.']]},
-{scene:'states',voices:[['Taylor · patient','The care I can get may depend on my state.'],['Sam · voter','State leaders and voters have more say over these rules.']]},
-{scene:'court',voices:[['Taylor · patient','The new rule starts now, but it may not last.'],['Jordan · judge','A court may stop the order. Another president could change it.']]}
-],
-[
-{scene:'cooling',voices:[['Maya · parent','My family can cool down safely. Hospitals keep their power.'],['Alex · town worker','Lives are saved, but less emergency money remains.']]},
-{scene:'blackout',voices:[['Maya · parent','Seven people die after hospitals lose power. Families demand answers.'],['Alex · town worker','The palace gets a gold fan while people need help.']]},
-{scene:'power',voices:[['Taylor · nurse','Hospitals get power first.'],['Eli · worker','Workers strike. A court blocks part of the takeover order.']]}
-],
-[
-{scene:'hospital',voices:[['Maya · parent','More people may afford medicine and health care.'],['Alex · town worker','The plan costs money, and companies challenge it.']]},
-{scene:'shops',voices:[['Maya · parent','Some families get help with high bills.'],['Taylor · patient','Others still struggle to pay for their care.']]},
-{scene:'court',voices:[['Taylor · patient','Prices fall fast, but some hospitals may turn patients away.'],['Sam · voter','Congress challenges the leader for acting without a vote.']]}
-],
-[
-{scene:'voting',voices:[['Sam · voter','More people can vote and see how the count was checked.'],['Alex · election worker','We get protection and money to run the election.']]},
-{scene:'queue',voices:[['Sam · voter','Some people trust the count more.'],['Maya · voter','Long lines and extra steps may stop other people from voting.']]},
-{scene:'protest',voices:[['Sam · voter','Our chance to choose a leader was taken away.'],['Alex · election worker','Courts block the order. Congress acts, and your leader loses the job.']]}
-],
-[
-{scene:'privacy',voices:[['Ari · student','I get more say over who uses my private details.'],['Eli · shop owner','Businesses need time and money to follow the new rules.']]},
-{scene:'shops',voices:[['Eli · shop owner','Companies can choose their own rules and change them quickly.'],['Ari · student','People have fewer ways to make a company fix a problem.']]},
-{scene:'oops',voices:[['Ari · student','Private details leak, including the president’s search history.'],['Sam · resident','The director quits. People call the agency the Department of Oops.']]}
-],
-[
-{scene:'school',voices:[['Ari · student','Students get the same basic protections in every state.'],['Taylor · teacher','The law takes time. Some states may challenge it in court.']]},
-{scene:'states',voices:[['Ari · student','School rules and support may change when a family moves states.'],['Sam · voter','State and local voters decide school rules.']]},
-{scene:'court',voices:[['Taylor · teacher','Schools get a rule quickly, but courts may block it.'],['Ari · student','A new president could change the rule again.']]}
-]
-];
+const stories=[[{"scene": "privacy", "voices": [["Maya · resident", "Police get vehicle clues, with limits on searches."], ["Alex · worker", "Reviews cost money. Some people still worry about privacy."]]}, {"scene": "shops", "voices": [["Maya · resident", "No new plate records are collected."], ["Alex · worker", "Police have one less source of clues."]]}, {"scene": "oops", "voices": [["Maya · resident", "Your public copy exposes people’s trips. A resident is attacked and hurt."], ["Alex · worker", "Your privacy chief resigns. People demand an investigation."]]}], [{"scene": "homes", "voices": [["Maya · resident", "Rent aid keeps us housed. Other services must wait."], ["Alex · worker", "Building takes time, even with help."]]}, {"scene": "building", "voices": [["Maya · resident", "More homes may lower rent later."], ["Alex · worker", "Some neighbors object to the new buildings."]]}, {"scene": "protest", "voices": [["Maya · resident", "A rushed building collapses. Three people die."], ["Alex · worker", "Courts halt projects. Your housing minister resigns."]]}], [{"scene": "school", "voices": [["Maya · resident", "Our school can test an AI rule."], ["Alex · worker", "Moving to another school may mean different rules."]]}, {"scene": "hearing", "voices": [["Maya · resident", "Congress debates a shared AI law."], ["Alex · worker", "Clear rules take time. Some schools want more freedom."]]}, {"scene": "court", "voices": [["Maya · resident", "False alerts punish honest students. Schools walk out."], ["Alex · worker", "Courts order hearings. Your education chief quits."]]}], [{"scene": "protest", "voices": [["Maya · resident", "Peaceful people can still criticize the leader."], ["Alex · worker", "Shops reopen slowly. Police investigate damage."]]}, {"scene": "court", "voices": [["Maya · resident", "The safety zone reduces damage but also moves peaceful people."], ["Alex · worker", "The limit has an end date. Courts can review it."]]}, {"scene": "protest", "voices": [["Maya · resident", "Clashes leave twelve people hurt and one dead."], ["Alex · worker", "A national strike begins. Congress investigates your orders."]]}], [{"scene": "voting", "voices": [["Maya · resident", "Voting continues. Workers explain the evidence."], ["Alex · worker", "The leader might lose, but people keep their vote."]]}, {"scene": "court", "voices": [["Maya · resident", "A court reviews evidence while voting stays open."], ["Alex · worker", "The review takes time. Supporters grow impatient."]]}, {"scene": "protest", "voices": [["Maya · resident", "Six people are hurt in clashes. Your guards refuse your order."], ["Alex · worker", "Congress removes your leader. Your cabinet takes over."]]}]];
 function impact(state,events,round){const d=decisions(state,events).find(d=>d.event===round);if(!d)return null;const before=scores(state,events,round-1),after=scores(state,events,round);return {...stories[round][d.choice],round,choice:d.choice,before,after};}
 function residents(score){return [
 {name:'Maya · parent',icon:'👩🏽',mood:score.budget<25?'worried':score.trust>=60?'hopeful':'unsure',text:score.budget<25?'Public money is low. Some repairs and services may have to wait.':score.trust>=60?'People feel heard when the government makes decisions.':'People want clearer plans before they trust their leaders.'},
@@ -81,5 +37,25 @@ function changeDecision(state,events,round,choice,goal){
  const old=decisions(state,events).find(d=>d.event===round),changed=!!old&&(old.choice!==choice||old.goal!==goal);
  state.decisions=decisions(state,events).filter(d=>d.event!==round).concat({event:round,choice,goal,revisions:(old?.revisions||0)+(changed?1:0)}).sort((a,b)=>a.event-b.event);return true;
 }
-const api={scores,decisions,impact,residents,purposeOptions,changeDecision,stories};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CountrySociety=api;
+function consequences(state,events,through=Infinity){
+ const result={deaths:0,injuries:0,resignations:[],strike:false,removed:false};
+ for(const d of decisions(state,events))if(d.event<=through){const h=events[d.event].choices[d.choice].harm||{};result.deaths+=h.deaths||0;result.injuries+=h.injuries||0;if(h.resigned)result.resignations.push(h.resigned);result.strike=result.strike||!!h.strike;result.removed=result.removed||!!h.removed;}
+ return result;
+}
+function alignment(state,events,round,choice){
+ const p=events[round]?.choices[choice]?.power||{},warnings=[];
+ const add=(basis,message)=>warnings.push({basis,message});
+ if(p.cancelElection&&['republic','democracy'].includes(state.polity))add('Who rules','You chose '+(state.polity==='republic'?'a constitutional republic':'direct democracy')+'. Canceling the vote takes power away from voters.');
+ else if(p.rights&&state.polity==='republic')add('Who rules','Your constitutional republic promises rights and legal limits. This move puts those limits at risk.');
+ else if(p.bypass&&state.polity==='republic')add('Who rules','You chose a constitutional republic. This move skips other officials who may have legal power.');
+ if(p.bypass&&state.polity==='democracy'&&!p.cancelElection)add('Who rules','You chose direct democracy. Here, your leader decides without a public vote.');
+ if(p.election&&['autocracy','oligarchy','totalitarian'].includes(state.polity))add('Who rules','You chose rule by one leader or a small group. Letting voters replace you gives the public more power.');
+ if(p.local&&state.division==='confederate'&&round===1)add('Shared power','You chose a confederation, where states keep most power. Your order overrides local decisions.');
+ if(p.bypass&&state.approach==='consult')add('Leadership','You chose to build agreement. This move skips agreement and uses command.');
+ if(p.input&&state.approach==='hard')add('Leadership','You chose rule by command. This move uses input or shared decisions instead.');
+ if(p.bypass&&state.oversight==='congress')add('Checks and balances','You chose Congress review. This move tries to act without that check.');
+ if(p.rights&&state.oversight==='courts')add('Checks and balances','You chose court review. Expect a legal challenge if people’s rights are harmed.');
+ return {warnings,authoritarian:!!(p.rights||p.cancelElection||p.bypass)};
+}
+const api={consequences,alignment,scores,decisions,impact,residents,purposeOptions,changeDecision,stories};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CountrySociety=api;
 })(typeof window!=='undefined'?window:this);
