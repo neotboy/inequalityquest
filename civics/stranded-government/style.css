@@ -10,3 +10,5 @@
 
 /* Visible cause-and-effect beat between missions */
 .decision-echo{margin:0 0 18px;padding:14px 16px;border:1px solid #edaa684f;border-left:4px solid #f0a75f;border-radius:6px;background:linear-gradient(110deg,#f0a75f16,#f0a75f04);animation:enter .28s}.decision-echo b{display:block;color:#f6be68;font-size:9px;letter-spacing:1.4px;margin-bottom:7px}.decision-echo p{margin:0!important;color:#f1d9b4!important;font-size:12px!important;line-height:1.65!important}
+
+.impact-overlay{position:absolute;inset:0;z-index:2;pointer-events:none}.impact-overlay .flame{transform-box:fill-box;transform-origin:bottom center;animation:flameFlicker .42s ease-in-out infinite alternate}@keyframes flameFlicker{from{transform:scaleY(.84)}to{transform:scaleY(1.08)}}@media(prefers-reduced-motion:reduce){.impact-overlay .flame{animation:none}}
