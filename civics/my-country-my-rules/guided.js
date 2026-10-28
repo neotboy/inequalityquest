@@ -2,11 +2,11 @@
 /* Required tasks are saved separately from the creative work already on the map. */
 (() => {
 const freeTools=renderTools,originalFinish=$('#finishBtn').onclick,originalFlagDone=$('#flagDone').onclick,originalSave=save;
-const titles=['Name your country','Name your leader','Make your flag','Build place 1','Build place 2','Build place 3','Choose who rules','Choose how power is shared','Choose how you will lead','Choose your economic system','Check your leader’s power','Rule through 5 scenarios','Make law 1','Make law 2','Make law 3','Review your country'];
-const stageAt=i=>i<6?'build':i<11?'power':i===11?'crisis':'laws';
-const starts={build:0,power:6,crisis:11,laws:12};
+const titles=['Name your country','Name your leader','Make your flag','Build place 1','Build place 2','Build place 3','Build place 4','Build place 5','Choose who rules','Choose how power is shared','Choose how you will lead','Choose your economic system','Check your leader’s power','Rule through 5 scenarios','Make law 1','Make law 2','Make law 3','Review your country'];
+const stageAt=i=>i<8?'build':i<13?'power':i===13?'crisis':'laws';
+const starts={build:0,power:8,crisis:13,laws:14};
 const G=state.guide&&state.guide.version===1?state.guide:{version:1,task:0,furthest:0,done:{},picks:{},meanings:{},places:[],round:0,readRounds:[],lawReasons:{},flagConfirmed:false,flagPurpose:''};
-state.guide=G;G.decorating=false;G.lawDrafts=G.lawDrafts||{};G.task=Math.max(0,Math.min(15,Number(G.task)||0));G.furthest=Math.max(0,Math.min(15,Number(G.furthest)||0));
+state.guide=G;G.decorating=false;G.lawDrafts=G.lawDrafts||{};G.task=Math.max(0,Math.min(17,Number(G.task)||0));G.furthest=Math.max(0,Math.min(17,Number(G.furthest)||0));
 let placePage=0,savedPlaceMode=false,editingRound=null,historyPage=0,replacingSlot=-1,chosenPlace=null,pendingChoice=null,choiceGoal='',mapPurpose='',lawDraft='',lawReason='',lawTask=-1,flagPurpose=G.flagPurpose||'';
 const longEnough=t=>String(t||'').trim().split(/\s+/).filter(Boolean).length>=3&&String(t||'').trim().length>=12;
 const hasFlag=()=>state.flag.length>0||state.flagBg!=='#16364a';
@@ -38,6 +38,13 @@ if(G.courseVersion!==3){
  G.knowledge={version:1,seed:Math.floor(Math.random()*4294967295),log:{}};
  for(let i=6;i<=15;i++)delete G.done[i];
  G.task=Math.min(G.task,6);G.furthest=Math.min(G.furthest,6);G.courseVersion=3;
+}
+// Add two place tasks without discarding completed government checks or decisions.
+if(G.requiredPlaces!==5){
+ const shifted={};for(const [key,value] of Object.entries(G.done)){const i=Number(key);shifted[i>=6?i+2:i]=value;}G.done=shifted;
+ if(G.task>=6)G.task+=2;if(G.furthest>=6)G.furthest+=2;
+ G.requiredPlaces=5;
+ if(G.task>=8&&(!placeFor(3)||!placeFor(4)))G.task=6;
 }
 G.seenResults=G.seenResults||{};
 const passed=id=>G.knowledge.log[id]?.passed===true;
@@ -83,23 +90,23 @@ function taskValid(i){
  if(i===0)return hasName(state.name);
  if(i===1)return hasName(state.leader);
  if(i===2)return hasFlag()&&G.flagConfirmed&&!!G.flagPurpose;
- if(i>=3&&i<=5)return !!placeFor(i-3)&&!!G.places[i-3].purpose;
- if(i>=6&&i<=10){const key=['polity','division','approach','ownership','oversight'][i-6];return G.picks[key]===state[key]&&passed('system.'+key+'.'+state[key]);}
- if(i===11)return E.governanceEvents.every((e,n)=>passed('round.'+n)&&state.decisions.some(d=>d.event===n&&e.choices[d.choice]));
- if(i>=12&&i<=14){const r=state.rules[i-12];return !!r&&longEnough(r.text)&&longEnough(G.lawReasons[r.id])&&state.rules.filter(x=>x.text.trim().toLowerCase()===r.text.trim().toLowerCase()).length===1;}
+ if(i>=3&&i<=7)return !!placeFor(i-3)&&!!G.places[i-3].purpose;
+ if(i>=8&&i<=12){const key=['polity','division','approach','ownership','oversight'][i-8];return G.picks[key]===state[key]&&passed('system.'+key+'.'+state[key]);}
+ if(i===13)return E.governanceEvents.every((e,n)=>passed('round.'+n)&&state.decisions.some(d=>d.event===n&&e.choices[d.choice]));
+ if(i>=14&&i<=16){const r=state.rules[i-14];return !!r&&longEnough(r.text)&&longEnough(G.lawReasons[r.id])&&state.rules.filter(x=>x.text.trim().toLowerCase()===r.text.trim().toLowerCase()).length===1;}
  return false;
 }
-const finished=()=>titles.slice(0,15).every((_,i)=>G.done[i]&&taskValid(i));
-function firstUnfinished(){return titles.slice(0,15).findIndex((_,i)=>!G.done[i]||!taskValid(i));}
+const finished=()=>titles.slice(0,17).every((_,i)=>G.done[i]&&taskValid(i));
+function firstUnfinished(){return titles.slice(0,17).findIndex((_,i)=>!G.done[i]||!taskValid(i));}
 function shell(){
- view=G.decorating?'build':stageAt(G.task);document.body.classList.add('guided');document.body.classList.toggle('guide-laws',G.task>=12);document.body.classList.toggle('guide-creative',G.task<=5||G.decorating);document.body.dataset.guideTask=G.decorating?'decorate':String(G.task);
+ view=G.decorating?'build':stageAt(G.task);document.body.classList.add('guided');document.body.classList.toggle('guide-laws',G.task>=14);document.body.classList.toggle('guide-creative',G.task<=7||G.decorating);document.body.dataset.guideTask=G.decorating?'decorate':String(G.task);
  $('main').classList.toggle('main-govern',view==='power');
  document.querySelectorAll('[data-tool]').forEach(b=>{const start=starts[b.dataset.tool];const unlocked=G.furthest>=start&&titles.slice(0,start).every((_,i)=>G.done[i]&&taskValid(i));b.disabled=!unlocked;b.classList.toggle('active',view===b.dataset.tool);b.setAttribute('aria-current',view===b.dataset.tool?'step':'false');b.title=unlocked?'Review this part':'Finish the earlier tasks to unlock this part';});
  $('#finishBtn').disabled=!finished();$('#finishBtn').textContent=finished()?'Review your country ↗':'Finish all tasks to review 🔒';
  $('#countryName').readOnly=true;$('#leaderName').readOnly=true;$('#countryName').tabIndex=-1;$('#leaderName').tabIndex=-1;
  $('#flagBtn').disabled=G.task!==2&&!finished();$('#flagBtn').tabIndex=$('#flagBtn').disabled?-1:0;
- map.style.pointerEvents=G.decorating||G.task>=3&&G.task<=5||G.task===15?'auto':'none';
- $('#stageStatus').innerHTML=`<b>${G.decorating?'Creative time':`TASK ${G.task+1} OF ${titles.length} · ${esc(titles[G.task])}`}</b><div class="guided-progress" role="progressbar" aria-label="Required tasks completed" aria-valuemin="0" aria-valuemax="15" aria-valuenow="${titles.slice(0,15).filter((_,i)=>G.done[i]&&taskValid(i)).length}"><i style="width:${titles.slice(0,15).filter((_,i)=>G.done[i]&&taskValid(i)).length/15*100}%"></i></div>`;
+ map.style.pointerEvents=G.decorating||G.task>=3&&G.task<=7||G.task===17?'auto':'none';
+ $('#stageStatus').innerHTML=`<b>${G.decorating?'Creative time':`TASK ${G.task+1} OF ${titles.length} · ${esc(titles[G.task])}`}</b><div class="guided-progress" role="progressbar" aria-label="Required tasks completed" aria-valuemin="0" aria-valuemax="17" aria-valuenow="${titles.slice(0,17).filter((_,i)=>G.done[i]&&taskValid(i)).length}"><i style="width:${titles.slice(0,17).filter((_,i)=>G.done[i]&&taskValid(i)).length/17*100}%"></i></div>`;
 }
 save=function(){originalSave();shell();};
 updateStageStatus=shell;
@@ -135,7 +142,7 @@ function mapTask(){
   const shown=pool.slice(placePage*3,placePage*3+3);
   content=pickButtons(shown.map((p,i)=>[String(placePage*3+i),(p.icon||'📍')+' '+(p.name||p.text)]),null,savedPlaceMode?'data-existing-place':'data-new-place')+`<div class="place-pager">${placePage>0?'<button id="placePrevious">← Back</button>':''}${placePage<pages-1?'<button id="placeMore">Three other places →</button>':''}</div>${old.length?`<button id="toggleSavedPlaces" class="wide guide-back">${savedPlaceMode?'Choose a new place instead':'Use a place already on my map'}</button>`:''}`;
  }
- $('#tools').innerHTML=intro(`Place ${slot+1} of 3. Pick one place. Then choose one of its two purposes.`)+content+(saved&&!chosenPlace&&replacingSlot!==slot?footer(taskValid(G.task)):'<button id="guideBack" class="wide guide-back">← Back to the last task</button>');
+ $('#tools').innerHTML=intro(`Place ${slot+1} of 5. Pick one place. Then choose one of its two purposes.`)+content+(saved&&!chosenPlace&&replacingSlot!==slot?footer(taskValid(G.task)):'<button id="guideBack" class="wide guide-back">← Back to the last task</button>');
  document.querySelectorAll('[data-new-place]').forEach(b=>b.onclick=()=>{chosenPlace=freshPlaces[+b.dataset.newPlace];mapPurpose='';refresh();});
  document.querySelectorAll('[data-existing-place]').forEach(b=>b.onclick=()=>{chosenPlace={saved:old[+b.dataset.existingPlace].id};mapPurpose='';refresh();});
  if($('#placeMore'))$('#placeMore').onclick=()=>{placePage++;refresh();};
@@ -147,12 +154,12 @@ function mapTask(){
  bindFooter();
 }
 function government(){
- const key=['polity','division','approach','ownership','oversight'][G.task-6],keys=Object.keys(checks[key]);
+ const key=['polity','division','approach','ownership','oversight'][G.task-8],keys=Object.keys(checks[key]);
  const label=k=>key==='oversight'?({courts:'Court review',congress:'Spending review',time:'Emergency time limits'}[k]):key==='approach'?({consult:'Build agreement',firm:'Lead firmly',hard:'Rule by command'}[k]):E.words[k].name;
  const explanation={polity:'Who gets the final say? Choose a system to try.',division:'Who holds power: national leaders, states, or both?',approach:'How will your leader use power?',ownership:'Who owns major businesses?',oversight:'Choose a check on your leader’s power.'}[key];
  const selected=G.picks[key],options=keys.map(k=>[k,label(k),checks[key][k]]);
  const id=selected?'system.'+key+'.'+selected:null,bank=selected?K.systems[key][selected]:null;
- $('#tools').innerHTML=intro(`Government ${G.task-5} of 5. ${explanation}`)+(selected?`<p class="guided-success"><b>Your choice:</b> ${esc(label(selected))}</p><button id="changeSystem" class="wide guide-back">Change my system</button>`:pickButtons(options,null,'data-gov-select'))+(key==='ownership'?'<p class="guided-help">This labels your economy. No choice here earns more country points.</p>':'')+(selected?quizMarkup(id,bank):'')+footer(taskValid(G.task),selected?'Save my system →':'Choose a system first');
+ $('#tools').innerHTML=intro(`Government ${G.task-7} of 5. ${explanation}`)+(selected?`<p class="guided-success"><b>Your choice:</b> ${esc(label(selected))}</p><button id="changeSystem" class="wide guide-back">Change my system</button>`:pickButtons(options,null,'data-gov-select'))+(key==='ownership'?'<p class="guided-help">This labels your economy. No choice here earns more country points.</p>':'')+(selected?quizMarkup(id,bank):'')+footer(taskValid(G.task),selected?'Save my system →':'Choose a system first');
  if($('#changeSystem'))$('#changeSystem').onclick=()=>{delete G.picks[key];refresh();};
  document.querySelectorAll('[data-gov-select]').forEach(b=>b.onclick=()=>{state[key]=b.dataset.govSelect;G.picks[key]=state[key];refresh();});
  if(selected)bindQuiz(id,bank);
@@ -160,21 +167,21 @@ function government(){
 }
 function scoreGuide(){return '<details class="score-guide"><summary>What do the country scores mean?</summary><p><b>Approval:</b> support for your government.<br><b>Budget room:</b> money left to spend.<br><b>Order:</b> safety and whether laws are followed.<br><b>Trust:</b> belief in your leaders.<br><b>Civil liberties:</b> freedoms such as speech and privacy.</p></details>';}
 function crisisFrontier(){for(let i=0;i<E.governanceEvents.length;i++)if(!state.decisions.some(d=>d.event===i)||!passed('round.'+i))return i;return E.governanceEvents.length;}
-function goRound(n){if(!Number.isInteger(n)||n<0||n>crisisFrontier()){toast('Finish the earlier scenario first.');return;}G.task=11;G.round=n;editingRound=null;pendingChoice=null;choiceGoal='';refresh();focusTask();}
+function goRound(n){if(!Number.isInteger(n)||n<0||n>crisisFrontier()){toast('Finish the earlier scenario first.');return;}G.task=13;G.round=n;editingRound=null;pendingChoice=null;choiceGoal='';refresh();focusTask();}
 function pastDecisions(){const rounds=CountrySociety.decisions(state,E.governanceEvents).filter(d=>d.event<=crisisFrontier());if(!rounds.length)return '';const pageCount=Math.ceil(rounds.length/3);historyPage=Math.max(0,Math.min(historyPage,pageCount-1));return `<details class="past-decisions"><summary>Review or change an earlier decision</summary>${rounds.slice(historyPage*3,historyPage*3+3).map(d=>`<button data-go-round="${d.event}"><b>Round ${d.event+1}:</b> ${esc(E.governanceEvents[d.event].title)}</button>`).join('')}<div class="round-page">${historyPage>0?'<button id="historyPrevious">← Earlier</button>':''}${historyPage<pageCount-1?'<button id="historyNext">Later →</button>':''}</div></details>`;}
 function roundControls(n){const frontier=crisisFrontier();return `<div class="round-navigation">${n>0?`<button class="guide-back wide" data-go-round="${Math.min(n-1,E.governanceEvents.length-1)}">← Previous scenario</button>`:'<button id="backToGovernment" class="guide-back wide">← Government choices</button>'}${n<frontier?`<button class="guide-back wide" data-go-round="${frontier}">Back to where I was →</button>`:''}</div>`+pastDecisions();}
-function bindRoundControls(){document.querySelectorAll('[data-go-round]').forEach(b=>b.onclick=()=>goRound(+b.dataset.goRound));if($('#backToGovernment'))$('#backToGovernment').onclick=()=>moveTask(10);if($('#historyPrevious'))$('#historyPrevious').onclick=()=>{historyPage--;refresh();$('.past-decisions').open=true;};if($('#historyNext'))$('#historyNext').onclick=()=>{historyPage++;refresh();$('.past-decisions').open=true;};}
+function bindRoundControls(){document.querySelectorAll('[data-go-round]').forEach(b=>b.onclick=()=>goRound(+b.dataset.goRound));if($('#backToGovernment'))$('#backToGovernment').onclick=()=>moveTask(12);if($('#historyPrevious'))$('#historyPrevious').onclick=()=>{historyPage--;refresh();$('.past-decisions').open=true;};if($('#historyNext'))$('#historyNext').onclick=()=>{historyPage++;refresh();$('.past-decisions').open=true;};}
 function powerAlert(n,choice,compact=false){
  const check=CountrySociety.alignment(state,E.governanceEvents,n,choice);
  if(!check.warnings.length&&!check.authoritarian)return '';
  if(compact)return `<section class="power-alert" role="alert"><b>⚠ ${check.warnings.length?'This move clashes with your setup.':'This move shifts power toward the leader.'}</b><details><summary>Why?</summary><p>${esc(check.warnings[0]?.message||'People have less room to challenge the leader.')}</p></details></section>`;
  return `<section class="power-alert" role="alert"><div class="step-kicker">${check.warnings.length?'GOVERNMENT MISMATCH':'POWER SHIFT'}</div><h3>${check.warnings.length?'Does this match your setup?':'This move is more authoritarian.'}</h3>${check.warnings.slice(0,1).map(w=>`<p>${esc(w.message)}</p>`).join('')}${check.authoritarian?'<p><b>Authoritarian move: power shifts toward the leader.</b> People have less room to challenge decisions.</p>':''}<p class="guided-help">Keep the move and face the result, or change it.</p><button id="reviewGovernment" class="wide guide-back">Review my government setup</button></section>`;
 }
-function bindPowerAlert(){if($('#reviewGovernment'))$('#reviewGovernment').onclick=()=>moveTask(6);}
+function bindPowerAlert(){if($('#reviewGovernment'))$('#reviewGovernment').onclick=()=>moveTask(8);}
 function crisis(){
  const n=G.round,total=E.governanceEvents.length;
  if(n>=total){
-  $('#tools').innerHTML=intro('Your first year is over. Your choices shaped daily life.')+`<p class="guided-success">✓ Five scenarios finished. Every check passed.</p><p>${esc(yearEnding())}</p>`+learningReport()+footer(taskValid(11),'Next: make law 1 →')+roundControls(n);bindFooter();bindRoundControls();return;
+  $('#tools').innerHTML=intro('Your first year is over. Your choices shaped daily life.')+`<p class="guided-success">✓ Five scenarios finished. Every check passed.</p><p>${esc(yearEnding())}</p>`+learningReport()+footer(taskValid(13),'Next: make law 1 →')+roundControls(n);bindFooter();bindRoundControls();return;
  }
  const event=E.governanceEvents[n],decision=state.decisions.find(d=>d.event===n),picked=decision&&event.choices[decision.choice],revising=editingRound===n;
  if(picked&&!revising){
@@ -194,16 +201,16 @@ function crisis(){
  if($('#commitDecision'))$('#commitDecision').onclick=()=>{if(pendingChoice===null||!choiceGoal||(!revising&&state.decisions.some(d=>d.event===n)))return;CountrySociety.changeDecision(state,E.governanceEvents,n,pendingChoice,choiceGoal);state.revealed={event:n,choice:pendingChoice};G.seenResults[n]=false;editingRound=null;pendingChoice=null;choiceGoal='';refresh();focusTask();};bindRoundControls();
 }
 const lawIdeas=[['Rights','People can criticize the government and hold peaceful protests.'],['Emergency powers','Emergency rules end after 30 days unless Congress votes to keep them.'],['Voting','Every eligible voter can vote. The public can check election results.'],['Health and safety','The government will keep hospitals and cooling centers ready for emergencies.'],['My own idea','']];
-function law(){const slot=G.task-12,existing=state.rules[slot];if(lawTask!==G.task){lawTask=G.task;lawDraft=G.lawDrafts[slot]?.text??existing?.text??'';lawReason=G.lawDrafts[slot]?.reason??(existing?G.lawReasons[existing.id]||'':'');}const ready=()=>longEnough(lawDraft)&&longEnough(lawReason)&&!state.rules.some((r,i)=>i!==slot&&r.text.trim().toLowerCase()===lawDraft.trim().toLowerCase());$('#tools').innerHTML=intro(`Law ${slot+1} of 3. Pick an idea or write your own. Say why it matters.`)+pickButtons(lawIdeas.map(([k,t],i)=>[String(i),k,t]),null,'data-law-idea')+`<label for="guidedLaw">Your law</label><textarea id="guidedLaw" maxlength="120" placeholder="People can… / The government must…">${esc(lawDraft)}</textarea><label for="guidedLawReason">Why does this law matter?</label><textarea id="guidedLawReason" maxlength="160" placeholder="This law matters because…">${esc(lawReason)}</textarea><p class="guided-help">Use at least 3 words in each box. Make each law different.</p>`+footer(ready(),`Save law ${slot+1} and continue →`);document.querySelectorAll('[data-law-idea]').forEach(b=>b.onclick=()=>{lawDraft=lawIdeas[+b.dataset.lawIdea][1];G.lawDrafts[slot]={text:lawDraft,reason:lawReason};save();$('#guidedLaw').value=lawDraft;$('#guidedLaw').focus();updateNext(ready());});$('#guidedLaw').oninput=e=>{lawDraft=e.target.value;G.lawDrafts[slot]={text:lawDraft,reason:lawReason};save();updateNext(ready());};$('#guidedLawReason').oninput=e=>{lawReason=e.target.value;G.lawDrafts[slot]={text:lawDraft,reason:lawReason};save();updateNext(ready());};$('#guideNext').onclick=()=>{if(!ready()){toast('Write a different law and explain why it matters.');return;}if(existing)existing.text=lawDraft.trim();else E.addRule(state,lawDraft);G.lawReasons[state.rules[slot].id]=lawReason.trim();advance();};if($('#guideBack'))$('#guideBack').onclick=()=>moveTask(G.task-1);}
+function law(){const slot=G.task-14,existing=state.rules[slot];if(lawTask!==G.task){lawTask=G.task;lawDraft=G.lawDrafts[slot]?.text??existing?.text??'';lawReason=G.lawDrafts[slot]?.reason??(existing?G.lawReasons[existing.id]||'':'');}const ready=()=>longEnough(lawDraft)&&longEnough(lawReason)&&!state.rules.some((r,i)=>i!==slot&&r.text.trim().toLowerCase()===lawDraft.trim().toLowerCase());$('#tools').innerHTML=intro(`Law ${slot+1} of 3. Pick an idea or write your own. Say why it matters.`)+pickButtons(lawIdeas.map(([k,t],i)=>[String(i),k,t]),null,'data-law-idea')+`<label for="guidedLaw">Your law</label><textarea id="guidedLaw" maxlength="120" placeholder="People can… / The government must…">${esc(lawDraft)}</textarea><label for="guidedLawReason">Why does this law matter?</label><textarea id="guidedLawReason" maxlength="160" placeholder="This law matters because…">${esc(lawReason)}</textarea><p class="guided-help">Use at least 3 words in each box. Make each law different.</p>`+footer(ready(),`Save law ${slot+1} and continue →`);document.querySelectorAll('[data-law-idea]').forEach(b=>b.onclick=()=>{lawDraft=lawIdeas[+b.dataset.lawIdea][1];G.lawDrafts[slot]={text:lawDraft,reason:lawReason};save();$('#guidedLaw').value=lawDraft;$('#guidedLaw').focus();updateNext(ready());});$('#guidedLaw').oninput=e=>{lawDraft=e.target.value;G.lawDrafts[slot]={text:lawDraft,reason:lawReason};save();updateNext(ready());};$('#guidedLawReason').oninput=e=>{lawReason=e.target.value;G.lawDrafts[slot]={text:lawDraft,reason:lawReason};save();updateNext(ready());};$('#guideNext').onclick=()=>{if(!ready()){toast('Write a different law and explain why it matters.');return;}if(existing)existing.text=lawDraft.trim();else E.addRule(state,lawDraft);G.lawReasons[state.rules[slot].id]=lawReason.trim();advance();};if($('#guideBack'))$('#guideBack').onclick=()=>moveTask(G.task-1);}
 function yearEnding(){const harm=CountrySociety.consequences(state,E.governanceEvents);if(harm.rebellion.length===3)return 'All three states rise against your rule. Your government collapses. The cabinet takes over.';if(harm.removed)return 'Your leader is removed. The cabinet takes over a country shaken by your choices.';if(harm.deaths>=3)return 'People died because safety was pushed aside. Families demand answers. Your government faces an investigation.';const score=indicators();return score.trust<18&&score.liberty<18?'Your government lost trust and rights. Congress removes your leader from office.':score.budget<18?'The treasury is empty. Your next government needs a rescue plan.':score.approval<18?'People have stopped supporting your leader. A vote to remove you is coming.':score.liberty>=62&&score.trust>=57?'You protected rights and public trust through a rough year.':'Your country made it through a hard year, but people are divided.';}
-function review(){if(!finished()){moveTask(Math.max(0,firstUnfinished()));return;}const ending=yearEnding();$('#tools').innerHTML=intro('Every required task is complete. Read your country’s story, then download your country profile.')+`<p class="guided-success">✓ Country and leader named<br>✓ Flag designed with a meaning<br>✓ Three places built with a purpose<br>✓ Five government choices checked<br>✓ Five scenarios and every check passed<br>✓ Three laws explained</p><section class="decision-feedback"><h3>Your first year</h3><p>${esc(ending)}</p></section>${learningReport()}<div class="guided-review">${state.rules.slice(0,3).map((r,i)=>`<article><h3>Law ${i+1}</h3><p>${esc(r.text)}</p><p><b>Why it matters:</b> ${esc(G.lawReasons[r.id])}</p></article>`).join('')}</div><button id="guidedReview" class="primary wide step-next">Open my finished country →</button><button id="decorateMore" class="wide">Keep decorating my map and flag ✎</button><button id="guideBack" class="wide guide-back">← Review law 3</button>`;$('#guidedReview').onclick=()=>$('#finishBtn').click();$('#decorateMore').onclick=()=>{G.decorating=true;undoStack=[];refresh();};const history=document.createElement('div');history.innerHTML=pastDecisions();$('#tools').append(history);bindRoundControls();$('#guideBack').onclick=()=>moveTask(14);}
-renderTools=function(){shell();if(G.decorating&&finished()){view='build';freeTools();$('#tools').querySelector('.step-intro').innerHTML='<h2>Keep decorating</h2><p>Your required work is complete. Add places, draw, or edit your flag.</p>';$('#tools').querySelector('[data-next-step]')?.remove();const b=document.createElement('button');b.className='primary wide step-next';b.textContent='Return to my finished country →';b.onclick=()=>{G.decorating=false;moveTask(15);};$('#tools').append(b);return;}if(G.task<2)names();else if(G.task===2)flagTask();else if(G.task<=5)mapTask();else if(G.task<=10)government();else if(G.task===11)crisis();else if(G.task<=14)law();else review();};
+function review(){if(!finished()){moveTask(Math.max(0,firstUnfinished()));return;}const ending=yearEnding();$('#tools').innerHTML=intro('Every required task is complete. Read your country’s story, then download your country profile.')+`<p class="guided-success">✓ Country and leader named<br>✓ Flag designed with a meaning<br>✓ Five places built with a purpose<br>✓ Five government choices checked<br>✓ Five scenarios and every check passed<br>✓ Three laws explained</p><section class="decision-feedback"><h3>Your first year</h3><p>${esc(ending)}</p></section>${learningReport()}<div class="guided-review">${state.rules.slice(0,3).map((r,i)=>`<article><h3>Law ${i+1}</h3><p>${esc(r.text)}</p><p><b>Why it matters:</b> ${esc(G.lawReasons[r.id])}</p></article>`).join('')}</div><button id="guidedReview" class="primary wide step-next">Open my finished country →</button><button id="decorateMore" class="wide">Keep decorating my map and flag ✎</button><button id="guideBack" class="wide guide-back">← Review law 3</button>`;$('#guidedReview').onclick=()=>$('#finishBtn').click();$('#decorateMore').onclick=()=>{G.decorating=true;undoStack=[];refresh();};const history=document.createElement('div');history.innerHTML=pastDecisions();$('#tools').append(history);bindRoundControls();$('#guideBack').onclick=()=>moveTask(16);}
+renderTools=function(){shell();if(G.decorating&&finished()){view='build';freeTools();$('#tools').querySelector('.step-intro').innerHTML='<h2>Keep decorating</h2><p>Your required work is complete. Add places, draw, or edit your flag.</p>';$('#tools').querySelector('[data-next-step]')?.remove();const b=document.createElement('button');b.className='primary wide step-next';b.textContent='Return to my finished country →';b.onclick=()=>{G.decorating=false;moveTask(17);};$('#tools').append(b);return;}if(G.task<2)names();else if(G.task===2)flagTask();else if(G.task<=7)mapTask();else if(G.task<=12)government();else if(G.task===13)crisis();else if(G.task<=16)law();else review();};
 $('#flagDone').onclick=()=>{if(G.task===2&&!hasFlag()){toast('Draw a symbol or change the flag background first.');return;}G.flagConfirmed=hasFlag();originalFlagDone();save();};
 let profileDownloadUrl='';
 $('#saveImage').onclick=null;
 $('#finishBtn').onclick=()=>{
  if(!finished()){toast('Finish every required task before reviewing.');return;}
- G.task=15;G.decorating=false;refresh();originalFinish();
+ G.task=17;G.decorating=false;refresh();originalFinish();
  if(profileDownloadUrl)URL.revokeObjectURL(profileDownloadUrl);
  const binary=atob(posterUrl.split(',')[1]),bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));
  profileDownloadUrl=URL.createObjectURL(new Blob([bytes],{type:'image/png'}));
@@ -216,7 +223,7 @@ makePoster=function(){
  const purposeNames={health:'Care for people',learning:'Help people learn',rights:'Protect rights or make decisions',travel:'Move people or supplies',work:'Provide jobs, food, or power',nature:'Protect land or water',fun:'Make life more fun'};
  const goalNames={help:'Help people now',money:'Protect the budget',rights:'Protect rights',speed:'Act fast',power:'Gain more control',chaos:'Try a wild idea and face the result'};
  line('THE MEANING OF MY FLAG',true);line(G.flagPurpose==='own'?'My own meaning':G.flagPurpose);
- line('THREE PLACES WITH A PURPOSE',true);G.places.forEach((record,i)=>{const place=placeFor(i);if(place)line(place.text+': '+(record.purposeText||purposeNames[record.purpose]||record.purpose));});
+ line('FIVE PLACES WITH A PURPOSE',true);G.places.forEach((record,i)=>{const place=placeFor(i);if(place)line(place.text+': '+(record.purposeText||purposeNames[record.purpose]||record.purpose));});
  line('CHECK ON MY LEADER: '+({courts:'Court review',congress:'Spending review',time:'Emergency time limits'}[state.oversight]),true);
  line('KNOWLEDGE CHECK RECORD',true);const stats=learningStats();line(stats.passed+' of '+stats.total+' checks passed. '+stats.firstTry+' correct on the first try. '+'Extra attempts: '+stats.retries+'. Checks with a clue: '+stats.clues+'.');activeCheckIds().forEach(id=>{const record=G.knowledge.log[id];if(record)line(checkLabel(id)+': '+record.attempts.length+' attempt(s); first try '+(record.attempts[0]?.correct?'correct':'needed another example')+(record.attempts.some(a=>a.helpUsed)?'; clue used':''));});line('MY THREE LAWS',true);state.rules.slice(0,3).forEach((r,i)=>{line((i+1)+'. '+r.text,true);line('Why it matters: '+G.lawReasons[r.id]);});
  const harm=CountrySociety.consequences(state,E.governanceEvents);line('LIVES LOST: '+harm.deaths+' · PEOPLE HURT: '+harm.injuries,true);if(harm.resignations.length)line('Officials who quit: '+harm.resignations.join(', '));if(harm.rebellion.length)line('States that rose against the government: '+harm.rebellion.join(', '));

@@ -33,7 +33,7 @@ function scene(impact){if(!impact)return;const candidates=[[[330,245],[160,210],
 drawMap=function(){
  map.setAttribute('aria-label','Map of your country with '+state.marks.length+' places. Faces and signs show how society changes.');ctx.clearRect(0,0,960,650);const sea=ctx.createLinearGradient(0,0,960,650);sea.addColorStop(0,'#d8f4f4');sea.addColorStop(1,'#a9dce9');ctx.fillStyle=sea;ctx.fillRect(0,0,960,650);
  ctx.strokeStyle='#ffffff70';ctx.lineWidth=2;for(let y=20;y<650;y+=43)for(let x=15;x<960;x+=62){ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+11,y-6,x+23,y);ctx.quadraticCurveTo(x+34,y+6,x+45,y);ctx.stroke();}
- const n=indicators(),impact=currentImpact(),governing=state.guide?.task>=6;
+ const n=indicators(),impact=currentImpact(),governing=state.guide?.task>=8;
  shapes.forEach((poly,i)=>{ctx.save();ctx.shadowColor='#4b8d9d40';ctx.shadowBlur=12;ctx.shadowOffsetY=7;outline(poly);ctx.fillStyle=colors[i];ctx.fill();ctx.shadowColor='transparent';ctx.lineWidth=10;ctx.strokeStyle='#fffdf0';ctx.stroke();ctx.clip();
   if(i===0){for(let t=0;t<16;t++)tree(115+(t*47)%310,180+(t*61)%145,9+(t%3)*2);hill(165,155,32);hill(205,140,25);}
   if(i===1){for(let t=0;t<9;t++){ctx.fillStyle=t%2?'#e9bf76':'#f8e8b2';ctx.beginPath();ctx.ellipse(530+t*38,235+(t%3)*30,48,18,-.3,0,Math.PI*2);ctx.fill();}hill(780,195,35);tree(805,255,12);tree(830,280,11);}
