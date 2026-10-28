@@ -1,0 +1,59 @@
+/* Letter-size sheets: the screen preview and printed report share their layout. */
+#countryPrintRoot{display:none}
+#showDialog{width:min(940px,96vw);max-width:96vw;max-height:94vh;padding:0;background:#e8eeeb}
+#showDialog>.close{position:absolute;right:9px;top:9px;z-index:5}
+#showDialog .poster-actions{position:sticky;top:0;z-index:3;display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff;padding:14px 52px 12px 18px;border-bottom:1px solid #b9cbc4;margin:0}
+#showDialog .poster-actions button,#showDialog .poster-actions a{font-size:14px;text-decoration:none}
+#showDialog .report-note{padding:0 20px 12px;font-size:12px;color:#4b6259}
+.report-preview{padding:20px 12px}
+.print-sheet{--report-ink:#243d43;--report-line:#b8c8c5;box-sizing:border-box;position:relative;width:7.5in;height:9.95in;margin:0 auto 22px;padding:.24in .25in .42in;background:#fff;color:var(--report-ink);font:10pt/1.34 Arial,sans-serif;box-shadow:0 3px 15px #203d4320;text-align:left;overflow-wrap:anywhere}
+.print-sheet *{box-sizing:border-box}
+.print-sheet p,.print-sheet h1,.print-sheet h2,.print-sheet h3,.print-sheet figure{margin:0}
+.report-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding-bottom:11px;margin-bottom:12px;border-bottom:2px solid #326f70}
+.report-kicker{font-size:8pt;letter-spacing:1.25px;font-weight:bold;color:#386c6c;margin-bottom:4px}
+.report-head h2{font-size:21pt;line-height:1.1;letter-spacing:-.5px;color:#243d43;margin-bottom:4px}
+.report-head p{font-size:9pt;color:#546c71}
+.report-page-number{font-size:10pt;white-space:nowrap;color:#536d72}
+.report-student{display:flex;align-items:center;gap:6px;font-size:9pt;margin-bottom:15px}.report-student span{display:inline-block;flex:1;border-bottom:1px solid #62777b;height:16px}.report-student span:first-of-type{flex:2}
+.report-identity{display:flex;align-items:center;gap:15px;margin-bottom:9px}.report-identity>div{flex:1;min-width:0}.report-identity h1{font-size:24pt;line-height:1.12;letter-spacing:-.5px;margin-bottom:6px}.report-identity p{font-size:10pt}
+.report-flag{display:block;width:1.17in;height:.7in;object-fit:contain;border:1px solid #829e99}
+.report-map img{display:block;width:100%;height:4in;object-fit:contain;background:#fff;border:1px solid #b8c8c5}
+.report-map figcaption{font-size:8.5pt;padding:6px 0;color:#4d666b}
+.report-flag-meaning{font-size:9.5pt;padding:6px 0 8px}
+.report-section-title{font-size:12pt;letter-spacing:0;margin:9px 0!important;color:#244f53}
+.report-places{border-collapse:collapse;width:100%;font-size:10pt;table-layout:fixed}
+.report-places th{background:#edf4f1;font-size:9pt;text-align:left;color:#284d50}
+.report-places th,.report-places td{border:1px solid var(--report-line);padding:7px 9px;vertical-align:top}
+.report-places th:first-child{width:7%}.report-places th:nth-child(2){width:35%}
+.report-footer{position:absolute;bottom:.16in;left:.25in;right:.25in;display:flex;justify-content:space-between;gap:15px;border-top:1px solid #c7d2ce;padding-top:6px;font-size:8pt;color:#52686d}
+.report-government{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.report-gov{border:1px solid #c4d2cd;border-radius:5px;padding:9px 10px;background:#fff;break-inside:avoid}
+.report-gov>span{display:block;font-size:8pt;font-weight:bold;color:#557176;margin-bottom:3px}.report-gov>b{display:block;font-size:11pt;line-height:1.2}.report-gov p{font-size:9pt;line-height:1.32;margin-top:5px}
+.report-law{display:flex;gap:10px;border-top:1px solid #c4d2cd;padding:12px 0;break-inside:avoid}
+.report-number{font-size:13pt;color:#3a6d6c;min-width:18px}
+.report-law h3{font-size:11pt;line-height:1.3;margin-bottom:6px}.report-law p{font-size:10pt;line-height:1.4}
+.report-learning{margin-top:15px;padding:11px 12px;border:1px solid #b7cac0;background:#f5f8f4;border-radius:5px}.report-learning h3,.report-year h3{font-size:11pt;margin-bottom:6px}.report-learning p{font-size:9.5pt}.report-learning .report-small{margin-top:6px}
+.print-sheet .report-small{font-size:8pt;line-height:1.35;color:#52686d}
+.report-final-scores{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:10px}.report-final-scores>div{border:1px solid #c4d2cd;border-radius:4px;padding:7px 8px}.report-final-scores span{font-size:8pt;display:block;color:#52686d}.report-final-scores b{font-size:17pt;line-height:1.15}.report-final-scores small{font-size:8pt;font-weight:normal;color:#52686d;margin-left:2px}
+.report-decision{border-top:1px solid #bbcfc8;padding:5px 0;break-inside:avoid}.report-decision-title{display:flex;align-items:baseline;gap:7px;margin-bottom:4px}.report-decision-title>b{color:#2d6b6b;font-size:11pt}.report-decision-title h3{flex:1;font-size:10.5pt;line-height:1.2}.report-decision-title>span{font-size:7.5pt;color:#486f5f;white-space:nowrap}
+.report-decision>p{font-size:9pt;line-height:1.28;margin:3px 0}.report-change{font-size:8pt;color:#375d62;margin-top:5px}.report-change span,.report-year p>span,.report-learning p>span{padding:0 5px}.report-decision .report-warning{font-size:8pt;line-height:1.25;color:#773b2b}
+.report-year{padding:9px 11px;border:1px solid #c5c8bb;border-radius:5px;background:#fbfaf2;margin-top:8px}.report-year p{font-size:9pt;line-height:1.28;margin:4px 0}.report-simulation{margin-top:7px!important}
+@media(max-width:650px){.report-preview{padding:12px 5px}.print-sheet{width:100%;height:auto;min-height:0;padding:18px 15px 45px;font-size:12px}.report-identity h1{font-size:24px}.report-head h2{font-size:23px}.report-map img{height:auto}.report-government{grid-template-columns:1fr}.report-footer{left:15px;right:15px;bottom:12px}.report-decision-title{flex-wrap:wrap}.report-decision-title>span{margin-left:19px}}
+@page{size:Letter portrait;margin:.5in}
+@media print{
+ html,body{margin:0!important;padding:0!important;background:white!important;width:auto!important;height:auto!important;overflow:visible!important}
+ body>*:not(#countryPrintRoot){display:none!important}
+ dialog,dialog[open],dialog::backdrop{display:none!important}
+ #countryPrintRoot{display:block!important;margin:0!important;padding:0!important}
+ #countryPrintRoot .print-sheet{display:block!important;width:7.5in!important;height:9.95in!important;min-height:0!important;max-width:none!important;margin:0!important;padding:.08in 0 .35in!important;box-shadow:none!important;border:0!important;break-after:page;page-break-after:always;font:10pt/1.34 Arial,sans-serif!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ #countryPrintRoot .print-sheet:last-child{break-after:auto;page-break-after:auto}
+ #countryPrintRoot .report-footer{left:0;right:0;bottom:.05in}
+ #countryPrintRoot .report-government{display:grid;grid-template-columns:1fr 1fr}
+ #countryPrintRoot .report-map img{height:4in;width:100%}
+ #countryPrintRoot .report-identity h1{font-size:24pt}
+ #countryPrintRoot .report-head h2{font-size:21pt}
+ #countryPrintRoot .report-decision-title{flex-wrap:nowrap}
+ #countryPrintRoot .report-decision-title>span{margin-left:0}
+}
+#poster .report-flag{width:1.17in;height:.7in;border:1px solid #829e99;border-radius:0;flex-shrink:0}
+#poster .report-map img{width:100%;height:4in;border:1px solid #b8c8c5;border-radius:0}
