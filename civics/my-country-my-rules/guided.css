@@ -1,0 +1,40 @@
+/* The task card leads on every screen size. The country remains a live preview. */
+.guided main,.guided main.main-govern{display:grid;grid-template-columns:minmax(340px,480px) minmax(0,1fr);align-items:start;gap:24px}
+.guided .studio,.guided .main-govern .studio{grid-column:1;grid-row:1;position:static;min-width:0}
+.guided .world{grid-column:2;grid-row:1;min-width:0;position:sticky;top:16px}
+.guided #tools,.guided .main-govern #tools{max-height:none;overflow:visible;padding:22px}
+.guided .studio nav button:disabled{opacity:.48;cursor:not-allowed;background:#172b34}
+.guided .studio nav button:disabled b:after{content:' 🔒';font-size:9px}
+.guided .stage-status{font-size:12px;line-height:1.5;padding:13px 14px}
+.guided-progress{height:8px;background:#0e2029;border-radius:8px;margin-top:10px;overflow:hidden}
+.guided-progress i{display:block;height:100%;background:#e6bf70;border-radius:8px;transition:width .2s}
+.guided .step-intro h2{font-size:26px;line-height:1.2;margin-bottom:10px}
+.guided .step-intro p,.guided #tools p,.guided #tools label,.guided #tools input,.guided #tools textarea{font-size:15px;line-height:1.55}
+.guided #tools label{display:block;font-weight:700;color:#f2eadb;margin:14px 0 6px}
+.guided #tools input,.guided #tools textarea{width:100%;min-width:0;padding:12px;border:1px solid #78908f;background:#0f252e;color:#fff;border-radius:7px}
+.guided #tools textarea{min-height:94px;resize:vertical}
+.guided #tools select{width:100%;font-size:15px;min-height:48px;padding:10px;background:#0f252e;color:#fff;border:1px solid #78908f;border-radius:7px}
+.guided-options{display:grid;gap:9px;margin:12px 0 18px}
+.guided .guided-choice{display:block;text-align:left;border:1px solid #66807e;background:#1c323b;color:#f5f0e4;padding:13px 14px;line-height:1.45;min-height:48px;width:100%}
+.guided .guided-choice b{display:block;font-size:15px}
+.guided .guided-choice span{display:block;font-size:14px;margin-top:5px;color:#d0dcd5;line-height:1.5}
+.guided .guided-choice.selected{border:2px solid #edc978;padding:12px 13px;background:#344440;box-shadow:0 0 0 2px #edc97822}
+.guided .guided-choice.selected b:before{content:'✓ ';color:#edc978}
+.guided .guided-choice:hover{border-color:#edc978;background:#2c4248}
+.guided .guided-question{font-weight:800;color:#f1d28d;margin:20px 0 8px}
+.guided .guided-check{margin:20px 0;padding:14px;border:1px solid #718b86;background:#122b32;border-radius:9px}
+.guided .guided-check .guided-question{margin-top:0}
+.guided .guided-help{color:#c4d3cb;font-size:13px!important;line-height:1.5}
+.guided .guided-success{color:#c5e9ce;background:#18382f;border:1px solid #6b9c7c;border-radius:8px;padding:13px;line-height:1.7!important}
+.guided .step-next{min-height:52px;font-size:15px;line-height:1.4;margin:14px 0 8px;white-space:normal}
+.guided button:disabled{cursor:not-allowed;opacity:.45;transform:none!important;box-shadow:none!important}
+.guided .guide-back{font-size:13px;margin-top:8px;background:transparent;color:#d1dcd4;border-color:#536b6d}
+.guided .guided-review article{border-bottom:1px solid #526a6b;padding:8px 0 15px}
+.guided .guided-review h3{color:#edc978;margin-bottom:5px}
+.guided:not(.guide-creative) .map-wrap{opacity:.85}
+.guided.guide-creative .governance-meters,.guided.guide-creative .power-labels,.guided.guide-creative .rule-strip{display:none}
+.guided input[readonly]{cursor:default}
+.guided .decision-feedback{margin:12px 0;padding:17px}
+.guided #tools details summary{padding:12px 0;font-size:14px;color:#edc978;cursor:pointer}
+.guided .country-heading input{pointer-events:none}
+@media(max-width:950px){.guided main,.guided main.main-govern{grid-template-columns:minmax(0,1fr);gap:18px}.guided .world{grid-column:1;grid-row:2;position:static}.guided .studio,.guided .main-govern .studio{grid-column:1;grid-row:1}.guided #tools,.guided .main-govern #tools{padding:18px}.guided .studio nav{position:static}.guided .step-intro h2{font-size:24px}}
