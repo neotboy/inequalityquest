@@ -82,11 +82,67 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 @media(max-width:650px){main{padding-top:14px}.intro{grid-template-columns:1fr}.name-card{padding:13px 16px}.name-card input{max-width:330px}.fact-grid{grid-template-columns:1fr;gap:7px}.fact{grid-template-columns:105px 1fr}.workspace{grid-template-columns:minmax(0,1fr)}.card-head{padding:14px}.map-instructions{padding:12px 14px}.map-wrap{padding:7px 6px 2px}.map-key{padding:10px}.key-item{font-size:12px}.question-intro{padding:13px 15px}.questions{padding:5px 9px 10px}.question{padding:13px 11px 15px}.choice{flex:1 1 calc(50% - 8px);min-width:120px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 @media print{body{background:white}.site-header{padding:12px}.work-note,.actions{display:none}main{padding:10px}.intro{grid-template-columns:1fr 200px}.workspace{grid-template-columns:1fr 1fr}.map-card{position:static;box-shadow:none}.question-panel{box-shadow:none}.questions{overflow:visible}.choice{min-height:30px}}
+
+/* Solo, two-part workflow */
+.workflow{display:grid;gap:18px}
+.phase{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 3px 12px #20394e0a;overflow:hidden}
+.phase[hidden],.part-done[hidden],.clue-next[hidden],#phase-two[hidden]{display:none!important}
+.phase-banner{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:17px 21px;background:#e8f2f3;border-bottom:1px solid var(--line)}
+.phase-banner h2{color:var(--teal);font-size:21px}
+.phase-kicker{display:block;font-size:12px;letter-spacing:.08em;font-weight:900;color:#526c78;margin-bottom:3px}
+.phase-time{font-size:14px;font-weight:800;color:#35586a;background:white;border:1px solid #c9d9de;border-radius:999px;padding:7px 12px;white-space:nowrap}
+.phase-directions{margin:0;padding:14px 21px;color:#344c59;background:#f7fafb;border-bottom:1px solid var(--line)}
+.clue-box{max-width:820px;margin:24px auto 28px;padding:0 20px}
+.clue-top{display:flex;align-items:center;gap:14px;margin-bottom:19px}
+.clue-number{font-size:13px;font-weight:900;color:var(--teal);letter-spacing:.05em;white-space:nowrap}
+.progress-track{height:10px;flex:1;background:#e4ecef;border-radius:999px;overflow:hidden}
+#progress-fill{display:block;height:100%;width:0;background:var(--teal);border-radius:inherit;transition:width .25s}
+.clue-box h3{font-size:22px;color:var(--navy);margin:0 0 6px}
+.clue-box>p{font-size:18px;margin:0 0 18px}
+.clue-box .choices{gap:10px}
+.clue-box .choice{min-width:125px;min-height:50px}
+.choice:disabled{cursor:default;opacity:.75}
+.feedback{min-height:27px;margin-top:10px;color:#425b67;font-weight:700}
+.feedback.success{color:#1c6749}
+.clue-actions{display:flex;justify-content:flex-end;margin-top:4px}
+.primary-button,.secondary-button{min-height:46px;border-radius:9px;padding:10px 16px;font-weight:850;cursor:pointer}
+.primary-button{background:var(--navy);color:white;border:2px solid var(--navy)}
+.primary-button:hover{background:#28566d}
+.secondary-button{background:white;border:1px solid #9cacb4;color:var(--navy)}
+.part-done{display:flex;align-items:center;gap:14px;margin:0 20px 22px;padding:15px;background:#edf7f1;border:1px solid #b9d8c4;border-radius:12px;flex-wrap:wrap}
+.part-done h3,.part-done p{margin:0}.part-done p{color:var(--muted)}
+.done-mark{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#d3eddd;color:#175c3a;font-weight:900;font-size:20px}
+.part-done .primary-button{margin-left:auto}
+.map-phase{padding-bottom:18px}
+.transfer-list{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.transfer-item{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fbfcfc;font-size:13px}
+.transfer-item strong{margin-left:auto;color:var(--teal)}
+.transfer-num{font-weight:900;color:var(--navy)}
+.map-workspace{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);gap:16px;padding:16px}
+.map-card,.assign-card{position:static;border:1px solid var(--line);border-radius:13px;box-shadow:none;overflow:hidden;background:white}
+.map-card .card-head,.assign-card .card-head{padding:13px 15px}
+.map-card h3,.assign-card h3{font-size:17px}
+.map-hint{font-size:13px;color:var(--muted)}
+.map-card .map-wrap{padding:8px;background:#e7f0f2}
+.map-card .map-svg{width:min(100%,560px);max-height:65vh}
+.assign-card{align-self:start}
+.assign-body{padding:17px}
+.assign-body p{margin:0 0 9px;color:var(--muted)}
+.selected-place{font-size:21px;font-weight:900;color:var(--navy);margin:12px 0 3px}
+.solved-answer{padding:8px 10px;background:#f1f7f4;border-left:3px solid #73a889;border-radius:6px;color:#265d41!important;font-weight:750}
+.color-choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.color-choice{min-height:46px;flex:1 1 calc(50% - 8px)}
+.assign-footer{display:flex;justify-content:flex-end;padding:0 16px 15px}
+.map-complete{margin:0 15px 15px;padding:11px 13px;border-radius:9px;background:#e8f5ec;color:#1d6542;font-weight:850}
+@media(max-width:850px){.map-workspace{grid-template-columns:1fr}.map-card .map-svg{max-height:none;width:min(100%,600px)}.transfer-list{grid-template-columns:repeat(3,minmax(0,1fr))}.map-card{position:static}}
+@media(max-width:600px){.phase-banner{align-items:flex-start;padding:14px}.phase-banner h2{font-size:18px}.phase-time{font-size:12px;padding:6px 9px}.phase-directions{padding:12px 15px}.clue-box{margin:18px auto;padding:0 15px}.clue-box>p{font-size:17px}.clue-box .choice{flex:1 1 calc(50% - 8px);min-width:0}.part-done{margin:0 12px 15px}.part-done .primary-button{margin-left:0;width:100%}.transfer-list{grid-template-columns:repeat(2,minmax(0,1fr));padding:10px}.map-workspace{padding:10px}.map-hint{max-width:130px;text-align:right}}
+@media(prefers-reduced-motion:reduce){#progress-fill{transition:none}}
+
 </style>
 </head>
 <body>
 <a class="skip-link" href="#activity">Skip to the map and questions</a>
-<header class="site-header"><div class="header-inner"><h1>DIVIDE AFRICA <span aria-hidden="true">|</span> READ, SOLVE &amp; COLOR</h1><div class="work-note"><span class="work-dot" aria-hidden="true"></span>Work alone or with a partner</div></div></header>
+<header class="site-header"><div class="header-inner"><h1>DIVIDE AFRICA <span aria-hidden="true">|</span> READ, SOLVE &amp; COLOR</h1><div class="work-note"><span class="work-dot" aria-hidden="true"></span>Work on your own</div></div></header>
 <main id="activity">
 <section class="intro" aria-label="Activity facts and name">
 <div class="facts">
@@ -101,12 +157,31 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 </div>
 <div class="name-card"><label for="student-name">Name:</label><input id="student-name" autocomplete="name"></div>
 </section>
-<section class="workspace" aria-label="Africa map activity">
+<section class="workflow" aria-label="Two-part activity">
+<section class="phase" id="phase-one" aria-labelledby="phase-one-title">
+<div class="phase-banner"><div><span class="phase-kicker">PART 1 OF 2</span><h2 id="phase-one-title">DECIPHER THE CLUES</h2></div><span class="phase-time">Plan for 20–25 minutes</span></div>
+<p class="phase-directions">Work on your own. Read the facts above, then solve all six clues one at a time. Choose a power. If you miss one, the choices will shuffle. Try again before moving on.</p>
+<div class="clue-box">
+<div class="clue-top"><span id="clue-number" class="clue-number">CLUE 1 OF 6</span><div class="progress-track" role="progressbar" aria-label="Clues solved" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0"><span id="progress-fill"></span></div></div>
+<h3 id="clue-title">1. EGYPT</h3>
+<p id="clue-prompt">Which power wanted to protect a canal used by ships?</p>
+<div id="clue-choices" class="choices" role="group" aria-label="Choose the controlling power"></div>
+<div id="clue-feedback" class="feedback" aria-live="polite"></div>
+<div class="clue-actions"><button id="clue-next" class="primary-button" type="button" hidden>Next clue</button></div>
+</div>
+<div id="part-one-done" class="part-done" hidden>
+<div class="done-mark" aria-hidden="true">✓</div><div><h3>All six clues solved</h3><p>Use your answers in Part 2 to color the map.</p></div>
+<button id="open-map" class="primary-button" type="button">Go to Part 2: Color the map</button>
+</div>
+</section>
+<section class="phase map-phase" id="phase-two" aria-labelledby="phase-two-title" hidden>
+<div class="phase-banner"><div><span class="phase-kicker">PART 2 OF 2</span><h2 id="phase-two-title">ASSIGN THE COLORS</h2></div><span id="map-status" class="phase-time" aria-live="polite">0 of 6 places colored</span></div>
+<p class="phase-directions">Use the answers you solved in Part 1. Select a numbered country on the map, then choose its power to color it.</p>
+<div class="transfer-list" id="answer-transfer" aria-label="Your answers from Part 1"></div>
+<div class="map-workspace">
 <section class="map-card" aria-labelledby="map-heading">
-<div class="card-head"><div class="head-title"><span class="head-icon" aria-hidden="true">⌖</span><h2 id="map-heading">FINISH YOUR AFRICA MAP</h2></div><span class="status" id="map-status" aria-live="polite">0 of 6 assigned</span></div>
-<div class="map-instructions"><p>Use the six answers you circled on page 1.</p><p><strong>STEP 1</strong> Find each number. The number matches the place on page 1.</p><p><strong>STEP 2</strong> Color the country using your color key below.</p><p class="map-help">Click a numbered country to jump to its clue. Choose a power to color it.</p></div>
-<div class="map-wrap">
-<svg class="map-svg" viewBox="0 0 730 780" role="group" aria-labelledby="map-title map-desc">
+<div class="card-head"><div class="head-title"><span class="head-icon" aria-hidden="true">⌖</span><h3 id="map-heading">AFRICA MAP</h3></div><span class="map-hint">Select a numbered country</span></div>
+<div class="map-wrap"><svg class="map-svg" viewBox="0 0 730 780" role="group" aria-labelledby="map-title map-desc">
 <title id="map-title">Political map of Africa</title>
 <desc id="map-desc">Country borders are shown. Numbered areas are Egypt, Algeria, Nigeria, Congo, South Africa, and Ethiopia. Select a numbered country with a mouse or keyboard to move to its clue.</desc>
 <path class="country-shape" d="M406.4,517.2 L407.9,521.9 L406.6,525.7 L407.3,529.1 L389.0,529.0 L388.6,560.8 L394.5,569.0 L400.3,575.2 L384.1,579.3 L362.8,577.9 L356.7,573.1 L321.0,573.5 L319.7,574.2 L314.5,569.7 L308.8,569.4 L303.5,571.1 L299.3,573.0 L298.4,566.7 L299.7,557.9 L302.7,548.8 L303.1,544.5 L306.0,535.5 L308.1,531.4 L313.2,524.8 L316.0,520.4 L316.9,513.0 L316.4,507.3 L313.8,503.7 L311.5,497.7 L309.3,491.7 L309.8,489.6 L312.5,485.6 L309.8,476.0 L308.0,469.3 L303.6,462.9 L304.4,461.0 L308.1,459.7 L310.6,459.8 L313.7,458.6 L339.7,458.8 L341.8,466.2 L344.4,472.2 L346.4,475.5 L349.8,480.7 L355.6,479.9 L358.5,478.5 L363.3,479.9 L364.7,477.4 L366.9,471.6 L372.3,471.2 L372.8,469.4 L377.3,469.4 L376.5,473.0 L387.2,472.9 L387.4,479.2 L389.2,483.1 L387.9,489.1 L388.5,495.2 L391.4,498.9 L391.0,510.8 L393.1,509.9 L397.0,510.2 L402.4,508.7 L406.4,509.3 L407.4,512.4 L406.4,517.2 Z M303.2,457.9 L300.9,450.4 L304.4,446.1 L307.1,444.4 L310.4,447.8 L307.2,449.9 L305.7,452.5 L305.4,456.8 L303.2,457.9 Z" aria-hidden="true"></path>
@@ -166,8 +241,7 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 <g class="map-marker" aria-hidden="true"><circle cx="398.4" cy="430.0" r="13"></circle><text x="398.4" y="434.5">4</text></g>
 <g class="map-marker" aria-hidden="true"><circle cx="407.2" cy="690.0" r="13"></circle><text x="407.2" y="694.5">5</text></g>
 <g class="map-marker" aria-hidden="true"><circle cx="548.0" cy="310.0" r="13"></circle><text x="548.0" y="314.5">6</text></g>
-</svg>
-</div>
+</svg></div>
 <div class="map-key" aria-label="Color key">
 <div class="key-item"><span class="swatch" style="background:var(--britain)"></span>Britain</div>
 <div class="key-item"><span class="swatch" style="background:var(--france)"></span>France</div>
@@ -176,75 +250,126 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 </div>
 <div class="source-note">Country boundaries: Natural Earth, 1:110m map data.</div>
 </section>
-<section class="question-panel" aria-labelledby="questions-heading">
-<div class="card-head"><div class="head-title"><span class="head-icon" aria-hidden="true">✓</span><h2 id="questions-heading">NEXT: READ EACH CLUE AND CIRCLE THE ANSWER</h2></div></div>
-<div class="question-intro"><p>Use the facts above. Then find the SAME number on the map on the left.</p></div>
-<div class="questions" id="questions">
-<article class="question active" id="q-egypt" data-country="egypt"><h3>1. EGYPT</h3><p>Which power wanted to protect a canal used by ships?</p><div class="choices" role="group" aria-label="Choose the controlling power for Egypt"></div><div class="row-foot" aria-live="polite"></div></article>
-<article class="question" id="q-algeria" data-country="algeria"><h3>2. ALGERIA</h3><p>Which power sent settlers to this North African place?</p><div class="choices" role="group" aria-label="Choose the controlling power for Algeria"></div><div class="row-foot" aria-live="polite"></div></article>
-<article class="question" id="q-nigeria" data-country="nigeria"><h3>3. NIGERIA</h3><p>Which power controlled this West African place for trade?</p><div class="choices" role="group" aria-label="Choose the controlling power for Nigeria"></div><div class="row-foot" aria-live="polite"></div></article>
-<article class="question" id="q-congo" data-country="congo"><h3>4. CONGO</h3><p>Which power forced people here to collect rubber?</p><div class="choices" role="group" aria-label="Choose the controlling power for Congo"></div><div class="row-foot" aria-live="polite"></div></article>
-<article class="question" id="q-south-africa" data-country="south-africa"><h3>5. SOUTH AFRICA</h3><p>Which power valued the gold and diamonds here?</p><div class="choices" role="group" aria-label="Choose the controlling power for South Africa"></div><div class="row-foot" aria-live="polite"></div></article>
-<article class="question" id="q-ethiopia" data-country="ethiopia"><h3>6. ETHIOPIA</h3><p>Did this country keep its own government after defeating Italy?</p><div class="choices" role="group" aria-label="Choose the controlling power for Ethiopia"></div><div class="row-foot" aria-live="polite"></div></article>
+<section class="assign-card" aria-labelledby="assign-heading">
+<div class="card-head"><div class="head-title"><span class="head-icon" aria-hidden="true">▣</span><h3 id="assign-heading">COLOR ONE PLACE AT A TIME</h3></div></div>
+<div class="assign-body">
+<p id="assign-help">Select a numbered country on the map to begin.</p>
+<div id="selected-place" class="selected-place" aria-live="polite">No country selected</div>
+<p id="solved-answer" class="solved-answer" hidden></p>
+<div id="color-choices" class="color-choices" role="group" aria-label="Choose a color for the selected country"></div>
+<div id="color-feedback" class="feedback" aria-live="polite"></div>
 </div>
-<div class="actions"><button class="reset" id="reset" type="button">Clear map</button></div>
+<div class="assign-footer"><button id="clear-map" class="secondary-button" type="button">Clear map colors</button></div>
+<div id="map-complete" class="map-complete" aria-live="polite" hidden>All six places are colored.</div>
+</section>
+</div>
 </section>
 </section>
 </main>
 <script>
+const questions=[{"id":"egypt","title":"1. EGYPT","prompt":"Which power wanted to protect a canal used by ships?","answer":"Britain"},{"id":"algeria","title":"2. ALGERIA","prompt":"Which power sent settlers to this North African place?","answer":"France"},{"id":"nigeria","title":"3. NIGERIA","prompt":"Which power controlled this West African place for trade?","answer":"Britain"},{"id":"congo","title":"4. CONGO","prompt":"Which power forced people here to collect rubber?","answer":"Belgium"},{"id":"south-africa","title":"5. SOUTH AFRICA","prompt":"Which power valued the gold and diamonds here?","answer":"Britain"},{"id":"ethiopia","title":"6. ETHIOPIA","prompt":"Did this country keep its own government after defeating Italy?","answer":"Independent"}];
 const powers=["Britain","France","Belgium","Independent"];
 const colors={Britain:"var(--britain)",France:"var(--france)",Belgium:"var(--belgium)",Independent:"var(--independent)"};
-const assigned={};
-const questions=[...document.querySelectorAll(".question")];
-const regions=[...document.querySelectorAll(".target")];
-let selected="egypt";
-function render(){
- let count=0;
- questions.forEach(card=>{
-  const id=card.dataset.country,value=assigned[id],group=card.querySelector(".choices"),status=card.querySelector(".row-foot");
-  group.replaceChildren();
-  powers.forEach(power=>{
-   const button=document.createElement("button");
-   button.type="button";button.className="choice";button.textContent=power;
-   button.setAttribute("aria-pressed",String(value===power));
-   button.addEventListener("click",()=>{assigned[id]=power;render()});
-   group.append(button);
+let clueIndex=0, solved={}, mapAssignments={}, selectedCountry=null;
+const clueTitle=document.getElementById("clue-title");
+const cluePrompt=document.getElementById("clue-prompt");
+const clueChoices=document.getElementById("clue-choices");
+const clueFeedback=document.getElementById("clue-feedback");
+const nextButton=document.getElementById("clue-next");
+const phaseOne=document.getElementById("phase-one");
+const phaseTwo=document.getElementById("phase-two");
+const mapRegions=[...document.querySelectorAll(".target")];
+function shuffle(list){const copy=[...list];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy}
+function renderClue(shuffleChoices=true){
+ const item=questions[clueIndex];
+ document.getElementById("clue-number").textContent="CLUE "+(clueIndex+1)+" OF 6";
+ document.querySelector(".progress-track").setAttribute("aria-valuenow",String(Object.keys(solved).length));
+ document.getElementById("progress-fill").style.width=(Object.keys(solved).length/6*100)+"%";
+ clueTitle.textContent=item.title;cluePrompt.textContent=item.prompt;clueChoices.replaceChildren();clueFeedback.textContent="";nextButton.hidden=true;
+ (shuffleChoices?shuffle(powers):powers).forEach(power=>{
+  const button=document.createElement("button");button.type="button";button.className="choice";button.textContent=power;
+  button.addEventListener("click",()=>{
+   if(power===item.answer){
+    solved[item.id]=power;clueFeedback.textContent="Correct. You solved this clue.";clueFeedback.className="feedback success";
+    [...clueChoices.querySelectorAll("button")].forEach(b=>b.disabled=true);
+    nextButton.textContent=clueIndex===questions.length-1?"Finish Part 1":"Next clue";nextButton.hidden=false;
+    document.querySelector(".progress-track").setAttribute("aria-valuenow",String(Object.keys(solved).length));
+    document.getElementById("progress-fill").style.width=(Object.keys(solved).length/6*100)+"%";
+   }else{
+    clueFeedback.textContent="Not yet. Read the facts again and try the shuffled choices.";clueFeedback.className="feedback";
+    renderClue(true);
+    clueFeedback.textContent="Not yet. Read the facts again and try the shuffled choices.";
+   }
   });
-  status.textContent=value?"Map color: "+value:"";
-  if(value)count++;
+  clueChoices.append(button);
  });
- regions.forEach(region=>{
-  const value=assigned[region.dataset.country];
-  region.setAttribute("aria-current",String(selected===region.dataset.country));
-  region.style.fill=value?colors[value]:"#dce9e9";
- });
- document.getElementById("map-status").textContent=count+" of 6 assigned";
 }
-function selectCountry(id,moveToClue=true){
- selected=id;
- questions.forEach(card=>card.classList.toggle("active",card.dataset.country===id));
- render();
- if(moveToClue){
-  const card=document.querySelector('.question[data-country="'+id+'"]');
-  card.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
+nextButton.addEventListener("click",()=>{
+ if(clueIndex<questions.length-1){clueIndex++;renderClue(true)}
+ else{
+  document.querySelector(".clue-box").hidden=true;
+  document.getElementById("part-one-done").hidden=false;
  }
+});
+document.getElementById("open-map").addEventListener("click",()=>{
+ phaseTwo.hidden=false;
+ document.getElementById("answer-transfer").replaceChildren(...questions.map(q=>{
+  const item=document.createElement("div");item.className="transfer-item";
+  item.innerHTML='<span class="transfer-num">'+q.title.split(".")[0]+'</span><span>'+q.title.split(". ").slice(1).join(". ")+'</span><strong>'+solved[q.id]+'</strong>';
+  return item;
+ }));
+ phaseTwo.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+});
+function selectPlace(id,focusCard=false){
+ selectedCountry=id;
+ mapRegions.forEach(region=>region.setAttribute("aria-current",String(region.dataset.country===id)));
+ const question=questions.find(q=>q.id===id);
+ const placeNum=question.title.split(".")[0];
+ document.getElementById("selected-place").textContent=question.title;
+ document.getElementById("solved-answer").hidden=false;
+ document.getElementById("solved-answer").textContent="Your Part 1 answer: "+solved[id];
+ document.getElementById("assign-help").textContent="Choose the matching color from the key.";
+ document.getElementById("color-feedback").textContent=mapAssignments[id]?"Color assigned: "+mapAssignments[id]:"";
+ renderColorButtons();
+ if(focusCard){document.getElementById("assign-heading").focus?.()}
 }
-regions.forEach(region=>{
- region.addEventListener("click",()=>selectCountry(region.dataset.country));
- region.addEventListener("keydown",event=>{
-  if(event.key==="Enter"||event.key===" "){event.preventDefault();selectCountry(region.dataset.country)}
+function renderColorButtons(){
+ const holder=document.getElementById("color-choices");holder.replaceChildren();
+ if(!selectedCountry)return;
+ powers.forEach(power=>{
+  const button=document.createElement("button");button.type="button";button.className="choice color-choice";button.textContent=power;
+  button.setAttribute("aria-pressed",String(mapAssignments[selectedCountry]===power));
+  button.addEventListener("click",()=>{
+   mapAssignments[selectedCountry]=power;renderMap();
+   document.getElementById("color-feedback").textContent="Assigned "+power+". Choose another numbered country.";
+   document.getElementById("color-feedback").className="feedback success";
+  });
+  holder.append(button);
  });
+}
+function renderMap(){
+ mapRegions.forEach(region=>{
+  const id=region.dataset.country,value=mapAssignments[id];
+  region.style.fill=value?colors[value]:"#dce9e9";
+  region.setAttribute("aria-current",String(id===selectedCountry));
+ });
+ const count=Object.keys(mapAssignments).length;
+ document.getElementById("map-status").textContent=count+" of 6 places colored";
+ document.getElementById("map-complete").hidden=count!==6;
+ renderColorButtons();
+}
+mapRegions.forEach(region=>{
+ const open=()=>selectPlace(region.dataset.country);
+ region.addEventListener("click",open);
+ region.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();open()}});
 });
-questions.forEach(card=>card.addEventListener("click",event=>{
- if(event.target.closest("button"))return;
- selectCountry(card.dataset.country,false);
-}));
-document.getElementById("reset").addEventListener("click",()=>{
- Object.keys(assigned).forEach(id=>delete assigned[id]);
- selectCountry("egypt",false);
- document.getElementById("q-egypt").scrollIntoView({behavior:"smooth",block:"nearest"});
+document.getElementById("clear-map").addEventListener("click",()=>{
+ mapAssignments={};renderMap();document.getElementById("selected-place").textContent="No country selected";
+ document.getElementById("solved-answer").hidden=true;document.getElementById("assign-help").textContent="Select a numbered country on the map to begin.";
+ document.getElementById("color-feedback").textContent="";selectedCountry=null;
+ mapRegions.forEach(region=>region.setAttribute("aria-current","false"));
 });
-render();
+renderClue(true);
 </script>
 </body>
 </html>
