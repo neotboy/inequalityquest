@@ -13,14 +13,35 @@ main{padding:8px 0 32px}.directions,.note,.panel{background:var(--card);border:1
 .directions{background:#ecf2ee;border-left:4px solid var(--green);font-size:1rem}
 .note{background:#fff1e9;border-left:4px solid var(--red);font-size:.9rem;padding:7px 10px}
 .day-tabs{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}.day-tab,button{font:inherit;font-weight:800;border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.day-tab{background:#e6dfd0;color:var(--navy)}.day-tab.active{background:var(--navy);color:white;box-shadow:inset 0 -3px var(--gold)}
-.layout{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(340px,.82fr);gap:16px;align-items:start}.panel{margin:0;padding:13px}
+.layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(390px,.92fr);gap:20px;align-items:start}.panel{margin:0;padding:16px}
 h2{font-size:1.2rem;color:var(--navy);margin:0 0 4px}.small{font-size:.9rem;color:var(--muted);margin:3px 0}
 .reader-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .scan{height:min(84vh,920px);min-height:560px;display:flex;align-items:flex-start;justify-content:center;overflow:auto;background:#e9e3d7;border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:8px}
 .scan img{display:block;height:100%;width:auto;max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 2px 10px #0003}.scan img.zoomed{height:150%;width:auto;max-width:none;max-height:none}.reader-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0}.reader-controls{display:flex;align-items:center;justify-content:space-between;gap:7px;flex:1;margin:0}.reader-controls button,.zoom-button{background:#e6dfd0;color:var(--navy);padding:8px 10px;font-size:.9rem}.zoom-button{background:#dbe7e1}
 .progress-line{display:flex;justify-content:space-between;align-items:center;gap:8px}.progressbar{height:10px;background:#e5dfd2;border-radius:99px;overflow:hidden;margin:5px 0 11px}.progressbar span{display:block;height:100%;background:var(--green);width:0}
 .fact{background:#edf3ef;border-left:5px solid var(--green);border-radius:8px;padding:11px 12px;margin:10px 0}.label{font-size:.75rem;font-weight:850;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 3px}
-.question{background:#f6f0e2;border-radius:8px;padding:10px 12px;margin:8px 0}.question p{margin:0}.question.us-connection{background:#edf3ef;border-left:4px solid var(--green)}
+.questions-panel{padding:20px;border-top:5px solid var(--navy);box-shadow:0 3px 14px #19364b12}
+.questions-panel .progress-line{align-items:flex-start}
+.questions-panel .progress-line h2{font-size:1.45rem;margin:0}
+.questions-panel #checkCount{background:#e8eef2;color:var(--navy);border-radius:999px;padding:5px 10px;white-space:nowrap;font-size:.9rem}
+.questions-panel .progressbar{height:8px;margin:11px 0}
+.section-help{font-size:.95rem;color:var(--muted);margin:0 0 14px}
+.name-wrap{background:#f6f4ee;border-radius:10px;padding:10px 12px;margin:12px 0 16px}
+.name-wrap label{margin:0 0 5px}
+.fact{background:#eef4f0;border-left:5px solid var(--green);border-radius:9px;padding:12px 14px;margin:12px 0 16px}
+.fact h3{font-size:.78rem;line-height:1.3;font-weight:850;text-transform:uppercase;letter-spacing:.06em;color:#315942;margin:0 0 5px}
+.question{background:#f2f5f8;border:1px solid #dbe3e9;border-left:5px solid #50738d;border-radius:10px;padding:14px 15px;margin:12px 0}
+.question p{margin:0}
+.question.us-connection{background:#f1f5ef;border-color:#d9e3d7;border-left-color:var(--green)}
+.prompt-heading{display:flex;align-items:center;gap:9px;font-size:1rem;line-height:1.25;color:var(--navy);margin:0 0 8px}
+.step-number{display:grid;place-items:center;width:27px;height:27px;flex:0 0 27px;border-radius:50%;background:var(--navy);color:#fff;font-size:.85rem}
+.question.us-connection .step-number{background:var(--green)}
+.question #questionText,.question #usQuestionText{font-size:1.06rem;line-height:1.5;color:#1e2e37}
+.questions-panel label{margin:12px 0 5px}
+.questions-panel textarea{min-height:64px}
+.questions-panel .actions{margin:14px 0 8px}
+.questions-panel .status{padding:4px 0}
+.questions-panel .small{line-height:1.4}
 label{display:block;font-weight:800;margin:9px 0 5px}input,textarea{width:100%;font:inherit;color:var(--ink);padding:10px;border:2px solid #cfc5b3;border-radius:8px;background:white}textarea{min-height:54px;resize:vertical}
 input:focus,textarea:focus,button:focus{outline:3px solid #6aa5bf;outline-offset:2px}textarea:disabled{background:#eee9df;color:var(--muted);cursor:not-allowed}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.primary{background:var(--red);color:white}.secondary{background:#e6dfd0;color:var(--navy)}button:disabled{opacity:.55;cursor:not-allowed}.status{font-size:.9rem;min-height:1.3em;color:var(--muted)}.success{color:#246947}.error{color:#a12f2f}
@@ -41,13 +62,13 @@ input:focus,textarea:focus,button:focus{outline:3px solid #6aa5bf;outline-offset
  <div class="scan"><img id="pageImage" alt="Scanned page from the assigned reading"></div>
  <p class="small">Each page stays open for 15 seconds. Use “Make page bigger” to zoom in.</p>
 </div>
-<div class="panel">
+<div class="panel questions-panel" aria-labelledby="checkTitle">
  <div class="progress-line"><div><p class="label" id="assignmentTitle"></p><h2 id="checkTitle"></h2></div><strong id="checkCount"></strong></div><div class="progressbar"><span id="progressFill"></span></div>
- <p class="small" id="dayPlan"></p>
- <label for="studentName">Your name</label><input id="studentName" maxlength="100" autocomplete="name" placeholder="First and last name">
- <div class="fact"><p class="label">U.S. fact</p><div id="factText"></div></div>
- <div class="question"><p class="label">Read the book</p><p id="questionText"></p></div>
- <div class="question us-connection"><p class="label">Connect to the U.S.</p><p id="usQuestionText"></p></div>
+ <p class="section-help" id="dayPlan"></p>
+ <div class="name-wrap"><label for="studentName">Your name</label><input id="studentName" maxlength="100" autocomplete="name" placeholder="First and last name"></div>
+ <div class="fact"><h3>U.S. history fact</h3><div id="factText"></div></div>
+ <section class="question" aria-labelledby="bookPromptTitle"><h3 class="prompt-heading" id="bookPromptTitle"><span class="step-number" aria-hidden="true">1</span>Read the book</h3><p id="questionText"></p></section>
+ <section class="question us-connection" aria-labelledby="usPromptTitle"><h3 class="prompt-heading" id="usPromptTitle"><span class="step-number" aria-hidden="true">2</span>Connect to the U.S.</h3><p id="usQuestionText"></p></section>
  <p class="small" id="answerHelp">Read all five pages in order to open the answer boxes.</p>
  <label for="bookAnswer">Book answer</label><textarea id="bookAnswer" placeholder="Use details from the pages." disabled></textarea>
  <label for="usAnswer">U.S. connection</label><textarea id="usAnswer" placeholder="Use the U.S. fact." disabled></textarea>
