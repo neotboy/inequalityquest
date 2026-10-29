@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A World War II decision map about German and Japanese expansion and U.S. entry into the war.">
+<title>World War II Decision Map | Day 8</title>
+<style>
+:root{--navy:#17364b;--red:#ad3c32;--gold:#e5bd65;--paper:#f3efe5;--card:#fffdf8;--ink:#21323b;--muted:#53656d;--line:#d8cfbf;--blue:#eaf2f6;--green:#e8f2e9}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.48 system-ui,Segoe UI,Arial,sans-serif}
+header{background:var(--navy);color:white;border-bottom:7px solid var(--gold);padding:23px 18px}.wrap{max-width:980px;margin:auto;padding:0 16px}
+.kicker{font-size:.78rem;letter-spacing:.11em;text-transform:uppercase;font-weight:850;color:#f3d98d}h1{font-size:clamp(2rem,5vw,3rem);line-height:1.05;margin:5px 0}header p{margin:5px 0;color:#e5edf1}
+main{padding:17px 0 44px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:17px;margin:13px 0;box-shadow:0 4px 12px #18364a0a}
+h2{font-size:1.33rem;color:var(--navy);margin:0 0 7px}h3{font-size:1.1rem;color:var(--navy);margin:0 0 5px}p{margin:6px 0}
+.intro{background:var(--blue);border-left:5px solid var(--navy);padding:10px 12px;border-radius:7px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin:11px 0}.step{background:#f1ecdf;border-radius:8px;padding:9px;font-weight:750}
+.maps{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.mapbox{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#eee9dd}.mapbox img{width:100%;height:250px;object-fit:contain;display:block;background:#e7e0d2}.mapbox p{padding:8px 10px;font-size:.86rem;color:var(--muted);margin:0}.mapbox a,.caption a{color:var(--navy);font-weight:750}
+.decision{border-top:1px solid var(--line);padding:16px 0}.decision:first-child{border-top:0}.decision-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.75fr);gap:14px;align-items:start}
+.photo{margin:0;background:#eee9dd;border:1px solid var(--line);border-radius:10px;overflow:hidden}.photo img{width:100%;height:220px;object-fit:contain;display:block;background:#e7e0d2}.caption{font-size:.82rem;color:var(--muted);line-height:1.3;padding:8px 10px}
+.map-note{border:1px solid var(--line);border-radius:10px;padding:14px;background:#f2eee4;color:var(--navy);font-weight:750}.map-note p{font-weight:500;color:var(--muted);font-size:.92rem}\n.clue{background:#f2eee4;border-radius:7px;padding:8px 10px;color:var(--muted);font-size:.93rem;margin:8px 0}
+label{display:block;font-weight:800;color:var(--navy);margin:9px 0 5px}select,input,textarea{width:100%;font:inherit;color:var(--ink);padding:10px 11px;border:2px solid #cfc6b7;border-radius:8px;background:white}textarea{min-height:64px;resize:vertical}select:focus,input:focus,textarea:focus{outline:3px solid #73a9bb;border-color:#28657e}
+button{font:inherit;font-weight:800;border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.primary{background:var(--red);color:#fff}.secondary{background:#e6dfd0;color:var(--navy)}.actions{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
+.reveal{display:none;background:var(--green);border-left:5px solid #4e805d;border-radius:7px;padding:10px 12px;margin:10px 0}.reveal.show{display:block}.reveal strong{color:#275437}
+.small{font-size:.89rem;color:var(--muted)}.status{min-height:1.4em}
+footer{max-width:980px;padding:0 16px 20px;margin:auto;font-size:.83rem;color:var(--muted)}
+@media(max-width:700px){.maps{grid-template-columns:1fr}.decision-grid{grid-template-columns:1fr}.mapbox img{height:220px}.photo img{height:210px}.card{padding:14px}}
+@media print{body{background:white}header{background:white;color:black;border-bottom:2px solid black;padding:10px}.kicker,header p{color:black}.actions,.no-print{display:none!important}.card{box-shadow:none;break-inside:avoid}.reveal{display:block!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="kicker">World History · Day 8</div><h1>World War II Decision Map</h1><p>Follow the invasions. Make a choice. See what happened.</p></div></header>
+<main class="wrap">
+<section class="card">
+<h2>Your mission · about 10 minutes</h2>
+<p class="intro">Germany and Japan took land by force. At each stop, use the map, choose a response, and explain your choice in <b>one sentence</b>. Then open the history card.</p>
+<div class="steps"><div class="step">1 · Look at the map</div><div class="step">2 · Choose and explain</div><div class="step">3 · See what happened</div><div class="step">4 · Turn it in</div></div>
+<div class="intro"><b>What do the choices mean?</b> Negotiate = try to make a deal. Sanctions = limit trade to pressure a country. Defend allies = help a country you promised to protect. Declare war = officially join the fighting.</div>
+</section>
+<section class="card">
+<h2>Four decision stops</h2>
+<div class="decision">
+<div class="decision-grid"><div>
+<h3>1. Germany attacks Poland · September 1939</h3>
+<p>Germany invaded Poland. Britain and France had promised to protect Poland. If they kept that promise, they could enter a wider war.</p>
+<label for="choice1">What should Britain and France do?</label><select id="choice1"><option value="">Choose an action</option><option>Declare war on Germany</option><option>Try to negotiate a deal</option><option>Impose economic sanctions</option><option>Stay out of the conflict</option></select>
+<label for="reason1">Why did you choose it? Write one sentence.</label><textarea id="reason1" rows="2" maxlength="300" placeholder="I chose ___ because Britain and France had promised ___."></textarea>
+<div class="actions"><button class="secondary revealBtn" data-reveal="outcome1">See what happened</button></div><p class="small status" id="status1" aria-live="polite"></p>
+<div class="reveal" id="outcome1"><strong>History:</strong> Britain and France declared war on Germany on September 3. They could not stop Poland from being conquered. The war had begun in Europe.</div>
+</div>
+<figure class="photo"><img src="https://www.facinghistory.org/sites/default/files/2022-06/Map_71_Nazi_Germany_1933_39.jpg" alt="Color-coded map showing Germany's expansion from 1933 to 1939" loading="lazy"><figcaption class="caption">Look at Germany's growth before the attack on Poland. <a href="https://www.facinghistory.org/resource-library/growth-nazi-germany" target="_blank" rel="noopener">Map source: Facing History &amp; Ourselves</a></figcaption></figure>
+</div></div>
+<div class="decision">
+<div class="decision-grid"><div>
+<h3>2. France falls · June 1940</h3>
+<p><b>Blitzkrieg</b> means “lightning war.” German planes and tanks attacked quickly. France surrendered. Britain was still fighting Germany, and German leaders were considering an invasion of Britain.</p>
+<label for="choice2">What should Britain do?</label><select id="choice2"><option value="">Choose an action</option><option>Keep fighting and defend Britain</option><option>Negotiate a peace deal with Hitler</option><option>Impose sanctions on Germany</option><option>Surrender to Germany</option></select>
+<label for="reason2">Why did you choose it? Write one sentence.</label><textarea id="reason2" rows="2" maxlength="300" placeholder="I chose ___ because Britain was ___."></textarea>
+<div class="actions"><button class="secondary revealBtn" data-reveal="outcome2">See what happened</button></div><p class="small status" id="status2" aria-live="polite"></p>
+<div class="reveal" id="outcome2"><strong>History:</strong> Britain's new prime minister, Winston Churchill, chose to keep fighting. Germany bombed Britain, but could not force it to surrender.</div>
+</div>
+<figure class="photo"><img src="https://encyclopedia.ushmm.org/images/large/606be84c-0744-4ff3-b50a-db8311b9fb06.gif" alt="Map showing German conquests in Europe from 1939 to 1942" loading="lazy"><figcaption class="caption">Follow Germany's attacks across Europe. Find France and Britain. <a href="https://encyclopedia.ushmm.org/content/en/map/german-conquests-in-europe-1939-1942" target="_blank" rel="noopener">Map source: U.S. Holocaust Memorial Museum</a></figcaption></figure>
+</div></div>
+<div class="decision">
+<div class="decision-grid"><div>
+<h3>3. Japan expands in Asia · 1937–1941</h3>
+<p>Japan invaded parts of China and moved into Southeast Asia. Japan wanted land and supplies. The United States wanted Japan to stop, but the countries were not at war yet.</p>
+<label for="choice3">What should the United States do?</label><select id="choice3"><option value="">Choose an action</option><option>Impose sanctions, including an oil ban</option><option>Keep negotiating with Japan</option><option>Help defend countries Japan attacked</option><option>Declare war on Japan</option></select>
+<label for="reason3">Why did you choose it? Write one sentence.</label><textarea id="reason3" rows="2" maxlength="300" placeholder="I chose ___ because Japan was ___."></textarea>
+<div class="actions"><button class="secondary revealBtn" data-reveal="outcome3">See what happened</button></div><p class="small status" id="status3" aria-live="polite"></p>
+<div class="reveal" id="outcome3"><strong>History:</strong> The United States stopped selling Japan oil and froze Japanese money. The U.S. kept negotiating too. Japan attacked Pearl Harbor after the talks failed.</div>
+</div>
+<figure class="photo"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Japanese_expansion_april_1942.svg?width=900" alt="Shaded map showing Japan's expansion across Asia and the Pacific" loading="lazy"><figcaption class="caption">Orange marks the areas Japan had taken by 1942. Find China and Southeast Asia. <a href="https://commons.wikimedia.org/wiki/File:Japanese_expansion_april_1942.svg" target="_blank" rel="noopener">Map source</a></figcaption></figure>
+</div></div>
+<div class="decision">
+<div class="decision-grid"><div>
+<h3>4. Japan attacks Pearl Harbor · December 7, 1941</h3>
+<p>Japan attacked the U.S. Navy at Pearl Harbor in Hawaii. The surprise attack killed more than 2,400 Americans. The United States had not declared war on Japan before the attack.</p>
+<label for="choice4">What should the United States do?</label><select id="choice4"><option value="">Choose an action</option><option>Declare war on Japan</option><option>Ask Japan to negotiate</option><option>Wait and stay out of the war</option><option>Impose more sanctions</option></select>
+<label for="reason4">Why did you choose it? Write one sentence.</label><textarea id="reason4" rows="2" maxlength="300" placeholder="I chose ___ because Japan had ___."></textarea>
+<div class="actions"><button class="secondary revealBtn" data-reveal="outcome4">See what happened</button></div><p class="small status" id="status4" aria-live="polite"></p>
+<div class="reveal" id="outcome4"><strong>History:</strong> The U.S. Congress declared war on Japan the next day. Germany and Italy then declared war on the United States. The U.S. fought in both Europe and the Pacific.</div>
+</div>
+<figure class="photo"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Japanese_expansion_april_1942.svg?width=900" alt="Map of the Pacific showing Hawaii and Pearl Harbor east of Japan's occupied lands" loading="lazy"><figcaption class="caption">Find Pearl Harbor in Hawaii, far east of Japan. <a href="https://commons.wikimedia.org/wiki/File:Japanese_expansion_april_1942.svg" target="_blank" rel="noopener">Map source</a></figcaption></figure>
+</div>
+<figure class="photo" style="max-width:620px;margin:12px auto 0"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Pearl_Harbor_Attack%2C_7_December_1941_-_80-G-19942.jpg?width=800" alt="Historical photograph from the Japanese attack on Pearl Harbor" loading="lazy"><figcaption class="caption">Pearl Harbor attack, December 7, 1941. <a href="https://commons.wikimedia.org/wiki/File:Pearl_Harbor_Attack,_7_December_1941_-_80-G-19942.jpg" target="_blank" rel="noopener">Photograph source</a></figcaption></figure>
+</div>
+</section>
+<section class="card">
+<h2>Turn in your choices and reasons</h2>
+<label for="studentName">Your first and last name</label><input id="studentName" type="text" maxlength="100" autocomplete="name" placeholder="First and last name">
+<div class="actions no-print"><button class="primary" id="submitWork">Turn in my work</button><button class="secondary" onclick="window.print()">Print</button><button class="secondary" id="clearWork">Clear answers</button></div>
+<p id="submitStatus" class="small status" role="status" aria-live="polite"></p><p id="saved" class="small" aria-live="polite"></p>
+</section></section>
+</main>
+<footer>Each question includes its own map. Use the map and the short event description to explain your choice.</footer>
+<script>
+const API="https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit";
+const choiceIds=["choice1","choice2","choice3","choice4"];
+const reasonIds=["reason1","reason2","reason3","reason4"];
+const allIds=[...choiceIds,...reasonIds,"studentName"];
+const nameInput=document.getElementById("studentName");
+const saved=document.getElementById("saved");
+allIds.forEach(id=>{const e=document.getElementById(id);e.value=localStorage.getItem("day8-decision-"+id)||"";e.addEventListener(id==="studentName"||id.startsWith("reason")?"input":"change",save)});
+function save(){allIds.forEach(id=>localStorage.setItem("day8-decision-"+id,document.getElementById(id).value));saved.textContent="Saved on this device.";setTimeout(()=>saved.textContent="",900)}
+document.querySelectorAll(".revealBtn").forEach(button=>button.addEventListener("click",()=>{const n=button.dataset.reveal.replace("outcome","");const choice=document.getElementById("choice"+n).value;const reason=document.getElementById("reason"+n).value.trim();const status=document.getElementById("status"+n);if(!choice){status.textContent="Choose an action first.";return}if(!reason){status.textContent="Write one sentence to explain your choice.";document.getElementById("reason"+n).focus();return}document.getElementById(button.dataset.reveal).classList.add("show");button.textContent="History revealed";button.disabled=true;status.textContent=""}));
+async function submitWork(){const status=document.getElementById("submitStatus");const name=nameInput.value.trim();const button=document.getElementById("submitWork");if(!name){status.textContent="Write your first and last name first.";nameInput.focus();return}for(let i=0;i<4;i++){if(!document.getElementById(choiceIds[i]).value||!document.getElementById(reasonIds[i]).value.trim()){status.textContent="Finish all four choices and reasons before turning in your work.";return}if(!document.getElementById("outcome"+(i+1)).classList.contains("show")){status.textContent="Open the history card for all four questions before turning in your work.";return}}const answers={};for(let i=0;i<4;i++){answers["Decision "+(i+1)]=document.getElementById(choiceIds[i]).value;answers["Reason "+(i+1)]=document.getElementById(reasonIds[i]).value.trim()}button.disabled=true;status.textContent="Sending your work…";try{const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"day8-wwii-decision-map",answers})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not send your work.");status.textContent="Turned in! Your choices and reasons were sent to your teacher.";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not send your work. Try again.";button.disabled=false}}
+document.getElementById("submitWork").addEventListener("click",submitWork);
+document.getElementById("clearWork").addEventListener("click",()=>{if(confirm("Clear all choices and reasons on this device?")){allIds.forEach(id=>localStorage.removeItem("day8-decision-"+id));location.reload()}});
+</script>
+</body>
+</html>
