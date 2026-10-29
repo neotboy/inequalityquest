@@ -65,6 +65,11 @@
 <script>
 (()=>{
  const key='sociologyCasebookV2', names=['case1','case2','case3'];
+ // A fresh-start link clears only this device's local casebook progress.
+ if(new URLSearchParams(window.location.search).get('restart')==='1'){
+  try{localStorage.removeItem('sociologyCasebookV2')}catch{}
+  window.history.replaceState(null,'',window.location.pathname);
+ }
  const correctValues=['connected','power','meaning'];
  const theories=['Functionalism','Conflict theory','Symbolic interactionism'];
  const explanations=[
