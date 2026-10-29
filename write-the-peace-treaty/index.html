@@ -230,8 +230,9 @@ questions:[
 }
 ];
 const stateKey="day6-cartoon-decoder-v1";
-let state={caseIndex:0,stepIndex:0,done:[false,false,false,false],answerText:"",studentName:""};
+let state={caseIndex:0,stepIndex:0,done:[false,false,false,false],answerText:"",studentName:"",responses:{}};
 try{const saved=JSON.parse(localStorage.getItem(stateKey)||"null");if(saved)state={...state,...saved}}catch{}
+state.responses=state.responses||{};
 let selectedOrder=null;
 const $=id=>document.getElementById(id);
 function save(){localStorage.setItem(stateKey,JSON.stringify(state))}
@@ -253,6 +254,7 @@ $("caseComplete").className="case-complete";
 }
 function answer(btn,q){
 if(btn.dataset.correct==="true"){
+state.responses["Case "+(state.caseIndex+1)+" · "+q.label]=btn.innerText.replace(/^[A-Z]\s*/,"").trim();save();
 btn.classList.add("correct");$("answers").querySelectorAll("button").forEach(b=>b.disabled=true);
 $("feedback").innerHTML="<b>Message decoded!</b>"+(state.stepIndex===2?"You found the history behind the artist’s opinion.":"That clue fits. Keep decoding this cartoon.");
 $("feedback").className="feedback show good";$("hint").className="hint";
@@ -284,7 +286,7 @@ if(!name){status.textContent="Add your first and last name first.";$("studentNam
 if(!answerText){status.textContent="Write one or two sentences first.";$("finalAnswer").focus();return}
 button.disabled=true;status.textContent="Sending your work…";
 try{
-const res=await fetch("https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"write-the-peace-treaty",answers:{"Russia cartoon":cases[0].questions[1].options.find(x=>x[1])[0],"China cartoon":cases[1].questions[2].options.find(x=>x[1])[0],"Gandhi cartoon":cases[2].questions[1].options.find(x=>x[1])[0],"Great Depression cartoon":cases[3].questions[2].options.find(x=>x[1])[0],"Final reflection":answerText}})});
+const res=await fetch("https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"write-the-peace-treaty",answers:{...state.responses,"Final reflection":answerText}})});
 const result=await res.json();if(!res.ok)throw new Error(result.error||"Could not send your work.");
 status.textContent="Turned in! Your work was sent to your teacher.";button.textContent="Turned in ✓";
 }catch(e){status.textContent=e instanceof Error?e.message:"Could not send your work. Try again.";button.disabled=false}
