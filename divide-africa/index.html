@@ -138,6 +138,11 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 @media(max-width:600px){.phase-banner{align-items:flex-start;padding:14px}.phase-banner h2{font-size:18px}.phase-time{font-size:12px;padding:6px 9px}.phase-directions{padding:12px 15px}.clue-box{margin:18px auto;padding:0 15px}.clue-box>p{font-size:17px}.clue-box .choice{flex:1 1 calc(50% - 8px);min-width:0}.part-done{margin:0 12px 15px}.part-done .primary-button{margin-left:0;width:100%}.transfer-list{grid-template-columns:repeat(2,minmax(0,1fr));padding:10px}.map-workspace{padding:10px}.map-hint{max-width:130px;text-align:right}}
 @media(prefers-reduced-motion:reduce){#progress-fill{transition:none}}
 
+
+.evidence-options{display:grid!important;grid-template-columns:1fr;gap:8px!important}
+.evidence-options .choice{text-align:left;width:100%;min-height:52px;line-height:1.35;font-weight:650}
+.clue-number{max-width:250px}
+@media(max-width:600px){.evidence-options .choice{font-size:14px;min-height:54px}}
 </style>
 </head>
 <body>
@@ -267,45 +272,85 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 </section>
 </main>
 <script>
-const questions=[{"id":"egypt","title":"1. EGYPT","prompt":"Which power wanted to protect a canal used by ships?","answer":"Britain"},{"id":"algeria","title":"2. ALGERIA","prompt":"Which power sent settlers to this North African place?","answer":"France"},{"id":"nigeria","title":"3. NIGERIA","prompt":"Which power controlled this West African place for trade?","answer":"Britain"},{"id":"congo","title":"4. CONGO","prompt":"Which power forced people here to collect rubber?","answer":"Belgium"},{"id":"south-africa","title":"5. SOUTH AFRICA","prompt":"Which power valued the gold and diamonds here?","answer":"Britain"},{"id":"ethiopia","title":"6. ETHIOPIA","prompt":"Did this country keep its own government after defeating Italy?","answer":"Independent"}];
+const questions=[{"id":"egypt","title":"1. EGYPT","prompt":"Which power wanted to protect a canal used by ships?","answer":"Britain","evidence":0},{"id":"algeria","title":"2. ALGERIA","prompt":"Which power sent settlers to this North African place?","answer":"France","evidence":1},{"id":"nigeria","title":"3. NIGERIA","prompt":"Which power controlled this West African place for trade?","answer":"Britain","evidence":0},{"id":"congo","title":"4. CONGO","prompt":"Which power forced people here to collect rubber?","answer":"Belgium","evidence":2},{"id":"south-africa","title":"5. SOUTH AFRICA","prompt":"Which power valued the gold and diamonds here?","answer":"Britain","evidence":0},{"id":"ethiopia","title":"6. ETHIOPIA","prompt":"Did this country keep its own government after defeating Italy?","answer":"Independent","evidence":3}];
+const evidenceFacts=["Britain controlled Egypt to protect the Suez Canal. It also controlled Nigeria and South Africa, where trade, gold, and diamonds mattered.","France controlled Algeria in North Africa and sent French settlers there.","Belgium controlled the Congo in Central Africa and forced many people to collect rubber.","Ethiopia defeated an Italian invasion in 1896. It kept its own government instead of becoming an Italian colony."];
 const powers=["Britain","France","Belgium","Independent"];
 const colors={Britain:"var(--britain)",France:"var(--france)",Belgium:"var(--belgium)",Independent:"var(--independent)"};
-let clueIndex=0, solved={}, mapAssignments={}, selectedCountry=null;
+let clueIndex=0, step="power", solved={}, mapAssignments={}, selectedCountry=null;
 const clueTitle=document.getElementById("clue-title");
 const cluePrompt=document.getElementById("clue-prompt");
 const clueChoices=document.getElementById("clue-choices");
 const clueFeedback=document.getElementById("clue-feedback");
 const nextButton=document.getElementById("clue-next");
-const phaseOne=document.getElementById("phase-one");
 const phaseTwo=document.getElementById("phase-two");
 const mapRegions=[...document.querySelectorAll(".target")];
 function shuffle(list){const copy=[...list];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy}
-function renderClue(shuffleChoices=true){
+function updateProgress(){
+ const count=Object.keys(solved).length;
+ document.querySelector(".progress-track").setAttribute("aria-valuenow",String(count));
+ document.getElementById("progress-fill").style.width=(count/6*100)+"%";
+}
+function setupClue(){
  const item=questions[clueIndex];
- document.getElementById("clue-number").textContent="CLUE "+(clueIndex+1)+" OF 6";
- document.querySelector(".progress-track").setAttribute("aria-valuenow",String(Object.keys(solved).length));
- document.getElementById("progress-fill").style.width=(Object.keys(solved).length/6*100)+"%";
- clueTitle.textContent=item.title;cluePrompt.textContent=item.prompt;clueChoices.replaceChildren();clueFeedback.textContent="";nextButton.hidden=true;
- (shuffleChoices?shuffle(powers):powers).forEach(power=>{
+ step="power";
+ document.getElementById("clue-number").textContent="CLUE "+(clueIndex+1)+" OF 6 · POWER";
+ clueTitle.textContent=item.title;
+ cluePrompt.textContent=item.prompt;
+ cluePrompt.setAttribute("aria-live","polite");
+ clueChoices.setAttribute("aria-label","Choose the controlling power");
+ clueChoices.classList.remove("evidence-options");
+ clueFeedback.textContent="";clueFeedback.className="feedback";nextButton.hidden=true;
+ updateProgress();
+ showPowerChoices(true);
+}
+function showPowerChoices(shuffled){
+ clueChoices.replaceChildren();
+ (shuffled?shuffle(powers):powers).forEach(power=>{
   const button=document.createElement("button");button.type="button";button.className="choice";button.textContent=power;
   button.addEventListener("click",()=>{
+   const item=questions[clueIndex];
    if(power===item.answer){
-    solved[item.id]=power;clueFeedback.textContent="Correct. You solved this clue.";clueFeedback.className="feedback success";
-    [...clueChoices.querySelectorAll("button")].forEach(b=>b.disabled=true);
-    nextButton.textContent=clueIndex===questions.length-1?"Finish Part 1":"Next clue";nextButton.hidden=false;
-    document.querySelector(".progress-track").setAttribute("aria-valuenow",String(Object.keys(solved).length));
-    document.getElementById("progress-fill").style.width=(Object.keys(solved).length/6*100)+"%";
+    step="evidence";
+    document.getElementById("clue-number").textContent="CLUE "+(clueIndex+1)+" OF 6 · FACT CHECK";
+    cluePrompt.textContent="Which fact helped you decide?";
+    clueChoices.setAttribute("aria-label","Choose the fact that supports your answer");
+    clueFeedback.textContent="Power matched. Now find the fact that supports it.";
+    clueFeedback.className="feedback";
+    showEvidenceChoices(true);
    }else{
-    clueFeedback.textContent="Not yet. Read the facts again and try the shuffled choices.";clueFeedback.className="feedback";
-    renderClue(true);
+    showPowerChoices(true);
     clueFeedback.textContent="Not yet. Read the facts again and try the shuffled choices.";
+    clueFeedback.className="feedback";
+   }
+  });
+  clueChoices.append(button);
+ });
+}
+function showEvidenceChoices(shuffled){
+ clueChoices.replaceChildren();clueChoices.classList.add("evidence-options");
+ const options=evidenceFacts.map((text,index)=>({text,index}));
+ (shuffled?shuffle(options):options).forEach(option=>{
+  const button=document.createElement("button");button.type="button";button.className="choice";button.textContent=option.text;
+  button.addEventListener("click",()=>{
+   const item=questions[clueIndex];
+   if(option.index===item.evidence){
+    solved[item.id]=item.answer;
+    clueFeedback.textContent="Correct. You matched the clue and its supporting fact.";
+    clueFeedback.className="feedback success";
+    [...clueChoices.querySelectorAll("button")].forEach(b=>b.disabled=true);
+    nextButton.textContent=clueIndex===questions.length-1?"Finish Part 1":"Next clue";
+    nextButton.hidden=false;updateProgress();
+   }else{
+    showEvidenceChoices(true);
+    clueFeedback.textContent="Not yet. Read the facts again and try the shuffled choices.";
+    clueFeedback.className="feedback";
    }
   });
   clueChoices.append(button);
  });
 }
 nextButton.addEventListener("click",()=>{
- if(clueIndex<questions.length-1){clueIndex++;renderClue(true)}
+ if(clueIndex<questions.length-1){clueIndex++;setupClue()}
  else{
   document.querySelector(".clue-box").hidden=true;
   document.getElementById("part-one-done").hidden=false;
@@ -315,24 +360,13 @@ document.getElementById("open-map").addEventListener("click",()=>{
  phaseTwo.hidden=false;
  document.getElementById("answer-transfer").replaceChildren(...questions.map(q=>{
   const item=document.createElement("div");item.className="transfer-item";
-  item.innerHTML='<span class="transfer-num">'+q.title.split(".")[0]+'</span><span>'+q.title.split(". ").slice(1).join(". ")+'</span><strong>'+solved[q.id]+'</strong>';
-  return item;
+  const number=document.createElement("span");number.className="transfer-num";number.textContent=q.title.split(".")[0];
+  const name=document.createElement("span");name.textContent=q.title.split(". ").slice(1).join(". ");
+  const answer=document.createElement("strong");answer.textContent=solved[q.id];
+  item.append(number,name,answer);return item;
  }));
  phaseTwo.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
 });
-function selectPlace(id,focusCard=false){
- selectedCountry=id;
- mapRegions.forEach(region=>region.setAttribute("aria-current",String(region.dataset.country===id)));
- const question=questions.find(q=>q.id===id);
- const placeNum=question.title.split(".")[0];
- document.getElementById("selected-place").textContent=question.title;
- document.getElementById("solved-answer").hidden=false;
- document.getElementById("solved-answer").textContent="Your Part 1 answer: "+solved[id];
- document.getElementById("assign-help").textContent="Choose the matching color from the key.";
- document.getElementById("color-feedback").textContent=mapAssignments[id]?"Color assigned: "+mapAssignments[id]:"";
- renderColorButtons();
- if(focusCard){document.getElementById("assign-heading").focus?.()}
-}
 function renderColorButtons(){
  const holder=document.getElementById("color-choices");holder.replaceChildren();
  if(!selectedCountry)return;
@@ -346,6 +380,18 @@ function renderColorButtons(){
   });
   holder.append(button);
  });
+}
+function selectPlace(id){
+ selectedCountry=id;
+ mapRegions.forEach(region=>region.setAttribute("aria-current",String(region.dataset.country===id)));
+ const question=questions.find(q=>q.id===id);
+ document.getElementById("selected-place").textContent=question.title;
+ document.getElementById("solved-answer").hidden=false;
+ document.getElementById("solved-answer").textContent="Your Part 1 answer: "+solved[id];
+ document.getElementById("assign-help").textContent="Choose the matching color from the key.";
+ document.getElementById("color-feedback").textContent=mapAssignments[id]?"Color assigned: "+mapAssignments[id]:"";
+ document.getElementById("color-feedback").className="feedback";
+ renderColorButtons();
 }
 function renderMap(){
  mapRegions.forEach(region=>{
@@ -364,12 +410,14 @@ mapRegions.forEach(region=>{
  region.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();open()}});
 });
 document.getElementById("clear-map").addEventListener("click",()=>{
- mapAssignments={};renderMap();document.getElementById("selected-place").textContent="No country selected";
- document.getElementById("solved-answer").hidden=true;document.getElementById("assign-help").textContent="Select a numbered country on the map to begin.";
- document.getElementById("color-feedback").textContent="";selectedCountry=null;
+ mapAssignments={};selectedCountry=null;renderMap();
+ document.getElementById("selected-place").textContent="No country selected";
+ document.getElementById("solved-answer").hidden=true;
+ document.getElementById("assign-help").textContent="Select a numbered country on the map to begin.";
+ document.getElementById("color-feedback").textContent="";
  mapRegions.forEach(region=>region.setAttribute("aria-current","false"));
 });
-renderClue(true);
+setupClue();
 </script>
 </body>
 </html>
