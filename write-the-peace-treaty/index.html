@@ -56,7 +56,7 @@ h2{margin:3px 0;color:var(--navy);font-size:clamp(1.4rem,3vw,2rem);line-height:1
 .context{background:#e7eff1;border-left:5px solid #56849b;border-radius:6px;padding:9px 11px;margin:8px 0 13px;color:#294552;font-size:.92rem}
 .step-label{font-size:.72rem;letter-spacing:.13em;font-weight:950;color:#9a7428;text-transform:uppercase}
 .question{font-size:1.15rem;font-weight:900;line-height:1.25;margin:6px 0 11px;color:#1c3646}
-.answers{display:grid;gap:9px}
+.evidence-lock{margin:12px 0 16px;padding:12px;background:#e9f1f3;border:2px solid #9bbac5;border-radius:10px}.evidence-choices{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0}.evidence-option{border:2px solid #c5d1d2;border-radius:8px;background:#fffdf8;color:#203946;text-align:left;padding:9px;font:inherit;font-weight:750;min-height:46px}.evidence-option.selected{border-color:#b78c37;background:#fff1c8;box-shadow:0 0 0 2px #b78c3744}.evidence-feedback{min-height:1.3em;margin-top:7px;font-weight:800;color:#8a4b28}.evidence-lock button:disabled{opacity:.55;cursor:not-allowed}.answers{display:grid;gap:9px}
 .answer{display:flex;align-items:center;gap:10px;text-align:left;width:100%;min-height:56px;background:#fffdf8;border:2px solid #d6cdbd;color:#223946;border-radius:10px;padding:10px 12px;box-shadow:0 3px 0 #d6cdbd;transition:transform .12s,box-shadow .12s,border-color .12s}
 .answer:hover:not(:disabled){transform:translateY(-2px);border-color:#b78c37;box-shadow:0 5px 0 #d6cdbd}
 .answer .letter{display:grid;place-items:center;flex:none;width:31px;height:31px;border-radius:50%;background:#244a60;color:#f3d078;font-weight:950}
@@ -105,7 +105,7 @@ textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
 <div class="directions-panel">
 <b>Play on your own</b>
 <ol>
-<li>Look closely at the cartoon.</li>
+<li>Spot two details in the cartoon before the questions unlock.</li>
 <li>Answer three quick questions to crack its message.</li>
 <li>If you miss, use the clue and try again.</li>
 <li>Decode all four cartoons. Then finish one short reflection.</li>
@@ -144,12 +144,15 @@ textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
 <span class="case-kicker" id="topicTag">CASE 01 · RUSSIA</span>
 <h3 id="caseTitle"></h3>
 <p class="context" id="context"></p>
+<div class="evidence-lock" id="evidenceLock"><div class="step-label">EYES ON THE CARTOON</div><div class="question" id="evidencePrompt"></div><p class="small">Select the two details you can see.</p><div class="evidence-choices" id="evidenceChoices"></div><button class="secondary" id="checkEvidence" type="button">Lock in clues</button><div class="evidence-feedback" id="evidenceFeedback" role="status" aria-live="polite"></div></div>
+<div id="questionBlock">
 <div class="step-label" id="stepLabel">CLUE 1 OF 3</div>
 <div class="question" id="question"></div>
 <div class="answers" id="answers"></div>
 <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
 <div class="hint" id="hint"></div>
 <div class="controls"><span class="small" id="scoreText">Cases decoded: 0 / 4</span><button class="primary" id="continueBtn" type="button" disabled>Next clue →</button></div>
+</div>
 <div class="case-complete" id="caseComplete"></div>
 </section>
 </div>
@@ -181,6 +184,7 @@ textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
 <script>
 const cases=[
 {
+evidence:{prompt:"Find both clues in the cartoon.",options:[["A patient on an operating table",true],["A man labeled Lenin",true],["A tank",false],["A ship at sea",false]]},
 tag:"CASE 01 · RUSSIA",
 title:"Lenin tries to rebuild Russia",
 context:"After the Russian Revolution, Lenin’s new government faced huge problems. This American cartoon was made in 1921.",
@@ -193,6 +197,7 @@ questions:[
 ]
 },
 {
+evidence:{prompt:"Find both clues in the cartoon.",options:[["A paper marked “My Rights”",true],["A paper marked “Demands”",true],["A bowl of apples",false],["A peace treaty signed by China",false]]},
 tag:"CASE 02 · CHINA",
 title:"China faces foreign demands",
 context:"This cartoon is from 1915. Four years later, the Treaty of Versailles gave Japan control of Germany’s former land in Shandong. Chinese students protested in the May Fourth Movement.",
@@ -205,6 +210,7 @@ questions:[
 ]
 },
 {
+evidence:{prompt:"Find both clues in the cartoon.",options:[["Gandhi above the central figure",true],["A path toward freedom",true],["A Japanese flag",false],["A stock market chart",false]]},
 tag:"CASE 03 · INDIA",
 title:"Gandhi leads India toward freedom",
 context:"This European cartoon shows India moving toward freedom with Gandhi’s leadership, while British force tries to stop it.",
@@ -217,6 +223,7 @@ questions:[
 ]
 },
 {
+evidence:{prompt:"Find both clues in the cartoon.",options:[["A sign about apples for five cents",true],["A man eating an apple",true],["A crowd of soldiers",false],["A ship at sea",false]]},
 tag:"CASE 04 · GREAT DEPRESSION",
 title:"A very strange “philanthropist”",
 context:"During the Great Depression, millions of people could not find work. This cartoon appeared in a newspaper in 1930.",
@@ -233,6 +240,8 @@ const stateKey="day6-cartoon-decoder-v1";
 let state={caseIndex:0,stepIndex:0,done:[false,false,false,false],answerText:"",studentName:"",responses:{}};
 try{const saved=JSON.parse(localStorage.getItem(stateKey)||"null");if(saved)state={...state,...saved}}catch{}
 state.responses=state.responses||{};
+state.evidenceDone=Array.isArray(state.evidenceDone)?state.evidenceDone:[false,false,false,false];
+while(state.evidenceDone.length<4)state.evidenceDone.push(false);
 let selectedOrder=null;
 const $=id=>document.getElementById(id);
 function save(){localStorage.setItem(stateKey,JSON.stringify(state))}
@@ -241,6 +250,7 @@ function render(){
 if(state.caseIndex>=cases.length){$("playView").style.display="none";$("finishView").classList.add("show");$("finalAnswer").value=state.answerText||"";$("studentName").value=state.studentName||"";return}
 $("playView").style.display="block";$("finishView").classList.remove("show");
 const c=cases[state.caseIndex],q=c.questions[state.stepIndex];selectedOrder=null;
+const needsEvidence=!state.evidenceDone[state.caseIndex];$("evidenceLock").style.display=needsEvidence?"block":"none";$("questionBlock").style.display=needsEvidence?"none":"block";$("evidencePrompt").textContent=c.evidence.prompt;$("evidenceFeedback").textContent="";const evidenceOrder=c.evidence.options.map((item,index)=>({item,index})).sort(()=>Math.random()-.5);$("evidenceChoices").innerHTML=evidenceOrder.map(({item,index})=>'<button class="evidence-option" type="button" aria-pressed="false" data-index="'+index+'">'+item[0]+'</button>').join("");const picked=new Set();$("evidenceChoices").querySelectorAll(".evidence-option").forEach(btn=>btn.onclick=()=>{const index=Number(btn.dataset.index);if(picked.has(index)){picked.delete(index);btn.classList.remove("selected");btn.setAttribute("aria-pressed","false")}else if(picked.size<2){picked.add(index);btn.classList.add("selected");btn.setAttribute("aria-pressed","true")}});$("checkEvidence").disabled=false;$("checkEvidence").onclick=()=>{const correct=c.evidence.options.map((item,index)=>item[1]?index:null).filter(index=>index!==null);if(picked.size===2&&correct.every(index=>picked.has(index))){state.evidenceDone[state.caseIndex]=true;state.responses["Case "+(state.caseIndex+1)+" · Visual clues"]=correct.map(index=>c.evidence.options[index][0]).join("; ");save();render()}else{$("evidenceFeedback").textContent="Those clues don’t match. Look closely and try again.";picked.clear();$("evidenceChoices").querySelectorAll(".evidence-option").forEach(b=>{b.classList.remove("selected");b.setAttribute("aria-pressed","false")})}};
 $("caseCount").textContent="CASE "+(state.caseIndex+1)+" OF 4";
 $("progressFill").style.width=((state.caseIndex+(state.stepIndex/3))/4*100)+"%";
 buildTabs();$("art").innerHTML=c.image;$("caption").innerHTML=c.caption;$("topicTag").textContent=c.tag;$("caseTitle").textContent=c.title;$("context").textContent=c.context;
@@ -278,7 +288,7 @@ save();render();
 });
 $("finalAnswer").addEventListener("input",e=>{state.answerText=e.target.value;save();$("savedStatus").textContent="Saved on this device."});
 $("studentName").addEventListener("input",e=>{state.studentName=e.target.value;save()});
-function startOver(){if(confirm("Start over and clear this activity’s saved answers?")){localStorage.removeItem(stateKey);state={caseIndex:0,stepIndex:0,done:[false,false,false,false],answerText:"",studentName:""};render();window.scrollTo({top:0,behavior:"smooth"})}}
+function startOver(){if(confirm("Start over and clear this activity’s saved answers?")){localStorage.removeItem(stateKey);state={caseIndex:0,stepIndex:0,done:[false,false,false,false],evidenceDone:[false,false,false,false],answerText:"",studentName:"",responses:{}};render();window.scrollTo({top:0,behavior:"smooth"})}}
 async function submitWork(){
 const name=$("studentName").value.trim(),answerText=$("finalAnswer").value.trim(),status=$("submitStatus"),button=$("submitWork");
 state.studentName=name;state.answerText=answerText;save();
