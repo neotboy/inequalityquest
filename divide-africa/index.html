@@ -143,6 +143,13 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 .evidence-options .choice{text-align:left;width:100%;min-height:52px;line-height:1.35;font-weight:650}
 .clue-number{max-width:250px}
 @media(max-width:600px){.evidence-options .choice{font-size:14px;min-height:54px}}
+
+.turn-in{margin:0 16px 0;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:#f7fafb;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:9px 16px}
+.turn-in h3{margin:0;color:var(--navy);font-size:18px}
+.turn-in p{margin:4px 0 0;color:var(--muted)}
+.turn-in-status{grid-column:1/-1;min-height:22px;font-weight:750;color:#315469}
+.turn-in-status.success{color:#1c6749}.turn-in-status.error{color:#9b3932}
+@media(max-width:600px){.turn-in{margin:0 10px;grid-template-columns:1fr}.turn-in button{width:100%}}
 </style>
 </head>
 <body>
@@ -268,6 +275,11 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 <div id="map-complete" class="map-complete" aria-live="polite" hidden>All six places are colored.</div>
 </section>
 </div>
+<section class="turn-in" aria-labelledby="turn-in-heading">
+<div><h3 id="turn-in-heading">Turn in your Day 1 activity</h3><p>Enter your name above and color all six places before you turn it in.</p></div>
+<button id="turn-in-button" class="primary-button" type="button">Turn in to teacher</button>
+<p id="turn-in-status" class="turn-in-status" role="status" aria-live="polite"></p>
+</section>
 </section>
 </section>
 </main>
@@ -424,6 +436,35 @@ document.getElementById("clear-map").addEventListener("click",()=>{
  mapRegions.forEach(region=>region.setAttribute("aria-current","false"));
 });
 setupClue();
+document.getElementById("turn-in-button").addEventListener("click",async()=>{
+ const name=document.getElementById("student-name").value.trim();
+ const status=document.getElementById("turn-in-status");
+ const button=document.getElementById("turn-in-button");
+ status.className="turn-in-status";
+ if(!name){status.textContent="Enter your name at the top of the page.";document.getElementById("student-name").focus();return}
+ if(Object.keys(solved).length!==6){status.textContent="Finish all six clues before turning in.";return}
+ if(Object.keys(mapAssignments).length!==6){status.textContent="Color all six places on the map before turning in.";return}
+ const answers={};
+ questions.forEach(q=>{
+  answers[q.title+" — Power"]=solved[q.id];
+  answers[q.title+" — Supporting fact"]=evidenceFacts[q.evidence];
+  answers[q.title+" — Map color"]=mapAssignments[q.id];
+ });
+ button.disabled=true;status.textContent="Sending your work…";
+ try{
+  const response=await fetch("https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",{
+   method:"POST",headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({studentName:name,assignmentId:"divide-africa-day1",answers})
+  });
+  const result=await response.json();
+  if(!response.ok)throw new Error(result.error||"Could not send your work.");
+  status.textContent="Turned in! Your work was sent to your teacher dashboard.";
+  status.classList.add("success");button.textContent="Turned in ✓";
+ }catch(error){
+  status.textContent=error instanceof Error?error.message:"Could not send your work. Try again.";
+  status.classList.add("error");button.disabled=false;
+ }
+});
 </script>
 </body>
 </html>
