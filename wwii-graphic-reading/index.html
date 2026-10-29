@@ -7,25 +7,25 @@
 <style>
 :root{--navy:#19364b;--red:#a33d36;--gold:#e6bd64;--paper:#f4efe4;--card:#fffdf8;--ink:#22313b;--muted:#526571;--line:#d8cfbd;--green:#396b50}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.45 system-ui,Segoe UI,Arial,sans-serif}
-header{background:var(--navy);color:white;border-bottom:6px solid var(--gold);padding:18px max(16px,calc((100vw - 1200px)/2))}.wrap{max-width:1200px;margin:auto;padding:0 14px}
+header{background:var(--navy);color:white;border-bottom:6px solid var(--gold);padding:18px max(16px,calc((100vw - 1200px)/2))}.wrap{max-width:1580px;margin:auto;padding:0 18px}
 .kicker{font-size:.8rem;font-weight:800;color:#f1d991;text-transform:uppercase;letter-spacing:.08em}h1{font-size:clamp(1.8rem,4vw,2.7rem);line-height:1.1;margin:4px 0}header p{margin:4px 0;color:#e8eff2}
 main{padding:14px 0 40px}.directions,.note,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px;margin:10px 0}
 .directions{background:#ecf2ee;border-left:5px solid var(--green)}.directions ol{display:flex;gap:8px 24px;flex-wrap:wrap;margin:6px 0 0;padding-left:22px}.directions li{padding-right:10px}
 .note{background:#fff1e9;border-left:5px solid var(--red);font-size:.95rem;padding:9px 12px}
 .day-tabs{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}.day-tab,button{font:inherit;font-weight:800;border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.day-tab{background:#e6dfd0;color:var(--navy)}.day-tab.active{background:var(--navy);color:white;box-shadow:inset 0 -3px var(--gold)}
-.layout{display:grid;grid-template-columns:minmax(300px,1.08fr) minmax(320px,.92fr);gap:12px;align-items:start}.panel{margin:0;padding:13px}
+.layout{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(340px,.82fr);gap:16px;align-items:start}.panel{margin:0;padding:13px}
 h2{font-size:1.2rem;color:var(--navy);margin:0 0 4px}.small{font-size:.9rem;color:var(--muted);margin:3px 0}
 .reader-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.scan{height:min(73vh,780px);min-height:440px;display:flex;align-items:center;justify-content:center;background:#e9e3d7;border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:8px}
-.scan img{display:block;max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 2px 10px #0003}.reader-controls{display:flex;align-items:center;justify-content:space-between;gap:7px;margin:8px 0}.reader-controls button{background:#e6dfd0;color:var(--navy);padding:8px 10px;font-size:.9rem}
+.scan{height:min(84vh,920px);min-height:560px;display:flex;align-items:flex-start;justify-content:center;overflow:auto;background:#e9e3d7;border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:8px}
+.scan img{display:block;height:100%;width:auto;max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 2px 10px #0003}.scan img.zoomed{height:150%;width:auto;max-width:none;max-height:none}.reader-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0}.reader-controls{display:flex;align-items:center;justify-content:space-between;gap:7px;flex:1;margin:0}.reader-controls button,.zoom-button{background:#e6dfd0;color:var(--navy);padding:8px 10px;font-size:.9rem}.zoom-button{background:#dbe7e1}
 .progress-line{display:flex;justify-content:space-between;align-items:center;gap:8px}.progressbar{height:10px;background:#e5dfd2;border-radius:99px;overflow:hidden;margin:5px 0 11px}.progressbar span{display:block;height:100%;background:var(--green);width:0}
 .fact{background:#edf3ef;border-left:5px solid var(--green);border-radius:8px;padding:11px 12px;margin:10px 0}.label{font-size:.75rem;font-weight:850;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 3px}
 .question{background:#f6f0e2;border-radius:8px;padding:12px;margin:10px 0}.question p{margin:0}
 label{display:block;font-weight:800;margin:9px 0 5px}input,textarea{width:100%;font:inherit;color:var(--ink);padding:10px;border:2px solid #cfc5b3;border-radius:8px;background:white}textarea{min-height:76px;resize:vertical}
 input:focus,textarea:focus,button:focus{outline:3px solid #6aa5bf;outline-offset:2px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.primary{background:var(--red);color:white}.secondary{background:#e6dfd0;color:var(--navy)}button:disabled{opacity:.55;cursor:not-allowed}.status{font-size:.9rem;min-height:1.3em;color:var(--muted)}.success{color:#246947}.error{color:#a12f2f}
-@media(max-width:820px){.layout{grid-template-columns:1fr}.scan{height:62vh;min-height:360px}.directions ol{display:block}}
-@media print{header{background:white;color:black;border-bottom:2px solid black}.reading,.day-tabs,.actions,.reader-controls{display:none!important}.layout{display:block}.panel{box-shadow:none}}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.scan{height:68vh;min-height:400px}.directions ol{display:block}}
+@media print{header{background:white;color:black;border-bottom:2px solid black}.reading,.day-tabs,.actions,.reader-tools{display:none!important}.layout{display:block}.panel{box-shadow:none}}
 </style>
 </head>
 <body>
@@ -37,9 +37,9 @@ input:focus,textarea:focus,button:focus{outline:3px solid #6aa5bf;outline-offset
 <section class="layout">
 <div class="panel reading">
  <div class="reader-head"><div><p class="label" id="dayLabel"></p><h2 id="bookTitle"></h2><p class="small" id="pageRange"></p></div></div>
- <div class="reader-controls"><button id="prevPage" type="button">← Back a page</button><span class="small" id="currentPage" aria-live="polite"></span><button id="nextPage" type="button">Next page →</button></div>
+ <div class="reader-tools"><div class="reader-controls"><button id="prevPage" type="button">← Back a page</button><span class="small" id="currentPage" aria-live="polite"></span><button id="nextPage" type="button">Next page →</button></div><button class="zoom-button" id="zoomBtn" type="button" aria-pressed="false">Make page bigger</button></div>
  <div class="scan"><img id="pageImage" alt="Scanned page from the assigned reading"></div>
- <p class="small">This section has five scanned pages. Use the buttons to read each page.</p>
+ <p class="small">Use “Make page bigger” to zoom in. Scroll inside the page box to read it.</p>
 </div>
 <div class="panel">
  <div class="progress-line"><div><p class="label" id="assignmentTitle"></p><h2 id="checkTitle"></h2></div><strong id="checkCount"></strong></div><div class="progressbar"><span id="progressFill"></span></div>
@@ -59,12 +59,12 @@ input:focus,textarea:focus,button:focus{outline:3px solid #6aa5bf;outline-offset
 <script>
 const DAYS=[
 {id:"wwii-graphic-reading-day1",day:"Day 1",title:"Why did the war begin?",book:"Maus I",start:30,end:59,overview:"Finish all six reading checks for Day 1.",checks:[
-["In 1939, the U.S. turned away a ship of Jewish refugees. What danger do you see? What could the U.S. have done for people in danger?"],
-["The U.S. stayed out of the war when Germany attacked Poland. What happened when the army called Vladek? What could the U.S. have done?"],
-["The U.S. joined the war after Japan attacked Pearl Harbor in 1941. How does this part end for Vladek? What changed when the U.S. joined?"],
-["The U.S. sent supplies to countries fighting Germany. Name one hard thing Vladek faced. Could U.S. food or supplies have helped?"],
-["The U.S. was fighting Nazi Germany by this time. What helped Vladek keep going? Why did U.S. fighting Nazi Germany matter?"],
-["The U.S. was still out of the war in Europe. Find one way people tried to help. What could the U.S. learn from this?"]
+["On page 34, what words do people shout at the Spiegelmans? What could the U.S. have done for Jewish families?"],
+["On page 35, what does Vladek learn on August 24, 1939? The U.S. stayed out. What help did people in Poland need?"],
+["On page 44, what happens when German soldiers reach Vladek? What changed when the U.S. joined the war?"],
+["On page 49, what did Vladek lack? U.S. supplies helped the Allies. How could food or warm clothes help a prisoner?"],
+["On page 50, what did prisoners do to pass the time? Why did U.S. fighting Nazi Germany matter to them?"],
+["On page 58, how did local Jewish people try to help Vladek? What could the U.S. have done for people like him?"]
 ],facts:[
 "In 1939, the U.S. turned away the St. Louis, a ship carrying Jewish refugees.",
 "The U.S. stayed out of the war when Germany attacked Poland in 1939.",
@@ -74,29 +74,29 @@ const DAYS=[
 "The U.S. did not fight Germany until 1941. People in Europe were already in danger."
 ]},
 {id:"wwii-graphic-reading-day2",day:"Day 2",title:"Big changes in the war",book:"Maus II",start:23,end:52,overview:"Start Day 2 when you come back. Finish all six checks.",checks:[
-["What is one thing taken from Vladek when he arrives? The U.S. joined the fight against Nazi Germany in 1941. Why did stopping the Nazis matter?"],
-["What does Vladek need at camp? The U.S. sent supplies to the Soviet Union. How could supplies help?"],
-["What skill helps Vladek in this section? U.S. and Allied troops landed in France on D-Day. Why did pushing back Germany matter to prisoners?"],
-["What does Artie ask or say about his father’s story? U.S. families heard stories from soldiers and survivors. Why should people listen?"],
-["What does Vladek learn about Anja in this section? U.S. and Allied troops were fighting Germany in Europe. Why did Vladek want to reach her?"],
-["What does Vladek do to help Anja? In 1944, the U.S. made a rescue board for people in danger. What does the page show people needed?"]
+["On page 24, what do the Nazis take from Vladek? Why did the U.S. joining the war matter to prisoners?"],
+["On page 27, how could a shoe or spoon help someone in camp? Why did U.S. supplies matter?"],
+["On page 34, what skill helps Vladek get work? Why did the U.S. and Allies pushing Germany back matter to prisoners?"],
+["On pages 41–42, what question does Artie ask about Holocaust stories? Why should people in the U.S. hear survivors’ stories?"],
+["On page 47, what does Vladek learn about Anja? Why does he want to reach her while the U.S. and Allies are fighting Germany?"],
+["On page 51, what job does Vladek ask to do? What kind of help did people in danger need in 1944?"]
 ],facts:[
 "After Pearl Harbor, the U.S. joined the war against Germany and Japan.",
 "The Soviet Union won at Stalingrad in 1943. The U.S. sent supplies to help it.",
 "On D-Day in 1944, U.S. and Allied troops landed in France.",
-"After the war, people in the U.S. learned from soldiers and survivors. Why should people in the U.S. hear Vladek’s story?",
+"After the war, U.S. families learned from survivors. Why should people in the U.S. hear Vladek’s story?",
 "U.S. and Allied troops fought Germany from the west. Soviet troops fought from the east.",
 "In 1944, the U.S. made the War Refugee Board to help rescue people from Nazi danger."
 ]},
 {id:"wwii-graphic-reading-day3",day:"Day 3",title:"The Holocaust and the U.S. response",book:"Anne Frank’s Diary: The Graphic Adaptation",start:45,end:74,overview:"Start Day 3 when you come back. Finish all six checks.",checks:[
-["Find one rule for the Secret Annex. How could the U.S. have helped families like Anne’s?"],
-["What danger do you see on these pages? Why did refugees need help from the U.S.?"],
-["Name one feeling Anne writes about. Did the danger end when the U.S. joined the war? Use the pages."],
-["Find one thing Anne or her family does each day. How was hiding different from life in the U.S.?"],
-["Choose one page. What do you see Anne doing or feeling? How was Anne’s life different from life in the U.S.?"],
-["What normal thing does Anne write about on July 26, 1943? What danger remained while the U.S. fought Germany?"]
+["On page 49, name one rule of the Secret Annex. What could the U.S. have done to help Jewish refugees find safety?"],
+["On page 50, what is happening to Jewish people in the street? The U.S. turned away a refugee ship in 1939. What should the U.S. have done to help?"],
+["On page 57, why is Anne upset with her mother? What does this show U.S. readers about her life during the war?"],
+["On page 64, what does Anne say about their food? U.S. families had rationing too. How was life in hiding harder?"],
+["On page 66, why does Anne pack and unpack her escape bag? What does this show about her life while the U.S. was at war?"],
+["On page 74, what does Anne pack at 1 p.m.? Why did her family still face danger while the U.S. fought Germany?"]
 ],facts:[
-"The Secret Annex had rules to help Anne’s family stay hidden.",
+"Before and during the war, U.S. rules limited how many refugees could enter.",
 "In 1939, the U.S. turned away the St. Louis, a ship carrying Jewish refugees.",
 "The U.S. joined the war in 1941, but Nazi danger in Europe continued.",
 "People in the U.S. faced rationing. Anne’s family had to hide from the Nazis.",
@@ -105,18 +105,18 @@ const DAYS=[
 ]}
 ];
 const API='https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit';
-let dayIndex=0,checkIndex=0,pageNow=1,sectionStart=1,sectionEnd=5;
+let dayIndex=0,checkIndex=0,pageNow=1,sectionStart=1,sectionEnd=5,zoomed=false;
 const $=id=>document.getElementById(id);
 const answerKey=(d,i)=>'wwii-reading-'+DAYS[d].id+'-'+i;
 function getAnswer(i){return localStorage.getItem(answerKey(dayIndex,i))||''}
 function saveCurrent(){localStorage.setItem(answerKey(dayIndex,checkIndex),$('answerBox').value);updateProgress()}
 function updateProgress(){const d=DAYS[dayIndex],done=d.checks.filter((_,i)=>getAnswer(i).trim()).length;$('answerProgress').textContent=done+' of 6 answers done';$('progressFill').style.width=(done/6*100)+'%'}
 function setPage(n){pageNow=Math.max(sectionStart,Math.min(sectionEnd,Number(n)||sectionStart));const d=DAYS[dayIndex];$('currentPage').textContent='Page '+pageNow+' of '+sectionEnd+' (this section)';$('pageImage').src='pages/day'+(dayIndex+1)+'-'+String(pageNow).padStart(3,'0')+'.jpg';$('pageImage').alt='Scanned '+d.book+' page '+pageNow;$('prevPage').disabled=pageNow===sectionStart;$('nextPage').disabled=pageNow===sectionEnd}
-function showCheck(){const d=DAYS[dayIndex],start=d.start+checkIndex*5,end=start+4;sectionStart=start;sectionEnd=end;$('assignmentTitle').textContent=d.day;$('checkTitle').textContent='Read pages '+start+'–'+end;$('checkCount').textContent=(checkIndex+1)+' / 6';$('pageRange').textContent='Only pages '+start+'–'+end+' are shown in this section.';$('dayPlan').textContent=d.overview;$('factText').textContent=d.facts[checkIndex];$('questionText').textContent=d.checks[checkIndex][0];$('answerBox').value=getAnswer(checkIndex);$('prevCheck').disabled=checkIndex===0;$('nextCheck').disabled=checkIndex===5;updateProgress();setPage(start)}
+function showCheck(){const d=DAYS[dayIndex],start=d.start+checkIndex*5,end=start+4;zoomed=false;$('pageImage').classList.remove('zoomed');$('zoomBtn').textContent='Make page bigger';$('zoomBtn').setAttribute('aria-pressed','false');sectionStart=start;sectionEnd=end;$('assignmentTitle').textContent=d.day;$('checkTitle').textContent='Read pages '+start+'–'+end;$('checkCount').textContent=(checkIndex+1)+' / 6';$('pageRange').textContent='Only pages '+start+'–'+end+' are shown in this section.';$('dayPlan').textContent=d.overview;$('factText').textContent=d.facts[checkIndex];$('questionText').textContent=d.checks[checkIndex][0];$('answerBox').value=getAnswer(checkIndex);$('prevCheck').disabled=checkIndex===0;$('nextCheck').disabled=checkIndex===5;updateProgress();setPage(start)}
 function showDay(i){saveCurrent();dayIndex=i;checkIndex=0;const d=DAYS[i];document.querySelectorAll('.day-tab').forEach((b,n)=>b.classList.toggle('active',n===i));$('dayLabel').textContent=d.day;$('bookTitle').textContent=d.book;$('studentName').value=localStorage.getItem('wwii-reading-name')||'';$('status').textContent='';showCheck()}
 $('dayTabs').innerHTML=DAYS.map((d,i)=>'<button type="button" class="day-tab'+(i===0?' active':'')+'" data-day="'+i+'">'+d.day+'</button>').join('');document.querySelectorAll('.day-tab').forEach(b=>b.addEventListener('click',()=>showDay(Number(b.dataset.day))));
 $('studentName').addEventListener('input',()=>localStorage.setItem('wwii-reading-name',$('studentName').value));$('answerBox').addEventListener('input',()=>{saveCurrent();$('status').textContent='Saved on this device.'});
-$('prevPage').addEventListener('click',()=>setPage(pageNow-1));$('nextPage').addEventListener('click',()=>setPage(pageNow+1));
+$('prevPage').addEventListener('click',()=>setPage(pageNow-1));$('nextPage').addEventListener('click',()=>setPage(pageNow+1));$('zoomBtn').addEventListener('click',()=>{zoomed=!zoomed;$('pageImage').classList.toggle('zoomed',zoomed);$('zoomBtn').textContent=zoomed?'Fit page':'Make page bigger';$('zoomBtn').setAttribute('aria-pressed',String(zoomed))});
 $('prevCheck').addEventListener('click',()=>{saveCurrent();if(checkIndex>0){checkIndex--;showCheck()}});
 $('nextCheck').addEventListener('click',()=>{saveCurrent();if(checkIndex<5){checkIndex++;showCheck()}});
 $('submitBtn').addEventListener('click',async()=>{saveCurrent();const name=$('studentName').value.trim(),d=DAYS[dayIndex],status=$('status'),btn=$('submitBtn');status.className='status';if(!name){status.textContent='Type your name first.';status.classList.add('error');$('studentName').focus();return}const answers=Object.fromEntries(d.checks.map((_,i)=>['check'+(i+1),getAnswer(i).trim()]));if(Object.values(answers).some(v=>!v)){status.textContent='Answer all 6 questions first.';status.classList.add('error');return}btn.disabled=true;status.textContent='Sending…';try{const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({studentName:name,assignmentId:d.id,answers})});const result=await res.json();if(!res.ok)throw new Error(result.error||'Could not turn this in. Try again.');status.textContent='Turned in! Your teacher has your work.';status.classList.add('success')}catch(err){status.textContent=err instanceof Error?err.message:'Could not turn this in. Try again.';status.classList.add('error')}finally{btn.disabled=false}});
