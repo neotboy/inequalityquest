@@ -180,7 +180,7 @@ function updateReadState(secondsLeft=0){
  paintChoices();
 }
 function showPageQuestion(){
- const q=pageQuestion();$('questionText').textContent=q[0];selectedChoice=-1;
+ const q=pageQuestion();$('bookPromptTitle').textContent='Page '+pageNow+' question';$('questionText').textContent=q[0];selectedChoice=-1;
  const saved=getPageAnswer(dayIndex,pageNow);
  currentChoices=saved===q[1]?[q[1],q[2],q[3]]:shuffled([q[1],q[2],q[3]]);
  $('pageFeedback').className='page-feedback';
