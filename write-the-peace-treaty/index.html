@@ -106,7 +106,7 @@ textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
 <b>Play on your own</b>
 <ol>
 <li>Copy one word from the cartoon before the questions unlock.</li>
-<li>Answer three quick questions to crack its message.</li>
+<li>Answer five quick questions to crack its message.</li>
 <li>If you miss, use the clue and try again.</li>
 <li>Decode all four cartoons. Then finish one short reflection.</li>
 </ol>
@@ -193,7 +193,9 @@ caption:'“Lenine calls for return of intellectuals,” Lute Pease, about 1921.
 questions:[
 {label:"SPOT A CLUE",q:"Who is lying on the table?",hint:"Look for a label on the person’s body.",options:[["Russia",true],["Lenin",false],["The United States",false]]},
 {label:"CRACK THE MESSAGE",q:"What is the cartoon saying about the revolution?",hint:"Lenin points out that Russia still needs its “brains.”",options:[["The new government damaged Russia, then needed skilled people to rebuild.",true],["Lenin wanted the old tsar to return.",false],["Russia had already solved its problems.",false]]},
-{label:"CONNECT TO HISTORY",q:"What can happen after a revolution?",hint:"A new government still has to run a whole country.",options:[["Replacing leaders is only one step; people still need food, work, and services.",true],["A revolution instantly fixes daily life.",false],["A country no longer needs workers or experts.",false]]}
+{label:"CONNECT TO HISTORY",q:"What can happen after a revolution?",hint:"A new government still has to run a whole country.",options:[["Replacing leaders is only one step; people still need food, work, and services.",true],["A revolution instantly fixes daily life.",false],["A country no longer needs workers or experts.",false]]},
+{label:"SPOT A CLUE",q:"What word does Lenin say Russia needs?",hint:"Look closely at the speech bubble.",options:[["Brains",true],["Gold",false],["Weapons",false]]},
+{label:"CONNECT TO HISTORY",q:"Why would a new government need experts?",hint:"Think about who can help solve a country’s problems.",options:[["Experts can help run services and rebuild.",true],["Experts make people stop needing food.",false],["Experts bring back the old ruler.",false]]}
 ]
 },
 {
@@ -206,7 +208,9 @@ caption:'“Now to see perhaps how the idea works out,” Luther Bradley, 1915. 
 questions:[
 {label:"SPOT A CLUE",q:"What is the figure behind China holding?",hint:"Read the word on the paper.",options:[["Demands",true],["A peace plan",false],["A map of India",false]]},
 {label:"CRACK THE MESSAGE",q:"What is the artist worried Japan might do?",hint:"China holds a paper called “My Rights.” Japan stands behind with demands.",options:[["Pressure China and take more control.",true],["Help China become fully independent.",false],["Give China its land back.",false]]},
-{label:"CONNECT TO HISTORY",q:"Why did students protest in China in 1919?",hint:"The Treaty of Versailles handed Shandong to Japan.",options:[["They opposed foreign control and their government’s weak response.",true],["They wanted Japan to rule China.",false],["They wanted the Qing emperor to return.",false]]}
+{label:"CONNECT TO HISTORY",q:"Why did students protest in China in 1919?",hint:"The Treaty of Versailles handed Shandong to Japan.",options:[["They opposed foreign control and their government’s weak response.",true],["They wanted Japan to rule China.",false],["They wanted the Qing emperor to return.",false]]},
+{label:"SPOT A CLUE",q:"What words are on the paper China holds?",hint:"Read the paper in China’s hands.",options:[["My Rights",true],["Japan’s Victory",false],["Treaty of Versailles",false]]},
+{label:"CONNECT TO HISTORY",q:"What did the Treaty of Versailles give Japan?",hint:"It transferred Germany’s former rights in Shandong.",options:[["Control of Germany’s former land in Shandong.",true],["Control of all of India.",false],["The right to rule Russia.",false]]}
 ]
 },
 {
@@ -219,7 +223,9 @@ caption:'European cartoon about Gandhi and India’s independence struggle. From
 questions:[
 {label:"SPOT A CLUE",q:"What is Gandhi helping India do?",hint:"Look at where the central figure is moving.",options:[["Move toward freedom.",true],["Return to British control.",false],["Take over another country.",false]]},
 {label:"CRACK THE MESSAGE",q:"What is Gandhi helping India move toward?",hint:"Look at the direction the central figure is moving and what the soldiers are trying to stop.",options:[["Freedom from British rule.",true],["A return to British control.",false],["A war to take over another country.",false]]},
-{label:"CONNECT TO HISTORY",q:"What did Gandhi’s movement want?",hint:"Think about who should control India.",options:[["More Indian self-rule and independence from Britain.",true],["More British control over India.",false],["A new king from Britain.",false]]}
+{label:"CONNECT TO HISTORY",q:"What did Gandhi’s movement want?",hint:"Think about who should control India.",options:[["More Indian self-rule and independence from Britain.",true],["More British control over India.",false],["A new king from Britain.",false]]},
+{label:"SPOT A CLUE",q:"What are the soldiers trying to stop?",hint:"Look at the direction India is moving in the cartoon.",options:[["India moving toward freedom.",true],["Gandhi joining the British army.",false],["A ship leaving India.",false]]},
+{label:"CONNECT TO HISTORY",q:"How did Gandhi challenge British rule?",hint:"He organized peaceful protests and civil disobedience.",options:[["Through peaceful protest.",true],["By leading a British army.",false],["By asking Britain to take more control.",false]]}
 ]
 },
 {
@@ -232,7 +238,9 @@ caption:'“The Philanthropist,” Herbert Block, December 5, 1930. <a href="htt
 questions:[
 {label:"SPOT A CLUE",q:"What is the unemployed man selling?",hint:"Read the sign beside him.",options:[["Apples for five cents.",true],["Bread for one dollar.",false],["Tickets to a job fair.",false]]},
 {label:"CRACK THE MESSAGE",q:"Why is the title “The Philanthropist” funny?",hint:"Compare the rich man with the person selling apples.",options:[["A rich man eats apples while a jobless man has to sell them.",true],["The unemployed man is giving the rich man a job.",false],["The rich man is sharing all his food.",false]]},
-{label:"CONNECT TO HISTORY",q:"What problem does this cartoon show?",hint:"The Great Depression brought lost jobs and poverty.",options:[["Many people lost jobs, and small acts of charity could not solve the crisis.",true],["Everyone became rich after the stock market crash.",false],["The Depression only affected people who owned farms.",false]]}
+{label:"CONNECT TO HISTORY",q:"What problem does this cartoon show?",hint:"The Great Depression brought lost jobs and poverty.",options:[["Many people lost jobs, and small acts of charity could not solve the crisis.",true],["Everyone became rich after the stock market crash.",false],["The Depression only affected people who owned farms.",false]]},
+{label:"SPOT A CLUE",q:"Who is eating an apple?",hint:"Look at the rich man in the picture.",options:[["The rich man.",true],["The unemployed man.",false],["A child selling bread.",false]]},
+{label:"CONNECT TO HISTORY",q:"Why did some people sell apples during the Depression?",hint:"Many people had lost their jobs and needed money.",options:[["They were trying to earn money after losing work.",true],["Apples were required to vote.",false],["The government paid everyone to sell fruit.",false]]}
 ]
 }
 ];
@@ -252,9 +260,9 @@ $("playView").style.display="block";$("finishView").classList.remove("show");
 const c=cases[state.caseIndex],q=c.questions[state.stepIndex];selectedOrder=null;
 const needsEvidence=!state.evidenceDone[state.caseIndex];$("evidenceLock").style.display=needsEvidence?"block":"none";$("questionBlock").style.display=needsEvidence?"none":"block";$("evidencePrompt").textContent=c.evidence.prompt;$("evidenceWord").value="";$("evidenceFeedback").textContent="";$("checkEvidence").disabled=false;const checkWord=()=>{const typed=$("evidenceWord").value.trim();if(!typed){$("evidenceFeedback").textContent="Type the word you found in the cartoon first.";$("evidenceWord").focus();return}const normalized=typed.toLocaleUpperCase().replace(/[^A-Z]/g,"");if(normalized===c.evidence.answer){state.evidenceDone[state.caseIndex]=true;state.responses["Case "+(state.caseIndex+1)+" · Image clue"]=typed;save();render()}else{$("evidenceFeedback").textContent="That word doesn’t match. Zoom in and read the cartoon again.";$("evidenceWord").focus();$("evidenceWord").select()}};$("checkEvidence").onclick=checkWord;$("evidenceWord").onkeydown=event=>{if(event.key==="Enter")checkWord()};
 $("caseCount").textContent="CASE "+(state.caseIndex+1)+" OF 4";
-$("progressFill").style.width=((state.caseIndex+(state.stepIndex/3))/4*100)+"%";
+$("progressFill").style.width=((state.caseIndex+(state.stepIndex/c.questions.length))/4*100)+"%";
 buildTabs();$("art").innerHTML=c.image;$("caption").innerHTML=c.caption;$("topicTag").textContent=c.tag;$("caseTitle").textContent=c.title;$("context").textContent=c.context;
-$("stepLabel").textContent=q.label+" · "+(state.stepIndex+1)+" OF 3";$("question").textContent=q.q;$("hint").textContent="CLUE: "+q.hint;$("hint").className="hint";
+$("stepLabel").textContent=q.label+" · "+(state.stepIndex+1)+" OF "+c.questions.length;$("question").textContent=q.q;$("hint").textContent="CLUE: "+q.hint;$("hint").className="hint";
 $("feedback").textContent="";$("feedback").className="feedback";$("continueBtn").disabled=true;$("continueBtn").textContent=state.stepIndex===2?(state.caseIndex===3?"Finish cases →":"Next case →"):"Next clue →";
 const start=(state.caseIndex+state.stepIndex)%q.options.length;const ordered=q.options.slice(start).concat(q.options.slice(0,start));
 $("answers").innerHTML=ordered.map((a,i)=>'<button class="answer" type="button" data-correct="'+a[1]+'"><span class="letter">'+String.fromCharCode(65+i)+'</span><span>'+a[0]+'</span></button>').join("");
@@ -264,9 +272,9 @@ $("caseComplete").className="case-complete";
 }
 function answer(btn,q){
 if(btn.dataset.correct==="true"){
-state.responses["Case "+(state.caseIndex+1)+" · "+q.label]=btn.innerText.replace(/^[A-Z]\s*/,"").trim();save();
+state.responses["Case "+(state.caseIndex+1)+" · Q"+(state.stepIndex+1)+" · "+q.label]=btn.innerText.replace(/^[A-Z]\s*/,"").trim();save();
 btn.classList.add("correct");$("answers").querySelectorAll("button").forEach(b=>b.disabled=true);
-$("feedback").innerHTML="<b>Message decoded!</b>"+(state.stepIndex===2?"You found the history behind the artist’s opinion.":"That clue fits. Keep decoding this cartoon.");
+$("feedback").innerHTML="<b>Message decoded!</b>"+(state.stepIndex===cases[state.caseIndex].questions.length-1?"You found the history behind the artist’s opinion.":"That clue fits. Keep decoding this cartoon.");
 $("feedback").className="feedback show good";$("hint").className="hint";
 $("continueBtn").disabled=false;
 }else{
@@ -277,7 +285,7 @@ $("feedback").className="feedback show retry";
 }
 $("continueBtn").addEventListener("click",()=>{
 if($("continueBtn").disabled)return;
-if(state.stepIndex<2){state.stepIndex++}
+if(state.stepIndex<cases[state.caseIndex].questions.length-1){state.stepIndex++}
 else{
 state.done[state.caseIndex]=true;
 $("caseComplete").innerHTML="<b>Case solved!</b> "+cases[state.caseIndex].title;
