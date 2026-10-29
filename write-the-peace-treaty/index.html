@@ -270,8 +270,8 @@ $("feedback").innerHTML="<b>Message decoded!</b>"+(state.stepIndex===2?"You foun
 $("feedback").className="feedback show good";$("hint").className="hint";
 $("continueBtn").disabled=false;
 }else{
-btn.classList.add("wrong");btn.disabled=true;$("hint").className="hint show";
-$("feedback").innerHTML="<b>Not quite—look again.</b>Use the clue, then choose another answer.";
+btn.classList.add("wrong");btn.disabled=true;const answers=$("answers"),buttons=Array.from(answers.querySelectorAll(".answer")),previous=buttons.map(b=>b.querySelector(".letter").textContent+":"+b.innerText);for(let i=buttons.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[buttons[i],buttons[j]]=[buttons[j],buttons[i]]}if(buttons.map(b=>b.querySelector(".letter").textContent+":"+b.innerText).every((v,i)=>v===previous[i]))buttons.unshift(buttons.pop());buttons.forEach((b,i)=>{b.querySelector(".letter").textContent=String.fromCharCode(65+i);answers.appendChild(b)});$("hint").className="hint show";
+$("feedback").innerHTML="<b>Not quite—look again.</b>Use the clue, then choose another answer. The choices moved.";
 $("feedback").className="feedback show retry";
 }
 }
