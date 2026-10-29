@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Divide Africa | Read, Solve & Color</title>
+<style>
+:root{--navy:#20394e;--teal:#087e83;--ink:#233342;--muted:#5e6c77;--paper:#f4f7f8;--line:#d7e0e4;--britain:#e5ad42;--france:#4f88bd;--belgium:#b36a83;--independent:#87a38e}
+*{box-sizing:border-box}body{margin:0;background:#edf2f4;color:var(--ink);font:16px/1.45 Arial,Helvetica,sans-serif}
+header{background:var(--navy);color:white;padding:20px clamp(18px,4vw,50px);display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+h1{font-size:clamp(22px,3vw,32px);margin:0;letter-spacing:.01em}.work-note{font-size:14px;color:#e0e9ed}
+main{max-width:1400px;margin:auto;padding:22px clamp(14px,3vw,34px) 40px}
+.intro{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;margin-bottom:18px}
+.facts{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px 18px}
+.facts h2{font-size:19px;color:var(--teal);margin:0 0 8px}.facts>p{margin:0 0 10px}
+.fact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px}
+.fact{display:grid;grid-template-columns:118px 1fr;gap:10px}.fact strong{color:var(--teal);font-size:14px;letter-spacing:.03em}.fact p{margin:0}
+.name{min-width:210px;background:white;border:1px solid var(--line);border-radius:14px;padding:15px}
+.name label{display:block;font-weight:700;margin-bottom:7px}.name input{width:100%;font:inherit;padding:8px 9px;border:1px solid #aebbc2;border-radius:7px}
+.workspace{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(410px,.95fr);gap:18px;align-items:start}
+.map-card,.question-panel{background:white;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.map-head,.question-head{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.map-head h2,.question-head h2{margin:0;font-size:20px;color:var(--navy)}
+.status{font-size:13px;color:var(--muted);font-weight:700}.map-wrap{padding:8px 12px 0;background:#fff}
+svg{width:100%;height:auto;display:block;max-height:670px}
+.continent{fill:#f0f4f5;stroke:#344651;stroke-width:3;stroke-linejoin:round}
+.borders{fill:none;stroke:#aab7bd;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
+.country{cursor:pointer;outline:none}.country polygon{fill:#dfe7e9;stroke:#fff;stroke-width:2.5;stroke-linejoin:round;transition:fill .15s,stroke .15s}
+.country:hover polygon,.country:focus polygon{stroke:#172a38;stroke-width:4}
+.country[aria-current="true"] polygon{stroke:#182b39;stroke-width:4}
+.country text{font-size:15px;font-weight:700;text-anchor:middle;fill:#223542;pointer-events:none}
+.country .num{font-size:13px;font-weight:800;fill:#fff;stroke:#20394e;stroke-width:5px;paint-order:stroke;text-anchor:middle}
+.legend{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px 16px;border-top:1px solid var(--line)}
+.legend-item{font-size:13px;display:flex;align-items:center;gap:7px}.swatch{width:16px;height:16px;border:1px solid #829198;border-radius:3px}
+.instructions{padding:14px 18px;background:#f4f8f9;border-bottom:1px solid var(--line)}
+.instructions p{margin:2px 0}.instructions strong{color:var(--navy)}
+.question-head{align-items:flex-start}.question-head p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+.questions{padding:8px 14px 15px;max-height:680px;overflow:auto}
+.question{padding:12px 10px 14px;border-bottom:1px solid #e5ebee;border-radius:8px;scroll-margin:12px}
+.question:last-child{border-bottom:0}.question.active{background:#f1f7f8;box-shadow:inset 3px 0 var(--teal)}
+.question h3{font-size:16px;color:var(--teal);margin:0 0 4px}.question p{margin:0 0 9px}
+.choices{display:flex;flex-wrap:wrap;gap:7px}.choice{font:700 13px Arial,sans-serif;background:white;border:1px solid #bac6cc;border-radius:999px;padding:7px 12px;color:var(--ink);cursor:pointer}
+.choice:hover,.choice:focus-visible{outline:2px solid #286d78;outline-offset:1px}.choice[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.row-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;font-size:12px;color:var(--muted)}
+.assigned{font-weight:700;color:var(--teal)}.reset{border:1px solid #bac6cc;background:white;border-radius:7px;padding:7px 10px;font:700 13px Arial,sans-serif;color:var(--navy);cursor:pointer}
+@media(max-width:980px){.workspace{grid-template-columns:1fr}.map-card{position:relative}.questions{max-height:none}.map-wrap svg{max-height:560px}}
+@media(max-width:640px){.intro{grid-template-columns:1fr}.fact-grid{grid-template-columns:1fr}.fact{grid-template-columns:105px 1fr}.name{min-width:0}.workspace{grid-template-columns:minmax(0,1fr)}.map-head,.question-head{align-items:flex-start}.country text{font-size:12px}.country .num{font-size:11px}}
+@media print{body{background:white}.work-note,.reset{display:none}.workspace{grid-template-columns:1fr 1fr}.questions{max-height:none;overflow:visible}.map-card,.question-panel,.facts{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><h1>DIVIDE AFRICA | READ, SOLVE &amp; COLOR</h1><div class="work-note">Work alone or with a partner</div></header>
+<main>
+<section class="intro" aria-label="Activity facts and name">
+<div class="facts">
+<h2>FIRST: WHO CONTROLLED WHAT?</h2>
+<p>Read these short facts. Use them to solve the six questions below.</p>
+<div class="fact-grid">
+<div class="fact"><strong>BRITAIN</strong><p>Controlled Egypt to protect the Suez Canal. It also controlled Nigeria and South Africa, where trade, gold, and diamonds mattered.</p></div>
+<div class="fact"><strong>FRANCE</strong><p>Controlled Algeria in North Africa and sent French settlers there.</p></div>
+<div class="fact"><strong>BELGIUM</strong><p>Controlled the Congo in Central Africa and forced many people to collect rubber.</p></div>
+<div class="fact"><strong>INDEPENDENT</strong><p>Ethiopia defeated an Italian invasion in 1896. It kept its own government instead of becoming an Italian colony.</p></div>
+</div></div>
+<div class="name"><label for="student-name">Name:</label><input id="student-name" autocomplete="name" aria-label="Name"></div>
+</section>
+<section class="workspace">
+<div class="map-card">
+<div class="map-head"><h2>FINISH YOUR AFRICA MAP</h2><span class="status" id="map-status">0 of 6 assigned</span></div>
+<div class="instructions"><p>Use the six answers you circled on page 1.</p><p><strong>STEP 1</strong> Find each number. The number matches the place on page 1.</p><p><strong>STEP 2</strong> Color the country using your color key below.</p></div>
+<div class="map-wrap">
+<svg viewBox="0 0 500 570" role="img" aria-label="Map of Africa. Select Egypt, Algeria, Nigeria, Congo, South Africa, or Ethiopia.">
+<!-- Simplified classroom map outline and country borders -->
+<path class="continent" d="M82 70 L112 48 151 53 180 42 221 47 250 56 280 49 306 60 335 56 357 68 378 67 396 85 409 94 424 104 431 119 422 134 436 145 430 162 447 176 437 192 449 209 440 229 447 245 435 258 429 279 419 295 416 320 405 339 397 363 386 386 374 405 367 428 354 447 347 470 335 495 322 520 306 537 292 529 285 504 276 483 260 462 246 444 234 420 221 401 213 379 203 358 194 337 184 319 171 301 159 281 146 265 132 247 119 227 107 210 95 190 87 170 78 150 74 131 75 111 79 92 Z"/>
+<path class="borders" d="M86 132 L147 128 199 126 251 128 307 124 359 119 412 115 M97 185 L157 182 208 187 255 184 305 180 365 174 428 169 M111 225 L164 220 208 225 249 225 294 224 341 217 437 209 M135 263 L181 255 218 263 254 260 297 265 338 252 428 246 M158 299 L202 290 244 291 279 296 318 286 416 280 M183 338 L217 324 257 331 294 322 382 315 M206 371 L246 355 283 362 359 352 M225 402 L263 387 301 393 378 382 M247 434 L280 421 349 415 M274 465 L304 451 359 443 M120 95 L127 177 M177 56 L177 126 M222 54 L226 185 M278 54 L278 177 M331 65 L327 177 M378 78 L367 160 M149 265 L144 316 M194 293 L192 357 M250 292 L246 356 M309 267 L301 323 M357 252 L346 316"/>
+<!-- Six interactive country areas, with approximate classroom-map positions -->
+<g class="country" role="button" tabindex="0" data-country="algeria" aria-label="2. Algeria" aria-current="false">
+<polygon points="113,89 195,81 232,99 226,153 200,177 145,169 111,145"/>
+<text x="169" y="127">Algeria</text><text class="num" x="169" y="148">2</text></g>
+<g class="country" role="button" tabindex="0" data-country="egypt" aria-label="1. Egypt" aria-current="false">
+<polygon points="343,98 397,98 407,145 379,163 347,151"/>
+<text x="375" y="124">Egypt</text><text class="num" x="375" y="145">1</text></g>
+<g class="country" role="button" tabindex="0" data-country="nigeria" aria-label="3. Nigeria" aria-current="false">
+<polygon points="149,211 194,208 204,237 190,255 157,250 143,233"/>
+<text x="173" y="229">Nigeria</text><text class="num" x="173" y="248">3</text></g>
+<g class="country" role="button" tabindex="0" data-country="ethiopia" aria-label="6. Ethiopia" aria-current="false">
+<polygon points="346,194 404,187 427,212 403,238 367,231 344,214"/>
+<text x="386" y="211">Ethiopia</text><text class="num" x="386" y="231">6</text></g>
+<g class="country" role="button" tabindex="0" data-country="congo" aria-label="4. Congo" aria-current="false">
+<polygon points="217,269 265,263 296,281 287,323 255,340 223,322 207,294"/>
+<text x="250" y="295">Congo</text><text class="num" x="250" y="315">4</text></g>
+<g class="country" role="button" tabindex="0" data-country="south-africa" aria-label="5. South Africa" aria-current="false">
+<polygon points="285,423 345,408 365,436 347,468 317,482 291,459"/>
+<text x="327" y="438">South Africa</text><text class="num" x="327" y="460">5</text></g>
+</svg></div>
+<div class="legend" aria-label="Color key">
+<div class="legend-item"><span class="swatch" style="background:var(--britain)"></span>Britain</div>
+<div class="legend-item"><span class="swatch" style="background:var(--france)"></span>France</div>
+<div class="legend-item"><span class="swatch" style="background:var(--belgium)"></span>Belgium</div>
+<div class="legend-item"><span class="swatch" style="background:var(--independent)"></span>Independent</div>
+</div>
+</div>
+<div class="question-panel">
+<div class="question-head"><div><h2>NEXT: READ EACH CLUE AND CIRCLE THE ANSWER</h2><p>Use the facts above. Find the same number on the map.</p></div><button class="reset" id="reset" type="button">Clear map</button></div>
+<div class="questions" id="questions">
+<article class="question" id="q-egypt" data-country="egypt"><h3>1. EGYPT</h3><p>Which power wanted to protect a canal used by ships?</p><div class="choices"></div><div class="row-foot"><span class="assigned"></span></div></article>
+<article class="question" id="q-algeria" data-country="algeria"><h3>2. ALGERIA</h3><p>Which power sent settlers to this North African place?</p><div class="choices"></div><div class="row-foot"><span class="assigned"></span></div></article>
+<article class="question" id="q-nigeria" data-country="nigeria"><h3>3. NIGERIA</h3><p>Which power controlled this West African place for trade?</p><div class="choices"></div><div class="row-foot"><span class="assigned"></span></div></article>
+<article class="question" id="q-congo" data-country="congo"><h3>4. CONGO</h3><p>Which power forced people here to collect rubber?</p><div class="choices"></div><div class="row-foot"><span class="assigned"></span></div></article>
+<article class="question" id="q-south-africa" data-country="south-africa"><h3>5. SOUTH AFRICA</h3><p>Which power valued the gold and diamonds here?</p><div class="choices"></div><div class="row-foot"><span class="assigned"></span></div></article>
+<article class="question" id="q-ethiopia" data-country="ethiopia"><h3>6. ETHIOPIA</h3><p>Did this country keep its own government after defeating Italy?</p><div class="choices"></div><div class="row-foot"><span class="assigned"></span></div></article>
+</div></div>
+</section>
+</main>
+<script>
+const powers=["Britain","France","Belgium","Independent"];
+const colors={Britain:"var(--britain)",France:"var(--france)",Belgium:"var(--belgium)",Independent:"var(--independent)"};
+const answers={egypt:"Britain",algeria:"France",nigeria:"Britain",congo:"Belgium","south-africa":"Britain",ethiopia:"Independent"};
+const assigned={};
+const questions=[...document.querySelectorAll(".question")];
+const mapRegions=[...document.querySelectorAll(".country")];
+function draw(){
+ let done=0;
+ questions.forEach(card=>{
+  const id=card.dataset.country, value=assigned[id], group=card.querySelector(".choices"), status=card.querySelector(".assigned");
+  group.innerHTML="";
+  powers.forEach(power=>{
+   const b=document.createElement("button");b.type="button";b.className="choice";b.textContent=power;
+   b.setAttribute("aria-pressed",String(value===power));
+   b.addEventListener("click",()=>{assigned[id]=power;draw()});group.appendChild(b);
+  });
+  status.textContent=value?"Map color: "+value:"";
+  if(value)done++;
+ });
+ mapRegions.forEach(region=>{
+  const id=region.dataset.country, value=assigned[id];
+  region.setAttribute("aria-current",String(selected===id));
+  region.querySelector("polygon").style.fill=value?colors[value]:"#dfe7e9";
+ });
+ document.getElementById("map-status").textContent=done+" of 6 assigned";
+}
+let selected="egypt";
+mapRegions.forEach(region=>{
+ const select=()=>{
+  selected=region.dataset.country;
+  document.querySelectorAll(".question").forEach(q=>q.classList.toggle("active",q.dataset.country===selected));
+  draw();
+  const card=document.querySelector('.question[data-country="'+selected+'"]');
+  card.scrollIntoView({behavior:"smooth",block:"nearest"});
+ };
+ region.addEventListener("click",select);
+ region.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();select()}});
+});
+document.getElementById("reset").addEventListener("click",()=>{Object.keys(assigned).forEach(k=>delete assigned[k]);selected="egypt";questions.forEach(q=>q.classList.toggle("active",q.dataset.country==="egypt"));draw()});
+questions.forEach(q=>q.addEventListener("click",e=>{if(e.target.closest("button"))return;selected=q.dataset.country;questions.forEach(x=>x.classList.toggle("active",x===q));draw()}));
+draw();
+</script>
+</body>
+</html>
