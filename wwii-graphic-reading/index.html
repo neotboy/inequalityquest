@@ -19,6 +19,7 @@ h2{font-size:1.2rem;color:var(--navy);margin:0 0 4px}.small{font-size:.9rem;colo
 .reader-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .scan{height:min(84vh,920px);min-height:560px;display:flex;align-items:flex-start;justify-content:center;overflow:auto;background:#e9e3d7;border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:8px}
 .scan img{display:block;height:100%;width:auto;max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 2px 10px #0003}.scan img.zoomed{height:150%;width:auto;max-width:none;max-height:none}.reader-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0}.reader-controls{display:flex;align-items:center;justify-content:space-between;gap:7px;flex:1;margin:0}.reader-controls button,.zoom-button{background:#e6dfd0;color:var(--navy);padding:8px 10px;font-size:.9rem}.zoom-button{background:#dbe7e1}
+.scan img.day5-comic{height:auto;width:100%;max-height:none;object-fit:initial}.scan img.day5-comic.zoomed{height:auto;width:175%;max-width:none}
 .progress-line{display:flex;justify-content:space-between;align-items:center;gap:8px}.progressbar{height:10px;background:#e5dfd2;border-radius:99px;overflow:hidden;margin:5px 0 11px}.progressbar span{display:block;height:100%;background:var(--green);width:0}
 .fact{background:#edf3ef;border-left:5px solid var(--green);border-radius:8px;padding:11px 12px;margin:10px 0}.label{font-size:.75rem;font-weight:850;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 3px}
 .questions-panel{padding:20px;border-top:5px solid var(--navy);box-shadow:0 3px 14px #19364b12}
@@ -241,7 +242,7 @@ function showPageQuestion(){
 function setPage(n){
  if(pageTimer){clearInterval(pageTimer);pageTimer=null}
  pageNow=Math.max(sectionStart,Math.min(sectionEnd,Number(n)||sectionStart));
- const d=DAYS[dayIndex];$('pageImage').src=d.preview?'https://images.macmillan.com/folio-assets/interiors-images/9781250793348.IN'+String(pageNow).padStart(2,'0')+'.jpg':d.pdfPreview?'pages/day5-'+String(pageNow).padStart(3,'0')+'.jpg':'pages/day'+(dayIndex+1)+'-'+String(pageNow).padStart(3,'0')+'.jpg';$('pageImage').alt=(d.preview?'Official publisher preview ':d.pdfPreview?'Upright Smithsonian comic ':'Scanned ')+d.book+' '+pageLabel(d,pageNow)
+ const d=DAYS[dayIndex];$('pageImage').classList.toggle('day5-comic',!!d.pdfPreview);$('pageImage').src=d.preview?'https://images.macmillan.com/folio-assets/interiors-images/9781250793348.IN'+String(pageNow).padStart(2,'0')+'.jpg':d.pdfPreview?'pages/day5-'+String(pageNow).padStart(3,'0')+'.jpg':'pages/day'+(dayIndex+1)+'-'+String(pageNow).padStart(3,'0')+'.jpg';$('pageImage').alt=(d.preview?'Official publisher preview ':d.pdfPreview?'Upright Smithsonian comic ':'Scanned ')+d.book+' '+pageLabel(d,pageNow)
  showPageQuestion();
  if(sectionRead.has(pageNow)){updateReadState(0);return}
  const pageAtStart=pageNow,unlockAt=Date.now()+READ_SECONDS*1000;
