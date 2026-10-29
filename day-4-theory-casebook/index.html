@@ -8,7 +8,7 @@
 </style>
 </head>
 <body>
-<header class="topbar"><div class="brand">FIELD NOTES · SOCIOLOGY</div><div class="topright"><span id="progressText">Casebook · 3 cases</span></div></header>
+<header class="topbar"><div class="brand">FIELD NOTES · SOCIOLOGY</div><div class="topright"><span id="progressText">Casebook · 3 cases</span><button type="button" id="resetNow" style="border:1px solid #a83c30;background:#fffdf8;color:#a83c30;padding:8px 12px;font-weight:700;border-radius:3px">Restart activity</button></div></header>
 <div class="progress"><i id="progressbar"></i></div>
 <main class="wrap">
 <section id="home">
@@ -65,6 +65,12 @@
 <script>
 (()=>{
  const key='sociologyCasebookV2', names=['case1','case2','case3'];
+ // Reset button works from any page, including an unfinished case.
+ document.getElementById('resetNow').addEventListener('click',()=>{
+  if(!confirm('Start from case 1? This clears your saved answers on this device, not teacher submissions.'))return;
+  try{localStorage.removeItem('sociologyCasebookV2')}catch{}
+  window.location.replace(window.location.pathname+'?restart=1&v=20261029reset2');
+ });
  // A fresh-start link clears only this device's local casebook progress.
  if(new URLSearchParams(window.location.search).get('restart')==='1'){
   try{localStorage.removeItem('sociologyCasebookV2')}catch{}
