@@ -3,156 +3,248 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Divide Africa | Read, Solve & Color</title>
+<meta name="theme-color" content="#15364b">
+<title>Divide Africa | Read, Solve &amp; Color</title>
 <style>
-:root{--navy:#20394e;--teal:#087e83;--ink:#233342;--muted:#5e6c77;--paper:#f4f7f8;--line:#d7e0e4;--britain:#e5ad42;--france:#4f88bd;--belgium:#b36a83;--independent:#87a38e}
-*{box-sizing:border-box}body{margin:0;background:#edf2f4;color:var(--ink);font:16px/1.45 Arial,Helvetica,sans-serif}
-header{background:var(--navy);color:white;padding:20px clamp(18px,4vw,50px);display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
-h1{font-size:clamp(22px,3vw,32px);margin:0;letter-spacing:.01em}.work-note{font-size:14px;color:#e0e9ed}
-main{max-width:1400px;margin:auto;padding:22px clamp(14px,3vw,34px) 40px}
-.intro{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;margin-bottom:18px}
-.facts{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px 18px}
-.facts h2{font-size:19px;color:var(--teal);margin:0 0 8px}.facts>p{margin:0 0 10px}
-.fact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px}
-.fact{display:grid;grid-template-columns:118px 1fr;gap:10px}.fact strong{color:var(--teal);font-size:14px;letter-spacing:.03em}.fact p{margin:0}
-.name{min-width:210px;background:white;border:1px solid var(--line);border-radius:14px;padding:15px}
-.name label{display:block;font-weight:700;margin-bottom:7px}.name input{width:100%;font:inherit;padding:8px 9px;border:1px solid #aebbc2;border-radius:7px}
-.workspace{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(410px,.95fr);gap:18px;align-items:start}
-.map-card,.question-panel{background:white;border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.map-head,.question-head{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
-.map-head h2,.question-head h2{margin:0;font-size:20px;color:var(--navy)}
-.status{font-size:13px;color:var(--muted);font-weight:700}.map-wrap{padding:8px 12px 0;background:#fff}
-svg{width:100%;height:auto;display:block;max-height:670px}
-.continent{fill:#f0f4f5;stroke:#344651;stroke-width:3;stroke-linejoin:round}
-.borders{fill:none;stroke:#aab7bd;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}
-.country{cursor:pointer;outline:none}.country polygon{fill:#dfe7e9;stroke:#fff;stroke-width:2.5;stroke-linejoin:round;transition:fill .15s,stroke .15s}
-.country:hover polygon,.country:focus polygon{stroke:#172a38;stroke-width:4}
-.country[aria-current="true"] polygon{stroke:#182b39;stroke-width:4}
-.country text{font-size:15px;font-weight:700;text-anchor:middle;fill:#223542;pointer-events:none}
-.country .num{font-size:13px;font-weight:800;fill:#fff;stroke:#20394e;stroke-width:5px;paint-order:stroke;text-anchor:middle}
-.legend{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px 16px;border-top:1px solid var(--line)}
-.legend-item{font-size:13px;display:flex;align-items:center;gap:7px}.swatch{width:16px;height:16px;border:1px solid #829198;border-radius:3px}
-.instructions{padding:14px 18px;background:#f4f8f9;border-bottom:1px solid var(--line)}
-.instructions p{margin:2px 0}.instructions strong{color:var(--navy)}
-.question-head{align-items:flex-start}.question-head p{margin:4px 0 0;font-size:13px;color:var(--muted)}
-.questions{padding:8px 14px 15px;max-height:680px;overflow:auto}
-.question{padding:12px 10px 14px;border-bottom:1px solid #e5ebee;border-radius:8px;scroll-margin:12px}
-.question:last-child{border-bottom:0}.question.active{background:#f1f7f8;box-shadow:inset 3px 0 var(--teal)}
-.question h3{font-size:16px;color:var(--teal);margin:0 0 4px}.question p{margin:0 0 9px}
-.choices{display:flex;flex-wrap:wrap;gap:7px}.choice{font:700 13px Arial,sans-serif;background:white;border:1px solid #bac6cc;border-radius:999px;padding:7px 12px;color:var(--ink);cursor:pointer}
-.choice:hover,.choice:focus-visible{outline:2px solid #286d78;outline-offset:1px}.choice[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
-.row-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;font-size:12px;color:var(--muted)}
-.assigned{font-weight:700;color:var(--teal)}.reset{border:1px solid #bac6cc;background:white;border-radius:7px;padding:7px 10px;font:700 13px Arial,sans-serif;color:var(--navy);cursor:pointer}
-@media(max-width:980px){.workspace{grid-template-columns:1fr}.map-card{position:relative}.questions{max-height:none}.map-wrap svg{max-height:560px}}
-@media(max-width:640px){.intro{grid-template-columns:1fr}.fact-grid{grid-template-columns:1fr}.fact{grid-template-columns:105px 1fr}.name{min-width:0}.workspace{grid-template-columns:minmax(0,1fr)}.map-head,.question-head{align-items:flex-start}.country text{font-size:12px}.country .num{font-size:11px}}
-@media print{body{background:white}.work-note,.reset{display:none}.workspace{grid-template-columns:1fr 1fr}.questions{max-height:none;overflow:visible}.map-card,.question-panel,.facts{break-inside:avoid}}
+:root{--navy:#15364b;--navy2:#23485d;--teal:#087e83;--ink:#203341;--muted:#526673;--paper:#f2f6f7;--line:#d5e0e5;--card:#fff;--britain:#e9bf5a;--france:#78addb;--belgium:#d78da0;--independent:#96b99c;--focus:#ffbf47}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+a{color:#075b87}
+button,input{font:inherit}
+.skip-link{position:absolute;left:12px;top:-60px;background:white;color:var(--navy);padding:10px 14px;border-radius:8px;z-index:5;font-weight:800}
+.skip-link:focus{top:12px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.site-header{background:var(--navy);color:white;padding:18px clamp(16px,4vw,54px);box-shadow:0 3px 12px #10283825}
+.header-inner{max-width:1440px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+h1{font-size:clamp(22px,3.3vw,34px);line-height:1.12;margin:0;letter-spacing:.01em}
+.work-note{display:flex;align-items:center;gap:9px;color:#e7f0f3;font-size:14px}
+.work-dot{width:9px;height:9px;border-radius:50%;background:#9bd1b0;display:inline-block}
+main{max-width:1440px;margin:auto;padding:22px clamp(14px,3vw,38px) 48px}
+.intro{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:15px;align-items:stretch;margin-bottom:18px}
+.facts,.name-card,.map-card,.question-panel{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 3px 12px #20394e0a}
+.facts{padding:18px 21px}
+.facts-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:5px}
+h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
+.facts h2{color:var(--teal)}
+.facts>p{margin:0 0 12px;color:var(--muted)}
+.fact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 26px}
+.fact{display:grid;grid-template-columns:112px 1fr;gap:10px;padding:8px 10px;border-radius:10px;background:#f5f8f8}
+.fact strong{color:#086c70;font-size:13px;letter-spacing:.05em}
+.fact p{margin:0}
+.name-card{padding:17px;align-self:start}
+.name-card label{display:block;font-weight:800;margin-bottom:8px;color:var(--navy)}
+.name-card input{width:100%;height:44px;border:1px solid #9cabb3;border-radius:8px;padding:8px 10px;background:white;color:var(--ink)}
+.workspace{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(410px,.98fr);gap:18px;align-items:start}
+.map-card{position:sticky;top:12px;overflow:hidden}
+.card-head{padding:16px 19px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.head-title{display:flex;align-items:center;gap:10px}
+.head-icon{width:32px;height:32px;display:grid;place-items:center;background:#e6f3f2;color:var(--teal);border-radius:9px;font-size:19px}
+.card-head h2{font-size:20px}
+.status{font-weight:800;font-size:13px;color:#315469;white-space:nowrap}
+.map-instructions{padding:12px 19px;background:#f5f9fa;border-bottom:1px solid var(--line)}
+.map-instructions p{margin:2px 0}
+.map-instructions strong{color:var(--navy)}
+.map-help{font-size:13px;color:var(--muted);margin-top:5px!important}
+.map-wrap{background:#e7f0f2;padding:10px 14px 5px;display:grid;place-items:center}
+.map-svg{display:block;width:min(100%,650px);height:auto;max-height:61vh}
+.country-shape{fill:#fbfdfd;stroke:#94a4aa;stroke-width:.7;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.target{fill:#dce9e9;stroke:#385663;stroke-width:1.2;cursor:pointer;pointer-events:all;transition:fill .15s,stroke .15s}
+.target:hover{fill:#c5dddd;stroke:#122f42;stroke-width:2.5}
+.target[aria-current="true"]{stroke:#102f42;stroke-width:3.2}
+.target:focus{outline:none;stroke:var(--navy);stroke-width:3.4}
+.map-marker circle{fill:var(--navy);stroke:white;stroke-width:2}
+.map-marker text{fill:white;font-size:10px;font-weight:900;text-anchor:middle;pointer-events:none}
+.map-key{padding:12px 16px 16px;display:flex;flex-wrap:wrap;gap:9px;border-top:1px solid var(--line)}
+.key-item{display:flex;align-items:center;gap:7px;padding:5px 9px;border-radius:999px;background:#f4f7f8;font-size:13px;font-weight:700}
+.swatch{width:16px;height:16px;border:1px solid #586a72;border-radius:4px;flex:0 0 auto}
+.source-note{padding:0 17px 13px;color:var(--muted);font-size:11px}
+.question-panel{overflow:hidden}
+.question-intro{padding:13px 19px;background:#f5f9fa;border-bottom:1px solid var(--line)}
+.question-intro p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.questions{padding:7px 14px 15px}
+.question{padding:14px 12px 16px;border-bottom:1px solid #e4ebee;border-radius:10px;scroll-margin:14px}
+.question:last-child{border-bottom:0}
+.question.active{background:#eff7f7;box-shadow:inset 4px 0 var(--teal)}
+.question h3{font-size:16px;color:#087477;margin:0 0 4px}
+.question p{margin:0 0 11px}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choice{min-height:44px;padding:8px 14px;border:2px solid #b5c4ca;border-radius:10px;background:#fff;color:#243b49;font-size:14px;font-weight:750;cursor:pointer;transition:background .12s,border-color .12s,transform .12s}
+.choice:hover{background:#f0f7f8;border-color:#437781}
+.choice:active{transform:translateY(1px)}
+.choice[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:white}
+.row-foot{min-height:20px;margin-top:8px;color:#315f63;font-size:13px;font-weight:700}
+.actions{display:flex;justify-content:flex-end;padding:0 14px 14px}
+.reset{min-height:42px;padding:8px 13px;border:1px solid #9cacb4;border-radius:8px;background:#fff;color:var(--navy);font-size:14px;font-weight:800;cursor:pointer}
+.reset:hover{background:#edf4f6}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:980px){.workspace{grid-template-columns:1fr}.map-card{position:relative;top:auto}.map-svg{max-height:none;width:min(100%,620px)}.questions{padding:7px 14px 15px}}
+@media(max-width:650px){main{padding-top:14px}.intro{grid-template-columns:1fr}.name-card{padding:13px 16px}.name-card input{max-width:330px}.fact-grid{grid-template-columns:1fr;gap:7px}.fact{grid-template-columns:105px 1fr}.workspace{grid-template-columns:minmax(0,1fr)}.card-head{padding:14px}.map-instructions{padding:12px 14px}.map-wrap{padding:7px 6px 2px}.map-key{padding:10px}.key-item{font-size:12px}.question-intro{padding:13px 15px}.questions{padding:5px 9px 10px}.question{padding:13px 11px 15px}.choice{flex:1 1 calc(50% - 8px);min-width:120px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+@media print{body{background:white}.site-header{padding:12px}.work-note,.actions{display:none}main{padding:10px}.intro{grid-template-columns:1fr 200px}.workspace{grid-template-columns:1fr 1fr}.map-card{position:static;box-shadow:none}.question-panel{box-shadow:none}.questions{overflow:visible}.choice{min-height:30px}}
 </style>
 </head>
 <body>
-<header><h1>DIVIDE AFRICA | READ, SOLVE &amp; COLOR</h1><div class="work-note">Work alone or with a partner</div></header>
-<main>
+<a class="skip-link" href="#activity">Skip to the map and questions</a>
+<header class="site-header"><div class="header-inner"><h1>DIVIDE AFRICA <span aria-hidden="true">|</span> READ, SOLVE &amp; COLOR</h1><div class="work-note"><span class="work-dot" aria-hidden="true"></span>Work alone or with a partner</div></div></header>
+<main id="activity">
 <section class="intro" aria-label="Activity facts and name">
 <div class="facts">
-<h2>FIRST: WHO CONTROLLED WHAT?</h2>
+<div class="facts-head"><h2>FIRST: WHO CONTROLLED WHAT?</h2></div>
 <p>Read these short facts. Use them to solve the six questions below.</p>
 <div class="fact-grid">
 <div class="fact"><strong>BRITAIN</strong><p>Controlled Egypt to protect the Suez Canal. It also controlled Nigeria and South Africa, where trade, gold, and diamonds mattered.</p></div>
 <div class="fact"><strong>FRANCE</strong><p>Controlled Algeria in North Africa and sent French settlers there.</p></div>
 <div class="fact"><strong>BELGIUM</strong><p>Controlled the Congo in Central Africa and forced many people to collect rubber.</p></div>
 <div class="fact"><strong>INDEPENDENT</strong><p>Ethiopia defeated an Italian invasion in 1896. It kept its own government instead of becoming an Italian colony.</p></div>
-</div></div>
-<div class="name"><label for="student-name">Name:</label><input id="student-name" autocomplete="name" aria-label="Name"></div>
+</div>
+</div>
+<div class="name-card"><label for="student-name">Name:</label><input id="student-name" autocomplete="name"></div>
 </section>
-<section class="workspace">
-<div class="map-card">
-<div class="map-head"><h2>FINISH YOUR AFRICA MAP</h2><span class="status" id="map-status">0 of 6 assigned</span></div>
-<div class="instructions"><p>Use the six answers you circled on page 1.</p><p><strong>STEP 1</strong> Find each number. The number matches the place on page 1.</p><p><strong>STEP 2</strong> Color the country using your color key below.</p></div>
+<section class="workspace" aria-label="Africa map activity">
+<section class="map-card" aria-labelledby="map-heading">
+<div class="card-head"><div class="head-title"><span class="head-icon" aria-hidden="true">⌖</span><h2 id="map-heading">FINISH YOUR AFRICA MAP</h2></div><span class="status" id="map-status" aria-live="polite">0 of 6 assigned</span></div>
+<div class="map-instructions"><p>Use the six answers you circled on page 1.</p><p><strong>STEP 1</strong> Find each number. The number matches the place on page 1.</p><p><strong>STEP 2</strong> Color the country using your color key below.</p><p class="map-help">Click a numbered country to jump to its clue. Choose a power to color it.</p></div>
 <div class="map-wrap">
-<svg viewBox="0 0 500 570" role="img" aria-label="Map of Africa. Select Egypt, Algeria, Nigeria, Congo, South Africa, or Ethiopia.">
-<!-- Simplified classroom map outline and country borders -->
-<path class="continent" d="M82 70 L112 48 151 53 180 42 221 47 250 56 280 49 306 60 335 56 357 68 378 67 396 85 409 94 424 104 431 119 422 134 436 145 430 162 447 176 437 192 449 209 440 229 447 245 435 258 429 279 419 295 416 320 405 339 397 363 386 386 374 405 367 428 354 447 347 470 335 495 322 520 306 537 292 529 285 504 276 483 260 462 246 444 234 420 221 401 213 379 203 358 194 337 184 319 171 301 159 281 146 265 132 247 119 227 107 210 95 190 87 170 78 150 74 131 75 111 79 92 Z"/>
-<path class="borders" d="M86 132 L147 128 199 126 251 128 307 124 359 119 412 115 M97 185 L157 182 208 187 255 184 305 180 365 174 428 169 M111 225 L164 220 208 225 249 225 294 224 341 217 437 209 M135 263 L181 255 218 263 254 260 297 265 338 252 428 246 M158 299 L202 290 244 291 279 296 318 286 416 280 M183 338 L217 324 257 331 294 322 382 315 M206 371 L246 355 283 362 359 352 M225 402 L263 387 301 393 378 382 M247 434 L280 421 349 415 M274 465 L304 451 359 443 M120 95 L127 177 M177 56 L177 126 M222 54 L226 185 M278 54 L278 177 M331 65 L327 177 M378 78 L367 160 M149 265 L144 316 M194 293 L192 357 M250 292 L246 356 M309 267 L301 323 M357 252 L346 316"/>
-<!-- Six interactive country areas, with approximate classroom-map positions -->
-<g class="country" role="button" tabindex="0" data-country="algeria" aria-label="2. Algeria" aria-current="false">
-<polygon points="113,89 195,81 232,99 226,153 200,177 145,169 111,145"/>
-<text x="169" y="127">Algeria</text><text class="num" x="169" y="148">2</text></g>
-<g class="country" role="button" tabindex="0" data-country="egypt" aria-label="1. Egypt" aria-current="false">
-<polygon points="343,98 397,98 407,145 379,163 347,151"/>
-<text x="375" y="124">Egypt</text><text class="num" x="375" y="145">1</text></g>
-<g class="country" role="button" tabindex="0" data-country="nigeria" aria-label="3. Nigeria" aria-current="false">
-<polygon points="149,211 194,208 204,237 190,255 157,250 143,233"/>
-<text x="173" y="229">Nigeria</text><text class="num" x="173" y="248">3</text></g>
-<g class="country" role="button" tabindex="0" data-country="ethiopia" aria-label="6. Ethiopia" aria-current="false">
-<polygon points="346,194 404,187 427,212 403,238 367,231 344,214"/>
-<text x="386" y="211">Ethiopia</text><text class="num" x="386" y="231">6</text></g>
-<g class="country" role="button" tabindex="0" data-country="congo" aria-label="4. Congo" aria-current="false">
-<polygon points="217,269 265,263 296,281 287,323 255,340 223,322 207,294"/>
-<text x="250" y="295">Congo</text><text class="num" x="250" y="315">4</text></g>
-<g class="country" role="button" tabindex="0" data-country="south-africa" aria-label="5. South Africa" aria-current="false">
-<polygon points="285,423 345,408 365,436 347,468 317,482 291,459"/>
-<text x="327" y="438">South Africa</text><text class="num" x="327" y="460">5</text></g>
-</svg></div>
-<div class="legend" aria-label="Color key">
-<div class="legend-item"><span class="swatch" style="background:var(--britain)"></span>Britain</div>
-<div class="legend-item"><span class="swatch" style="background:var(--france)"></span>France</div>
-<div class="legend-item"><span class="swatch" style="background:var(--belgium)"></span>Belgium</div>
-<div class="legend-item"><span class="swatch" style="background:var(--independent)"></span>Independent</div>
+<svg class="map-svg" viewBox="0 0 730 780" role="group" aria-labelledby="map-title map-desc">
+<title id="map-title">Political map of Africa</title>
+<desc id="map-desc">Country borders are shown. Numbered areas are Egypt, Algeria, Nigeria, Congo, South Africa, and Ethiopia. Select a numbered country with a mouse or keyboard to move to its clue.</desc>
+<path class="country-shape" d="M406.4,517.2 L407.9,521.9 L406.6,525.7 L407.3,529.1 L389.0,529.0 L388.6,560.8 L394.5,569.0 L400.3,575.2 L384.1,579.3 L362.8,577.9 L356.7,573.1 L321.0,573.5 L319.7,574.2 L314.5,569.7 L308.8,569.4 L303.5,571.1 L299.3,573.0 L298.4,566.7 L299.7,557.9 L302.7,548.8 L303.1,544.5 L306.0,535.5 L308.1,531.4 L313.2,524.8 L316.0,520.4 L316.9,513.0 L316.4,507.3 L313.8,503.7 L311.5,497.7 L309.3,491.7 L309.8,489.6 L312.5,485.6 L309.8,476.0 L308.0,469.3 L303.6,462.9 L304.4,461.0 L308.1,459.7 L310.6,459.8 L313.7,458.6 L339.7,458.8 L341.8,466.2 L344.4,472.2 L346.4,475.5 L349.8,480.7 L355.6,479.9 L358.5,478.5 L363.3,479.9 L364.7,477.4 L366.9,471.6 L372.3,471.2 L372.8,469.4 L377.3,469.4 L376.5,473.0 L387.2,472.9 L387.4,479.2 L389.2,483.1 L387.9,489.1 L388.5,495.2 L391.4,498.9 L391.0,510.8 L393.1,509.9 L397.0,510.2 L402.4,508.7 L406.4,509.3 L407.4,512.4 L406.4,517.2 Z M303.2,457.9 L300.9,450.4 L304.4,446.1 L307.1,444.4 L310.4,447.8 L307.2,449.9 L305.7,452.5 L305.4,456.8 L303.2,457.9 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M454.2,445.0 L453.6,432.9 L451.4,428.4 L456.8,429.2 L459.5,423.5 L464.1,424.1 L464.6,428.1 L466.5,430.3 L466.6,433.6 L464.4,435.7 L461.0,440.9 L457.8,444.5 L454.2,445.0 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M219.7,337.4 L212.4,338.6 L210.2,331.7 L210.6,308.7 L208.9,306.7 L208.5,301.7 L205.5,298.2 L202.8,295.3 L203.9,290.0 L206.9,288.9 L208.7,284.5 L213.0,283.6 L215.0,280.6 L217.9,277.7 L221.1,277.6 L227.8,283.4 L227.4,286.7 L229.4,292.7 L227.7,296.7 L228.6,299.4 L224.3,305.6 L221.6,308.6 L220.0,314.9 L220.2,321.3 L219.7,337.4 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M215.0,280.6 L213.0,283.6 L208.7,284.5 L206.9,288.9 L203.9,290.0 L196.2,289.8 L192.1,289.0 L189.3,290.6 L185.4,289.9 L170.1,290.4 L169.9,296.0 L171.1,303.6 L165.1,301.0 L161.0,301.4 L157.9,303.9 L153.9,301.8 L152.4,298.5 L148.4,296.3 L147.9,290.5 L150.3,286.2 L150.1,282.9 L157.0,274.6 L158.3,267.7 L160.7,265.3 L165.0,266.6 L168.7,264.6 L169.9,262.0 L176.7,257.5 L178.4,254.4 L186.6,250.3 L191.5,248.8 L193.7,250.8 L199.3,250.7 L198.6,255.6 L199.8,260.1 L204.7,266.6 L205.0,271.5 L215.2,273.7 L215.0,280.6 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M455.0,620.9 L442.6,628.3 L434.7,635.7 L431.7,642.4 L429.1,646.2 L424.3,647.0 L422.7,651.7 L421.8,654.9 L416.2,657.2 L409.1,656.7 L404.9,653.9 L401.1,652.7 L396.9,655.0 L394.7,659.8 L390.5,662.8 L386.1,667.3 L379.8,668.3 L377.9,664.8 L378.7,658.7 L373.5,649.2 L371.1,647.7 L371.1,618.5 L379.8,618.1 L380.0,582.5 L386.6,582.2 L400.1,578.7 L403.5,582.8 L409.1,578.9 L411.8,578.9 L416.7,576.6 L418.3,577.4 L421.7,585.4 L423.5,587.1 L426.3,592.9 L436.2,603.9 L440.0,605.0 L440.0,608.5 L442.6,614.9 L449.4,616.4 L455.0,620.9 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M330.5,325.8 L337.7,325.0 L339.4,322.5 L340.8,322.7 L343.0,324.9 L354.1,321.1 L357.8,317.2 L362.4,313.7 L361.5,310.2 L364.0,309.3 L372.5,309.9 L380.8,305.2 L387.2,294.3 L391.6,290.3 L397.2,288.6 L398.2,292.9 L403.3,299.1 L403.3,303.2 L401.9,307.3 L402.4,310.5 L405.5,313.3 L412.2,317.7 L417.0,321.7 L417.1,325.0 L423.0,330.2 L426.7,334.5 L428.9,340.5 L435.5,344.5 L436.9,347.7 L434.0,348.7 L428.3,348.5 L421.7,347.4 L418.5,348.3 L417.1,350.7 L414.3,351.0 L410.8,348.9 L401.0,353.9 L397.0,352.9 L395.8,353.7 L393.2,359.7 L386.6,357.8 L380.2,356.8 L374.6,353.1 L367.3,349.7 L362.6,352.9 L359.2,358.0 L358.4,365.0 L352.7,364.4 L346.8,362.7 L341.5,368.0 L336.9,377.3 L336.0,374.4 L335.6,369.9 L331.6,366.6 L328.3,361.5 L327.6,357.9 L323.4,352.7 L324.1,349.7 L323.2,345.5 L323.9,337.7 L326.0,335.9 L330.5,325.8 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M148.4,296.3 L152.4,298.5 L153.9,301.8 L157.9,303.9 L161.0,301.4 L165.1,301.0 L171.1,303.6 L173.5,317.8 L169.7,326.2 L167.4,337.5 L171.3,346.1 L170.9,350.1 L166.9,350.2 L160.7,348.2 L155.1,348.3 L144.7,350.1 L138.5,352.9 L129.8,356.6 L128.1,356.4 L128.8,348.1 L129.7,346.9 L129.4,342.9 L125.7,338.7 L122.9,338.1 L120.3,335.3 L122.2,330.9 L121.3,326.0 L121.7,323.1 L123.1,323.1 L123.6,318.8 L123.0,316.8 L123.8,315.4 L127.1,314.2 L124.9,306.2 L122.9,302.1 L123.6,298.7 L125.3,297.9 L126.5,297.0 L128.9,298.5 L135.7,298.6 L137.3,295.7 L138.9,295.9 L141.4,294.8 L142.8,299.0 L144.8,297.8 L148.4,296.3 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M330.5,325.8 L326.0,335.9 L323.9,337.7 L323.2,345.5 L324.1,349.7 L323.4,352.7 L327.6,357.9 L328.3,361.5 L331.6,366.6 L335.6,369.9 L336.0,374.4 L336.9,377.3 L336.3,382.7 L329.3,380.4 L322.2,377.7 L311.1,377.3 L310.0,376.8 L304.8,378.1 L299.4,376.7 L295.2,377.4 L280.9,377.2 L282.2,369.3 L278.8,362.7 L274.7,361.0 L273.0,356.5 L270.7,355.0 L270.8,352.3 L273.1,345.2 L277.3,335.6 L279.8,335.5 L285.0,329.6 L288.4,329.4 L293.3,333.6 L299.4,330.2 L300.2,326.0 L302.2,322.0 L303.5,316.9 L308.2,312.8 L310.0,305.8 L311.9,303.6 L313.1,298.4 L315.4,292.0 L322.9,284.3 L323.3,281.0 L324.3,279.1 L320.8,275.2 L321.1,272.0 L323.6,271.4 L327.1,277.8 L327.6,284.4 L327.3,291.1 L332.1,300.2 L327.2,300.1 L324.7,300.8 L320.7,299.8 L318.8,304.5 L324.0,310.3 L327.8,312.0 L329.1,316.2 L331.8,323.1 L330.5,325.8 Z" aria-hidden="true"></path>
+<path class="country-shape target" data-country="congo" role="button" tabindex="0" aria-label="4. Congo" aria-current="false" d="M406.4,509.3 L402.4,508.7 L397.0,510.2 L393.1,509.9 L391.0,510.8 L391.4,498.9 L388.5,495.2 L387.9,489.1 L389.2,483.1 L387.4,479.2 L387.2,472.9 L376.5,473.0 L377.3,469.4 L372.8,469.4 L372.3,471.2 L366.9,471.6 L364.7,477.4 L363.3,479.9 L358.5,478.5 L355.6,479.9 L349.8,480.7 L346.4,475.5 L344.4,472.2 L341.8,466.2 L339.7,458.8 L313.7,458.6 L310.6,459.8 L308.1,459.7 L304.4,461.0 L303.2,457.9 L305.4,456.8 L305.7,452.5 L307.2,449.9 L310.4,447.8 L312.7,448.8 L315.7,445.0 L320.5,445.1 L321.0,447.9 L324.3,449.7 L329.5,443.4 L334.6,438.6 L336.9,435.4 L336.6,427.1 L340.4,417.4 L344.4,412.3 L350.2,407.4 L351.2,404.2 L351.4,400.6 L352.9,397.1 L352.4,391.4 L353.5,382.6 L355.2,376.3 L357.9,371.0 L358.4,365.0 L359.2,358.0 L362.6,352.9 L367.3,349.7 L374.6,353.1 L380.2,356.8 L386.6,357.8 L393.2,359.7 L395.8,353.7 L397.0,352.9 L401.0,353.9 L410.8,348.9 L414.3,351.0 L417.1,350.7 L418.5,348.3 L421.7,347.4 L428.3,348.5 L434.0,348.7 L436.9,347.7 L442.2,355.9 L446.2,357.1 L448.5,355.4 L452.6,356.1 L457.5,354.0 L459.6,358.3 L467.3,364.9 L467.3,364.9 L466.8,376.6 L470.3,378.0 L467.5,381.5 L464.1,384.2 L460.8,389.4 L458.9,394.0 L458.4,402.1 L456.4,405.9 L456.3,413.4 L453.8,416.2 L453.4,422.2 L452.2,422.9 L451.4,428.4 L453.6,432.9 L454.2,445.0 L455.8,454.2 L454.9,459.4 L456.7,465.2 L461.8,470.8 L466.5,483.4 L466.5,483.4 L463.0,482.4 L451.2,484.1 L448.9,485.3 L446.4,491.6 L448.3,496.1 L446.8,507.9 L445.7,517.9 L448.1,519.7 L454.2,523.6 L456.6,521.8 L457.4,532.6 L450.6,532.5 L447.0,527.0 L443.8,522.7 L437.0,521.3 L435.0,516.1 L429.7,519.2 L422.6,517.8 L419.7,513.3 L414.1,512.4 L410.0,512.6 L409.5,509.5 L406.4,509.3 Z"><title>4. Congo</title></path>
+<path class="country-shape" d="M310.4,447.8 L307.1,444.4 L304.4,446.1 L300.9,450.4 L293.6,439.8 L300.3,434.3 L297.0,427.7 L300.0,425.1 L306.0,423.9 L306.7,419.5 L311.4,424.3 L319.1,424.7 L321.8,420.0 L322.9,413.3 L322.0,405.5 L317.8,399.6 L321.6,388.0 L319.4,386.0 L312.9,386.9 L310.4,381.7 L311.1,377.3 L322.2,377.7 L329.3,380.4 L336.3,382.7 L336.9,377.3 L341.5,368.0 L346.8,362.7 L352.7,364.4 L358.4,365.0 L357.9,371.0 L355.2,376.3 L353.5,382.6 L352.4,391.4 L352.9,397.1 L351.4,400.6 L351.2,404.2 L350.2,407.4 L344.4,412.3 L340.4,417.4 L336.6,427.1 L336.9,435.4 L334.6,438.6 L329.5,443.4 L324.3,449.7 L321.0,447.9 L320.5,445.1 L315.7,445.0 L312.7,448.8 L310.4,447.8 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M575.1,273.0 L577.2,276.1 L576.9,280.3 L571.9,282.6 L575.7,285.4 L572.4,290.7 L570.5,288.9 L568.4,289.7 L563.4,289.5 L563.3,286.4 L562.6,283.7 L565.6,279.0 L568.7,274.6 L572.5,275.4 L575.1,273.0 Z" aria-hidden="true"></path>
+<path class="country-shape target" data-country="algeria" role="button" tabindex="0" aria-label="2. Algeria" aria-current="false" d="M233.6,208.4 L223.8,209.4 L223.7,203.1 L219.6,201.4 L214.1,198.6 L212.0,193.9 L182.4,172.1 L152.7,150.3 L119.6,126.0 L119.7,124.1 L119.7,123.4 L119.7,111.6 L133.9,104.2 L142.7,102.7 L149.9,100.0 L153.2,95.0 L163.5,91.0 L163.9,83.6 L169.0,82.8 L173.0,79.1 L184.5,77.4 L186.1,73.5 L183.8,71.4 L180.7,60.8 L180.2,54.7 L176.9,48.3 L185.4,42.9 L194.9,41.1 L200.4,37.0 L208.9,33.9 L223.8,32.2 L238.4,31.3 L242.8,32.8 L251.1,28.9 L260.5,28.8 L264.1,31.1 L270.1,30.5 L268.3,35.7 L269.7,45.2 L267.6,53.4 L262.2,59.0 L263.0,66.6 L270.2,72.5 L270.3,74.9 L275.7,79.0 L279.4,96.9 L282.3,105.8 L282.8,110.4 L281.2,118.6 L281.9,123.1 L280.7,128.6 L281.5,134.9 L278.0,139.1 L283.2,146.3 L283.5,150.6 L286.7,156.2 L290.8,154.4 L297.7,159.0 L301.6,165.3 L271.4,184.3 L246.0,204.0 L233.6,208.4 Z"><title>2. Algeria</title></path>
+<path class="country-shape target" data-country="egypt" role="button" tabindex="0" aria-label="1. Egypt" aria-current="false" d="M520.4,180.0 L485.5,180.0 L451.4,180.0 L416.0,180.0 L416.0,143.2 L416.0,107.6 L413.4,99.6 L415.6,93.4 L414.3,89.1 L417.5,84.3 L429.2,84.1 L437.6,86.8 L446.4,89.7 L450.4,91.3 L457.2,88.1 L460.8,85.3 L468.6,84.4 L474.9,85.7 L477.3,90.7 L479.3,87.4 L486.3,89.8 L493.2,90.3 L497.5,87.8 L497.5,87.8 L502.4,102.4 L503.3,105.0 L500.8,109.0 L499.0,116.6 L496.6,121.8 L494.5,123.5 L491.6,120.3 L487.6,115.8 L481.3,101.5 L480.4,102.4 L484.1,112.9 L489.5,123.0 L496.1,138.6 L499.4,144.0 L502.2,149.7 L510.1,160.7 L508.3,162.5 L508.6,169.0 L518.9,178.0 L520.4,180.0 Z"><title>1. Egypt</title></path>
+<path class="country-shape" d="M575.1,273.0 L572.5,275.4 L568.7,274.6 L565.7,271.3 L562.1,265.5 L558.2,262.3 L555.9,258.8 L548.2,254.8 L542.2,254.7 L540.1,252.6 L534.9,254.9 L529.6,250.4 L526.8,257.9 L516.6,255.8 L515.6,251.8 L519.4,237.1 L520.3,230.4 L523.1,227.4 L529.6,225.7 L534.0,220.0 L539.1,231.6 L541.5,240.8 L546.4,245.6 L558.4,255.1 L563.3,260.8 L568.0,266.6 L570.8,270.0 L575.1,273.0 Z" aria-hidden="true"></path>
+<path class="country-shape target" data-country="ethiopia" role="button" tabindex="0" aria-label="6. Ethiopia" aria-current="false" d="M568.7,274.6 L565.6,279.0 L562.6,283.7 L563.3,286.4 L563.4,289.5 L568.4,289.7 L570.5,288.9 L572.4,290.7 L570.5,294.3 L573.8,299.8 L577.0,304.6 L580.4,308.2 L609.1,320.0 L616.5,320.0 L591.7,350.0 L580.2,350.4 L572.4,357.5 L566.7,357.7 L564.3,360.8 L558.3,360.8 L554.8,357.4 L546.7,361.6 L544.1,365.8 L538.3,365.0 L536.3,363.8 L534.2,364.1 L531.5,364.0 L520.3,355.5 L514.2,355.5 L511.2,352.2 L511.2,346.6 L506.6,344.9 L501.4,334.1 L497.4,331.7 L495.9,327.7 L491.4,322.9 L486.0,322.2 L489.0,316.5 L493.7,316.2 L495.0,313.2 L494.9,304.2 L497.5,293.7 L501.6,290.9 L502.5,286.8 L506.3,279.2 L511.6,274.2 L515.2,264.4 L516.6,255.8 L526.8,257.9 L529.6,250.4 L534.9,254.9 L540.1,252.6 L542.2,254.7 L548.2,254.8 L555.9,258.8 L558.2,262.3 L562.1,265.5 L565.7,271.3 L568.7,274.6 Z"><title>6. Ethiopia</title></path>
+<path class="country-shape" d="M295.2,377.4 L299.4,376.7 L304.8,378.1 L310.0,376.8 L311.1,377.3 L310.4,381.7 L312.9,386.9 L319.4,386.0 L321.6,388.0 L317.8,399.6 L322.0,405.5 L322.9,413.3 L321.8,420.0 L319.1,424.7 L311.4,424.3 L306.7,419.5 L306.0,423.9 L300.0,425.1 L297.0,427.7 L300.3,434.3 L293.6,439.8 L284.6,429.7 L278.8,421.4 L273.4,411.1 L273.7,407.8 L275.6,404.6 L277.8,397.3 L279.5,389.9 L282.5,389.3 L295.3,389.4 L295.2,377.4 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M171.1,303.6 L169.9,296.0 L170.1,290.4 L185.4,289.9 L189.3,290.6 L192.1,289.0 L196.2,289.8 L195.6,292.9 L199.2,298.1 L199.2,305.3 L200.1,313.2 L202.3,316.9 L200.3,325.9 L201.0,330.9 L203.4,337.2 L205.3,340.7 L191.5,346.6 L186.6,350.0 L178.7,352.9 L170.9,350.1 L171.3,346.1 L167.4,337.5 L169.7,326.2 L173.5,317.8 L171.1,303.6 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M125.3,297.9 L123.6,298.7 L122.9,302.1 L124.9,306.2 L127.1,314.2 L123.8,315.4 L123.0,316.8 L123.6,318.8 L123.1,323.1 L121.7,323.1 L119.2,322.9 L117.5,326.9 L115.0,326.9 L113.3,324.7 L113.8,320.7 L110.2,314.6 L107.9,315.7 L106.0,315.9 L103.6,316.5 L103.7,312.8 L102.2,310.2 L102.5,307.3 L100.6,303.1 L98.2,299.5 L91.1,299.5 L89.1,301.4 L86.7,301.6 L85.1,303.8 L84.1,306.6 L79.4,311.0 L75.6,305.1 L72.1,301.1 L69.9,299.8 L67.7,297.9 L66.7,293.4 L65.4,291.2 L62.9,289.6 L66.8,284.7 L69.4,284.9 L71.7,283.2 L73.7,283.2 L75.1,281.9 L74.3,278.6 L75.3,277.5 L75.4,274.1 L79.7,274.2 L86.0,276.7 L87.9,276.5 L88.6,275.3 L93.4,276.1 L94.7,275.6 L95.2,279.2 L96.6,279.2 L98.9,277.9 L100.3,278.2 L102.8,280.8 L106.5,281.6 L109.0,279.4 L111.8,278.1 L113.9,276.7 L115.7,276.9 L117.6,279.1 L118.7,281.9 L122.3,286.1 L120.5,288.6 L120.1,291.9 L122.0,290.9 L123.1,292.1 L122.6,295.1 L125.3,297.9 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M47.8,268.5 L48.9,264.1 L58.5,263.8 L60.5,261.4 L63.3,261.2 L66.8,263.7 L69.5,263.7 L72.4,262.1 L74.2,264.9 L70.4,267.2 L66.5,267.0 L62.8,264.9 L59.5,267.2 L57.9,267.3 L55.8,268.7 L47.8,268.5 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M75.4,274.1 L75.3,277.5 L74.3,278.6 L75.1,281.9 L73.7,283.2 L71.7,283.2 L69.4,284.9 L66.8,284.7 L62.9,289.6 L58.2,285.4 L54.5,284.8 L52.4,281.9 L52.5,280.4 L49.8,278.3 L49.2,276.2 L53.9,274.5 L56.8,274.8 L59.2,273.7 L75.4,274.1 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M280.9,377.2 L295.2,377.4 L295.3,389.4 L282.5,389.3 L279.5,389.9 L277.9,388.4 L280.9,377.2 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M506.6,344.9 L511.2,346.6 L511.2,352.2 L514.2,355.5 L520.3,355.5 L531.5,364.0 L534.2,364.1 L536.3,363.8 L538.3,365.0 L544.1,365.8 L546.7,361.6 L554.8,357.4 L558.3,360.8 L564.3,360.8 L556.6,372.2 L556.7,408.6 L561.9,416.8 L555.8,420.8 L553.6,425.0 L550.3,425.7 L549.1,432.8 L546.2,436.8 L544.5,443.5 L541.0,446.8 L528.3,436.8 L527.7,431.0 L495.8,410.6 L494.4,409.5 L494.3,398.9 L496.8,394.9 L501.1,388.2 L504.3,380.9 L500.4,369.5 L499.4,364.4 L495.2,357.5 L500.7,351.5 L506.6,344.9 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M121.7,323.1 L121.3,326.0 L122.2,330.9 L120.3,335.3 L122.9,338.1 L125.7,338.7 L129.4,342.9 L129.7,346.9 L128.8,348.1 L128.1,356.4 L125.8,356.4 L116.8,351.7 L108.8,344.1 L101.3,338.6 L95.3,332.1 L97.4,328.9 L97.9,326.0 L101.9,320.6 L106.0,315.9 L107.9,315.7 L110.2,314.6 L113.8,320.7 L113.3,324.7 L115.0,326.9 L117.5,326.9 L119.2,322.9 L121.7,323.1 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M301.6,165.3 L297.7,159.0 L290.8,154.4 L286.7,156.2 L283.5,150.6 L283.2,146.3 L278.0,139.1 L281.5,134.9 L280.7,128.6 L281.9,123.1 L281.2,118.6 L282.8,110.4 L282.3,105.8 L279.4,96.9 L283.7,94.6 L284.5,90.4 L283.6,86.2 L289.6,82.4 L292.3,79.2 L296.6,76.3 L297.1,68.6 L307.4,72.1 L311.1,71.2 L318.5,72.9 L330.2,77.3 L334.3,86.2 L342.2,88.2 L354.6,92.4 L364.0,97.3 L368.3,94.7 L372.5,90.1 L370.4,82.5 L373.2,77.6 L379.5,72.9 L385.6,71.6 L397.5,73.6 L400.5,78.1 L403.8,78.1 L406.6,79.8 L415.3,81.0 L417.5,84.3 L414.3,89.1 L415.6,93.4 L413.4,99.6 L416.0,107.6 L416.0,143.2 L416.0,180.0 L416.0,200.0 L405.9,200.0 L405.8,204.2 L370.7,185.0 L335.6,165.9 L326.7,171.4 L320.5,175.1 L315.5,169.6 L301.6,165.3 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M451.0,689.6 L454.1,692.6 L451.4,697.4 L449.9,700.7 L445.0,702.3 L443.3,705.5 L440.2,706.5 L433.6,698.8 L438.3,692.4 L443.1,688.5 L447.2,686.5 L451.0,689.6 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M176.9,48.3 L180.2,54.7 L180.7,60.8 L183.8,71.4 L186.1,73.5 L184.5,77.4 L173.0,79.1 L169.0,82.8 L163.9,83.6 L163.5,91.0 L153.2,95.0 L149.9,100.0 L142.7,102.7 L133.9,104.2 L119.7,111.6 L119.7,123.4 L118.4,123.4 L118.6,128.8 L113.2,129.1 L110.3,131.4 L106.3,131.4 L103.1,130.1 L95.7,131.2 L92.9,139.0 L90.1,139.7 L86.0,152.3 L73.8,163.1 L70.9,176.9 L67.2,181.4 L66.2,185.0 L46.4,185.8 L46.2,185.8 L46.6,181.1 L50.0,178.4 L52.9,173.2 L52.3,169.8 L55.4,162.8 L60.3,156.4 L63.2,154.8 L65.5,149.0 L65.8,143.6 L68.9,137.5 L74.8,133.8 L80.4,123.6 L80.5,123.5 L85.0,119.6 L93.1,118.5 L100.1,111.7 L104.5,109.0 L111.8,100.7 L109.6,88.2 L113.0,79.6 L114.2,74.4 L119.8,67.6 L128.6,63.0 L135.2,58.9 L141.0,48.5 L143.8,42.4 L150.3,42.4 L155.6,46.7 L164.0,46.0 L173.1,48.2 L176.9,48.3 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M632.0,524.7 L634.3,529.0 L636.5,535.6 L637.9,547.6 L640.2,552.3 L639.3,557.1 L637.8,560.0 L634.8,554.1 L633.1,557.1 L634.8,564.5 L634.0,568.8 L631.6,571.1 L631.0,579.5 L627.6,591.2 L623.2,605.0 L617.8,623.9 L614.4,637.8 L610.4,649.4 L603.3,651.8 L595.6,656.0 L590.5,653.5 L583.5,649.9 L581.1,644.6 L580.5,635.7 L577.4,627.8 L576.6,620.6 L578.2,613.4 L582.3,611.6 L582.3,608.3 L586.5,600.7 L587.3,594.4 L585.2,589.6 L583.6,583.3 L582.9,574.1 L585.9,568.5 L587.1,562.2 L591.5,561.8 L596.4,559.7 L599.7,557.9 L603.5,557.8 L608.6,552.1 L615.8,545.9 L618.4,540.9 L617.2,536.6 L621.0,537.8 L625.8,530.9 L626.0,524.9 L628.9,520.4 L632.0,524.7 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M199.3,250.7 L193.7,250.8 L191.5,248.8 L186.6,250.3 L178.4,254.4 L176.7,257.5 L169.9,262.0 L168.7,264.6 L165.0,266.6 L160.7,265.3 L158.3,267.7 L157.0,274.6 L150.1,282.9 L150.3,286.2 L147.9,290.5 L148.4,296.3 L144.8,297.8 L142.8,299.0 L141.4,294.8 L138.9,295.9 L137.3,295.7 L135.7,298.6 L128.9,298.5 L126.5,297.0 L125.3,297.9 L122.6,295.1 L123.1,292.1 L122.0,290.9 L120.1,291.9 L120.5,288.6 L122.3,286.1 L118.7,281.9 L117.6,279.1 L115.7,276.9 L113.9,276.7 L111.8,278.1 L109.0,279.4 L106.5,281.6 L102.8,280.8 L100.3,278.2 L98.9,277.9 L96.6,279.2 L95.2,279.2 L94.7,275.6 L95.1,272.5 L94.3,268.6 L91.0,265.8 L89.3,260.1 L88.9,253.8 L91.9,252.0 L93.3,246.1 L96.1,245.9 L102.3,248.7 L107.2,246.7 L110.6,247.4 L112.0,245.1 L147.3,245.0 L149.2,238.0 L147.7,236.7 L143.5,193.6 L139.2,150.4 L152.7,150.3 L182.4,172.1 L212.0,193.9 L214.1,198.6 L219.6,201.4 L223.7,203.1 L223.8,209.4 L233.6,208.4 L233.6,231.5 L228.8,238.2 L228.0,244.3 L220.2,245.9 L208.2,246.8 L204.9,250.3 L199.3,250.7 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M500.1,515.2 L506.7,514.4 L517.3,517.2 L519.6,515.9 L525.7,515.7 L528.9,512.7 L534.2,512.9 L543.8,509.0 L550.8,503.2 L550.8,503.2 L550.8,503.2 L552.2,507.7 L551.8,517.6 L552.9,526.4 L553.3,542.0 L554.8,546.9 L552.2,554.1 L548.8,561.0 L543.2,567.2 L535.1,571.0 L525.2,575.9 L515.3,586.6 L511.9,588.4 L505.7,595.5 L502.1,597.8 L501.4,605.0 L505.5,612.5 L507.3,618.4 L507.4,621.4 L509.0,620.9 L508.7,630.7 L507.3,635.4 L509.3,637.1 L508.0,641.2 L504.4,644.8 L497.1,648.2 L486.5,653.6 L482.7,657.3 L483.4,661.5 L485.7,662.2 L484.9,667.4 L478.2,667.3 L477.5,662.9 L476.2,658.4 L475.4,654.8 L477.0,643.7 L474.7,636.6 L470.5,622.5 L479.8,611.2 L482.1,604.0 L483.4,603.0 L484.4,597.2 L483.0,594.2 L483.4,586.7 L485.1,579.8 L485.1,567.1 L480.5,563.9 L476.3,563.2 L474.4,560.7 L470.3,558.6 L463.0,558.8 L462.4,555.1 L461.6,548.0 L488.3,539.7 L493.3,544.5 L495.8,543.6 L499.2,546.1 L499.8,550.1 L497.9,554.8 L498.6,561.8 L504.3,568.0 L507.0,561.1 L510.8,559.0 L510.0,546.1 L506.4,538.9 L503.2,535.7 L500.1,535.8 L497.7,522.8 L500.1,515.2 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M119.6,126.0 L152.7,150.3 L139.2,150.4 L143.5,193.6 L147.7,236.7 L149.2,238.0 L147.3,245.0 L112.0,245.1 L110.6,247.4 L107.2,246.7 L102.3,248.7 L96.1,245.9 L93.3,246.1 L91.9,252.0 L88.9,253.8 L83.1,247.0 L77.8,239.6 L71.9,237.0 L67.7,234.0 L62.8,234.1 L58.5,236.3 L54.1,235.4 L51.1,238.6 L50.4,233.3 L52.8,228.3 L53.9,218.9 L52.9,209.0 L51.9,204.1 L52.8,199.1 L50.5,194.3 L45.8,190.0 L47.8,186.7 L82.2,186.7 L80.6,172.3 L82.7,167.2 L91.0,166.3 L90.7,140.7 L119.6,141.2 L119.6,126.0 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M500.1,515.2 L497.7,522.8 L500.1,535.8 L503.2,535.7 L506.4,538.9 L510.0,546.1 L510.8,559.0 L507.0,561.1 L504.3,568.0 L498.6,561.8 L497.9,554.8 L499.8,550.1 L499.2,546.1 L495.8,543.6 L493.3,544.5 L488.3,539.7 L483.7,537.1 L486.3,527.8 L489.1,524.4 L487.4,516.1 L489.2,508.0 L490.7,505.3 L488.4,496.8 L484.3,492.3 L492.9,494.2 L494.7,496.9 L497.7,501.6 L500.1,515.2 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M299.3,573.0 L303.5,571.1 L308.8,569.4 L314.5,569.7 L319.7,574.2 L321.0,573.5 L356.7,573.1 L362.8,577.9 L384.1,579.3 L400.3,575.2 L407.5,573.0 L413.2,573.5 L416.7,575.8 L416.7,576.6 L411.8,578.9 L409.1,578.9 L403.5,582.8 L400.1,578.7 L386.6,582.2 L380.0,582.5 L379.8,618.1 L371.1,618.5 L371.1,647.7 L371.1,684.6 L363.2,689.7 L358.5,690.5 L353.0,688.6 L349.0,687.8 L347.5,683.6 L344.1,680.8 L339.8,685.8 L333.3,678.2 L329.9,670.9 L327.9,661.2 L325.7,653.9 L322.8,638.5 L322.6,626.6 L321.5,621.1 L318.0,617.0 L313.5,608.7 L308.9,596.7 L307.0,590.5 L299.8,580.7 L299.3,573.0 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M227.8,283.4 L221.1,277.6 L217.9,277.7 L215.0,280.6 L215.2,273.7 L205.0,271.5 L204.7,266.6 L199.8,260.1 L198.6,255.6 L199.3,250.7 L204.9,250.3 L208.2,246.8 L220.2,245.9 L228.0,244.3 L228.8,238.2 L233.6,231.5 L233.6,208.4 L246.0,204.0 L271.4,184.3 L301.6,165.3 L315.5,169.6 L320.5,175.1 L326.7,171.4 L328.9,186.9 L332.1,189.5 L332.3,192.7 L335.9,196.1 L334.0,200.4 L330.6,220.7 L330.2,233.7 L319.0,243.2 L315.2,256.3 L318.8,260.0 L318.8,266.5 L324.4,266.7 L323.6,271.4 L321.1,272.0 L320.8,275.2 L319.2,275.4 L313.2,264.4 L311.1,264.0 L304.3,269.6 L297.4,266.7 L292.7,266.1 L290.2,267.5 L285.0,267.2 L279.8,271.5 L275.3,271.7 L264.7,266.6 L260.5,269.0 L256.0,268.8 L252.7,265.1 L243.9,261.3 L234.4,262.5 L232.1,264.7 L230.9,270.4 L228.4,274.5 L227.8,283.4 Z" aria-hidden="true"></path>
+<path class="country-shape target" data-country="nigeria" role="button" tabindex="0" aria-label="3. Nigeria" aria-current="false" d="M219.7,337.4 L220.2,321.3 L220.0,314.9 L221.6,308.6 L224.3,305.6 L228.6,299.4 L227.7,296.7 L229.4,292.7 L227.4,286.7 L227.8,283.4 L228.4,274.5 L230.9,270.4 L232.1,264.7 L234.4,262.5 L243.9,261.3 L252.7,265.1 L256.0,268.8 L260.5,269.0 L264.7,266.6 L275.3,271.7 L279.8,271.5 L285.0,267.2 L290.2,267.5 L292.7,266.1 L297.4,266.7 L304.3,269.6 L311.1,264.0 L313.2,264.4 L319.2,275.4 L320.8,275.2 L324.3,279.1 L323.3,281.0 L322.9,284.3 L315.4,292.0 L313.1,298.4 L311.9,303.6 L310.0,305.8 L308.2,312.8 L303.5,316.9 L302.2,322.0 L300.2,326.0 L299.4,330.2 L293.3,333.6 L288.4,329.4 L285.0,329.6 L279.8,335.5 L277.3,335.6 L273.1,345.2 L270.8,352.3 L261.7,355.9 L258.3,355.4 L254.9,357.6 L247.9,357.4 L243.2,351.1 L240.3,343.9 L234.1,337.3 L227.5,337.4 L219.7,337.4 Z"><title>3. Nigeria</title></path>
+<path class="country-shape" d="M464.1,424.1 L459.5,423.5 L456.8,429.2 L451.4,428.4 L452.2,422.9 L453.4,422.2 L453.8,416.2 L456.3,413.4 L458.4,414.4 L463.7,411.3 L467.2,417.0 L466.7,422.9 L464.1,424.1 L464.1,424.1 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M119.7,123.4 L119.7,124.1 L119.6,126.0 L119.6,141.2 L90.7,140.7 L91.0,166.3 L82.7,167.2 L80.6,172.3 L82.2,186.7 L47.8,186.7 L45.8,190.0 L46.2,185.8 L46.4,185.8 L66.2,185.0 L67.2,181.4 L70.9,176.9 L73.8,163.1 L86.0,152.3 L90.1,139.7 L92.9,139.0 L95.7,131.2 L103.1,130.1 L106.3,131.4 L110.3,131.4 L113.2,129.1 L118.6,128.8 L118.4,123.4 L119.7,123.4 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M412.2,317.7 L405.5,313.3 L402.4,310.5 L401.9,307.3 L403.3,303.2 L403.3,299.1 L398.2,292.9 L397.2,288.6 L397.3,286.2 L394.1,283.2 L394.0,277.4 L392.1,273.5 L389.0,274.1 L389.9,270.4 L392.2,266.3 L391.2,262.1 L394.1,259.1 L392.3,256.7 L394.6,250.6 L398.6,243.2 L406.2,243.9 L405.8,204.2 L405.9,200.0 L416.0,200.0 L416.0,180.0 L451.4,180.0 L485.5,180.0 L520.4,180.0 L523.3,189.8 L521.3,191.6 L522.6,201.9 L525.8,213.9 L529.2,216.3 L534.0,220.0 L529.6,225.7 L523.1,227.4 L520.3,230.4 L519.4,237.1 L515.6,251.8 L516.6,255.8 L515.2,264.4 L511.6,274.2 L506.3,279.2 L502.5,286.8 L501.6,290.9 L497.5,293.7 L494.9,304.2 L495.0,313.2 L494.9,305.4 L493.7,305.2 L493.8,300.2 L492.8,296.7 L488.2,292.8 L487.2,285.6 L488.2,278.2 L484.1,277.5 L483.5,279.8 L478.3,280.3 L480.4,283.2 L481.1,289.2 L476.3,294.7 L471.9,301.9 L467.4,302.9 L460.0,297.1 L456.6,299.2 L455.7,302.1 L451.2,304.0 L450.9,306.0 L442.1,306.0 L440.9,304.0 L434.6,303.6 L431.4,305.3 L429.0,304.5 L424.5,298.6 L423.0,295.9 L416.6,297.3 L414.2,301.9 L411.9,310.8 L408.9,312.7 L406.2,313.8 L412.2,317.7 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M436.9,347.7 L435.5,344.5 L428.9,340.5 L426.7,334.5 L423.0,330.2 L417.1,325.0 L417.0,321.7 L412.2,317.7 L406.2,313.8 L408.9,312.7 L411.9,310.8 L414.2,301.9 L416.6,297.3 L423.0,295.9 L424.5,298.6 L429.0,304.5 L431.4,305.3 L434.6,303.6 L440.9,304.0 L442.1,306.0 L450.9,306.0 L451.2,304.0 L455.7,302.1 L456.6,299.2 L460.0,297.1 L467.4,302.9 L471.9,301.9 L476.3,294.7 L481.1,289.2 L480.4,283.2 L478.3,280.3 L483.5,279.8 L484.1,277.5 L488.2,278.2 L487.2,285.6 L488.2,292.8 L492.8,296.7 L493.8,300.2 L493.7,305.2 L494.9,305.4 L495.0,313.2 L493.7,316.2 L489.0,316.5 L486.0,322.2 L491.4,322.9 L495.9,327.7 L497.4,331.7 L501.4,334.1 L506.6,344.9 L500.7,351.5 L495.2,357.5 L489.8,362.1 L483.6,362.1 L476.6,364.4 L471.0,362.2 L467.3,364.9 L459.6,358.3 L457.5,354.0 L452.6,356.1 L448.5,355.4 L446.2,357.1 L442.2,355.9 L436.9,347.7 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M94.7,275.6 L93.4,276.1 L88.6,275.3 L87.9,276.5 L86.0,276.7 L79.7,274.2 L75.4,274.1 L59.2,273.7 L56.8,274.8 L53.9,274.5 L49.2,276.2 L47.8,268.5 L55.8,268.7 L57.9,267.3 L59.5,267.2 L62.8,264.9 L66.5,267.0 L70.4,267.2 L74.2,264.9 L72.4,262.1 L69.5,263.7 L66.8,263.7 L63.3,261.2 L60.5,261.4 L58.5,263.8 L48.9,264.1 L45.3,256.3 L40.9,252.7 L44.8,250.8 L49.0,243.8 L51.1,238.6 L54.1,235.4 L58.5,236.3 L62.8,234.1 L67.7,234.0 L71.9,237.0 L77.8,239.6 L83.1,247.0 L88.9,253.8 L89.3,260.1 L91.0,265.8 L94.3,268.6 L95.1,272.5 L94.7,275.6 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M79.4,311.0 L84.1,306.6 L85.1,303.8 L86.7,301.6 L89.1,301.4 L91.1,299.5 L98.2,299.5 L100.6,303.1 L102.5,307.3 L102.2,310.2 L103.7,312.8 L103.6,316.5 L106.0,315.9 L101.9,320.6 L97.9,326.0 L97.4,328.9 L95.3,332.1 L93.0,331.4 L86.6,327.4 L82.0,322.0 L80.5,318.4 L79.4,311.0 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M572.4,290.7 L575.7,285.4 L578.5,287.2 L580.3,291.4 L584.2,295.5 L588.6,295.6 L596.9,293.0 L606.5,291.8 L614.2,288.7 L618.6,288.1 L621.7,286.2 L626.7,285.9 L626.7,285.9 L626.7,285.9 L626.7,286.1 L626.7,290.2 L626.7,300.3 L626.7,305.5 L622.7,311.6 L616.5,320.0 L609.1,320.0 L580.4,308.2 L577.0,304.6 L573.8,299.8 L570.5,294.3 L572.4,290.7 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M564.3,360.8 L566.7,357.7 L572.4,357.5 L580.2,350.4 L591.7,350.0 L616.5,320.0 L622.7,311.6 L626.7,305.5 L626.7,300.3 L626.7,290.2 L626.7,286.1 L626.7,285.9 L626.7,285.9 L629.6,285.7 L633.6,284.2 L638.3,283.2 L642.4,279.8 L645.8,279.8 L646.0,282.5 L645.2,288.3 L645.2,293.6 L643.3,297.2 L640.9,308.0 L636.6,319.2 L631.2,332.0 L623.6,346.6 L616.1,357.8 L605.8,371.4 L597.0,379.5 L583.8,389.5 L575.6,397.1 L566.0,409.2 L563.9,414.5 L561.9,416.8 L556.7,408.6 L556.6,372.2 L564.3,360.8 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M476.2,658.4 L477.5,662.9 L478.2,667.3 L476.4,671.8 L471.3,672.9 L466.0,667.4 L466.0,664.0 L468.4,660.2 L469.2,657.3 L471.7,656.6 L476.2,658.4 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M397.2,288.6 L391.6,290.3 L387.2,294.3 L380.8,305.2 L372.5,309.9 L364.0,309.3 L361.5,310.2 L362.4,313.7 L357.8,317.2 L354.1,321.1 L343.0,324.9 L340.8,322.7 L339.4,322.5 L337.7,325.0 L330.5,325.8 L331.8,323.1 L329.1,316.2 L327.8,312.0 L324.0,310.3 L318.8,304.5 L320.7,299.8 L324.7,300.8 L327.2,300.1 L332.1,300.2 L327.3,291.1 L327.6,284.4 L327.1,277.8 L323.6,271.4 L324.4,266.7 L318.8,266.5 L318.8,260.0 L315.2,256.3 L319.0,243.2 L330.2,233.7 L330.6,220.7 L334.0,200.4 L335.9,196.1 L332.3,192.7 L332.1,189.5 L328.9,186.9 L326.7,171.4 L335.6,165.9 L370.7,185.0 L405.8,204.2 L406.2,243.9 L398.6,243.2 L394.6,250.6 L392.3,256.7 L394.1,259.1 L391.2,262.1 L392.2,266.3 L389.9,270.4 L389.0,274.1 L392.1,273.5 L394.0,277.4 L394.1,283.2 L397.3,286.2 L397.2,288.6 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M203.9,290.0 L202.8,295.3 L205.5,298.2 L208.5,301.7 L208.9,306.7 L210.6,308.7 L210.2,331.7 L212.4,338.6 L205.3,340.7 L203.4,337.2 L201.0,330.9 L200.3,325.9 L202.3,316.9 L200.1,313.2 L199.2,305.3 L199.2,298.1 L195.6,292.9 L196.2,289.8 L203.9,290.0 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M279.4,96.9 L275.7,79.0 L270.3,74.9 L270.2,72.5 L263.0,66.6 L262.2,59.0 L267.6,53.4 L269.7,45.2 L268.3,35.7 L270.1,30.5 L279.7,26.5 L285.8,27.7 L285.6,32.8 L293.1,29.1 L293.7,31.0 L289.3,35.9 L289.2,40.5 L292.3,43.0 L291.1,51.7 L285.3,56.7 L287.0,62.1 L291.5,62.3 L293.8,67.1 L297.1,68.6 L296.6,76.3 L292.3,79.2 L289.6,82.4 L283.6,86.2 L284.5,90.4 L283.7,94.6 L279.4,96.9 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M454.2,445.0 L457.8,444.5 L461.0,440.9 L464.4,435.7 L466.6,433.6 L466.5,430.3 L464.6,428.1 L464.1,424.1 L464.1,424.1 L466.7,422.9 L467.2,417.0 L463.7,411.3 L466.8,410.1 L476.4,410.3 L494.4,409.5 L495.8,410.6 L527.7,431.0 L528.3,436.8 L541.0,446.8 L536.9,459.1 L537.4,464.8 L543.1,468.4 L543.3,471.0 L540.9,477.0 L541.4,480.1 L540.8,484.9 L543.9,491.1 L547.6,501.0 L550.8,503.2 L550.8,503.2 L543.8,509.0 L534.2,512.9 L528.9,512.7 L525.7,515.7 L519.6,515.9 L517.3,517.2 L506.7,514.4 L500.1,515.2 L497.7,501.6 L494.7,496.9 L492.9,494.2 L484.3,492.3 L479.3,489.3 L473.7,487.6 L470.2,485.9 L466.5,483.4 L466.5,483.4 L461.8,470.8 L456.7,465.2 L454.9,459.4 L455.8,454.2 L454.2,445.0 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M456.3,413.4 L456.4,405.9 L458.4,402.1 L458.9,394.0 L460.8,389.4 L464.1,384.2 L467.5,381.5 L470.3,378.0 L466.8,376.6 L467.3,364.9 L467.3,364.9 L471.0,362.2 L476.6,364.4 L483.6,362.1 L489.8,362.1 L495.2,357.5 L499.4,364.4 L500.4,369.5 L504.3,380.9 L501.1,388.2 L496.8,394.9 L494.3,398.9 L494.4,409.5 L476.4,410.3 L466.8,410.1 L463.7,411.3 L458.4,414.4 L456.3,413.4 Z" aria-hidden="true"></path>
+<path class="country-shape target" data-country="south-africa" role="button" tabindex="0" aria-label="5. South Africa" aria-current="false" d="M371.1,647.7 L373.5,649.2 L378.7,658.7 L377.9,664.8 L379.8,668.3 L386.1,667.3 L390.5,662.8 L394.7,659.8 L396.9,655.0 L401.1,652.7 L404.9,653.9 L409.1,656.7 L416.2,657.2 L421.8,654.9 L422.7,651.7 L424.3,647.0 L429.1,646.2 L431.7,642.4 L434.7,635.7 L442.6,628.3 L455.0,620.9 L458.6,621.0 L462.8,622.7 L465.8,621.5 L470.5,622.5 L474.7,636.6 L477.0,643.7 L475.4,654.8 L476.2,658.4 L471.7,656.6 L469.2,657.3 L468.4,660.2 L466.0,664.0 L466.0,667.4 L471.3,672.9 L476.4,671.8 L478.2,667.3 L484.9,667.4 L482.7,674.7 L481.7,683.0 L479.4,687.5 L473.4,692.6 L471.7,694.0 L467.9,699.1 L465.5,704.2 L460.5,711.4 L450.5,721.7 L444.3,727.7 L437.7,732.3 L428.5,736.1 L424.0,736.7 L422.9,739.4 L417.5,738.0 L413.2,739.9 L403.6,737.9 L398.3,739.2 L394.7,738.6 L385.6,742.6 L378.1,744.2 L372.6,748.0 L368.6,748.2 L364.9,744.6 L361.9,744.4 L358.1,740.0 L357.7,741.4 L356.6,738.7 L356.6,732.8 L353.7,726.1 L356.6,724.3 L356.4,716.6 L350.6,707.3 L346.2,698.8 L346.2,698.8 L339.8,685.8 L344.1,680.8 L347.5,683.6 L349.0,687.8 L353.0,688.6 L358.5,690.5 L363.2,689.7 L371.1,684.6 L371.1,647.7 Z M451.0,689.6 L447.2,686.5 L443.1,688.5 L438.3,692.4 L433.6,698.8 L440.2,706.5 L443.3,705.5 L445.0,702.3 L449.9,700.7 L451.4,697.4 L454.1,692.6 L451.0,689.6 Z"><title>5. South Africa</title></path>
+<path class="country-shape" d="M400.3,575.2 L394.5,569.0 L388.6,560.8 L389.0,529.0 L407.3,529.1 L406.6,525.7 L407.9,521.9 L406.4,517.2 L407.4,512.4 L406.4,509.3 L409.5,509.5 L410.0,512.6 L414.1,512.4 L419.7,513.3 L422.6,517.8 L429.7,519.2 L435.0,516.1 L437.0,521.3 L443.8,522.7 L447.0,527.0 L450.6,532.5 L457.4,532.6 L456.6,521.8 L454.2,523.6 L448.1,519.7 L445.7,517.9 L446.8,507.9 L448.3,496.1 L446.4,491.6 L448.9,485.3 L451.2,484.1 L463.0,482.4 L466.5,483.4 L470.2,485.9 L473.7,487.6 L479.3,489.3 L484.3,492.3 L488.4,496.8 L490.7,505.3 L489.2,508.0 L487.4,516.1 L489.1,524.4 L486.3,527.8 L483.7,537.1 L488.3,539.7 L461.6,548.0 L462.4,555.1 L455.7,556.4 L450.7,560.4 L449.7,563.9 L446.5,564.7 L438.9,572.9 L434.0,579.4 L431.0,579.6 L428.2,578.5 L418.3,577.4 L416.7,576.6 L416.7,575.8 L413.2,573.5 L407.5,573.0 L400.3,575.2 Z" aria-hidden="true"></path>
+<path class="country-shape" d="M455.0,620.9 L449.4,616.4 L442.6,614.9 L440.0,608.5 L440.0,605.0 L436.2,603.9 L426.3,592.9 L423.5,587.1 L421.7,585.4 L418.3,577.4 L428.2,578.5 L431.0,579.6 L434.0,579.4 L438.9,572.9 L446.5,564.7 L449.7,563.9 L450.7,560.4 L455.7,556.4 L462.4,555.1 L463.0,558.8 L470.3,558.6 L474.4,560.7 L476.3,563.2 L480.5,563.9 L485.1,567.1 L485.1,579.8 L483.4,586.7 L483.0,594.2 L484.4,597.2 L483.4,603.0 L482.1,604.0 L479.8,611.2 L470.5,622.5 L465.8,621.5 L462.8,622.7 L458.6,621.0 L455.0,620.9 Z" aria-hidden="true"></path>
+<g class="map-marker" aria-hidden="true"><circle cx="460.0" cy="140.0" r="13"></circle><text x="460.0" y="144.5">1</text></g>
+<g class="map-marker" aria-hidden="true"><circle cx="222.4" cy="120.0" r="13"></circle><text x="222.4" y="124.5">2</text></g>
+<g class="map-marker" aria-hidden="true"><circle cx="266.4" cy="310.0" r="13"></circle><text x="266.4" y="314.5">3</text></g>
+<g class="map-marker" aria-hidden="true"><circle cx="398.4" cy="430.0" r="13"></circle><text x="398.4" y="434.5">4</text></g>
+<g class="map-marker" aria-hidden="true"><circle cx="407.2" cy="690.0" r="13"></circle><text x="407.2" y="694.5">5</text></g>
+<g class="map-marker" aria-hidden="true"><circle cx="548.0" cy="310.0" r="13"></circle><text x="548.0" y="314.5">6</text></g>
+</svg>
 </div>
+<div class="map-key" aria-label="Color key">
+<div class="key-item"><span class="swatch" style="background:var(--britain)"></span>Britain</div>
+<div class="key-item"><span class="swatch" style="background:var(--france)"></span>France</div>
+<div class="key-item"><span class="swatch" style="background:var(--belgium)"></span>Belgium</div>
+<div class="key-item"><span class="swatch" style="background:var(--independent)"></span>Independent</div>
 </div>
-<div class="question-panel">
-<div class="question-head"><div><h2>NEXT: READ EACH CLUE AND CIRCLE THE ANSWER</h2><p>Use the facts above. Find the same number on the map.</p></div><button class="reset" id="reset" type="button">Clear map</button></div>
+<div class="source-note">Country boundaries: Natural Earth, 1:110m map data.</div>
+</section>
+<section class="question-panel" aria-labelledby="questions-heading">
+<div class="card-head"><div class="head-title"><span class="head-icon" aria-hidden="true">✓</span><h2 id="questions-heading">NEXT: READ EACH CLUE AND CIRCLE THE ANSWER</h2></div></div>
+<div class="question-intro"><p>Use the facts above. Then find the SAME number on the map on the left.</p></div>
 <div class="questions" id="questions">
-<article class="question" id="q-egypt" data-country="egypt"><h3>1. EGYPT</h3><p>Which power wanted to protect a canal used by ships?</p><div class="choices"></div><div class="row-foot"><span class="assigned"></span></div></article>
-<article class="question" id="q-algeria" data-country="algeria"><h3>2. ALGERIA</h3><p>Which power sent settlers to this North African place?</p><div class="choices"></div><div class="row-foot"><span class="assigned"></span></div></article>
-<article class="question" id="q-nigeria" data-country="nigeria"><h3>3. NIGERIA</h3><p>Which power controlled this West African place for trade?</p><div class="choices"></div><div class="row-foot"><span class="assigned"></span></div></article>
-<article class="question" id="q-congo" data-country="congo"><h3>4. CONGO</h3><p>Which power forced people here to collect rubber?</p><div class="choices"></div><div class="row-foot"><span class="assigned"></span></div></article>
-<article class="question" id="q-south-africa" data-country="south-africa"><h3>5. SOUTH AFRICA</h3><p>Which power valued the gold and diamonds here?</p><div class="choices"></div><div class="row-foot"><span class="assigned"></span></div></article>
-<article class="question" id="q-ethiopia" data-country="ethiopia"><h3>6. ETHIOPIA</h3><p>Did this country keep its own government after defeating Italy?</p><div class="choices"></div><div class="row-foot"><span class="assigned"></span></div></article>
-</div></div>
+<article class="question active" id="q-egypt" data-country="egypt"><h3>1. EGYPT</h3><p>Which power wanted to protect a canal used by ships?</p><div class="choices" role="group" aria-label="Choose the controlling power for Egypt"></div><div class="row-foot" aria-live="polite"></div></article>
+<article class="question" id="q-algeria" data-country="algeria"><h3>2. ALGERIA</h3><p>Which power sent settlers to this North African place?</p><div class="choices" role="group" aria-label="Choose the controlling power for Algeria"></div><div class="row-foot" aria-live="polite"></div></article>
+<article class="question" id="q-nigeria" data-country="nigeria"><h3>3. NIGERIA</h3><p>Which power controlled this West African place for trade?</p><div class="choices" role="group" aria-label="Choose the controlling power for Nigeria"></div><div class="row-foot" aria-live="polite"></div></article>
+<article class="question" id="q-congo" data-country="congo"><h3>4. CONGO</h3><p>Which power forced people here to collect rubber?</p><div class="choices" role="group" aria-label="Choose the controlling power for Congo"></div><div class="row-foot" aria-live="polite"></div></article>
+<article class="question" id="q-south-africa" data-country="south-africa"><h3>5. SOUTH AFRICA</h3><p>Which power valued the gold and diamonds here?</p><div class="choices" role="group" aria-label="Choose the controlling power for South Africa"></div><div class="row-foot" aria-live="polite"></div></article>
+<article class="question" id="q-ethiopia" data-country="ethiopia"><h3>6. ETHIOPIA</h3><p>Did this country keep its own government after defeating Italy?</p><div class="choices" role="group" aria-label="Choose the controlling power for Ethiopia"></div><div class="row-foot" aria-live="polite"></div></article>
+</div>
+<div class="actions"><button class="reset" id="reset" type="button">Clear map</button></div>
+</section>
 </section>
 </main>
 <script>
 const powers=["Britain","France","Belgium","Independent"];
 const colors={Britain:"var(--britain)",France:"var(--france)",Belgium:"var(--belgium)",Independent:"var(--independent)"};
-const answers={egypt:"Britain",algeria:"France",nigeria:"Britain",congo:"Belgium","south-africa":"Britain",ethiopia:"Independent"};
 const assigned={};
 const questions=[...document.querySelectorAll(".question")];
-const mapRegions=[...document.querySelectorAll(".country")];
-function draw(){
- let done=0;
+const regions=[...document.querySelectorAll(".target")];
+let selected="egypt";
+function render(){
+ let count=0;
  questions.forEach(card=>{
-  const id=card.dataset.country, value=assigned[id], group=card.querySelector(".choices"), status=card.querySelector(".assigned");
-  group.innerHTML="";
+  const id=card.dataset.country,value=assigned[id],group=card.querySelector(".choices"),status=card.querySelector(".row-foot");
+  group.replaceChildren();
   powers.forEach(power=>{
-   const b=document.createElement("button");b.type="button";b.className="choice";b.textContent=power;
-   b.setAttribute("aria-pressed",String(value===power));
-   b.addEventListener("click",()=>{assigned[id]=power;draw()});group.appendChild(b);
+   const button=document.createElement("button");
+   button.type="button";button.className="choice";button.textContent=power;
+   button.setAttribute("aria-pressed",String(value===power));
+   button.addEventListener("click",()=>{assigned[id]=power;render()});
+   group.append(button);
   });
   status.textContent=value?"Map color: "+value:"";
-  if(value)done++;
+  if(value)count++;
  });
- mapRegions.forEach(region=>{
-  const id=region.dataset.country, value=assigned[id];
-  region.setAttribute("aria-current",String(selected===id));
-  region.querySelector("polygon").style.fill=value?colors[value]:"#dfe7e9";
+ regions.forEach(region=>{
+  const value=assigned[region.dataset.country];
+  region.setAttribute("aria-current",String(selected===region.dataset.country));
+  region.style.fill=value?colors[value]:"#dce9e9";
  });
- document.getElementById("map-status").textContent=done+" of 6 assigned";
+ document.getElementById("map-status").textContent=count+" of 6 assigned";
 }
-let selected="egypt";
-mapRegions.forEach(region=>{
- const select=()=>{
-  selected=region.dataset.country;
-  document.querySelectorAll(".question").forEach(q=>q.classList.toggle("active",q.dataset.country===selected));
-  draw();
-  const card=document.querySelector('.question[data-country="'+selected+'"]');
-  card.scrollIntoView({behavior:"smooth",block:"nearest"});
- };
- region.addEventListener("click",select);
- region.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();select()}});
+function selectCountry(id,moveToClue=true){
+ selected=id;
+ questions.forEach(card=>card.classList.toggle("active",card.dataset.country===id));
+ render();
+ if(moveToClue){
+  const card=document.querySelector('.question[data-country="'+id+'"]');
+  card.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
+ }
+}
+regions.forEach(region=>{
+ region.addEventListener("click",()=>selectCountry(region.dataset.country));
+ region.addEventListener("keydown",event=>{
+  if(event.key==="Enter"||event.key===" "){event.preventDefault();selectCountry(region.dataset.country)}
+ });
 });
-document.getElementById("reset").addEventListener("click",()=>{Object.keys(assigned).forEach(k=>delete assigned[k]);selected="egypt";questions.forEach(q=>q.classList.toggle("active",q.dataset.country==="egypt"));draw()});
-questions.forEach(q=>q.addEventListener("click",e=>{if(e.target.closest("button"))return;selected=q.dataset.country;questions.forEach(x=>x.classList.toggle("active",x===q));draw()}));
-draw();
+questions.forEach(card=>card.addEventListener("click",event=>{
+ if(event.target.closest("button"))return;
+ selectCountry(card.dataset.country,false);
+}));
+document.getElementById("reset").addEventListener("click",()=>{
+ Object.keys(assigned).forEach(id=>delete assigned[id]);
+ selectCountry("egypt",false);
+ document.getElementById("q-egypt").scrollIntoView({behavior:"smooth",block:"nearest"});
+});
+render();
 </script>
 </body>
 </html>
