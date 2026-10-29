@@ -67,14 +67,14 @@
     dialog button { display:block; margin:4px 0 0 auto; }
     @media (max-width:800px) { .reader { grid-template-columns:1fr; } .scan-card { min-height:0; } .scan-frame { min-height:310px; } .scan-frame img { max-height:58vh; } header { align-items:flex-start; flex-direction:column; gap:8px; } .standard { align-self:flex-start; } }
     @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
-  </style>
+  .day-nav{display:flex;gap:8px;margin:8px 0 20px}.day-nav a{color:#275b50;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-weight:700;background:#fffefa}.day-nav a[aria-current=page]{background:var(--green);border-color:var(--green);color:#fff}</style>
 </head>
 <body>
   <main class="shell">
     <header>
       <div><div class="course">Sociology · Day 1</div><h1>What Is Sociology?</h1></div>
       <div class="standard">SS.9–12.Soc.1–2</div>
-    </header>
+    </header><nav class="day-nav" aria-label="Sociology reading days"><a href="../day-1-reading/" aria-current="page">Day 1: What Is Sociology?</a><a href="../day-2-sociological-imagination/">Day 2: Sociological Imagination</a></nav>
     <div class="progress-wrap" id="progressWrap" hidden>
       <div class="progress-label"><span id="progressText">Page 1 of 5</span><span>Read, then answer</span></div>
       <div class="track" role="progressbar" aria-label="Assignment progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="fill" id="progressFill"></div></div>
