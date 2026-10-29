@@ -301,6 +301,7 @@ function setupClue(){
  clueChoices.classList.remove("evidence-options");
  clueFeedback.textContent="";clueFeedback.className="feedback";nextButton.hidden=true;
  updateProgress();
+ if(clueIndex>0){clueTitle.tabIndex=-1;clueTitle.focus()}
  showPowerChoices(true);
 }
 function showPowerChoices(shuffled){
@@ -317,10 +318,12 @@ function showPowerChoices(shuffled){
     clueFeedback.textContent="Power matched. Now find the fact that supports it.";
     clueFeedback.className="feedback";
     showEvidenceChoices(true);
+    clueChoices.querySelector("button")?.focus();
    }else{
     showPowerChoices(true);
     clueFeedback.textContent="Not yet. Read the facts again and try the shuffled choices.";
     clueFeedback.className="feedback";
+    clueChoices.querySelector("button")?.focus();
    }
   });
   clueChoices.append(button);
@@ -339,11 +342,12 @@ function showEvidenceChoices(shuffled){
     clueFeedback.className="feedback success";
     [...clueChoices.querySelectorAll("button")].forEach(b=>b.disabled=true);
     nextButton.textContent=clueIndex===questions.length-1?"Finish Part 1":"Next clue";
-    nextButton.hidden=false;updateProgress();
+    nextButton.hidden=false;updateProgress();nextButton.focus();
    }else{
     showEvidenceChoices(true);
     clueFeedback.textContent="Not yet. Read the facts again and try the shuffled choices.";
     clueFeedback.className="feedback";
+    clueChoices.querySelector("button")?.focus();
    }
   });
   clueChoices.append(button);
@@ -366,6 +370,7 @@ document.getElementById("open-map").addEventListener("click",()=>{
   item.append(number,name,answer);return item;
  }));
  phaseTwo.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+ document.querySelector("#phase-two .target")?.focus();
 });
 function renderColorButtons(){
  const holder=document.getElementById("color-choices");holder.replaceChildren();
@@ -377,6 +382,7 @@ function renderColorButtons(){
    mapAssignments[selectedCountry]=power;renderMap();
    document.getElementById("color-feedback").textContent="Assigned "+power+". Choose another numbered country.";
    document.getElementById("color-feedback").className="feedback success";
+   [...document.querySelectorAll("#color-choices .choice")].find(option=>option.textContent===power)?.focus();
   });
   holder.append(button);
  });
@@ -405,7 +411,7 @@ function renderMap(){
  renderColorButtons();
 }
 mapRegions.forEach(region=>{
- const open=()=>selectPlace(region.dataset.country);
+ const open=()=>{selectPlace(region.dataset.country);document.querySelector("#color-choices button")?.focus()};
  region.addEventListener("click",open);
  region.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();open()}});
 });
