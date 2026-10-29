@@ -1,58 +1,119 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="A simple three-day World War II graphic novel reading for U.S. History.">
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="A three-day U.S. History reading with selected graphic novel pages and short reading questions.">
 <title>World War II: Read, Look, Answer</title>
 <style>
 :root{--navy:#19364b;--red:#a33d36;--gold:#e6bd64;--paper:#f4efe4;--card:#fffdf8;--ink:#22313b;--muted:#526571;--line:#d8cfbd;--green:#396b50}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.45 system-ui,Segoe UI,Arial,sans-serif}
-header{background:var(--navy);color:#fff;border-bottom:6px solid var(--gold);padding:18px max(16px,calc((100vw - 1200px)/2))}.wrap{max-width:1200px;margin:auto;padding:0 14px}
+header{background:var(--navy);color:white;border-bottom:6px solid var(--gold);padding:18px max(16px,calc((100vw - 1200px)/2))}.wrap{max-width:1200px;margin:auto;padding:0 14px}
 .kicker{font-size:.8rem;font-weight:800;color:#f1d991;text-transform:uppercase;letter-spacing:.08em}h1{font-size:clamp(1.8rem,4vw,2.7rem);line-height:1.1;margin:4px 0}header p{margin:4px 0;color:#e8eff2}
 main{padding:14px 0 40px}.directions,.note,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px;margin:10px 0}
-.directions{background:#ecf2ee;border-left:5px solid var(--green)}.directions ol{display:flex;gap:8px 24px;flex-wrap:wrap;margin:6px 0 0;padding-left:22px}.directions li{padding-right:10px}.note{background:#fff1e9;border-left:5px solid var(--red);font-size:.9rem;padding:9px 12px}
+.directions{background:#ecf2ee;border-left:5px solid var(--green)}.directions ol{display:flex;gap:8px 24px;flex-wrap:wrap;margin:6px 0 0;padding-left:22px}.directions li{padding-right:10px}
+.note{background:#fff1e9;border-left:5px solid var(--red);font-size:.95rem;padding:9px 12px}
 .day-tabs{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}.day-tab,button{font:inherit;font-weight:800;border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.day-tab{background:#e6dfd0;color:var(--navy)}.day-tab.active{background:var(--navy);color:white;box-shadow:inset 0 -3px var(--gold)}
-.layout{display:grid;grid-template-columns:minmax(300px,1.1fr) minmax(320px,.9fr);gap:12px;align-items:start}.panel{margin:0;padding:13px}.reading{position:sticky;top:8px}
+.layout{display:grid;grid-template-columns:minmax(300px,1.08fr) minmax(320px,.92fr);gap:12px;align-items:start}.panel{margin:0;padding:13px}
 h2{font-size:1.2rem;color:var(--navy);margin:0 0 4px}.small{font-size:.9rem;color:var(--muted);margin:3px 0}
-.reader-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.open-source{color:var(--navy);font-weight:800}
-iframe{border:1px solid var(--line);background:#fff;width:100%;height:min(69vh,740px);border-radius:8px;margin-top:8px}
-.reader-controls{display:flex;align-items:center;justify-content:space-between;gap:7px;margin:8px 0}.reader-controls button{background:#e6dfd0;color:var(--navy);padding:8px 10px;font-size:.9rem}
+.reader-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.scan{height:min(73vh,780px);min-height:440px;display:flex;align-items:center;justify-content:center;background:#e9e3d7;border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:8px}
+.scan img{display:block;max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 2px 10px #0003}.reader-controls{display:flex;align-items:center;justify-content:space-between;gap:7px;margin:8px 0}.reader-controls button{background:#e6dfd0;color:var(--navy);padding:8px 10px;font-size:.9rem}
 .progress-line{display:flex;justify-content:space-between;align-items:center;gap:8px}.progressbar{height:10px;background:#e5dfd2;border-radius:99px;overflow:hidden;margin:5px 0 11px}.progressbar span{display:block;height:100%;background:var(--green);width:0}
 .fact{background:#edf3ef;border-left:5px solid var(--green);border-radius:8px;padding:11px 12px;margin:10px 0}.label{font-size:.75rem;font-weight:850;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 3px}
 .question{background:#f6f0e2;border-radius:8px;padding:12px;margin:10px 0}.question p{margin:0}
-label{display:block;font-weight:800;margin:9px 0 5px}input,textarea{width:100%;font:inherit;color:var(--ink);padding:10px;border:2px solid #cfc5b3;border-radius:8px;background:white}textarea{min-height:86px;resize:vertical}
+label{display:block;font-weight:800;margin:9px 0 5px}input,textarea{width:100%;font:inherit;color:var(--ink);padding:10px;border:2px solid #cfc5b3;border-radius:8px;background:white}textarea{min-height:76px;resize:vertical}
 input:focus,textarea:focus,button:focus{outline:3px solid #6aa5bf;outline-offset:2px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.primary{background:var(--red);color:white}.secondary{background:#e6dfd0;color:var(--navy)}button:disabled{opacity:.55;cursor:not-allowed}.status{font-size:.9rem;min-height:1.3em;color:var(--muted)}.success{color:#246947}.error{color:#a12f2f}
-@media(max-width:820px){.layout{grid-template-columns:1fr}.reading{position:static}iframe{height:55vh}.directions ol{display:block}}
+@media(max-width:820px){.layout{grid-template-columns:1fr}.scan{height:62vh;min-height:360px}.directions ol{display:block}}
 @media print{header{background:white;color:black;border-bottom:2px solid black}.reading,.day-tabs,.actions,.reader-controls{display:none!important}.layout{display:block}.panel{box-shadow:none}}
-</style></head>
+</style>
+</head>
 <body>
-<header><div class="wrap"><div class="kicker">U.S. History · World War II</div><h1>Read. Look. Answer.</h1><p>Three days. Three graphic novels. Each day connects the story to the United States.</p></div></header>
+<header><div class="wrap"><div class="kicker">U.S. History · World War II</div><h1>Read. Look. Answer.</h1><p>Three days. Five pages at a time. Connect the reading to the United States.</p></div></header>
 <main class="wrap">
-<section class="directions"><strong>Do these 3 steps:</strong><ol><li>Read 5 pages.</li><li>Read the U.S. fact.</li><li>Answer 1 question.</li></ol><p class="small">Do one day at a time. Finish Day 1 first. Next class, start Day 2.</p></section>
-<section class="note"><strong>These books show hate, hiding, and camps.</strong> Ask your teacher for a break if you need one.</section>
+<section class="directions"><strong>Do these 3 steps:</strong><ol><li>Read the five pages.</li><li>Read the U.S. fact.</li><li>Answer the question.</li></ol><p class="small">Finish Day 1 today. When you come back, start Day 2. Then do Day 3.</p></section>
+<section class="note"><strong>Some pages show hate, hiding, and camps.</strong> Ask your teacher for a break if you need one.</section>
 <nav class="day-tabs" id="dayTabs" aria-label="Choose a day"></nav>
 <section class="layout">
-<div class="panel reading"><div class="reader-head"><div><p class="label" id="dayLabel"></p><h2 id="bookTitle"></h2><p class="small" id="pageRange"></p></div><a class="open-source" id="openSource" target="_blank" rel="noopener">Open book</a></div>
-<div class="reader-controls"><button id="prevPage" type="button">← Back a page</button><span class="small" id="currentPage"></span><button id="nextPage" type="button">Next page →</button></div>
-<iframe id="viewer" title="Scanned book pages"></iframe><p class="small">If the book does not show here, press <strong>Open book</strong>.</p></div>
-<div class="panel"><div class="progress-line"><div><p class="label" id="assignmentTitle"></p><h2 id="checkTitle"></h2></div><strong id="checkCount"></strong></div><div class="progressbar"><span id="progressFill"></span></div>
-<p class="small" id="dayPlan"></p><label for="studentName">Your name</label><input id="studentName" maxlength="100" autocomplete="name" placeholder="First and last name">
-<div class="fact"><p class="label">U.S. fact</p><div id="factText"></div></div>
-<div class="question"><p class="label">Your question</p><p id="questionText"></p></div>
-<p class="small">Start here: The book shows ___. The U.S. fact says ___.</p><label for="answerBox">Write 1 or 2 sentences</label><textarea id="answerBox" placeholder="Use one detail from the book."></textarea>
-<p class="small" id="answerProgress"></p><div class="actions"><button type="button" class="secondary" id="prevCheck">← Back</button><button type="button" class="secondary" id="nextCheck">Next →</button><button type="button" class="primary" id="submitBtn">Turn in today’s work</button></div><p class="status" id="status" aria-live="polite"></p></div>
-</section><p class="small">Your answers save on this device until you turn in the day.</p></main>
+<div class="panel reading">
+ <div class="reader-head"><div><p class="label" id="dayLabel"></p><h2 id="bookTitle"></h2><p class="small" id="pageRange"></p></div></div>
+ <div class="reader-controls"><button id="prevPage" type="button">← Back a page</button><span class="small" id="currentPage" aria-live="polite"></span><button id="nextPage" type="button">Next page →</button></div>
+ <div class="scan"><img id="pageImage" alt="Scanned page from the assigned reading"></div>
+ <p class="small">This section has five scanned pages. Use the buttons to read each page.</p>
+</div>
+<div class="panel">
+ <div class="progress-line"><div><p class="label" id="assignmentTitle"></p><h2 id="checkTitle"></h2></div><strong id="checkCount"></strong></div><div class="progressbar"><span id="progressFill"></span></div>
+ <p class="small" id="dayPlan"></p>
+ <label for="studentName">Your name</label><input id="studentName" maxlength="100" autocomplete="name" placeholder="First and last name">
+ <div class="fact"><p class="label">U.S. fact</p><div id="factText"></div></div>
+ <div class="question"><p class="label">Look at the page. Answer the question.</p><p id="questionText"></p></div>
+ <p class="small">Start here: I see ___. This connects to the U.S. because ___.</p>
+ <label for="answerBox">Write 1 short sentence</label><textarea id="answerBox" placeholder="Use one detail from the page."></textarea>
+ <p class="small" id="answerProgress"></p>
+ <div class="actions"><button type="button" class="secondary" id="prevCheck">← Back</button><button type="button" class="secondary" id="nextCheck">Next →</button><button type="button" class="primary" id="submitBtn">Turn in today’s work</button></div>
+ <p class="status" id="status" aria-live="polite"></p>
+</div>
+</section>
+<p class="small">Your answers save on this device until you turn in the day.</p>
+</main>
 <script>
-const DAYS=[{"id":"wwii-graphic-reading-day1","day":"Day 1","title":"Why did the war begin?","book":"Maus I","standard":"SS.9-12.US.29","start":30,"end":59,"overview":"Finish Day 1 today. Next class, start Day 2.","viewer":"https://drive.google.com/file/d/0B5YGNq2SZ2WALU1MNTktQTc2TG8/preview?resourcekey=0-yLbaOWs3NsYjmSFI-JLZBQ","source":"https://drive.google.com/file/d/0B5YGNq2SZ2WALU1MNTktQTc2TG8/view?usp=sharing&resourcekey=0-yLbaOWs3NsYjmSFI-JLZBQ","checks":[["In 1939, the U.S. turned away a ship of Jewish people escaping the Nazis.","Should the U.S. have let the ship stay? Use one danger from the book to explain."],["Germany attacked Poland. The U.S. stayed out of the war.","The U.S. stayed out. Should it have helped Poland? Use one warning from the book."],["The U.S. sent supplies to some countries, but no soldiers.","Was sending supplies the same as joining the war? Use one book detail."],["Japan bombed Pearl Harbor in 1941. Then the U.S. joined the war.","After Pearl Harbor, what did the U.S. do?"],["The U.S. fought in Europe and in the Pacific.","How could U.S. fighting in Europe help people like Vladek? Use one book detail."],["The U.S. joined after the war in Europe had begun.","What could the U.S. have done sooner to help people like Vladek?"]]},{"id":"wwii-graphic-reading-day2","day":"Day 2","title":"Big changes in the war","book":"Maus II","standard":"SS.9-12.US.29","start":23,"end":52,"overview":"Start Day 2 when you come back. Next class, start Day 3.","viewer":"https://drive.google.com/file/d/0BwJ8DKxJd6g3MG82V1gtbU1PQTQ/preview?resourcekey=0-GqbuJNPTeoWWWTG7Kj7DDA","source":"https://drive.google.com/file/d/0BwJ8DKxJd6g3MG82V1gtbU1PQTQ/view?usp=sharing&resourcekey=0-GqbuJNPTeoWWWTG7Kj7DDA","checks":[["After Pearl Harbor, the U.S. fought in Europe and in the Pacific.","After Pearl Harbor, where did the U.S. fight?"],["At Midway, the U.S. stopped Japan’s advance.","How can a U.S. win far away change the war Vladek faces?"],["At Stalingrad, the Soviet Union beat a German army.","How did fighting from the east and west hurt Germany?"],["On D-Day, U.S. and Allied troops landed in France.","D-Day brought U.S. troops to France. What could this change for people under Nazi rule?"],["The U.S. fought Japan across Pacific islands and fought Germany in Europe.","Why did the U.S. have to fight in Europe and the Pacific at once?"],["U.S. troops and troops from other countries freed people in Nazi camps.","What could freeing people in camps fix? What could it not fix?"]]},{"id":"wwii-graphic-reading-day3","day":"Day 3","title":"The Holocaust and the U.S. response","book":"Anne Frank’s Diary: The Graphic Adaptation","standard":"SS.9-12.US.30","start":45,"end":74,"overview":"Start Day 3 after Day 2. This is the last day.","viewer":"https://linnmarcsd-my.sharepoint.com/:b:/g/personal/fynnley_toppert_linnmar_k12_ia_us/IQAGDxd2LuEhQ6KgrCBmgkhHAcdhe7C8QpB4Si2X467YGv0?e=cD79Az&action=embedview","source":"https://linnmarcsd-my.sharepoint.com/:b:/g/personal/fynnley_toppert_linnmar_k12_ia_us/IQAGDxd2LuEhQ6KgrCBmgkhHAcdhe7C8QpB4Si2X467YGv0?e=cD79Az","checks":[["U.S. rules made it hard for Jewish people escaping the Nazis to enter.","What does Anne show about life under Nazi rule? How could the U.S. have helped?"],["In 1939, the U.S. turned away a ship of Jewish people escaping the Nazis.","What should the U.S. have done with the ship of people who needed safety?"],["The U.S. joined the war after Pearl Harbor. Fighting and rescuing were not the same.","Why was fighting the Nazis not enough to save everyone?"],["In 1944, U.S. President Franklin Roosevelt started a rescue group called the War Refugee Board.","The U.S. started a rescue group in 1944. What does this tell you about when help came?"],["U.S. and Allied troops freed people in Nazi camps.","What did U.S. troops do at the camps? What could they not undo?"],["Anne’s diary ends before she is arrested.","What does Anne’s diary show about one person’s life? What does it not show about U.S. actions?"]]}];
+const DAYS=[
+{id:"wwii-graphic-reading-day1",day:"Day 1",title:"Why did the war begin?",book:"Maus I",start:30,end:59,overview:"Finish all six reading checks for Day 1.",checks:[
+["In 1939, the U.S. turned away a ship of Jewish refugees. What danger do you see on these pages?"],
+["The U.S. stayed out of the war when Germany attacked Poland. What happened to Vladek when soldiers called him?"],
+["The U.S. joined the war after Japan attacked Pearl Harbor in 1941. How does this section end for Vladek?"],
+["The U.S. sent supplies to countries fighting Germany. Name one hard thing Vladek faced as a prisoner."],
+["The U.S. was fighting Nazi Germany by this time. What helped Vladek keep going in this section?"],
+["The U.S. was still out of the war in Europe. Find one way people in the reading tried to help."]
+],facts:[
+"In 1939, the U.S. turned away the St. Louis, a ship carrying Jewish refugees.",
+"The U.S. stayed out of the war when Germany attacked Poland in 1939.",
+"The U.S. joined the war in 1941, after Japan attacked Pearl Harbor.",
+"The U.S. sent food and supplies to help countries fighting Germany.",
+"After Pearl Harbor, U.S. soldiers fought Germany and Japan.",
+"The U.S. did not fight Germany until 1941. People in Europe were already in danger."
+]},
+{id:"wwii-graphic-reading-day2",day:"Day 2",title:"Big changes in the war",book:"Maus II",start:23,end:52,overview:"Start Day 2 when you come back. Finish all six checks.",checks:[
+["What is one thing taken from Vladek when he arrives? The U.S. joined the fight against Nazi Germany in 1941. Why did stopping the Nazis matter?"],
+["What does Vladek do to get food, work, or shoes? The Soviet win at Stalingrad hurt Germany. What did prisoners still need?"],
+["What skill helps Vladek in this section? U.S. and Allied troops landed in France on D-Day. Why did pushing back Germany matter to prisoners?"],
+["What does Artie ask or say about his father’s story? U.S. families heard stories from soldiers and survivors. Why should people listen?"],
+["What does Vladek learn about Anja in this section? U.S. and Allied troops were fighting Germany in Europe. Why did Vladek want to reach her?"],
+["What does Vladek do to help Anja? In 1944, the U.S. made a rescue board for people in danger. What does the page show people needed?"]
+],facts:[
+"After Pearl Harbor, the U.S. joined the war against Germany and Japan.",
+"The Soviet Union won a major battle at Stalingrad in 1943.",
+"On D-Day in 1944, U.S. and Allied troops landed in France.",
+"After the war, people in the U.S. learned from soldiers and survivors.",
+"U.S. and Allied troops fought Germany from the west. Soviet troops fought from the east.",
+"In 1944, the U.S. made the War Refugee Board to help rescue people from Nazi danger."
+]},
+{id:"wwii-graphic-reading-day3",day:"Day 3",title:"The Holocaust and the U.S. response",book:"Anne Frank’s Diary: The Graphic Adaptation",start:45,end:74,overview:"Start Day 3 when you come back. Finish all six checks.",checks:[
+["Find one rule for the Secret Annex. Before the war, U.S. rules made it hard for refugees to enter. Why did Anne’s family need a hiding place?"],
+["What do you see happening to Jewish people on these pages? The U.S. turned away a refugee ship in 1939. Why did people need a safe place?"],
+["Name one feeling Anne writes about. The U.S. joined the war in 1941, but danger in Europe continued. What does her diary show?"],
+["Find one thing Anne or her family does each day. U.S. families also changed daily life during the war. How is hiding different?"],
+["Choose one page. What do you see Anne doing or feeling? In the U.S., people heard news about the war. How was Anne’s life different?"],
+["What is one normal thing Anne writes about on July 26, 1943? The U.S. was fighting Germany then. How did Anne’s family still have to live?"]
+],facts:[
+"The Secret Annex had rules to help Anne’s family stay hidden.",
+"In 1939, the U.S. turned away the St. Louis, a ship carrying Jewish refugees.",
+"The U.S. joined the war in 1941, but Nazi danger in Europe continued.",
+"People in the U.S. faced rationing. Anne’s family had to hide from the Nazis.",
+"People in the U.S. heard war news. Anne wrote from a hiding place.",
+"Anne’s diary says July 26, 1943 was a very busy and upsetting day. U.S. troops were fighting Germany."
+]}
+];
 const API='https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit';
-let dayIndex=0,checkIndex=0,pageNow=1;
+let dayIndex=0,checkIndex=0,pageNow=1,sectionStart=1,sectionEnd=5;
 const $=id=>document.getElementById(id);
 const answerKey=(d,i)=>'wwii-reading-'+DAYS[d].id+'-'+i;
 function getAnswer(i){return localStorage.getItem(answerKey(dayIndex,i))||''}
 function saveCurrent(){localStorage.setItem(answerKey(dayIndex,checkIndex),$('answerBox').value);updateProgress()}
 function updateProgress(){const d=DAYS[dayIndex],done=d.checks.filter((_,i)=>getAnswer(i).trim()).length;$('answerProgress').textContent=done+' of 6 answers done';$('progressFill').style.width=(done/6*100)+'%'}
-function setPage(n){const d=DAYS[dayIndex];pageNow=Math.max(d.start,Math.min(d.end,Number(n)||d.start));$('currentPage').textContent='Page '+pageNow+' · today '+d.start+'–'+d.end;$('viewer').src=d.viewer+'#page='+pageNow+'&view=FitH'}
-function showCheck(){const d=DAYS[dayIndex],c=d.checks[checkIndex],start=d.start+checkIndex*5,end=start+4;$('assignmentTitle').textContent=d.day;$('checkTitle').textContent='Read pages '+start+'–'+end;$('checkCount').textContent=(checkIndex+1)+' / 6';$('dayPlan').textContent=d.overview;$('factText').textContent=c[0];$('questionText').textContent=c[1];$('answerBox').value=getAnswer(checkIndex);$('prevCheck').disabled=checkIndex===0;$('nextCheck').disabled=checkIndex===5;updateProgress();setPage(start)}
-function showDay(i){saveCurrent();dayIndex=i;checkIndex=0;const d=DAYS[i];document.querySelectorAll('.day-tab').forEach((b,n)=>b.classList.toggle('active',n===i));$('dayLabel').textContent=d.day;$('bookTitle').textContent=d.book;$('openSource').href=d.source;$('studentName').value=localStorage.getItem('wwii-reading-name')||'';showCheck()}
+function setPage(n){pageNow=Math.max(sectionStart,Math.min(sectionEnd,Number(n)||sectionStart));const d=DAYS[dayIndex];$('currentPage').textContent='Page '+pageNow+' of '+sectionEnd+' (this section)';$('pageImage').src='pages/day'+(dayIndex+1)+'-'+String(pageNow).padStart(3,'0')+'.jpg';$('pageImage').alt='Scanned '+d.book+' page '+pageNow;$('prevPage').disabled=pageNow===sectionStart;$('nextPage').disabled=pageNow===sectionEnd}
+function showCheck(){const d=DAYS[dayIndex],start=d.start+checkIndex*5,end=start+4;sectionStart=start;sectionEnd=end;$('assignmentTitle').textContent=d.day;$('checkTitle').textContent='Read pages '+start+'–'+end;$('checkCount').textContent=(checkIndex+1)+' / 6';$('pageRange').textContent='Only pages '+start+'–'+end+' are shown in this section.';$('dayPlan').textContent=d.overview;$('factText').textContent=d.facts[checkIndex];$('questionText').textContent=d.checks[checkIndex][0];$('answerBox').value=getAnswer(checkIndex);$('prevCheck').disabled=checkIndex===0;$('nextCheck').disabled=checkIndex===5;updateProgress();setPage(start)}
+function showDay(i){saveCurrent();dayIndex=i;checkIndex=0;const d=DAYS[i];document.querySelectorAll('.day-tab').forEach((b,n)=>b.classList.toggle('active',n===i));$('dayLabel').textContent=d.day;$('bookTitle').textContent=d.book;$('studentName').value=localStorage.getItem('wwii-reading-name')||'';$('status').textContent='';showCheck()}
 $('dayTabs').innerHTML=DAYS.map((d,i)=>'<button type="button" class="day-tab'+(i===0?' active':'')+'" data-day="'+i+'">'+d.day+'</button>').join('');document.querySelectorAll('.day-tab').forEach(b=>b.addEventListener('click',()=>showDay(Number(b.dataset.day))));
 $('studentName').addEventListener('input',()=>localStorage.setItem('wwii-reading-name',$('studentName').value));$('answerBox').addEventListener('input',()=>{saveCurrent();$('status').textContent='Saved on this device.'});
 $('prevPage').addEventListener('click',()=>setPage(pageNow-1));$('nextPage').addEventListener('click',()=>setPage(pageNow+1));
@@ -60,4 +121,5 @@ $('prevCheck').addEventListener('click',()=>{saveCurrent();if(checkIndex>0){chec
 $('nextCheck').addEventListener('click',()=>{saveCurrent();if(checkIndex<5){checkIndex++;showCheck()}});
 $('submitBtn').addEventListener('click',async()=>{saveCurrent();const name=$('studentName').value.trim(),d=DAYS[dayIndex],status=$('status'),btn=$('submitBtn');status.className='status';if(!name){status.textContent='Type your name first.';status.classList.add('error');$('studentName').focus();return}const answers=Object.fromEntries(d.checks.map((_,i)=>['check'+(i+1),getAnswer(i).trim()]));if(Object.values(answers).some(v=>!v)){status.textContent='Answer all 6 questions first.';status.classList.add('error');return}btn.disabled=true;status.textContent='Sending…';try{const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({studentName:name,assignmentId:d.id,answers})});const result=await res.json();if(!res.ok)throw new Error(result.error||'Could not turn this in. Try again.');status.textContent='Turned in! Your teacher has your work.';status.classList.add('success')}catch(err){status.textContent=err instanceof Error?err.message:'Could not turn this in. Try again.';status.classList.add('error')}finally{btn.disabled=false}});
 showDay(0);
-</script></body></html>
+</script>
+</body></html>
