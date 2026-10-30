@@ -1,6 +1,7 @@
 // List of every activity that turns work in, and which class it belongs to.
-// The teacher dashboard uses this to put each turn-in under the right tab.
-// To add a new activity: copy one line, change the id, title, course, and path (its folder).
+// The teacher dashboard uses this to put each turn-in under the right tab,
+// grouped by unit and sorted by day (matching the Schoology day posts).
+// To add a new activity: copy one line, change the id, title, course, unit, day, and path (its folder).
 // course must be one of: "us-history", "world-history", "sociology", "government", "civics"
 window.CLASS_COURSES = {
   "us-history":    "U.S. History",
@@ -10,45 +11,68 @@ window.CLASS_COURSES = {
   "civics":        "Civics"
 };
 
+// Unit names for each class (same order and numbers as the Schoology unit pages).
+window.CLASS_UNITS = {
+  "us-history": {
+    1: "Roaring 20s & the Great Depression",
+    2: "World War II"
+  },
+  "world-history": {
+    1: "Imperialism & the World Wars (1800–1945)"
+  },
+  "sociology": {
+    1: "Foundations, Perspectives & Methods",
+    2: "Culture, Institutions & Society"
+  },
+  "government": {
+    1: "Foundations of the U.S. Constitution"
+  },
+  "civics": {
+    1: "The Missing Constitution"
+  }
+};
+
 window.CLASS_ASSIGNMENTS = {
-  // ---- World History ----
-  "divide-africa-day1":          { course: "world-history", title: "Day 1 · Divide Africa", path: "divide-africa/" },
-  "day-2-hanoi-rat-hunt":        { course: "world-history", title: "Day 2 · The Great Hanoi Rat Hunt", path: "day-2-hanoi/" },
-  "pacific-case-files":          { course: "world-history", title: "Day 3 · Pacific Case Files", path: "pacific-case-files/" },
-  "wwi-alliance-chain-reaction": { course: "world-history", title: "Day 4 · WWI Alliance Chain Reaction", path: "wwi-alliance-chain-reaction/" },
-  "write-the-peace-treaty":      { course: "world-history", title: "Day 6 · Cartoon Decoder", path: "write-the-peace-treaty/" },
-  "day6-world-in-crisis":        { course: "world-history", title: "Day 6 · A World in Crisis", path: "day6-world-in-crisis/" },
-  "day7-maus-reading-checks":    { course: "world-history", title: "Day 7 · Maus I Reading Checks", path: "day7-maus/" },
-  "day8-wwii-combined":          { course: "world-history", title: "Day 8 · WWII Decisions & Warning Signs", path: "day8-wwii-decision-map/" },
-  "day8-wwii-decision-map":      { course: "world-history", title: "Day 8 · Decision Map (older version)" },
-  "day7-warning-signs":          { course: "world-history", title: "Day 8 · Warning Signs (older version)" },
-  "day9-maus2-reading-checks":   { course: "world-history", title: "Day 9 · Maus II Reading Checks", path: "day9-maus2/" },
-  "day9-anne-frank-quick-write": { course: "world-history", title: "Anne Frank Diary Quick Write", path: "day9-anne-frank-quick-write/" },
+  // ---- World History · Unit 1 ----
+  "divide-africa-day1":          { course: "world-history", unit: 1, day: 1, title: "Day 1 · Divide Africa", path: "divide-africa/" },
+  "day-2-hanoi-rat-hunt":        { course: "world-history", unit: 1, day: 2, title: "Day 2 · The Great Hanoi Rat Hunt", path: "day-2-hanoi/" },
+  "pacific-case-files":          { course: "world-history", unit: 1, day: 3, title: "Day 3 · Pacific Case Files", path: "pacific-case-files/" },
+  "wwi-alliance-chain-reaction": { course: "world-history", unit: 1, day: 4, title: "Day 4 · WWI Alliance Chain Reaction", path: "wwi-alliance-chain-reaction/" },
+  "write-the-peace-treaty":      { course: "world-history", unit: 1, day: 5, title: "Day 5 · Cartoon Decoder", path: "write-the-peace-treaty/" },
+  "day6-world-in-crisis":        { course: "world-history", unit: 1, day: 6, title: "Day 6 · A World in Crisis", path: "day6-world-in-crisis/" },
+  "day7-maus-reading-checks":    { course: "world-history", unit: 1, day: 7, title: "Day 7 · Maus I Reading Checks", path: "day7-maus/" },
+  "day7-warning-signs":          { course: "world-history", unit: 1, day: 7, title: "Day 7 · Spot the Warning Signs", path: "day7-warning-signs/" },
+  "day8-wwii-combined":          { course: "world-history", unit: 1, day: 8, title: "Day 8 · WWII Decisions & Warning Signs", path: "day8-wwii-decision-map/" },
+  "day8-wwii-decision-map":      { course: "world-history", unit: 1, day: 8, title: "Day 8 · Decision Map (older version)" },
+  "day9-maus2-reading-checks":   { course: "world-history", unit: 1, day: 9, title: "Day 9 · Maus II Reading Checks", path: "day9-maus2/" },
+  "day9-anne-frank-quick-write": { course: "world-history", unit: 1, day: 9, title: "Day 9 · Anne Frank Diary Quick Write", path: "day9-anne-frank-quick-write/" },
 
-  // ---- U.S. History ----
-  "wwii-graphic-reading-day1":   { course: "us-history", title: "WWII Graphic Reading · Day 1", path: "wwii-graphic-reading/#day1" },
-  "wwii-graphic-reading-day2":   { course: "us-history", title: "WWII Graphic Reading · Day 2", path: "wwii-graphic-reading/#day2" },
-  "wwii-graphic-reading-day3":   { course: "us-history", title: "WWII Graphic Reading · Day 3", path: "wwii-graphic-reading/#day3" },
-  "wwii-graphic-reading-day4":   { course: "us-history", title: "WWII Graphic Reading · Day 4", path: "wwii-graphic-reading/#day4" },
-  "wwii-graphic-reading-day5":   { course: "us-history", title: "WWII Graphic Reading · Day 5", path: "wwii-graphic-reading/#day5" },
+  // ---- U.S. History · Unit 2 (World War II) ----
+  "wwii-graphic-reading-day1":   { course: "us-history", unit: 2, day: 1, title: "Day 1 · WWII Graphic Reading", path: "wwii-graphic-reading/#day1" },
+  "wwii-graphic-reading-day2":   { course: "us-history", unit: 2, day: 2, title: "Day 2 · WWII Graphic Reading", path: "wwii-graphic-reading/#day2" },
+  "wwii-graphic-reading-day3":   { course: "us-history", unit: 2, day: 3, title: "Day 3 · WWII Graphic Reading", path: "wwii-graphic-reading/#day3" },
+  "wwii-graphic-reading-day4":   { course: "us-history", unit: 2, day: 4, title: "Day 4 · WWII Graphic Reading", path: "wwii-graphic-reading/#day4" },
+  "wwii-graphic-reading-day5":   { course: "us-history", unit: 2, day: 5, title: "Day 5 · WWII Graphic Reading", path: "wwii-graphic-reading/#day5" },
 
-  // ---- Sociology ----
-  "sociology-theory-casebook":        { course: "sociology", title: "Theory Casebook", path: "day-4-theory-casebook/" },
-  "sociology-unit2-arrival-culture":  { course: "sociology", title: "Unit 2 · The Arrival: A New Culture", path: "sociology/arrival-culture/" },
-  "sociology-day-1-reading":                  { course: "sociology", title: "Day 1 · What Is Sociology? (Reading)", path: "sociology/day-1-reading/" },
-  "sociology-day-2-sociological-imagination": { course: "sociology", title: "Day 2 · The Sociological Imagination (Reading)", path: "sociology/day-2-sociological-imagination/" },
-  "sociology-day-3-founders":                 { course: "sociology", title: "Day 3 · Origins and Founders (Reading)", path: "sociology/day-3-founders/" },
-  "sociology-day-4-perspectives":             { course: "sociology", title: "Day 4 · Sociological Perspectives (Reading)", path: "sociology/day-4-perspectives/" },
-  "sociology-day-7-research-ethics":          { course: "sociology", title: "Day 7 · Ethics in Sociological Research (Reading)", path: "sociology/day-7-research-ethics/" },
+  // ---- Sociology · Unit 1 ----
+  "sociology-day-1-reading":                  { course: "sociology", unit: 1, day: 1, title: "Day 1 · What Is Sociology? (Reading)", path: "sociology/day-1-reading/" },
+  "sociology-day-2-sociological-imagination": { course: "sociology", unit: 1, day: 2, title: "Day 2 · The Sociological Imagination (Reading)", path: "sociology/day-2-sociological-imagination/" },
+  "sociology-day-3-founders":                 { course: "sociology", unit: 1, day: 3, title: "Day 3 · Origins and Founders (Reading)", path: "sociology/day-3-founders/" },
+  "sociology-day-4-perspectives":             { course: "sociology", unit: 1, day: 4, title: "Day 4 · Sociological Perspectives (Reading)", path: "sociology/day-4-perspectives/" },
+  "sociology-theory-casebook":                { course: "sociology", unit: 1, day: 4, title: "Day 4 · Theory Casebook", path: "day-4-theory-casebook/" },
+  "sociology-day-7-research-ethics":          { course: "sociology", unit: 1, day: 7, title: "Day 7 · Ethics in Sociological Research (Reading)", path: "sociology/day-7-research-ethics/" },
 
-  // ---- Government ----
-  "gov-democracy-visualized-day1":    { course: "government", title: "Day 1 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day1" },
-  "gov-democracy-visualized-day2":    { course: "government", title: "Day 2 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day2" },
-  "gov-democracy-visualized-day7":    { course: "government", title: "Day 7 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day7" },
-  "gov-democracy-visualized-day9":    { course: "government", title: "Day 9 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day9" },
+  // ---- Sociology · Unit 2 ----
+  "sociology-unit2-arrival-culture":          { course: "sociology", unit: 2, day: 2, title: "Day 2 · The Arrival: A New Culture", path: "sociology/arrival-culture/" },
 
-  // ---- Civics (Iowa civics test prep) ----
-  "civics-test-s1-founders-defense":  { course: "civics", title: "Civics Test Section 1 · Founders' Defense", path: "civics/civics-test-s1-founders-defense/" }
+  // ---- Government · Unit 1 ----
+  "gov-democracy-visualized-day1":    { course: "government", unit: 1, day: 1, title: "Day 1 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day1" },
+  "gov-democracy-visualized-day2":    { course: "government", unit: 1, day: 2, title: "Day 2 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day2" },
+  "gov-democracy-visualized-day7":    { course: "government", unit: 1, day: 7, title: "Day 7 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day7" },
+  "gov-democracy-visualized-day9":    { course: "government", unit: 1, day: 9, title: "Day 9 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day9" },
+
+  // ---- Civics (Iowa civics test prep) · Friday 1 ----
+  "civics-test-s1-founders-defense":  { course: "civics", unit: 1, title: "Founders' Defense", path: "civics/civics-test-s1-founders-defense/" }
 };
 
 // Works out the class for any id, even one not listed above.
