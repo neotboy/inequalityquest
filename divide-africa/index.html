@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#15364b">
 <title>Divide Africa | Read, Solve &amp; Color</title>
 <style>
-:root{--navy:#15364b;--navy2:#23485d;--teal:#087e83;--ink:#203341;--muted:#526673;--paper:#f2f6f7;--line:#d5e0e5;--card:#fff;--britain:#e9bf5a;--france:#78addb;--belgium:#d78da0;--independent:#96b99c;--focus:#ffbf47}
+:root{--navy:#15364b;--navy2:#23485d;--teal:#087e83;--ink:#203341;--muted:#526673;--paper:#f2f6f7;--line:#d5e0e5;--card:#fff;--britain:#e9bf5a;--france:#78addb;--belgium:#d78da0;--independent:#96b99c;--germany:#a796d6;--italy:#ee9a5d;--portugal:#c4ad83;--focus:#ffbf47}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
@@ -150,6 +150,30 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 .turn-in-status{grid-column:1/-1;min-height:22px;font-weight:750;color:#315469}
 .turn-in-status.success{color:#1c6749}.turn-in-status.error{color:#9b3932}
 @media(max-width:600px){.turn-in{margin:0 10px;grid-template-columns:1fr}.turn-in button{width:100%}}
+
+/* v2 fixes */
+.fact-grid{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))!important;gap:9px!important}
+.fact{display:block!important;padding:10px 12px!important}
+.fact strong{display:flex;align-items:center;gap:7px;margin-bottom:3px}
+.fact p{font-size:15px;line-height:1.45}
+.fact b{color:var(--navy)}
+.facts[hidden]{display:none!important}
+.clue-text{font-size:19px!important;background:#f5f9fa;border-left:4px solid var(--teal);padding:12px 14px;border-radius:8px;margin:0 0 14px!important}
+#clue-prompt{font-weight:800;font-size:18px;margin:0 0 12px}
+.clue-reveal{margin:12px 0 0;padding:12px 14px;border-radius:9px;background:#e8f5ec;color:#1d6542;font-weight:850;font-size:17px}
+.clue-reveal[hidden]{display:none}
+.map-marker{cursor:pointer;pointer-events:all}
+.map-marker circle{stroke-width:2.5}
+.map-marker text{font-size:17px!important;pointer-events:none}
+.map-marker:hover circle{fill:var(--teal)}
+.transfer-list{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+.transfer-item{cursor:pointer;font:inherit;font-size:14px;color:var(--ink);text-align:left}
+.transfer-item:hover{border-color:var(--teal)}
+.transfer-item.done{background:#e8f5ec;border-color:#b9d8c4}
+.transfer-item.done::after{content:"✓";margin-left:auto;color:#1d6542;font-weight:900}
+.color-choice{display:flex;align-items:center;justify-content:center;gap:8px}
+.map-card .map-svg{width:min(100%,620px)!important;max-height:72vh!important}
+@media(max-width:850px){.transfer-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 </style>
 <script src="../shared/assignments.js?v=20261030d"></script><script src="../shared/turnin.js?v=20261030d"></script></head>
 <body>
@@ -158,45 +182,50 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 <main id="activity">
 <section class="intro" aria-label="Activity facts and name">
 <div class="facts">
-<div class="facts-head"><h2>FIRST: WHO CONTROLLED WHAT?</h2></div>
-<p>Read these short facts. Use them to solve the six questions below.</p>
+<div class="facts-head"><h2>STEP 1: READ — WHO CONTROLLED AFRICA BY 1914?</h2></div>
+<p>Read all seven cards. You will need them to solve the mystery places below. They disappear in Part 2.</p>
 <div class="fact-grid">
-<div class="fact"><strong>BRITAIN</strong><p>Controlled Egypt to protect the Suez Canal. It also controlled Nigeria and South Africa, where trade, gold, and diamonds mattered.</p></div>
-<div class="fact"><strong>FRANCE</strong><p>Controlled Algeria in North Africa and sent French settlers there.</p></div>
-<div class="fact"><strong>BELGIUM</strong><p>Controlled the Congo in Central Africa and forced many people to collect rubber.</p></div>
-<div class="fact"><strong>INDEPENDENT</strong><p>Ethiopia defeated an Italian invasion in 1896. It kept its own government instead of becoming an Italian colony.</p></div>
+<div class="fact"><strong><span class="swatch" style="background:var(--britain)"></span>BRITAIN</strong><p>Wanted a short sea route to its colony in India, so it took over <b>Egypt</b> and the Suez Canal. It also ruled <b>Nigeria</b>, where British companies bought palm oil, and <b>South Africa</b>, where miners dug gold and diamonds.</p></div>
+<div class="fact"><strong><span class="swatch" style="background:var(--france)"></span>FRANCE</strong><p>Ruled the most land in Africa, mostly in the north and west. In <b>Algeria</b>, hundreds of thousands of European settlers moved in and took farmland from Algerians.</p></div>
+<div class="fact"><strong><span class="swatch" style="background:var(--belgium)"></span>BELGIUM</strong><p>King Leopold II owned the <b>Congo</b> as his personal property. People were forced to collect rubber and were beaten or killed if they fell short. In 1908, Belgium's government took over.</p></div>
+<div class="fact"><strong><span class="swatch" style="background:var(--germany)"></span>GERMANY</strong><p>Wanted colonies to prove it was a world power. In German East Africa (today's <b>Tanzania</b>), it forced farmers to grow cotton. People fought back in the Maji Maji uprising of 1905.</p></div>
+<div class="fact"><strong><span class="swatch" style="background:var(--italy)"></span>ITALY</strong><p>Tried to conquer Ethiopia and lost. Then, in 1911, Italy attacked the Ottoman Empire and took <b>Libya</b>, a desert land just across the sea from Italy.</p></div>
+<div class="fact"><strong><span class="swatch" style="background:var(--portugal)"></span>PORTUGAL</strong><p>Arrived in <b>Angola</b> in the 1500s and shipped enslaved Africans across the Atlantic. By 1914 it controlled most of Angola and forced many people to work for little or no pay.</p></div>
+<div class="fact"><strong><span class="swatch" style="background:var(--independent)"></span>INDEPENDENT</strong><p>Only two African countries stayed free. <b>Ethiopia</b>'s army beat Italy at the Battle of Adwa in 1896. <b>Liberia</b>, settled by freed Black Americans, kept its own government.</p></div>
 </div>
 </div>
 <div class="name-card"><label for="student-name">Name:</label><input id="student-name" autocomplete="name"></div>
 </section>
 <section class="workflow" aria-label="Two-part activity">
 <section class="phase" id="phase-one" aria-labelledby="phase-one-title">
-<div class="phase-banner"><div><span class="phase-kicker">PART 1 OF 2</span><h2 id="phase-one-title">DECIPHER THE CLUES</h2></div><span class="phase-time">Plan for 20–25 minutes</span></div>
-<p class="phase-directions">Work on your own. Read the facts above, then solve all six clues one at a time. Choose a power. If you miss one, the choices will shuffle. Try again before moving on.</p>
+<div class="phase-banner"><div><span class="phase-kicker">PART 1 OF 2</span><h2 id="phase-one-title">SOLVE 10 MYSTERY PLACES</h2></div><span class="phase-time">About 20–25 minutes total</span></div>
+<p class="phase-directions"><b>Step 2:</b> Read each clue and match it to a fact card. Pick who controlled the place, then answer why. Wrong answers reshuffle — read again and retry. <b>Step 3:</b> Color the map from memory and turn it in.</p>
 <div class="clue-box">
-<div class="clue-top"><span id="clue-number" class="clue-number">CLUE 1 OF 6</span><div class="progress-track" role="progressbar" aria-label="Clues solved" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0"><span id="progress-fill"></span></div></div>
-<h3 id="clue-title">1. EGYPT</h3>
-<p id="clue-prompt">Which power wanted to protect a canal used by ships?</p>
+<div class="clue-top"><span id="clue-number" class="clue-number">CLUE 1 OF 6</span><div class="progress-track" role="progressbar" aria-label="Clues solved" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><span id="progress-fill"></span></div></div>
+<h3 id="clue-title">Mystery place #1</h3>
+<p id="clue-text" class="clue-text"></p>
+<p id="clue-prompt"></p>
 <div id="clue-choices" class="choices" role="group" aria-label="Choose the controlling power"></div>
 <div id="clue-feedback" class="feedback" aria-live="polite"></div>
+<p id="clue-reveal" class="clue-reveal" aria-live="polite" hidden></p>
 <div class="clue-actions"><button id="clue-next" class="primary-button" type="button" hidden>Next clue</button></div>
 </div>
 <div id="part-one-done" class="part-done" hidden>
-<div class="done-mark" aria-hidden="true">✓</div><div><h3>All six clues solved</h3><p>Use your answers in Part 2 to color the map.</p></div>
+<div class="done-mark" aria-hidden="true">✓</div><div><h3>All ten places solved</h3><p>Next, color the map from memory. The fact cards will be hidden.</p></div>
 <button id="open-map" class="primary-button" type="button">Go to Part 2: Color the map</button>
 </div>
 </section>
 <section class="phase map-phase" id="phase-two" aria-labelledby="phase-two-title" hidden>
-<div class="phase-banner"><div><span class="phase-kicker">PART 2 OF 2</span><h2 id="phase-two-title">ASSIGN THE COLORS</h2></div><span id="map-status" class="phase-time" aria-live="polite">0 of 6 places colored</span></div>
-<p class="phase-directions">Use the answers you solved in Part 1. Select a numbered country on the map, then choose its power to color it.</p>
-<div class="transfer-list" id="answer-transfer" aria-label="Your answers from Part 1"></div>
+<div class="phase-banner"><div><span class="phase-kicker">PART 2 OF 2</span><h2 id="phase-two-title">ASSIGN THE COLORS</h2></div><span id="map-status" class="phase-time" aria-live="polite">0 of 10 places colored</span></div>
+<p class="phase-directions">Click a numbered place (on the map or in the list), then pick the power that controlled it. A wrong pick won't color — think back and try again.</p>
+<div class="transfer-list" id="answer-transfer" aria-label="Places to color"></div>
 <div class="map-workspace">
 <section class="map-card" aria-labelledby="map-heading">
-<div class="card-head"><div class="head-title"><span class="head-icon" aria-hidden="true">⌖</span><h3 id="map-heading">AFRICA MAP</h3></div><span class="map-hint">Select a numbered country</span></div>
+<div class="card-head"><div class="head-title"><span class="head-icon" aria-hidden="true">⌖</span><h3 id="map-heading">AFRICA MAP</h3></div><span class="map-hint">Click a number or a shaded place</span></div>
 <div class="map-wrap"><svg class="map-svg" viewBox="0 0 730 780" role="group" aria-labelledby="map-title map-desc">
 <title id="map-title">Political map of Africa</title>
-<desc id="map-desc">Country borders are shown. Numbered areas are Egypt, Algeria, Nigeria, Congo, South Africa, and Ethiopia. Select a numbered country with a mouse or keyboard to move to its clue.</desc>
-<path class="country-shape" d="M406.4,517.2 L407.9,521.9 L406.6,525.7 L407.3,529.1 L389.0,529.0 L388.6,560.8 L394.5,569.0 L400.3,575.2 L384.1,579.3 L362.8,577.9 L356.7,573.1 L321.0,573.5 L319.7,574.2 L314.5,569.7 L308.8,569.4 L303.5,571.1 L299.3,573.0 L298.4,566.7 L299.7,557.9 L302.7,548.8 L303.1,544.5 L306.0,535.5 L308.1,531.4 L313.2,524.8 L316.0,520.4 L316.9,513.0 L316.4,507.3 L313.8,503.7 L311.5,497.7 L309.3,491.7 L309.8,489.6 L312.5,485.6 L309.8,476.0 L308.0,469.3 L303.6,462.9 L304.4,461.0 L308.1,459.7 L310.6,459.8 L313.7,458.6 L339.7,458.8 L341.8,466.2 L344.4,472.2 L346.4,475.5 L349.8,480.7 L355.6,479.9 L358.5,478.5 L363.3,479.9 L364.7,477.4 L366.9,471.6 L372.3,471.2 L372.8,469.4 L377.3,469.4 L376.5,473.0 L387.2,472.9 L387.4,479.2 L389.2,483.1 L387.9,489.1 L388.5,495.2 L391.4,498.9 L391.0,510.8 L393.1,509.9 L397.0,510.2 L402.4,508.7 L406.4,509.3 L407.4,512.4 L406.4,517.2 Z M303.2,457.9 L300.9,450.4 L304.4,446.1 L307.1,444.4 L310.4,447.8 L307.2,449.9 L305.7,452.5 L305.4,456.8 L303.2,457.9 Z" aria-hidden="true"></path>
+<desc id="map-desc">Modern country borders. Ten numbered places: Egypt, Algeria, Congo, Libya, Tanzania, Nigeria, Angola, Ethiopia, South Africa, and Liberia.</desc>
+<path class="country-shape target" data-country="angola" role="button" tabindex="0" aria-label="7. Angola" aria-current="false" d="M406.4,517.2 L407.9,521.9 L406.6,525.7 L407.3,529.1 L389.0,529.0 L388.6,560.8 L394.5,569.0 L400.3,575.2 L384.1,579.3 L362.8,577.9 L356.7,573.1 L321.0,573.5 L319.7,574.2 L314.5,569.7 L308.8,569.4 L303.5,571.1 L299.3,573.0 L298.4,566.7 L299.7,557.9 L302.7,548.8 L303.1,544.5 L306.0,535.5 L308.1,531.4 L313.2,524.8 L316.0,520.4 L316.9,513.0 L316.4,507.3 L313.8,503.7 L311.5,497.7 L309.3,491.7 L309.8,489.6 L312.5,485.6 L309.8,476.0 L308.0,469.3 L303.6,462.9 L304.4,461.0 L308.1,459.7 L310.6,459.8 L313.7,458.6 L339.7,458.8 L341.8,466.2 L344.4,472.2 L346.4,475.5 L349.8,480.7 L355.6,479.9 L358.5,478.5 L363.3,479.9 L364.7,477.4 L366.9,471.6 L372.3,471.2 L372.8,469.4 L377.3,469.4 L376.5,473.0 L387.2,472.9 L387.4,479.2 L389.2,483.1 L387.9,489.1 L388.5,495.2 L391.4,498.9 L391.0,510.8 L393.1,509.9 L397.0,510.2 L402.4,508.7 L406.4,509.3 L407.4,512.4 L406.4,517.2 Z M303.2,457.9 L300.9,450.4 L304.4,446.1 L307.1,444.4 L310.4,447.8 L307.2,449.9 L305.7,452.5 L305.4,456.8 L303.2,457.9 Z"></path>
 <path class="country-shape" d="M454.2,445.0 L453.6,432.9 L451.4,428.4 L456.8,429.2 L459.5,423.5 L464.1,424.1 L464.6,428.1 L466.5,430.3 L466.6,433.6 L464.4,435.7 L461.0,440.9 L457.8,444.5 L454.2,445.0 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M219.7,337.4 L212.4,338.6 L210.2,331.7 L210.6,308.7 L208.9,306.7 L208.5,301.7 L205.5,298.2 L202.8,295.3 L203.9,290.0 L206.9,288.9 L208.7,284.5 L213.0,283.6 L215.0,280.6 L217.9,277.7 L221.1,277.6 L227.8,283.4 L227.4,286.7 L229.4,292.7 L227.7,296.7 L228.6,299.4 L224.3,305.6 L221.6,308.6 L220.0,314.9 L220.2,321.3 L219.7,337.4 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M215.0,280.6 L213.0,283.6 L208.7,284.5 L206.9,288.9 L203.9,290.0 L196.2,289.8 L192.1,289.0 L189.3,290.6 L185.4,289.9 L170.1,290.4 L169.9,296.0 L171.1,303.6 L165.1,301.0 L161.0,301.4 L157.9,303.9 L153.9,301.8 L152.4,298.5 L148.4,296.3 L147.9,290.5 L150.3,286.2 L150.1,282.9 L157.0,274.6 L158.3,267.7 L160.7,265.3 L165.0,266.6 L168.7,264.6 L169.9,262.0 L176.7,257.5 L178.4,254.4 L186.6,250.3 L191.5,248.8 L193.7,250.8 L199.3,250.7 L198.6,255.6 L199.8,260.1 L204.7,266.6 L205.0,271.5 L215.2,273.7 L215.0,280.6 Z" aria-hidden="true"></path>
@@ -204,13 +233,13 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 <path class="country-shape" d="M330.5,325.8 L337.7,325.0 L339.4,322.5 L340.8,322.7 L343.0,324.9 L354.1,321.1 L357.8,317.2 L362.4,313.7 L361.5,310.2 L364.0,309.3 L372.5,309.9 L380.8,305.2 L387.2,294.3 L391.6,290.3 L397.2,288.6 L398.2,292.9 L403.3,299.1 L403.3,303.2 L401.9,307.3 L402.4,310.5 L405.5,313.3 L412.2,317.7 L417.0,321.7 L417.1,325.0 L423.0,330.2 L426.7,334.5 L428.9,340.5 L435.5,344.5 L436.9,347.7 L434.0,348.7 L428.3,348.5 L421.7,347.4 L418.5,348.3 L417.1,350.7 L414.3,351.0 L410.8,348.9 L401.0,353.9 L397.0,352.9 L395.8,353.7 L393.2,359.7 L386.6,357.8 L380.2,356.8 L374.6,353.1 L367.3,349.7 L362.6,352.9 L359.2,358.0 L358.4,365.0 L352.7,364.4 L346.8,362.7 L341.5,368.0 L336.9,377.3 L336.0,374.4 L335.6,369.9 L331.6,366.6 L328.3,361.5 L327.6,357.9 L323.4,352.7 L324.1,349.7 L323.2,345.5 L323.9,337.7 L326.0,335.9 L330.5,325.8 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M148.4,296.3 L152.4,298.5 L153.9,301.8 L157.9,303.9 L161.0,301.4 L165.1,301.0 L171.1,303.6 L173.5,317.8 L169.7,326.2 L167.4,337.5 L171.3,346.1 L170.9,350.1 L166.9,350.2 L160.7,348.2 L155.1,348.3 L144.7,350.1 L138.5,352.9 L129.8,356.6 L128.1,356.4 L128.8,348.1 L129.7,346.9 L129.4,342.9 L125.7,338.7 L122.9,338.1 L120.3,335.3 L122.2,330.9 L121.3,326.0 L121.7,323.1 L123.1,323.1 L123.6,318.8 L123.0,316.8 L123.8,315.4 L127.1,314.2 L124.9,306.2 L122.9,302.1 L123.6,298.7 L125.3,297.9 L126.5,297.0 L128.9,298.5 L135.7,298.6 L137.3,295.7 L138.9,295.9 L141.4,294.8 L142.8,299.0 L144.8,297.8 L148.4,296.3 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M330.5,325.8 L326.0,335.9 L323.9,337.7 L323.2,345.5 L324.1,349.7 L323.4,352.7 L327.6,357.9 L328.3,361.5 L331.6,366.6 L335.6,369.9 L336.0,374.4 L336.9,377.3 L336.3,382.7 L329.3,380.4 L322.2,377.7 L311.1,377.3 L310.0,376.8 L304.8,378.1 L299.4,376.7 L295.2,377.4 L280.9,377.2 L282.2,369.3 L278.8,362.7 L274.7,361.0 L273.0,356.5 L270.7,355.0 L270.8,352.3 L273.1,345.2 L277.3,335.6 L279.8,335.5 L285.0,329.6 L288.4,329.4 L293.3,333.6 L299.4,330.2 L300.2,326.0 L302.2,322.0 L303.5,316.9 L308.2,312.8 L310.0,305.8 L311.9,303.6 L313.1,298.4 L315.4,292.0 L322.9,284.3 L323.3,281.0 L324.3,279.1 L320.8,275.2 L321.1,272.0 L323.6,271.4 L327.1,277.8 L327.6,284.4 L327.3,291.1 L332.1,300.2 L327.2,300.1 L324.7,300.8 L320.7,299.8 L318.8,304.5 L324.0,310.3 L327.8,312.0 L329.1,316.2 L331.8,323.1 L330.5,325.8 Z" aria-hidden="true"></path>
-<path class="country-shape target" data-country="congo" role="button" tabindex="0" aria-label="4. Congo" aria-current="false" d="M406.4,509.3 L402.4,508.7 L397.0,510.2 L393.1,509.9 L391.0,510.8 L391.4,498.9 L388.5,495.2 L387.9,489.1 L389.2,483.1 L387.4,479.2 L387.2,472.9 L376.5,473.0 L377.3,469.4 L372.8,469.4 L372.3,471.2 L366.9,471.6 L364.7,477.4 L363.3,479.9 L358.5,478.5 L355.6,479.9 L349.8,480.7 L346.4,475.5 L344.4,472.2 L341.8,466.2 L339.7,458.8 L313.7,458.6 L310.6,459.8 L308.1,459.7 L304.4,461.0 L303.2,457.9 L305.4,456.8 L305.7,452.5 L307.2,449.9 L310.4,447.8 L312.7,448.8 L315.7,445.0 L320.5,445.1 L321.0,447.9 L324.3,449.7 L329.5,443.4 L334.6,438.6 L336.9,435.4 L336.6,427.1 L340.4,417.4 L344.4,412.3 L350.2,407.4 L351.2,404.2 L351.4,400.6 L352.9,397.1 L352.4,391.4 L353.5,382.6 L355.2,376.3 L357.9,371.0 L358.4,365.0 L359.2,358.0 L362.6,352.9 L367.3,349.7 L374.6,353.1 L380.2,356.8 L386.6,357.8 L393.2,359.7 L395.8,353.7 L397.0,352.9 L401.0,353.9 L410.8,348.9 L414.3,351.0 L417.1,350.7 L418.5,348.3 L421.7,347.4 L428.3,348.5 L434.0,348.7 L436.9,347.7 L442.2,355.9 L446.2,357.1 L448.5,355.4 L452.6,356.1 L457.5,354.0 L459.6,358.3 L467.3,364.9 L467.3,364.9 L466.8,376.6 L470.3,378.0 L467.5,381.5 L464.1,384.2 L460.8,389.4 L458.9,394.0 L458.4,402.1 L456.4,405.9 L456.3,413.4 L453.8,416.2 L453.4,422.2 L452.2,422.9 L451.4,428.4 L453.6,432.9 L454.2,445.0 L455.8,454.2 L454.9,459.4 L456.7,465.2 L461.8,470.8 L466.5,483.4 L466.5,483.4 L463.0,482.4 L451.2,484.1 L448.9,485.3 L446.4,491.6 L448.3,496.1 L446.8,507.9 L445.7,517.9 L448.1,519.7 L454.2,523.6 L456.6,521.8 L457.4,532.6 L450.6,532.5 L447.0,527.0 L443.8,522.7 L437.0,521.3 L435.0,516.1 L429.7,519.2 L422.6,517.8 L419.7,513.3 L414.1,512.4 L410.0,512.6 L409.5,509.5 L406.4,509.3 Z"><title>4. Congo</title></path>
+<path class="country-shape target" data-country="congo" role="button" tabindex="0" aria-label="3. Congo" aria-current="false" d="M406.4,509.3 L402.4,508.7 L397.0,510.2 L393.1,509.9 L391.0,510.8 L391.4,498.9 L388.5,495.2 L387.9,489.1 L389.2,483.1 L387.4,479.2 L387.2,472.9 L376.5,473.0 L377.3,469.4 L372.8,469.4 L372.3,471.2 L366.9,471.6 L364.7,477.4 L363.3,479.9 L358.5,478.5 L355.6,479.9 L349.8,480.7 L346.4,475.5 L344.4,472.2 L341.8,466.2 L339.7,458.8 L313.7,458.6 L310.6,459.8 L308.1,459.7 L304.4,461.0 L303.2,457.9 L305.4,456.8 L305.7,452.5 L307.2,449.9 L310.4,447.8 L312.7,448.8 L315.7,445.0 L320.5,445.1 L321.0,447.9 L324.3,449.7 L329.5,443.4 L334.6,438.6 L336.9,435.4 L336.6,427.1 L340.4,417.4 L344.4,412.3 L350.2,407.4 L351.2,404.2 L351.4,400.6 L352.9,397.1 L352.4,391.4 L353.5,382.6 L355.2,376.3 L357.9,371.0 L358.4,365.0 L359.2,358.0 L362.6,352.9 L367.3,349.7 L374.6,353.1 L380.2,356.8 L386.6,357.8 L393.2,359.7 L395.8,353.7 L397.0,352.9 L401.0,353.9 L410.8,348.9 L414.3,351.0 L417.1,350.7 L418.5,348.3 L421.7,347.4 L428.3,348.5 L434.0,348.7 L436.9,347.7 L442.2,355.9 L446.2,357.1 L448.5,355.4 L452.6,356.1 L457.5,354.0 L459.6,358.3 L467.3,364.9 L467.3,364.9 L466.8,376.6 L470.3,378.0 L467.5,381.5 L464.1,384.2 L460.8,389.4 L458.9,394.0 L458.4,402.1 L456.4,405.9 L456.3,413.4 L453.8,416.2 L453.4,422.2 L452.2,422.9 L451.4,428.4 L453.6,432.9 L454.2,445.0 L455.8,454.2 L454.9,459.4 L456.7,465.2 L461.8,470.8 L466.5,483.4 L466.5,483.4 L463.0,482.4 L451.2,484.1 L448.9,485.3 L446.4,491.6 L448.3,496.1 L446.8,507.9 L445.7,517.9 L448.1,519.7 L454.2,523.6 L456.6,521.8 L457.4,532.6 L450.6,532.5 L447.0,527.0 L443.8,522.7 L437.0,521.3 L435.0,516.1 L429.7,519.2 L422.6,517.8 L419.7,513.3 L414.1,512.4 L410.0,512.6 L409.5,509.5 L406.4,509.3 Z"><title>4. Congo</title></path>
 <path class="country-shape" d="M310.4,447.8 L307.1,444.4 L304.4,446.1 L300.9,450.4 L293.6,439.8 L300.3,434.3 L297.0,427.7 L300.0,425.1 L306.0,423.9 L306.7,419.5 L311.4,424.3 L319.1,424.7 L321.8,420.0 L322.9,413.3 L322.0,405.5 L317.8,399.6 L321.6,388.0 L319.4,386.0 L312.9,386.9 L310.4,381.7 L311.1,377.3 L322.2,377.7 L329.3,380.4 L336.3,382.7 L336.9,377.3 L341.5,368.0 L346.8,362.7 L352.7,364.4 L358.4,365.0 L357.9,371.0 L355.2,376.3 L353.5,382.6 L352.4,391.4 L352.9,397.1 L351.4,400.6 L351.2,404.2 L350.2,407.4 L344.4,412.3 L340.4,417.4 L336.6,427.1 L336.9,435.4 L334.6,438.6 L329.5,443.4 L324.3,449.7 L321.0,447.9 L320.5,445.1 L315.7,445.0 L312.7,448.8 L310.4,447.8 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M575.1,273.0 L577.2,276.1 L576.9,280.3 L571.9,282.6 L575.7,285.4 L572.4,290.7 L570.5,288.9 L568.4,289.7 L563.4,289.5 L563.3,286.4 L562.6,283.7 L565.6,279.0 L568.7,274.6 L572.5,275.4 L575.1,273.0 Z" aria-hidden="true"></path>
 <path class="country-shape target" data-country="algeria" role="button" tabindex="0" aria-label="2. Algeria" aria-current="false" d="M233.6,208.4 L223.8,209.4 L223.7,203.1 L219.6,201.4 L214.1,198.6 L212.0,193.9 L182.4,172.1 L152.7,150.3 L119.6,126.0 L119.7,124.1 L119.7,123.4 L119.7,111.6 L133.9,104.2 L142.7,102.7 L149.9,100.0 L153.2,95.0 L163.5,91.0 L163.9,83.6 L169.0,82.8 L173.0,79.1 L184.5,77.4 L186.1,73.5 L183.8,71.4 L180.7,60.8 L180.2,54.7 L176.9,48.3 L185.4,42.9 L194.9,41.1 L200.4,37.0 L208.9,33.9 L223.8,32.2 L238.4,31.3 L242.8,32.8 L251.1,28.9 L260.5,28.8 L264.1,31.1 L270.1,30.5 L268.3,35.7 L269.7,45.2 L267.6,53.4 L262.2,59.0 L263.0,66.6 L270.2,72.5 L270.3,74.9 L275.7,79.0 L279.4,96.9 L282.3,105.8 L282.8,110.4 L281.2,118.6 L281.9,123.1 L280.7,128.6 L281.5,134.9 L278.0,139.1 L283.2,146.3 L283.5,150.6 L286.7,156.2 L290.8,154.4 L297.7,159.0 L301.6,165.3 L271.4,184.3 L246.0,204.0 L233.6,208.4 Z"><title>2. Algeria</title></path>
 <path class="country-shape target" data-country="egypt" role="button" tabindex="0" aria-label="1. Egypt" aria-current="false" d="M520.4,180.0 L485.5,180.0 L451.4,180.0 L416.0,180.0 L416.0,143.2 L416.0,107.6 L413.4,99.6 L415.6,93.4 L414.3,89.1 L417.5,84.3 L429.2,84.1 L437.6,86.8 L446.4,89.7 L450.4,91.3 L457.2,88.1 L460.8,85.3 L468.6,84.4 L474.9,85.7 L477.3,90.7 L479.3,87.4 L486.3,89.8 L493.2,90.3 L497.5,87.8 L497.5,87.8 L502.4,102.4 L503.3,105.0 L500.8,109.0 L499.0,116.6 L496.6,121.8 L494.5,123.5 L491.6,120.3 L487.6,115.8 L481.3,101.5 L480.4,102.4 L484.1,112.9 L489.5,123.0 L496.1,138.6 L499.4,144.0 L502.2,149.7 L510.1,160.7 L508.3,162.5 L508.6,169.0 L518.9,178.0 L520.4,180.0 Z"><title>1. Egypt</title></path>
 <path class="country-shape" d="M575.1,273.0 L572.5,275.4 L568.7,274.6 L565.7,271.3 L562.1,265.5 L558.2,262.3 L555.9,258.8 L548.2,254.8 L542.2,254.7 L540.1,252.6 L534.9,254.9 L529.6,250.4 L526.8,257.9 L516.6,255.8 L515.6,251.8 L519.4,237.1 L520.3,230.4 L523.1,227.4 L529.6,225.7 L534.0,220.0 L539.1,231.6 L541.5,240.8 L546.4,245.6 L558.4,255.1 L563.3,260.8 L568.0,266.6 L570.8,270.0 L575.1,273.0 Z" aria-hidden="true"></path>
-<path class="country-shape target" data-country="ethiopia" role="button" tabindex="0" aria-label="6. Ethiopia" aria-current="false" d="M568.7,274.6 L565.6,279.0 L562.6,283.7 L563.3,286.4 L563.4,289.5 L568.4,289.7 L570.5,288.9 L572.4,290.7 L570.5,294.3 L573.8,299.8 L577.0,304.6 L580.4,308.2 L609.1,320.0 L616.5,320.0 L591.7,350.0 L580.2,350.4 L572.4,357.5 L566.7,357.7 L564.3,360.8 L558.3,360.8 L554.8,357.4 L546.7,361.6 L544.1,365.8 L538.3,365.0 L536.3,363.8 L534.2,364.1 L531.5,364.0 L520.3,355.5 L514.2,355.5 L511.2,352.2 L511.2,346.6 L506.6,344.9 L501.4,334.1 L497.4,331.7 L495.9,327.7 L491.4,322.9 L486.0,322.2 L489.0,316.5 L493.7,316.2 L495.0,313.2 L494.9,304.2 L497.5,293.7 L501.6,290.9 L502.5,286.8 L506.3,279.2 L511.6,274.2 L515.2,264.4 L516.6,255.8 L526.8,257.9 L529.6,250.4 L534.9,254.9 L540.1,252.6 L542.2,254.7 L548.2,254.8 L555.9,258.8 L558.2,262.3 L562.1,265.5 L565.7,271.3 L568.7,274.6 Z"><title>6. Ethiopia</title></path>
+<path class="country-shape target" data-country="ethiopia" role="button" tabindex="0" aria-label="8. Ethiopia" aria-current="false" d="M568.7,274.6 L565.6,279.0 L562.6,283.7 L563.3,286.4 L563.4,289.5 L568.4,289.7 L570.5,288.9 L572.4,290.7 L570.5,294.3 L573.8,299.8 L577.0,304.6 L580.4,308.2 L609.1,320.0 L616.5,320.0 L591.7,350.0 L580.2,350.4 L572.4,357.5 L566.7,357.7 L564.3,360.8 L558.3,360.8 L554.8,357.4 L546.7,361.6 L544.1,365.8 L538.3,365.0 L536.3,363.8 L534.2,364.1 L531.5,364.0 L520.3,355.5 L514.2,355.5 L511.2,352.2 L511.2,346.6 L506.6,344.9 L501.4,334.1 L497.4,331.7 L495.9,327.7 L491.4,322.9 L486.0,322.2 L489.0,316.5 L493.7,316.2 L495.0,313.2 L494.9,304.2 L497.5,293.7 L501.6,290.9 L502.5,286.8 L506.3,279.2 L511.6,274.2 L515.2,264.4 L516.6,255.8 L526.8,257.9 L529.6,250.4 L534.9,254.9 L540.1,252.6 L542.2,254.7 L548.2,254.8 L555.9,258.8 L558.2,262.3 L562.1,265.5 L565.7,271.3 L568.7,274.6 Z"><title>6. Ethiopia</title></path>
 <path class="country-shape" d="M295.2,377.4 L299.4,376.7 L304.8,378.1 L310.0,376.8 L311.1,377.3 L310.4,381.7 L312.9,386.9 L319.4,386.0 L321.6,388.0 L317.8,399.6 L322.0,405.5 L322.9,413.3 L321.8,420.0 L319.1,424.7 L311.4,424.3 L306.7,419.5 L306.0,423.9 L300.0,425.1 L297.0,427.7 L300.3,434.3 L293.6,439.8 L284.6,429.7 L278.8,421.4 L273.4,411.1 L273.7,407.8 L275.6,404.6 L277.8,397.3 L279.5,389.9 L282.5,389.3 L295.3,389.4 L295.2,377.4 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M171.1,303.6 L169.9,296.0 L170.1,290.4 L185.4,289.9 L189.3,290.6 L192.1,289.0 L196.2,289.8 L195.6,292.9 L199.2,298.1 L199.2,305.3 L200.1,313.2 L202.3,316.9 L200.3,325.9 L201.0,330.9 L203.4,337.2 L205.3,340.7 L191.5,346.6 L186.6,350.0 L178.7,352.9 L170.9,350.1 L171.3,346.1 L167.4,337.5 L169.7,326.2 L173.5,317.8 L171.1,303.6 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M125.3,297.9 L123.6,298.7 L122.9,302.1 L124.9,306.2 L127.1,314.2 L123.8,315.4 L123.0,316.8 L123.6,318.8 L123.1,323.1 L121.7,323.1 L119.2,322.9 L117.5,326.9 L115.0,326.9 L113.3,324.7 L113.8,320.7 L110.2,314.6 L107.9,315.7 L106.0,315.9 L103.6,316.5 L103.7,312.8 L102.2,310.2 L102.5,307.3 L100.6,303.1 L98.2,299.5 L91.1,299.5 L89.1,301.4 L86.7,301.6 L85.1,303.8 L84.1,306.6 L79.4,311.0 L75.6,305.1 L72.1,301.1 L69.9,299.8 L67.7,297.9 L66.7,293.4 L65.4,291.2 L62.9,289.6 L66.8,284.7 L69.4,284.9 L71.7,283.2 L73.7,283.2 L75.1,281.9 L74.3,278.6 L75.3,277.5 L75.4,274.1 L79.7,274.2 L86.0,276.7 L87.9,276.5 L88.6,275.3 L93.4,276.1 L94.7,275.6 L95.2,279.2 L96.6,279.2 L98.9,277.9 L100.3,278.2 L102.8,280.8 L106.5,281.6 L109.0,279.4 L111.8,278.1 L113.9,276.7 L115.7,276.9 L117.6,279.1 L118.7,281.9 L122.3,286.1 L120.5,288.6 L120.1,291.9 L122.0,290.9 L123.1,292.1 L122.6,295.1 L125.3,297.9 Z" aria-hidden="true"></path>
@@ -218,8 +247,8 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 <path class="country-shape" d="M75.4,274.1 L75.3,277.5 L74.3,278.6 L75.1,281.9 L73.7,283.2 L71.7,283.2 L69.4,284.9 L66.8,284.7 L62.9,289.6 L58.2,285.4 L54.5,284.8 L52.4,281.9 L52.5,280.4 L49.8,278.3 L49.2,276.2 L53.9,274.5 L56.8,274.8 L59.2,273.7 L75.4,274.1 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M280.9,377.2 L295.2,377.4 L295.3,389.4 L282.5,389.3 L279.5,389.9 L277.9,388.4 L280.9,377.2 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M506.6,344.9 L511.2,346.6 L511.2,352.2 L514.2,355.5 L520.3,355.5 L531.5,364.0 L534.2,364.1 L536.3,363.8 L538.3,365.0 L544.1,365.8 L546.7,361.6 L554.8,357.4 L558.3,360.8 L564.3,360.8 L556.6,372.2 L556.7,408.6 L561.9,416.8 L555.8,420.8 L553.6,425.0 L550.3,425.7 L549.1,432.8 L546.2,436.8 L544.5,443.5 L541.0,446.8 L528.3,436.8 L527.7,431.0 L495.8,410.6 L494.4,409.5 L494.3,398.9 L496.8,394.9 L501.1,388.2 L504.3,380.9 L500.4,369.5 L499.4,364.4 L495.2,357.5 L500.7,351.5 L506.6,344.9 Z" aria-hidden="true"></path>
-<path class="country-shape" d="M121.7,323.1 L121.3,326.0 L122.2,330.9 L120.3,335.3 L122.9,338.1 L125.7,338.7 L129.4,342.9 L129.7,346.9 L128.8,348.1 L128.1,356.4 L125.8,356.4 L116.8,351.7 L108.8,344.1 L101.3,338.6 L95.3,332.1 L97.4,328.9 L97.9,326.0 L101.9,320.6 L106.0,315.9 L107.9,315.7 L110.2,314.6 L113.8,320.7 L113.3,324.7 L115.0,326.9 L117.5,326.9 L119.2,322.9 L121.7,323.1 Z" aria-hidden="true"></path>
-<path class="country-shape" d="M301.6,165.3 L297.7,159.0 L290.8,154.4 L286.7,156.2 L283.5,150.6 L283.2,146.3 L278.0,139.1 L281.5,134.9 L280.7,128.6 L281.9,123.1 L281.2,118.6 L282.8,110.4 L282.3,105.8 L279.4,96.9 L283.7,94.6 L284.5,90.4 L283.6,86.2 L289.6,82.4 L292.3,79.2 L296.6,76.3 L297.1,68.6 L307.4,72.1 L311.1,71.2 L318.5,72.9 L330.2,77.3 L334.3,86.2 L342.2,88.2 L354.6,92.4 L364.0,97.3 L368.3,94.7 L372.5,90.1 L370.4,82.5 L373.2,77.6 L379.5,72.9 L385.6,71.6 L397.5,73.6 L400.5,78.1 L403.8,78.1 L406.6,79.8 L415.3,81.0 L417.5,84.3 L414.3,89.1 L415.6,93.4 L413.4,99.6 L416.0,107.6 L416.0,143.2 L416.0,180.0 L416.0,200.0 L405.9,200.0 L405.8,204.2 L370.7,185.0 L335.6,165.9 L326.7,171.4 L320.5,175.1 L315.5,169.6 L301.6,165.3 Z" aria-hidden="true"></path>
+<path class="country-shape target" data-country="liberia" role="button" tabindex="0" aria-label="10. Liberia" aria-current="false" d="M121.7,323.1 L121.3,326.0 L122.2,330.9 L120.3,335.3 L122.9,338.1 L125.7,338.7 L129.4,342.9 L129.7,346.9 L128.8,348.1 L128.1,356.4 L125.8,356.4 L116.8,351.7 L108.8,344.1 L101.3,338.6 L95.3,332.1 L97.4,328.9 L97.9,326.0 L101.9,320.6 L106.0,315.9 L107.9,315.7 L110.2,314.6 L113.8,320.7 L113.3,324.7 L115.0,326.9 L117.5,326.9 L119.2,322.9 L121.7,323.1 Z"></path>
+<path class="country-shape target" data-country="libya" role="button" tabindex="0" aria-label="4. Libya" aria-current="false" d="M301.6,165.3 L297.7,159.0 L290.8,154.4 L286.7,156.2 L283.5,150.6 L283.2,146.3 L278.0,139.1 L281.5,134.9 L280.7,128.6 L281.9,123.1 L281.2,118.6 L282.8,110.4 L282.3,105.8 L279.4,96.9 L283.7,94.6 L284.5,90.4 L283.6,86.2 L289.6,82.4 L292.3,79.2 L296.6,76.3 L297.1,68.6 L307.4,72.1 L311.1,71.2 L318.5,72.9 L330.2,77.3 L334.3,86.2 L342.2,88.2 L354.6,92.4 L364.0,97.3 L368.3,94.7 L372.5,90.1 L370.4,82.5 L373.2,77.6 L379.5,72.9 L385.6,71.6 L397.5,73.6 L400.5,78.1 L403.8,78.1 L406.6,79.8 L415.3,81.0 L417.5,84.3 L414.3,89.1 L415.6,93.4 L413.4,99.6 L416.0,107.6 L416.0,143.2 L416.0,180.0 L416.0,200.0 L405.9,200.0 L405.8,204.2 L370.7,185.0 L335.6,165.9 L326.7,171.4 L320.5,175.1 L315.5,169.6 L301.6,165.3 Z"></path>
 <path class="country-shape" d="M451.0,689.6 L454.1,692.6 L451.4,697.4 L449.9,700.7 L445.0,702.3 L443.3,705.5 L440.2,706.5 L433.6,698.8 L438.3,692.4 L443.1,688.5 L447.2,686.5 L451.0,689.6 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M176.9,48.3 L180.2,54.7 L180.7,60.8 L183.8,71.4 L186.1,73.5 L184.5,77.4 L173.0,79.1 L169.0,82.8 L163.9,83.6 L163.5,91.0 L153.2,95.0 L149.9,100.0 L142.7,102.7 L133.9,104.2 L119.7,111.6 L119.7,123.4 L118.4,123.4 L118.6,128.8 L113.2,129.1 L110.3,131.4 L106.3,131.4 L103.1,130.1 L95.7,131.2 L92.9,139.0 L90.1,139.7 L86.0,152.3 L73.8,163.1 L70.9,176.9 L67.2,181.4 L66.2,185.0 L46.4,185.8 L46.2,185.8 L46.6,181.1 L50.0,178.4 L52.9,173.2 L52.3,169.8 L55.4,162.8 L60.3,156.4 L63.2,154.8 L65.5,149.0 L65.8,143.6 L68.9,137.5 L74.8,133.8 L80.4,123.6 L80.5,123.5 L85.0,119.6 L93.1,118.5 L100.1,111.7 L104.5,109.0 L111.8,100.7 L109.6,88.2 L113.0,79.6 L114.2,74.4 L119.8,67.6 L128.6,63.0 L135.2,58.9 L141.0,48.5 L143.8,42.4 L150.3,42.4 L155.6,46.7 L164.0,46.0 L173.1,48.2 L176.9,48.3 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M632.0,524.7 L634.3,529.0 L636.5,535.6 L637.9,547.6 L640.2,552.3 L639.3,557.1 L637.8,560.0 L634.8,554.1 L633.1,557.1 L634.8,564.5 L634.0,568.8 L631.6,571.1 L631.0,579.5 L627.6,591.2 L623.2,605.0 L617.8,623.9 L614.4,637.8 L610.4,649.4 L603.3,651.8 L595.6,656.0 L590.5,653.5 L583.5,649.9 L581.1,644.6 L580.5,635.7 L577.4,627.8 L576.6,620.6 L578.2,613.4 L582.3,611.6 L582.3,608.3 L586.5,600.7 L587.3,594.4 L585.2,589.6 L583.6,583.3 L582.9,574.1 L585.9,568.5 L587.1,562.2 L591.5,561.8 L596.4,559.7 L599.7,557.9 L603.5,557.8 L608.6,552.1 L615.8,545.9 L618.4,540.9 L617.2,536.6 L621.0,537.8 L625.8,530.9 L626.0,524.9 L628.9,520.4 L632.0,524.7 Z" aria-hidden="true"></path>
@@ -229,7 +258,7 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 <path class="country-shape" d="M500.1,515.2 L497.7,522.8 L500.1,535.8 L503.2,535.7 L506.4,538.9 L510.0,546.1 L510.8,559.0 L507.0,561.1 L504.3,568.0 L498.6,561.8 L497.9,554.8 L499.8,550.1 L499.2,546.1 L495.8,543.6 L493.3,544.5 L488.3,539.7 L483.7,537.1 L486.3,527.8 L489.1,524.4 L487.4,516.1 L489.2,508.0 L490.7,505.3 L488.4,496.8 L484.3,492.3 L492.9,494.2 L494.7,496.9 L497.7,501.6 L500.1,515.2 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M299.3,573.0 L303.5,571.1 L308.8,569.4 L314.5,569.7 L319.7,574.2 L321.0,573.5 L356.7,573.1 L362.8,577.9 L384.1,579.3 L400.3,575.2 L407.5,573.0 L413.2,573.5 L416.7,575.8 L416.7,576.6 L411.8,578.9 L409.1,578.9 L403.5,582.8 L400.1,578.7 L386.6,582.2 L380.0,582.5 L379.8,618.1 L371.1,618.5 L371.1,647.7 L371.1,684.6 L363.2,689.7 L358.5,690.5 L353.0,688.6 L349.0,687.8 L347.5,683.6 L344.1,680.8 L339.8,685.8 L333.3,678.2 L329.9,670.9 L327.9,661.2 L325.7,653.9 L322.8,638.5 L322.6,626.6 L321.5,621.1 L318.0,617.0 L313.5,608.7 L308.9,596.7 L307.0,590.5 L299.8,580.7 L299.3,573.0 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M227.8,283.4 L221.1,277.6 L217.9,277.7 L215.0,280.6 L215.2,273.7 L205.0,271.5 L204.7,266.6 L199.8,260.1 L198.6,255.6 L199.3,250.7 L204.9,250.3 L208.2,246.8 L220.2,245.9 L228.0,244.3 L228.8,238.2 L233.6,231.5 L233.6,208.4 L246.0,204.0 L271.4,184.3 L301.6,165.3 L315.5,169.6 L320.5,175.1 L326.7,171.4 L328.9,186.9 L332.1,189.5 L332.3,192.7 L335.9,196.1 L334.0,200.4 L330.6,220.7 L330.2,233.7 L319.0,243.2 L315.2,256.3 L318.8,260.0 L318.8,266.5 L324.4,266.7 L323.6,271.4 L321.1,272.0 L320.8,275.2 L319.2,275.4 L313.2,264.4 L311.1,264.0 L304.3,269.6 L297.4,266.7 L292.7,266.1 L290.2,267.5 L285.0,267.2 L279.8,271.5 L275.3,271.7 L264.7,266.6 L260.5,269.0 L256.0,268.8 L252.7,265.1 L243.9,261.3 L234.4,262.5 L232.1,264.7 L230.9,270.4 L228.4,274.5 L227.8,283.4 Z" aria-hidden="true"></path>
-<path class="country-shape target" data-country="nigeria" role="button" tabindex="0" aria-label="3. Nigeria" aria-current="false" d="M219.7,337.4 L220.2,321.3 L220.0,314.9 L221.6,308.6 L224.3,305.6 L228.6,299.4 L227.7,296.7 L229.4,292.7 L227.4,286.7 L227.8,283.4 L228.4,274.5 L230.9,270.4 L232.1,264.7 L234.4,262.5 L243.9,261.3 L252.7,265.1 L256.0,268.8 L260.5,269.0 L264.7,266.6 L275.3,271.7 L279.8,271.5 L285.0,267.2 L290.2,267.5 L292.7,266.1 L297.4,266.7 L304.3,269.6 L311.1,264.0 L313.2,264.4 L319.2,275.4 L320.8,275.2 L324.3,279.1 L323.3,281.0 L322.9,284.3 L315.4,292.0 L313.1,298.4 L311.9,303.6 L310.0,305.8 L308.2,312.8 L303.5,316.9 L302.2,322.0 L300.2,326.0 L299.4,330.2 L293.3,333.6 L288.4,329.4 L285.0,329.6 L279.8,335.5 L277.3,335.6 L273.1,345.2 L270.8,352.3 L261.7,355.9 L258.3,355.4 L254.9,357.6 L247.9,357.4 L243.2,351.1 L240.3,343.9 L234.1,337.3 L227.5,337.4 L219.7,337.4 Z"><title>3. Nigeria</title></path>
+<path class="country-shape target" data-country="nigeria" role="button" tabindex="0" aria-label="6. Nigeria" aria-current="false" d="M219.7,337.4 L220.2,321.3 L220.0,314.9 L221.6,308.6 L224.3,305.6 L228.6,299.4 L227.7,296.7 L229.4,292.7 L227.4,286.7 L227.8,283.4 L228.4,274.5 L230.9,270.4 L232.1,264.7 L234.4,262.5 L243.9,261.3 L252.7,265.1 L256.0,268.8 L260.5,269.0 L264.7,266.6 L275.3,271.7 L279.8,271.5 L285.0,267.2 L290.2,267.5 L292.7,266.1 L297.4,266.7 L304.3,269.6 L311.1,264.0 L313.2,264.4 L319.2,275.4 L320.8,275.2 L324.3,279.1 L323.3,281.0 L322.9,284.3 L315.4,292.0 L313.1,298.4 L311.9,303.6 L310.0,305.8 L308.2,312.8 L303.5,316.9 L302.2,322.0 L300.2,326.0 L299.4,330.2 L293.3,333.6 L288.4,329.4 L285.0,329.6 L279.8,335.5 L277.3,335.6 L273.1,345.2 L270.8,352.3 L261.7,355.9 L258.3,355.4 L254.9,357.6 L247.9,357.4 L243.2,351.1 L240.3,343.9 L234.1,337.3 L227.5,337.4 L219.7,337.4 Z"><title>3. Nigeria</title></path>
 <path class="country-shape" d="M464.1,424.1 L459.5,423.5 L456.8,429.2 L451.4,428.4 L452.2,422.9 L453.4,422.2 L453.8,416.2 L456.3,413.4 L458.4,414.4 L463.7,411.3 L467.2,417.0 L466.7,422.9 L464.1,424.1 L464.1,424.1 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M119.7,123.4 L119.7,124.1 L119.6,126.0 L119.6,141.2 L90.7,140.7 L91.0,166.3 L82.7,167.2 L80.6,172.3 L82.2,186.7 L47.8,186.7 L45.8,190.0 L46.2,185.8 L46.4,185.8 L66.2,185.0 L67.2,181.4 L70.9,176.9 L73.8,163.1 L86.0,152.3 L90.1,139.7 L92.9,139.0 L95.7,131.2 L103.1,130.1 L106.3,131.4 L110.3,131.4 L113.2,129.1 L118.6,128.8 L118.4,123.4 L119.7,123.4 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M412.2,317.7 L405.5,313.3 L402.4,310.5 L401.9,307.3 L403.3,303.2 L403.3,299.1 L398.2,292.9 L397.2,288.6 L397.3,286.2 L394.1,283.2 L394.0,277.4 L392.1,273.5 L389.0,274.1 L389.9,270.4 L392.2,266.3 L391.2,262.1 L394.1,259.1 L392.3,256.7 L394.6,250.6 L398.6,243.2 L406.2,243.9 L405.8,204.2 L405.9,200.0 L416.0,200.0 L416.0,180.0 L451.4,180.0 L485.5,180.0 L520.4,180.0 L523.3,189.8 L521.3,191.6 L522.6,201.9 L525.8,213.9 L529.2,216.3 L534.0,220.0 L529.6,225.7 L523.1,227.4 L520.3,230.4 L519.4,237.1 L515.6,251.8 L516.6,255.8 L515.2,264.4 L511.6,274.2 L506.3,279.2 L502.5,286.8 L501.6,290.9 L497.5,293.7 L494.9,304.2 L495.0,313.2 L494.9,305.4 L493.7,305.2 L493.8,300.2 L492.8,296.7 L488.2,292.8 L487.2,285.6 L488.2,278.2 L484.1,277.5 L483.5,279.8 L478.3,280.3 L480.4,283.2 L481.1,289.2 L476.3,294.7 L471.9,301.9 L467.4,302.9 L460.0,297.1 L456.6,299.2 L455.7,302.1 L451.2,304.0 L450.9,306.0 L442.1,306.0 L440.9,304.0 L434.6,303.6 L431.4,305.3 L429.0,304.5 L424.5,298.6 L423.0,295.9 L416.6,297.3 L414.2,301.9 L411.9,310.8 L408.9,312.7 L406.2,313.8 L412.2,317.7 Z" aria-hidden="true"></path>
@@ -242,41 +271,46 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 <path class="country-shape" d="M397.2,288.6 L391.6,290.3 L387.2,294.3 L380.8,305.2 L372.5,309.9 L364.0,309.3 L361.5,310.2 L362.4,313.7 L357.8,317.2 L354.1,321.1 L343.0,324.9 L340.8,322.7 L339.4,322.5 L337.7,325.0 L330.5,325.8 L331.8,323.1 L329.1,316.2 L327.8,312.0 L324.0,310.3 L318.8,304.5 L320.7,299.8 L324.7,300.8 L327.2,300.1 L332.1,300.2 L327.3,291.1 L327.6,284.4 L327.1,277.8 L323.6,271.4 L324.4,266.7 L318.8,266.5 L318.8,260.0 L315.2,256.3 L319.0,243.2 L330.2,233.7 L330.6,220.7 L334.0,200.4 L335.9,196.1 L332.3,192.7 L332.1,189.5 L328.9,186.9 L326.7,171.4 L335.6,165.9 L370.7,185.0 L405.8,204.2 L406.2,243.9 L398.6,243.2 L394.6,250.6 L392.3,256.7 L394.1,259.1 L391.2,262.1 L392.2,266.3 L389.9,270.4 L389.0,274.1 L392.1,273.5 L394.0,277.4 L394.1,283.2 L397.3,286.2 L397.2,288.6 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M203.9,290.0 L202.8,295.3 L205.5,298.2 L208.5,301.7 L208.9,306.7 L210.6,308.7 L210.2,331.7 L212.4,338.6 L205.3,340.7 L203.4,337.2 L201.0,330.9 L200.3,325.9 L202.3,316.9 L200.1,313.2 L199.2,305.3 L199.2,298.1 L195.6,292.9 L196.2,289.8 L203.9,290.0 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M279.4,96.9 L275.7,79.0 L270.3,74.9 L270.2,72.5 L263.0,66.6 L262.2,59.0 L267.6,53.4 L269.7,45.2 L268.3,35.7 L270.1,30.5 L279.7,26.5 L285.8,27.7 L285.6,32.8 L293.1,29.1 L293.7,31.0 L289.3,35.9 L289.2,40.5 L292.3,43.0 L291.1,51.7 L285.3,56.7 L287.0,62.1 L291.5,62.3 L293.8,67.1 L297.1,68.6 L296.6,76.3 L292.3,79.2 L289.6,82.4 L283.6,86.2 L284.5,90.4 L283.7,94.6 L279.4,96.9 Z" aria-hidden="true"></path>
-<path class="country-shape" d="M454.2,445.0 L457.8,444.5 L461.0,440.9 L464.4,435.7 L466.6,433.6 L466.5,430.3 L464.6,428.1 L464.1,424.1 L464.1,424.1 L466.7,422.9 L467.2,417.0 L463.7,411.3 L466.8,410.1 L476.4,410.3 L494.4,409.5 L495.8,410.6 L527.7,431.0 L528.3,436.8 L541.0,446.8 L536.9,459.1 L537.4,464.8 L543.1,468.4 L543.3,471.0 L540.9,477.0 L541.4,480.1 L540.8,484.9 L543.9,491.1 L547.6,501.0 L550.8,503.2 L550.8,503.2 L543.8,509.0 L534.2,512.9 L528.9,512.7 L525.7,515.7 L519.6,515.9 L517.3,517.2 L506.7,514.4 L500.1,515.2 L497.7,501.6 L494.7,496.9 L492.9,494.2 L484.3,492.3 L479.3,489.3 L473.7,487.6 L470.2,485.9 L466.5,483.4 L466.5,483.4 L461.8,470.8 L456.7,465.2 L454.9,459.4 L455.8,454.2 L454.2,445.0 Z" aria-hidden="true"></path>
+<path class="country-shape target" data-country="tanzania" role="button" tabindex="0" aria-label="5. Tanzania" aria-current="false" d="M454.2,445.0 L457.8,444.5 L461.0,440.9 L464.4,435.7 L466.6,433.6 L466.5,430.3 L464.6,428.1 L464.1,424.1 L464.1,424.1 L466.7,422.9 L467.2,417.0 L463.7,411.3 L466.8,410.1 L476.4,410.3 L494.4,409.5 L495.8,410.6 L527.7,431.0 L528.3,436.8 L541.0,446.8 L536.9,459.1 L537.4,464.8 L543.1,468.4 L543.3,471.0 L540.9,477.0 L541.4,480.1 L540.8,484.9 L543.9,491.1 L547.6,501.0 L550.8,503.2 L550.8,503.2 L543.8,509.0 L534.2,512.9 L528.9,512.7 L525.7,515.7 L519.6,515.9 L517.3,517.2 L506.7,514.4 L500.1,515.2 L497.7,501.6 L494.7,496.9 L492.9,494.2 L484.3,492.3 L479.3,489.3 L473.7,487.6 L470.2,485.9 L466.5,483.4 L466.5,483.4 L461.8,470.8 L456.7,465.2 L454.9,459.4 L455.8,454.2 L454.2,445.0 Z"></path>
 <path class="country-shape" d="M456.3,413.4 L456.4,405.9 L458.4,402.1 L458.9,394.0 L460.8,389.4 L464.1,384.2 L467.5,381.5 L470.3,378.0 L466.8,376.6 L467.3,364.9 L467.3,364.9 L471.0,362.2 L476.6,364.4 L483.6,362.1 L489.8,362.1 L495.2,357.5 L499.4,364.4 L500.4,369.5 L504.3,380.9 L501.1,388.2 L496.8,394.9 L494.3,398.9 L494.4,409.5 L476.4,410.3 L466.8,410.1 L463.7,411.3 L458.4,414.4 L456.3,413.4 Z" aria-hidden="true"></path>
-<path class="country-shape target" data-country="south-africa" role="button" tabindex="0" aria-label="5. South Africa" aria-current="false" d="M371.1,647.7 L373.5,649.2 L378.7,658.7 L377.9,664.8 L379.8,668.3 L386.1,667.3 L390.5,662.8 L394.7,659.8 L396.9,655.0 L401.1,652.7 L404.9,653.9 L409.1,656.7 L416.2,657.2 L421.8,654.9 L422.7,651.7 L424.3,647.0 L429.1,646.2 L431.7,642.4 L434.7,635.7 L442.6,628.3 L455.0,620.9 L458.6,621.0 L462.8,622.7 L465.8,621.5 L470.5,622.5 L474.7,636.6 L477.0,643.7 L475.4,654.8 L476.2,658.4 L471.7,656.6 L469.2,657.3 L468.4,660.2 L466.0,664.0 L466.0,667.4 L471.3,672.9 L476.4,671.8 L478.2,667.3 L484.9,667.4 L482.7,674.7 L481.7,683.0 L479.4,687.5 L473.4,692.6 L471.7,694.0 L467.9,699.1 L465.5,704.2 L460.5,711.4 L450.5,721.7 L444.3,727.7 L437.7,732.3 L428.5,736.1 L424.0,736.7 L422.9,739.4 L417.5,738.0 L413.2,739.9 L403.6,737.9 L398.3,739.2 L394.7,738.6 L385.6,742.6 L378.1,744.2 L372.6,748.0 L368.6,748.2 L364.9,744.6 L361.9,744.4 L358.1,740.0 L357.7,741.4 L356.6,738.7 L356.6,732.8 L353.7,726.1 L356.6,724.3 L356.4,716.6 L350.6,707.3 L346.2,698.8 L346.2,698.8 L339.8,685.8 L344.1,680.8 L347.5,683.6 L349.0,687.8 L353.0,688.6 L358.5,690.5 L363.2,689.7 L371.1,684.6 L371.1,647.7 Z M451.0,689.6 L447.2,686.5 L443.1,688.5 L438.3,692.4 L433.6,698.8 L440.2,706.5 L443.3,705.5 L445.0,702.3 L449.9,700.7 L451.4,697.4 L454.1,692.6 L451.0,689.6 Z"><title>5. South Africa</title></path>
+<path class="country-shape target" data-country="south-africa" role="button" tabindex="0" aria-label="9. South Africa" aria-current="false" d="M371.1,647.7 L373.5,649.2 L378.7,658.7 L377.9,664.8 L379.8,668.3 L386.1,667.3 L390.5,662.8 L394.7,659.8 L396.9,655.0 L401.1,652.7 L404.9,653.9 L409.1,656.7 L416.2,657.2 L421.8,654.9 L422.7,651.7 L424.3,647.0 L429.1,646.2 L431.7,642.4 L434.7,635.7 L442.6,628.3 L455.0,620.9 L458.6,621.0 L462.8,622.7 L465.8,621.5 L470.5,622.5 L474.7,636.6 L477.0,643.7 L475.4,654.8 L476.2,658.4 L471.7,656.6 L469.2,657.3 L468.4,660.2 L466.0,664.0 L466.0,667.4 L471.3,672.9 L476.4,671.8 L478.2,667.3 L484.9,667.4 L482.7,674.7 L481.7,683.0 L479.4,687.5 L473.4,692.6 L471.7,694.0 L467.9,699.1 L465.5,704.2 L460.5,711.4 L450.5,721.7 L444.3,727.7 L437.7,732.3 L428.5,736.1 L424.0,736.7 L422.9,739.4 L417.5,738.0 L413.2,739.9 L403.6,737.9 L398.3,739.2 L394.7,738.6 L385.6,742.6 L378.1,744.2 L372.6,748.0 L368.6,748.2 L364.9,744.6 L361.9,744.4 L358.1,740.0 L357.7,741.4 L356.6,738.7 L356.6,732.8 L353.7,726.1 L356.6,724.3 L356.4,716.6 L350.6,707.3 L346.2,698.8 L346.2,698.8 L339.8,685.8 L344.1,680.8 L347.5,683.6 L349.0,687.8 L353.0,688.6 L358.5,690.5 L363.2,689.7 L371.1,684.6 L371.1,647.7 Z M451.0,689.6 L447.2,686.5 L443.1,688.5 L438.3,692.4 L433.6,698.8 L440.2,706.5 L443.3,705.5 L445.0,702.3 L449.9,700.7 L451.4,697.4 L454.1,692.6 L451.0,689.6 Z"><title>5. South Africa</title></path>
 <path class="country-shape" d="M400.3,575.2 L394.5,569.0 L388.6,560.8 L389.0,529.0 L407.3,529.1 L406.6,525.7 L407.9,521.9 L406.4,517.2 L407.4,512.4 L406.4,509.3 L409.5,509.5 L410.0,512.6 L414.1,512.4 L419.7,513.3 L422.6,517.8 L429.7,519.2 L435.0,516.1 L437.0,521.3 L443.8,522.7 L447.0,527.0 L450.6,532.5 L457.4,532.6 L456.6,521.8 L454.2,523.6 L448.1,519.7 L445.7,517.9 L446.8,507.9 L448.3,496.1 L446.4,491.6 L448.9,485.3 L451.2,484.1 L463.0,482.4 L466.5,483.4 L470.2,485.9 L473.7,487.6 L479.3,489.3 L484.3,492.3 L488.4,496.8 L490.7,505.3 L489.2,508.0 L487.4,516.1 L489.1,524.4 L486.3,527.8 L483.7,537.1 L488.3,539.7 L461.6,548.0 L462.4,555.1 L455.7,556.4 L450.7,560.4 L449.7,563.9 L446.5,564.7 L438.9,572.9 L434.0,579.4 L431.0,579.6 L428.2,578.5 L418.3,577.4 L416.7,576.6 L416.7,575.8 L413.2,573.5 L407.5,573.0 L400.3,575.2 Z" aria-hidden="true"></path>
 <path class="country-shape" d="M455.0,620.9 L449.4,616.4 L442.6,614.9 L440.0,608.5 L440.0,605.0 L436.2,603.9 L426.3,592.9 L423.5,587.1 L421.7,585.4 L418.3,577.4 L428.2,578.5 L431.0,579.6 L434.0,579.4 L438.9,572.9 L446.5,564.7 L449.7,563.9 L450.7,560.4 L455.7,556.4 L462.4,555.1 L463.0,558.8 L470.3,558.6 L474.4,560.7 L476.3,563.2 L480.5,563.9 L485.1,567.1 L485.1,579.8 L483.4,586.7 L483.0,594.2 L484.4,597.2 L483.4,603.0 L482.1,604.0 L479.8,611.2 L470.5,622.5 L465.8,621.5 L462.8,622.7 L458.6,621.0 L455.0,620.9 Z" aria-hidden="true"></path>
-<g class="map-marker" aria-hidden="true"><circle cx="460.0" cy="140.0" r="13"></circle><text x="460.0" y="144.5">1</text></g>
-<g class="map-marker" aria-hidden="true"><circle cx="222.4" cy="120.0" r="13"></circle><text x="222.4" y="124.5">2</text></g>
-<g class="map-marker" aria-hidden="true"><circle cx="266.4" cy="310.0" r="13"></circle><text x="266.4" y="314.5">3</text></g>
-<g class="map-marker" aria-hidden="true"><circle cx="398.4" cy="430.0" r="13"></circle><text x="398.4" y="434.5">4</text></g>
-<g class="map-marker" aria-hidden="true"><circle cx="407.2" cy="690.0" r="13"></circle><text x="407.2" y="694.5">5</text></g>
-<g class="map-marker" aria-hidden="true"><circle cx="548.0" cy="310.0" r="13"></circle><text x="548.0" y="314.5">6</text></g>
+<g class="map-marker" data-for="egypt" aria-hidden="true"><circle cx="462" cy="135" r="17"></circle><text x="462" y="141">1</text></g>
+<g class="map-marker" data-for="algeria" aria-hidden="true"><circle cx="222" cy="118" r="17"></circle><text x="222" y="124">2</text></g>
+<g class="map-marker" data-for="congo" aria-hidden="true"><circle cx="398" cy="430" r="17"></circle><text x="398" y="436">3</text></g>
+<g class="map-marker" data-for="libya" aria-hidden="true"><circle cx="345" cy="125" r="17"></circle><text x="345" y="131">4</text></g>
+<g class="map-marker" data-for="tanzania" aria-hidden="true"><circle cx="502" cy="468" r="17"></circle><text x="502" y="474">5</text></g>
+<g class="map-marker" data-for="nigeria" aria-hidden="true"><circle cx="268" cy="312" r="17"></circle><text x="268" y="318">6</text></g>
+<g class="map-marker" data-for="angola" aria-hidden="true"><circle cx="350" cy="512" r="17"></circle><text x="350" y="518">7</text></g>
+<g class="map-marker" data-for="ethiopia" aria-hidden="true"><circle cx="545" cy="312" r="17"></circle><text x="545" y="318">8</text></g>
+<g class="map-marker" data-for="south-africa" aria-hidden="true"><circle cx="405" cy="690" r="17"></circle><text x="405" y="696">9</text></g>
+<g class="map-marker" data-for="liberia" aria-hidden="true"><circle cx="98" cy="352" r="17"></circle><text x="98" y="358">10</text></g>
 </svg></div>
 <div class="map-key" aria-label="Color key">
 <div class="key-item"><span class="swatch" style="background:var(--britain)"></span>Britain</div>
 <div class="key-item"><span class="swatch" style="background:var(--france)"></span>France</div>
 <div class="key-item"><span class="swatch" style="background:var(--belgium)"></span>Belgium</div>
+<div class="key-item"><span class="swatch" style="background:var(--germany)"></span>Germany</div>
+<div class="key-item"><span class="swatch" style="background:var(--italy)"></span>Italy</div>
+<div class="key-item"><span class="swatch" style="background:var(--portugal)"></span>Portugal</div>
 <div class="key-item"><span class="swatch" style="background:var(--independent)"></span>Independent</div>
 </div>
-<div class="source-note">Country boundaries: Natural Earth, 1:110m map data.</div>
+<div class="source-note">Today's borders are shown so places are easy to find. Colonial borders in 1914 were often different. Map data: Natural Earth.</div>
 </section>
 <section class="assign-card" aria-labelledby="assign-heading">
 <div class="card-head"><div class="head-title"><span class="head-icon" aria-hidden="true">▣</span><h3 id="assign-heading">COLOR ONE PLACE AT A TIME</h3></div></div>
 <div class="assign-body">
-<p id="assign-help">Select a numbered country on the map to begin.</p>
-<div id="selected-place" class="selected-place" aria-live="polite">No country selected</div>
-<p id="solved-answer" class="solved-answer" hidden></p>
+<p id="assign-help">Select a numbered place to begin.</p>
+<div id="selected-place" class="selected-place" aria-live="polite">No place selected</div>
 <div id="color-choices" class="color-choices" role="group" aria-label="Choose a color for the selected country"></div>
 <div id="color-feedback" class="feedback" aria-live="polite"></div>
 </div>
-<div class="assign-footer"><button id="clear-map" class="secondary-button" type="button">Clear map colors</button></div>
-<div id="map-complete" class="map-complete" aria-live="polite" hidden>All six places are colored.</div>
+<div id="map-complete" class="map-complete" aria-live="polite" hidden>All ten places are colored correctly. Turn in your work below.</div>
 </section>
 </div>
 <section class="turn-in" aria-labelledby="turn-in-heading">
-<div><h3 id="turn-in-heading">Turn in your Day 1 activity</h3><p>Enter your name above and color all six places before you turn it in.</p></div>
+<div><h3 id="turn-in-heading">Turn in your Day 1 activity</h3><p>Enter your first name and last initial at the top, and color all ten places.</p></div>
 <button id="turn-in-button" class="primary-button" type="button">Turn in to teacher</button>
 <p id="turn-in-status" class="turn-in-status" role="status" aria-live="polite"></p>
 </section>
@@ -284,181 +318,179 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 </section>
 </main>
 <script>
-const questions=[{"id":"egypt","title":"1. EGYPT","prompt":"Which power wanted to protect a canal used by ships?","answer":"Britain","evidence":0},{"id":"algeria","title":"2. ALGERIA","prompt":"Which power sent settlers to this North African place?","answer":"France","evidence":1},{"id":"nigeria","title":"3. NIGERIA","prompt":"Which power controlled this West African place for trade?","answer":"Britain","evidence":0},{"id":"congo","title":"4. CONGO","prompt":"Which power forced people here to collect rubber?","answer":"Belgium","evidence":2},{"id":"south-africa","title":"5. SOUTH AFRICA","prompt":"Which power valued the gold and diamonds here?","answer":"Britain","evidence":0},{"id":"ethiopia","title":"6. ETHIOPIA","prompt":"Did this country keep its own government after defeating Italy?","answer":"Independent","evidence":3}];
-const evidenceFacts=["Britain controlled Egypt to protect the Suez Canal. It also controlled Nigeria and South Africa, where trade, gold, and diamonds mattered.","France controlled Algeria in North Africa and sent French settlers there.","Belgium controlled the Congo in Central Africa and forced many people to collect rubber.","Ethiopia defeated an Italian invasion in 1896. It kept its own government instead of becoming an Italian colony."];
-const powers=["Britain","France","Belgium","Independent"];
-const colors={Britain:"var(--britain)",France:"var(--france)",Belgium:"var(--belgium)",Independent:"var(--independent)"};
-let clueIndex=0, step="power", solved={}, mapAssignments={}, selectedCountry=null;
-const clueTitle=document.getElementById("clue-title");
-const cluePrompt=document.getElementById("clue-prompt");
-const clueChoices=document.getElementById("clue-choices");
-const clueFeedback=document.getElementById("clue-feedback");
-const nextButton=document.getElementById("clue-next");
-const phaseTwo=document.getElementById("phase-two");
-const mapRegions=[...document.querySelectorAll(".target")];
-function shuffle(list){const copy=[...list];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy}
+const places=[
+ {id:"egypt",name:"Egypt",clue:"This land in the northeast corner of Africa has a canal that links the Mediterranean Sea to the Red Sea.",power:"Britain",whyQ:"Why did this power want it?",why:"To protect its sea route to India"},
+ {id:"algeria",name:"Algeria",clue:"This huge North African land is mostly Sahara Desert, but its coast has rich farmland.",power:"France",whyQ:"Why did this power want it?",why:"To give European settlers farmland"},
+ {id:"congo",name:"Congo",clue:"This giant rainforest land in Central Africa was once owned by one European king.",power:"Belgium",whyQ:"Why did this power want it?",why:"To make money from rubber",avoid:["angola"]},
+ {id:"libya",name:"Libya",clue:"This desert land was part of the Ottoman Empire until 1911.",power:"Italy",whyQ:"Why did this power want it?",why:"To build an empire after losing Ethiopia"},
+ {id:"tanzania",name:"Tanzania",clue:"This East African land has Mount Kilimanjaro. In 1905, its people fought the Maji Maji uprising.",power:"Germany",whyQ:"Why did this power want it?",why:"To prove it was a world power"},
+ {id:"nigeria",name:"Nigeria",clue:"This West African land is named after the Niger River.",power:"Britain",whyQ:"Why did this power want it?",why:"To buy palm oil for its companies"},
+ {id:"angola",name:"Angola",clue:"Europeans first came to this land in southwest Africa in the 1500s.",power:"Portugal",whyQ:"Why did this power want it?",why:"To keep forcing Africans to work",avoid:["congo"]},
+ {id:"ethiopia",name:"Ethiopia",clue:"This land in the Horn of Africa was invaded by Italy in 1896.",power:"Independent",whyQ:"Why did it stay independent?",why:"Its army won the Battle of Adwa",fakes:["Britain protected it as an ally","It paid Italy to leave it alone","Europe saw nothing there worth taking"]},
+ {id:"south-africa",name:"South Africa",clue:"This land at the southern tip of Africa has some of the richest mines in the world.",power:"Britain",whyQ:"Why did this power want it?",why:"To control gold and diamond mines"},
+ {id:"liberia",name:"Liberia",clue:"This small West African land has a capital city named after U.S. President James Monroe.",power:"Independent",whyQ:"Who settled this land?",why:"Freed Black Americans",fakes:["Italian soldiers","Portuguese traders","French farm families"]}
+];
+const powers=["Britain","France","Belgium","Germany","Italy","Portugal","Independent"];
+const colors={Britain:"var(--britain)",France:"var(--france)",Belgium:"var(--belgium)",Germany:"var(--germany)",Italy:"var(--italy)",Portugal:"var(--portugal)",Independent:"var(--independent)"};
+const TOTAL=places.length;
+let idx=0,step="power",solved={},whySolved={},misses={},mapAssignments={},mapMisses={},selected=null;
+places.forEach(p=>{misses[p.id]={power:0,why:0};mapMisses[p.id]=0});
+const $=id=>document.getElementById(id);
+const clueChoices=$("clue-choices"),clueFeedback=$("clue-feedback"),nextButton=$("clue-next"),phaseTwo=$("phase-two");
+const mapRegions=[...document.querySelectorAll("#phase-two .target")];
+function shuffle(list){const c=[...list];for(let i=c.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[c[i],c[j]]=[c[j],c[i]]}return c}
+function whyOptions(p){
+ let wrong=p.fakes?[...p.fakes]:shuffle(places.filter(o=>o.power!=="Independent"&&o.id!==p.id&&!(p.avoid||[]).includes(o.id)).map(o=>o.why)).slice(0,3);
+ return shuffle([p.why,...wrong]);
+}
 function updateProgress(){
- const count=Object.keys(solved).length;
- document.querySelector(".progress-track").setAttribute("aria-valuenow",String(count));
- document.getElementById("progress-fill").style.width=(count/6*100)+"%";
+ const n=Object.keys(whySolved).length;
+ document.querySelector(".progress-track").setAttribute("aria-valuenow",String(n));
+ $("progress-fill").style.width=(n/TOTAL*100)+"%";
 }
+function setFeedback(text,ok){clueFeedback.textContent=text;clueFeedback.className="feedback"+(ok?" success":"")}
 function setupClue(){
- const item=questions[clueIndex];
- step="power";
- document.getElementById("clue-number").textContent="CLUE "+(clueIndex+1)+" OF 6 · POWER";
- clueTitle.textContent=item.title;
- cluePrompt.textContent=item.prompt;
- cluePrompt.setAttribute("aria-live","polite");
- clueChoices.setAttribute("aria-label","Choose the controlling power");
- clueChoices.classList.remove("evidence-options");
- clueFeedback.textContent="";clueFeedback.className="feedback";nextButton.hidden=true;
- updateProgress();
- if(clueIndex>0){clueTitle.tabIndex=-1;clueTitle.focus()}
- showPowerChoices(true);
+ const p=places[idx];step="power";
+ $("clue-number").textContent="MYSTERY PLACE "+(idx+1)+" OF "+TOTAL;
+ $("clue-title").textContent="Mystery place #"+(idx+1);
+ $("clue-text").textContent=p.clue;
+ $("clue-prompt").textContent="Which power controlled this place by 1914?";
+ $("clue-reveal").hidden=true;
+ setFeedback("");nextButton.hidden=true;updateProgress();
+ if(idx>0){$("clue-title").tabIndex=-1;$("clue-title").focus()}
+ renderChoices(shuffle(powers),choosePower);
 }
-function showPowerChoices(shuffled){
- clueChoices.replaceChildren();
- (shuffled?shuffle(powers):powers).forEach(power=>{
-  const button=document.createElement("button");button.type="button";button.className="choice";button.textContent=power;
-  button.addEventListener("click",()=>{
-   const item=questions[clueIndex];
-   if(power===item.answer){
-    step="evidence";
-    document.getElementById("clue-number").textContent="CLUE "+(clueIndex+1)+" OF 6 · FACT CHECK";
-    cluePrompt.textContent="Which fact helped you decide?";
-    clueChoices.setAttribute("aria-label","Choose the fact that supports your answer");
-    clueFeedback.textContent="Power matched. Now find the fact that supports it.";
-    clueFeedback.className="feedback";
-    showEvidenceChoices(true);
-    clueChoices.querySelector("button")?.focus();
-   }else{
-    showPowerChoices(true);
-    clueFeedback.textContent="Not yet. Read the facts again and try the shuffled choices.";
-    clueFeedback.className="feedback";
-    clueChoices.querySelector("button")?.focus();
-   }
-  });
-  clueChoices.append(button);
+function renderChoices(list,handler,wide){
+ clueChoices.replaceChildren();clueChoices.classList.toggle("evidence-options",!!wide);
+ list.forEach(text=>{
+  const b=document.createElement("button");b.type="button";b.className="choice";b.textContent=text;
+  b.addEventListener("click",()=>handler(text));clueChoices.append(b);
  });
 }
-function showEvidenceChoices(shuffled){
- clueChoices.replaceChildren();clueChoices.classList.add("evidence-options");
- const options=evidenceFacts.map((text,index)=>({text,index}));
- (shuffled?shuffle(options):options).forEach(option=>{
-  const button=document.createElement("button");button.type="button";button.className="choice";button.textContent=option.text;
-  button.addEventListener("click",()=>{
-   const item=questions[clueIndex];
-   if(option.index===item.evidence){
-    solved[item.id]=item.answer;
-    clueFeedback.textContent="Correct. You matched the clue and its supporting fact.";
-    clueFeedback.className="feedback success";
-    [...clueChoices.querySelectorAll("button")].forEach(b=>b.disabled=true);
-    nextButton.textContent=clueIndex===questions.length-1?"Finish Part 1":"Next clue";
-    nextButton.hidden=false;updateProgress();nextButton.focus();
-   }else{
-    showEvidenceChoices(true);
-    clueFeedback.textContent="Not yet. Read the facts again and try the shuffled choices.";
-    clueFeedback.className="feedback";
-    clueChoices.querySelector("button")?.focus();
-   }
-  });
-  clueChoices.append(button);
- });
+function choosePower(choice){
+ const p=places[idx];
+ if(choice===p.power){
+  solved[p.id]=choice;step="why";
+  $("clue-prompt").textContent=p.whyQ;
+  setFeedback("Yes — "+(p.power==="Independent"?"it stayed independent.":p.power+" controlled it.")+" Now answer the second question.",true);
+  renderChoices(whyOptions(p),chooseWhy,true);
+  clueChoices.querySelector("button")?.focus();
+ }else{
+  misses[p.id].power++;
+  setFeedback("Not yet. Find the fact card that matches this clue, then try again.");
+  renderChoices(shuffle(powers),choosePower);
+  clueChoices.querySelector("button")?.focus();
+ }
+}
+function chooseWhy(choice){
+ const p=places[idx];
+ if(choice===p.why){
+  whySolved[p.id]=choice;
+  clueChoices.replaceChildren();
+  $("clue-reveal").hidden=false;
+  $("clue-reveal").textContent="Solved! Mystery place #"+(idx+1)+" is "+p.name.toUpperCase()+". You will color it in Part 2.";
+  setFeedback("");
+  nextButton.textContent=idx===TOTAL-1?"Finish Part 1":"Next mystery place";
+  nextButton.hidden=false;updateProgress();nextButton.focus();
+ }else{
+  misses[p.id].why++;
+  setFeedback("Not yet. Reread the "+(p.power==="Independent"?"Independent":p.power)+" fact card and try the new choices.");
+  renderChoices(whyOptions(p),chooseWhy,true);
+  clueChoices.querySelector("button")?.focus();
+ }
 }
 nextButton.addEventListener("click",()=>{
- if(clueIndex<questions.length-1){clueIndex++;setupClue()}
- else{
-  document.querySelector(".clue-box").hidden=true;
-  document.getElementById("part-one-done").hidden=false;
- }
+ if(idx<TOTAL-1){idx++;setupClue()}
+ else{document.querySelector(".clue-box").hidden=true;$("part-one-done").hidden=false;$("open-map").focus()}
 });
-document.getElementById("open-map").addEventListener("click",()=>{
+$("open-map").addEventListener("click",()=>{
+ $("phase-one").hidden=true;
+ document.querySelector(".facts").hidden=true;
  phaseTwo.hidden=false;
- document.getElementById("answer-transfer").replaceChildren(...questions.map(q=>{
-  const item=document.createElement("div");item.className="transfer-item";
-  const number=document.createElement("span");number.className="transfer-num";number.textContent=q.title.split(".")[0];
-  const name=document.createElement("span");name.textContent=q.title.split(". ").slice(1).join(". ");
-  const answer=document.createElement("strong");answer.textContent=solved[q.id];
-  item.append(number,name,answer);return item;
- }));
  phaseTwo.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
- document.querySelector("#phase-two .target")?.focus();
+ renderMap();
 });
 function renderColorButtons(){
- const holder=document.getElementById("color-choices");holder.replaceChildren();
- if(!selectedCountry)return;
- powers.forEach(power=>{
-  const button=document.createElement("button");button.type="button";button.className="choice color-choice";button.textContent=power;
-  button.setAttribute("aria-pressed",String(mapAssignments[selectedCountry]===power));
-  button.addEventListener("click",()=>{
-   mapAssignments[selectedCountry]=power;renderMap();
-   document.getElementById("color-feedback").textContent="Assigned "+power+". Choose another numbered country.";
-   document.getElementById("color-feedback").className="feedback success";
-   [...document.querySelectorAll("#color-choices .choice")].find(option=>option.textContent===power)?.focus();
-  });
-  holder.append(button);
+ const holder=$("color-choices");holder.replaceChildren();
+ if(!selected||mapAssignments[selected])return;
+ shuffle(powers).forEach(power=>{
+  const b=document.createElement("button");b.type="button";b.className="choice color-choice";
+  const sw=document.createElement("span");sw.className="swatch";sw.style.background=colors[power];
+  b.append(sw,document.createTextNode(power));
+  b.addEventListener("click",()=>colorPlace(power));holder.append(b);
  });
+}
+function colorPlace(power){
+ const p=places.find(x=>x.id===selected);
+ const fb=$("color-feedback");
+ if(power===p.power){
+  mapAssignments[p.id]=power;
+  fb.textContent="Correct. "+p.name+" is colored. Pick another numbered place.";fb.className="feedback success";
+  renderMap();
+ }else{
+  mapMisses[p.id]++;
+  fb.textContent="Not quite. Think back to mystery place #"+(places.indexOf(p)+1)+" and try again.";fb.className="feedback";
+  renderColorButtons();$("color-choices").querySelector("button")?.focus();
+ }
 }
 function selectPlace(id){
- selectedCountry=id;
- mapRegions.forEach(region=>region.setAttribute("aria-current",String(region.dataset.country===id)));
- const question=questions.find(q=>q.id===id);
- document.getElementById("selected-place").textContent=question.title;
- document.getElementById("solved-answer").hidden=false;
- document.getElementById("solved-answer").textContent="Your Part 1 answer: "+solved[id];
- document.getElementById("assign-help").textContent="Choose the matching color from the key.";
- document.getElementById("color-feedback").textContent=mapAssignments[id]?"Color assigned: "+mapAssignments[id]:"";
- document.getElementById("color-feedback").className="feedback";
- renderColorButtons();
+ selected=id;const p=places.find(x=>x.id===id);
+ $("selected-place").textContent=(places.indexOf(p)+1)+". "+p.name.toUpperCase();
+ $("assign-help").textContent=mapAssignments[id]?"Already colored correctly.":"Who controlled this place? Choose a color.";
+ $("color-feedback").textContent="";$("color-feedback").className="feedback";
+ renderMap();
+ $("color-choices").querySelector("button")?.focus();
 }
 function renderMap(){
- mapRegions.forEach(region=>{
-  const id=region.dataset.country,value=mapAssignments[id];
-  region.style.fill=value?colors[value]:"#dce9e9";
-  region.setAttribute("aria-current",String(id===selectedCountry));
+ mapRegions.forEach(r=>{
+  const v=mapAssignments[r.dataset.country];
+  r.style.fill=v?colors[v]:"#dce9e9";
+  r.setAttribute("aria-current",String(r.dataset.country===selected));
  });
- const count=Object.keys(mapAssignments).length;
- document.getElementById("map-status").textContent=count+" of 6 places colored";
- document.getElementById("map-complete").hidden=count!==6;
+ document.querySelectorAll(".transfer-item").forEach(el=>el.classList.toggle("done",!!mapAssignments[el.dataset.country]));
+ const n=Object.keys(mapAssignments).length;
+ $("map-status").textContent=n+" of "+TOTAL+" places colored";
+ $("map-complete").hidden=n!==TOTAL;
  renderColorButtons();
 }
-mapRegions.forEach(region=>{
- const open=()=>{selectPlace(region.dataset.country);document.querySelector("#color-choices button")?.focus()};
- region.addEventListener("click",open);
- region.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();open()}});
+$("answer-transfer").replaceChildren(...places.map((p,i)=>{
+ const b=document.createElement("button");b.type="button";b.className="transfer-item";b.dataset.country=p.id;
+ b.innerHTML='<span class="transfer-num">'+(i+1)+'</span><span></span>';b.lastChild.textContent=p.name;
+ b.addEventListener("click",()=>selectPlace(p.id));return b;
+}));
+mapRegions.forEach(r=>{
+ const open=()=>selectPlace(r.dataset.country);
+ r.addEventListener("click",open);
+ r.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open()}});
 });
-document.getElementById("clear-map").addEventListener("click",()=>{
- mapAssignments={};selectedCountry=null;renderMap();
- document.getElementById("selected-place").textContent="No country selected";
- document.getElementById("solved-answer").hidden=true;
- document.getElementById("assign-help").textContent="Select a numbered country on the map to begin.";
- document.getElementById("color-feedback").textContent="";
- mapRegions.forEach(region=>region.setAttribute("aria-current","false"));
-});
+document.querySelectorAll(".map-marker").forEach(m=>m.addEventListener("click",()=>selectPlace(m.dataset.for)));
 setupClue();
-document.getElementById("turn-in-button").addEventListener("click",async()=>{
- const name=document.getElementById("student-name").value.trim();
- const status=document.getElementById("turn-in-status");
- const button=document.getElementById("turn-in-button");
+function scoreInfo(){
+ let first=0;
+ places.forEach(p=>{if(!misses[p.id].power)first++;if(!misses[p.id].why)first++;if(!mapMisses[p.id])first++});
+ return {first,max:TOTAL*3,pct:Math.round(first/(TOTAL*3)*100)};
+}
+$("turn-in-button").addEventListener("click",async()=>{
+ const name=$("student-name").value.trim(),status=$("turn-in-status"),button=$("turn-in-button");
  status.className="turn-in-status";
- if(!name){status.textContent="Enter your name at the top of the page.";document.getElementById("student-name").focus();return}
- if(Object.keys(solved).length!==6){status.textContent="Finish all six clues before turning in.";return}
- if(Object.keys(mapAssignments).length!==6){status.textContent="Color all six places on the map before turning in.";return}
- const answers={};
- questions.forEach(q=>{
-  answers[q.title+" — Power"]=solved[q.id];
-  answers[q.title+" — Supporting fact"]=evidenceFacts[q.evidence];
-  answers[q.title+" — Map color"]=mapAssignments[q.id];
+ if(!name){status.textContent="Enter your name at the top of the page.";$("student-name").focus();return}
+ if(Object.keys(whySolved).length!==TOTAL){status.textContent="Solve all ten mystery places before turning in.";return}
+ if(Object.keys(mapAssignments).length!==TOTAL){status.textContent="Color all ten places correctly before turning in.";return}
+ const s=scoreInfo();
+ const answers={"Score (right on first try)":s.first+" of "+s.max+" ("+s.pct+"%)"};
+ places.forEach((p,i)=>{
+  const tries=m=>m?("took "+(m+1)+" tries"):"first try";
+  answers[(i+1)+". "+p.name]=p.power+" | power: "+tries(misses[p.id].power)+" · why: "+tries(misses[p.id].why)+" · map: "+tries(mapMisses[p.id]);
  });
  button.disabled=true;status.textContent="Sending your work…";
  try{
   const response=await classTurnIn("https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",{
    method:"POST",headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({studentName:name,assignmentId:"divide-africa-day1",answers})
+   body:JSON.stringify({studentName:name,assignmentId:"divide-africa-day1",score:s.pct,answers})
   });
   const result=await response.json();
   if(!response.ok)throw new Error(result.error||"Could not send your work.");
-  status.textContent="Turned in! Your work was sent to your teacher dashboard.";
+  status.textContent="Turned in! Your work was sent to your teacher.";
   status.classList.add("success");button.textContent="Turned in ✓";
  }catch(error){
   status.textContent=error instanceof Error?error.message:"Could not send your work. Try again.";
