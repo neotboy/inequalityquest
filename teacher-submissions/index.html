@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Teacher Dashboard · All Classes</title>
-<script src="../shared/assignments.js?v=20261030d"></script>
+<script src="../shared/assignments.js?v=20261030e"></script>
 <script src="../shared/turnin.js?v=20261030d"></script>
 <style>
 :root{--navy:#19364b;--red:#a33d36;--green:#2f6b3a;--paper:#f4efe4;--card:#fffdf8;--ink:#22313b;--muted:#536571;--line:#d8cfbd}
@@ -61,6 +61,13 @@ summary{font-weight:800;color:var(--navy);cursor:pointer}
 .ans .ans{margin-left:14px}
 .tag{display:inline-block;font-size:.75rem;background:#efe7d6;border-radius:6px;padding:1px 6px;color:var(--muted);margin-left:6px}
 .import{background:#fff8e6;border-color:#e8cf8f}
+.linkhead{display:block;color:var(--navy);margin:0 0 6px}
+.unitlinks{margin:0 0 8px}
+.unitlinks .links{margin:4px 0 0}
+.unitname{display:block;font-size:.78rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--red)}
+.unitblock{margin:0 0 18px}
+.unithead{font-size:1.05rem;margin:6px 0 6px;color:var(--navy)}
+.unitcount{font-size:.82rem;font-weight:600;color:var(--muted);margin-left:6px}
 </style>
 </head>
 <body>
@@ -161,18 +168,38 @@ async function load() {
 
 function tabRows(t) { return rows.filter(r => r.course === t); }
 
+const UNITS = window.CLASS_UNITS || {}, UNIT_WORD = { civics: "Friday" };
+const unitOf = id => (REG[id] && REG[id].unit) || 0;
+const dayOf = id => (REG[id] && REG[id].day) || 99;
+const unitName = (course, u) => u ? (UNIT_WORD[course] || "Unit") + " " + u + (UNITS[course] && UNITS[course][u] ? " · " + UNITS[course][u] : "") : "Other activities";
+function sortIds(ids) {
+  const order = Object.keys(REG);
+  return ids.slice().sort((a, b) => ((unitOf(a) || 999) - (unitOf(b) || 999)) || (dayOf(a) - dayOf(b)) || ((order.indexOf(a) + 1 || 999) - (order.indexOf(b) + 1 || 999)));
+}
+// Chunks a list of activity ids into units: [{ unit, name, ids }], Unit 1 first.
+function byUnit(ids, course) {
+  const groups = [];
+  sortIds(ids).forEach(id => {
+    const u = unitOf(id);
+    let g = groups.find(x => x.unit === u);
+    if (!g) groups.push(g = { unit: u, name: unitName(course, u), ids: [] });
+    g.ids.push(id);
+  });
+  return groups;
+}
+
 function renderTabs() {
   $("tabs").innerHTML = Object.keys(COURSES).map(k =>
     `<button class="tab" role="tab" data-tab="${k}" aria-selected="${k === tab}">${COURSES[k]}<span class="n">${tabRows(k).length}</span></button>`).join("");
   $("tabs").querySelectorAll(".tab").forEach(b => b.onclick = () => { tab = b.dataset.tab; sessionStorage.setItem("dash-tab", tab); $("search").value = ""; render(); });
-  const acts = Object.entries(REG).filter(([, a]) => a.course === tab && a.path);
-  $("links").innerHTML = acts.length ? "<b style='color:var(--navy);margin-right:4px'>Student links:</b>" + acts.map(([, a]) => `<a href="../${a.path}" target="_blank" rel="noopener">${safe(a.title)}</a>`).join("")
+  const acts = Object.keys(REG).filter(id => REG[id].course === tab && REG[id].path);
+  $("links").innerHTML = acts.length
+    ? "<b class='linkhead'>Student links</b>" + byUnit(acts, tab).map(g => `<div class="unitlinks"><span class="unitname">${safe(g.name)}</span><div class="links">${g.ids.map(id => `<a href="../${REG[id].path}" target="_blank" rel="noopener">${safe(REG[id].title)}</a>`).join("")}</div></div>`).join("")
     : "<span class='status'>No activities in this class send work to the dashboard yet.</span>";
 }
 
 function activitiesFor(list) {
-  const order = Object.keys(REG), ids = [...new Set(list.map(r => r.assignmentId))];
-  return ids.sort((a, b) => (order.indexOf(a) + 1 || 999) - (order.indexOf(b) + 1 || 999));
+  return sortIds([...new Set(list.map(r => r.assignmentId))]);
 }
 
 function render() {
@@ -182,7 +209,7 @@ function render() {
   $("listView").setAttribute("aria-pressed", view === "list");
   $("filters").hidden = view !== "list";
   const sel = $("assignment"), keep = sel.value;
-  sel.innerHTML = '<option value="all">All activities</option>' + activitiesFor(list).map(id => `<option value="${safe(id)}">${safe(titleOf({ assignmentId: id }))}</option>`).join("");
+  sel.innerHTML = '<option value="all">All activities</option>' + byUnit(activitiesFor(list), tab).map(g => `<optgroup label="${safe(g.name)}">${g.ids.map(id => `<option value="${safe(id)}">${safe(titleOf({ assignmentId: id }))}</option>`).join("")}</optgroup>`).join("");
   sel.value = [...sel.options].some(o => o.value === keep) ? keep : "all";
   const shown = visible();
   $("csvBtn").disabled = !shown.length;
@@ -196,15 +223,24 @@ function visible() {
 }
 
 function renderGrid(list) {
-  const acts = activitiesFor(list), students = [...new Set(list.map(r => r.studentName))].sort((a, b) => a.localeCompare(b));
+  const students = [...new Set(list.map(r => r.studentName))].sort((a, b) => a.localeCompare(b));
   const cell = (s, id) => {
     const hits = list.filter(r => r.studentName === s && r.assignmentId === id);
     if (!hits.length) return `<td class="miss">—</td>`;
     return `<td class="done"><button data-s="${safe(s)}" data-a="${safe(id)}" title="Open answers">✓ ${dateShort(hits[0].submittedAt)}${hits.length > 1 ? " ×" + hits.length : ""}</button></td>`;
   };
-  $("out").innerHTML = `<p class="status" style="margin:0 0 8px">${students.length} students · click a ✓ to read that student's answers.</p>
-    <div class="gridwrap"><table><thead><tr><th class="student">Student</th>${acts.map(id => `<th>${safe(titleOf({ assignmentId: id }))}</th>`).join("")}<th>Done</th></tr></thead>
-    <tbody>${students.map(s => `<tr><td class="student">${safe(s)}</td>${acts.map(id => cell(s, id)).join("")}<td>${new Set(list.filter(r => r.studentName === s).map(r => r.assignmentId)).size}/${acts.length}</td></tr>`).join("")}</tbody></table></div>`;
+  // One table per unit, Unit 1 first. Each unit only shows students who turned in something in it.
+  // Show every day of a unit (not just ones with turn-ins) so missing work stands out.
+  const unitsUsed = new Set(list.map(r => unitOf(r.assignmentId)));
+  const units = byUnit([...new Set([...activitiesFor(list), ...Object.keys(REG).filter(id => REG[id].course === tab && REG[id].path && unitsUsed.has(unitOf(id)))])], tab);
+  $("out").innerHTML = `<p class="status" style="margin:0 0 8px">${students.length} students · grouped by unit, in day order · click a ✓ to read that student's answers.</p>` +
+    units.map(g => {
+      const inUnit = list.filter(r => g.ids.includes(r.assignmentId));
+      const who = [...new Set(inUnit.map(r => r.studentName))].sort((a, b) => a.localeCompare(b));
+      return `<section class="unitblock"><h2 class="unithead">${safe(g.name)} <span class="unitcount">${g.ids.length} ${g.ids.length === 1 ? "activity" : "activities"} · ${who.length} ${who.length === 1 ? "student" : "students"}</span></h2>
+    <div class="gridwrap"><table><thead><tr><th class="student">Student</th>${g.ids.map(id => `<th>${safe(titleOf({ assignmentId: id }))}</th>`).join("")}<th>Done</th></tr></thead>
+    <tbody>${who.map(s => `<tr><td class="student">${safe(s)}</td>${g.ids.map(id => cell(s, id)).join("")}<td>${new Set(inUnit.filter(r => r.studentName === s).map(r => r.assignmentId)).size}/${g.ids.length}</td></tr>`).join("")}</tbody></table></div></section>`;
+    }).join("");
   $("out").querySelectorAll("td.done button").forEach(b => b.onclick = () => { view = "list"; render(); $("search").value = b.dataset.s; $("assignment").value = b.dataset.a; render(); });
 }
 
