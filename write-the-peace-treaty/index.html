@@ -93,7 +93,7 @@ textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
 @media(max-width:760px){.case-layout{grid-template-columns:1fr}.cartoon-panel img{max-height:420px}.cartoon-pdf{height:360px}.decode-panel{padding:13px}.game-head{align-items:flex-start}}
 @media print{header .directions,.refreshers,.controls,.finish-actions{display:none!important}body{background:white}.game{box-shadow:none}.case-layout{grid-template-columns:1fr 1fr}.cartoon-panel img{max-height:450px}}
 </style>
-</head>
+<script src="../shared/assignments.js"></script><script src="../shared/turnin.js"></script></head>
 <body>
 <header>
 <div class="wrap">
@@ -304,7 +304,7 @@ if(!name){status.textContent="Add your first and last name first.";$("studentNam
 if(!answerText){status.textContent="Write one or two sentences first.";$("finalAnswer").focus();return}
 button.disabled=true;status.textContent="Sending your work…";
 try{
-const res=await fetch("https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"write-the-peace-treaty",answers:{...state.responses,"Final reflection":answerText}})});
+const res=await classTurnIn("https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"write-the-peace-treaty",answers:{...state.responses,"Final reflection":answerText}})});
 const result=await res.json();if(!res.ok)throw new Error(result.error||"Could not send your work.");
 status.textContent="Turned in! Your work was sent to your teacher.";button.textContent="Turned in ✓";
 }catch(e){status.textContent=e instanceof Error?e.message:"Could not send your work. Try again.";button.disabled=false}

@@ -1,6 +1,6 @@
 # Life Race — The Unequal Starting Line
 
-Hosted at https://neotboy.github.io/inequalityquest/life-race/
+Hosted at https://neotboy.github.io/socialstudies1800/life-race/
 
 The app has a working solo classroom demo. **Live multiplayer only works after a Firebase Realtime Database and anonymous Authentication are provisioned.** GitHub Pages hosts static files and cannot create the Firebase project by itself.
 

@@ -22,7 +22,7 @@ button:disabled{opacity:.7;cursor:default}
 .status{min-height:1.4em;color:#52616a}
 @media print{body{background:#fff;font-size:12pt}header{padding:8px 14px}main{max-width:none;margin:10px auto;padding:0}.card{border:0;padding:8px}.notice{padding:8px 10px}textarea{min-height:110px}button{display:none}}
 </style>
-</head>
+<script src="../shared/assignments.js"></script><script src="../shared/turnin.js"></script></head>
 <body>
 <header><h1>Day 9 · Anne Frank’s Diary</h1></header>
 <main><section class="card">
@@ -42,7 +42,7 @@ nameInput.value=localStorage.getItem("anne-diary-name")||"";
 responseInput.value=localStorage.getItem("anne-diary-response")||"";
 nameInput.addEventListener("input",()=>localStorage.setItem("anne-diary-name",nameInput.value));
 responseInput.addEventListener("input",()=>localStorage.setItem("anne-diary-response",responseInput.value));
-button.addEventListener("click",async()=>{const studentName=nameInput.value.trim(),answer=responseInput.value.trim();if(!studentName){status.textContent="Enter your name.";nameInput.focus();return}if(!answer){status.textContent="Write your paragraph.";responseInput.focus();return}button.disabled=true;status.textContent="Sending…";try{const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName,assignmentId:"day9-anne-frank-quick-write",answers:{"Written response":answer}})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not send your work.");status.textContent="Turned in!";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not send your work. Try again.";button.disabled=false}});
+button.addEventListener("click",async()=>{const studentName=nameInput.value.trim(),answer=responseInput.value.trim();if(!studentName){status.textContent="Enter your name.";nameInput.focus();return}if(!answer){status.textContent="Write your paragraph.";responseInput.focus();return}button.disabled=true;status.textContent="Sending…";try{const response=await classTurnIn(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName,assignmentId:"day9-anne-frank-quick-write",answers:{"Written response":answer}})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not send your work.");status.textContent="Turned in!";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not send your work. Try again.";button.disabled=false}});
 </script>
 </body>
 </html>

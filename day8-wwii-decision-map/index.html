@@ -25,7 +25,7 @@ button.secondary{background:#e7e0d1;color:var(--navy)}button:disabled{opacity:.5
 @media(max-width:650px){body{font-size:16px}header{padding:21px 14px}main.wrap{padding:13px 10px 38px}.directions,.part,.turnin{padding:14px}.part-intro{margin-left:0}.row{flex-wrap:wrap}.row input{flex-basis:100%}.part-frame{min-height:650px}}
 @media print{header{padding:10px}.directions,.turnin button{display:none!important}.part{break-inside:avoid}.part-frame{min-height:0}}
 </style>
-</head>
+<script src="../shared/assignments.js"></script><script src="../shared/turnin.js"></script></head>
 <body>
 <header><div class="wrap"><div class="kicker">World History · Day 8</div><h1>World War II: Decisions &amp; Warning Signs</h1><p>Two parts. One assignment. Turn in your work once at the end.</p></div></header>
 <main class="wrap">
@@ -88,7 +88,7 @@ const studentName=nameInput.value.trim();if(!studentName){status.textContent="En
 let answers;try{answers=requiredValues()}catch(error){status.textContent=error.message;return}
 const button=document.getElementById("submitWork");button.disabled=true;status.textContent="Sending both parts…";
 try{
-const response=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName,assignmentId:"day8-wwii-combined",answers})});
+const response=await classTurnIn(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName,assignmentId:"day8-wwii-combined",answers})});
 const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not turn in your work.");
 status.textContent="Both parts were turned in together.";button.textContent="Turned in ✓";
 }catch(error){status.textContent=error instanceof Error?error.message:"Could not send your work. Try again.";button.disabled=false}

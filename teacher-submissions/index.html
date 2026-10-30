@@ -1,52 +1,267 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Teacher Turn-in Dashboard</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Teacher Dashboard · All Classes</title>
+<script src="../shared/assignments.js"></script>
+<script src="../shared/turnin.js"></script>
 <style>
-:root{--navy:#19364b;--red:#a33d36;--paper:#f4efe4;--card:#fffdf8;--ink:#22313b;--muted:#536571;--line:#d8cfbd}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.5 system-ui,Segoe UI,Arial,sans-serif}main{max-width:1000px;margin:auto;padding:32px 18px 60px}
-h1{font-size:clamp(2rem,4vw,3rem);line-height:1.08;color:var(--navy);margin:0 0 7px}h2{font-size:1.3rem;color:var(--navy);margin:0 0 6px}h3{color:var(--navy);margin:0 0 3px}
-.eyebrow{color:var(--red);font-weight:900;text-transform:uppercase;letter-spacing:.12em;font-size:.78rem;margin:0 0 5px}.intro{color:var(--muted);margin:6px 0 17px}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px;margin:14px 0;box-shadow:0 4px 12px #19364b0a}
-.row,.head,.filters,.top{display:flex;align-items:center;gap:9px}.head{justify-content:space-between;align-items:flex-start;margin-bottom:18px}
-label{display:block;font-weight:800;color:var(--navy);margin-bottom:6px}
-input,select{min-width:0;flex:1;border:1px solid #cfc5b3;border-radius:8px;background:white;font:inherit;padding:10px 12px;color:var(--ink)}
-button{border:0;border-radius:8px;background:var(--red);color:white;font:800 .95rem system-ui;padding:11px 15px;cursor:pointer}button.light{background:#e7e0d1;color:var(--navy)}button:disabled{opacity:.45;cursor:not-allowed}
-.status{color:var(--muted);font-size:.9rem;margin:8px 0 0}.count{display:inline-grid;place-items:center;background:#e8e1d4;border-radius:99px;padding:1px 9px;font-size:.9rem}
-.empty{background:#f4efe4;border-radius:9px;padding:18px;color:var(--muted);text-align:center}
-.list{display:grid;gap:10px}.submission{border:1px solid var(--line);border-radius:11px;padding:13px;background:white}.top{justify-content:space-between;align-items:flex-start}.top p{margin:0;color:var(--muted)}time{font-size:.8rem;color:var(--muted);text-align:right}
-details{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}summary{font-weight:800;color:var(--navy);cursor:pointer}dl{margin:8px 0 0}.answer{border-top:1px solid #eee8dc;padding:7px 0}.answer dt{font-weight:800;color:var(--navy)}.answer dd{margin:2px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
-a{color:var(--navy);font-weight:750}.countline{display:flex;justify-content:space-between;align-items:center;gap:12px}
-@media(max-width:650px){main{padding:22px 13px 40px}.panel{padding:14px}.row,.filters{flex-wrap:wrap}.row input,.filters input,.filters select{flex-basis:100%}.head{flex-direction:column}.top{flex-direction:column}time{text-align:left}}
+:root{--navy:#19364b;--red:#a33d36;--green:#2f6b3a;--paper:#f4efe4;--card:#fffdf8;--ink:#22313b;--muted:#536571;--line:#d8cfbd}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,Segoe UI,Arial,sans-serif}
+main{max-width:1200px;margin:auto;padding:24px 16px 60px}
+h1{font-size:clamp(1.7rem,3.5vw,2.4rem);line-height:1.1;color:var(--navy);margin:0 0 4px}
+h2{font-size:1.15rem;color:var(--navy);margin:0 0 8px}
+.eyebrow{color:var(--red);font-weight:900;text-transform:uppercase;letter-spacing:.12em;font-size:.75rem;margin:0 0 4px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+label{font-weight:800;color:var(--navy)}
+input,select{border:1px solid #cfc5b3;border-radius:8px;background:#fff;font:inherit;padding:9px 11px;color:var(--ink);min-width:0}
+input#teacherCode{width:220px}
+button{border:0;border-radius:8px;background:var(--red);color:#fff;font:800 .95rem system-ui;padding:10px 14px;cursor:pointer}
+button.light{background:#e7e0d1;color:var(--navy)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #2b6cb0;outline-offset:2px}
+.status{color:var(--muted);font-size:.92rem;margin:8px 0 0}
+.warn{color:#8a4b00;font-weight:700}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
+.tab{background:#e7e0d1;color:var(--navy);border-radius:10px 10px 0 0;padding:10px 16px}
+.tab[aria-selected=true]{background:var(--navy);color:#fff}
+.tab .n{display:inline-block;margin-left:6px;background:#ffffff33;border-radius:99px;padding:0 8px;font-size:.85rem}
+.tab[aria-selected=false] .n{background:#d8cfbd}
+.tabpanel{border-top:4px solid var(--navy);border-radius:0 14px 14px 14px}
+.links{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 12px}
+.links a{font-size:.88rem;background:#edf2f3;border:1px solid #c8d7dc;border-radius:7px;padding:5px 9px;color:var(--navy);text-decoration:none;font-weight:700}
+.views{display:flex;gap:6px;margin:6px 0 12px}
+.views button[aria-pressed=true]{background:var(--navy);color:#fff}
+.empty{background:var(--paper);border-radius:9px;padding:18px;color:var(--muted);text-align:center}
+.gridwrap{overflow:auto;border:1px solid var(--line);border-radius:10px;max-height:70vh}
+table{border-collapse:collapse;font-size:.9rem;background:#fff}
+th,td{border-bottom:1px solid #eee6d6;border-right:1px solid #eee6d6;padding:6px 8px;text-align:center;white-space:nowrap}
+thead th{position:sticky;top:0;background:#f1ebde;color:var(--navy);z-index:1;max-width:140px;white-space:normal;vertical-align:bottom;font-size:.8rem}
+th.student,td.student{position:sticky;left:0;background:#fff;text-align:left;font-weight:800;z-index:2}
+thead th.student{z-index:3;background:#f1ebde}
+td.done button{background:#e3f0e5;color:var(--green);padding:3px 8px;font-size:.85rem}
+td.miss{color:#b9ad97}
+.list{display:grid;gap:9px}
+.sub{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff}
+.sub .top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sub h3{margin:0;color:var(--navy);font-size:1.05rem}
+.sub p{margin:0;color:var(--muted)}
+time{font-size:.85rem;color:var(--muted)}
+details{margin-top:8px;border-top:1px solid var(--line);padding-top:6px}
+summary{font-weight:800;color:var(--navy);cursor:pointer}
+.ans{margin:6px 0 0;padding:0;list-style:none}
+.ans li{border-top:1px solid #f0eadf;padding:6px 0}
+.ans b{color:var(--navy);display:block}
+.ans span{white-space:pre-wrap;overflow-wrap:anywhere}
+.ans .ans{margin-left:14px}
+.tag{display:inline-block;font-size:.75rem;background:#efe7d6;border-radius:6px;padding:1px 6px;color:var(--muted);margin-left:6px}
+.import{background:#fff8e6;border-color:#e8cf8f}
+</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">Teacher dashboard</p>
+<h1>All class turn-ins</h1>
+<p class="status">One code, every class. Pick a class tab to see who turned in what.</p>
 
-.activity-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:12px}.activity-links a{display:block;background:#edf2f3;border:1px solid #c8d7dc;border-radius:8px;padding:10px 12px;text-decoration:none}.activity-links a:hover,.activity-links a:focus-visible{background:#dcebef;text-decoration:underline}.activity-links small{display:block;color:var(--muted);font-weight:500}.activity-links strong{display:block;color:var(--navy)}
-.activity-placeholder{background:#f4f0e8;border:1px dashed #c8bdab;border-radius:8px;padding:10px 12px}.activity-placeholder strong{display:block;color:var(--navy)}.activity-placeholder small{display:block;color:var(--muted)}
-</style></head><body><main>
-<header class="head"><div><p class="eyebrow">Teacher dashboard</p><h1>Class assignment turn-ins</h1><p class="intro">See student names and work from your activities.</p></div><a href="https://neotboy.github.io/inequalityquest/">← All activities</a></header>
-<section class="panel" aria-labelledby="activitiesHeading"><h2 id="activitiesHeading">Connected World History assignments</h2><p class="status">Open a student activity below. Completed turn-ins appear in the Saved work section when you enter your teacher code.</p>
-<div class="activity-links">
-<a href="../divide-africa/"><strong>Day 1 · Divide Africa</strong><small>Six clues, evidence checks, and map colors</small></a>
-<a href="../day-2-hanoi/"><strong>Day 2 · Hanoi Rat Hunt</strong><small>4 reading checks</small></a>
-<a href="../pacific-case-files/"><strong>Day 3 · Pacific Case Files</strong><small>Colonialism investigation</small></a>
-<a href="../wwi-alliance-chain-reaction/"><strong>Day 4 · WWI Alliances</strong><small>Alliance chain reaction</small></a>
-<a href="../write-the-peace-treaty/"><strong>Day 6 · Cartoon Decoder</strong><small>Four political cartoons · 5 questions each</small></a>
-<a href="../day6-world-in-crisis/"><strong>Day 6 · World in Crisis</strong><small>5 decisions and explanations</small></a>
-<a href="../day7-maus/"><strong>Day 7 · Maus I</strong><small>24 pages · 4 short questions</small></a>
-<a href="../day8-wwii-decision-map/"><strong>Day 8 · World War II: Decisions &amp; Warning Signs</strong><small>Two parts · one turn-in</small></a>
-<a href="../day9-maus2/"><strong>Day 9 · Maus II</strong><small>25 pages · 4 questions</small></a>
-</div></section>
-<section class="panel"><label for="teacherCode">Teacher code</label><div class="row"><input id="teacherCode" type="password" inputmode="numeric" placeholder="Enter teacher code"><button id="loadBtn">View turn-ins</button><button class="light" id="lockBtn">Lock</button></div><p class="status" id="status" role="status" aria-live="polite">Enter the teacher code to view saved work.</p></section>
-<section class="panel"><div class="countline"><div><h2>Saved work <span class="count" id="count">0</span></h2><p class="status">Each row is one student's turn-in.</p></div><button class="light" id="csvBtn" disabled>Download CSV</button></div>
-<div class="filters"><input id="search" placeholder="Search student name"><select id="assignment"><option value="all">All activities</option><option value="divide-africa-day1">Divide Africa (Day 1)</option><option value="day-2-hanoi-rat-hunt">The Great Hanoi Rat Hunt (Day 2)</option><option value="pacific-case-files">Pacific Case Files (Day 3)</option><option value="wwi-alliance-chain-reaction">WWI Alliance Chain Reaction (Day 4)</option><option value="write-the-peace-treaty">Cartoon Decoder (Day 6)</option><option value="day6-world-in-crisis">A World in Crisis (Day 6)</option><option value="day7-maus-reading-checks">Maus I Reading Checks (Day 7)</option><option value="day8-wwii-combined">World War II: Decisions &amp; Warning Signs (Day 8)</option><option value="day8-wwii-decision-map">Previous standalone · Decision Map (Day 8)</option><option value="day7-warning-signs">Previous standalone · Warning Signs (Day 8)</option><option value="day9-maus2-reading-checks">Maus II Reading Checks (Day 9)</option><option value="day9-anne-frank-quick-write">Anne Frank Diary Quick Write (previous assignment)</option><option value="wwii-graphic-reading-day1">World War II Graphic Reading · Day 1</option><option value="wwii-graphic-reading-day2">World War II Graphic Reading · Day 2</option><option value="wwii-graphic-reading-day3">World War II Graphic Reading · Day 3</option></select><button class="light" id="refreshBtn">Refresh</button></div>
-<div id="entries" class="list"><div class="empty">Turn-ins will appear here.</div></div></section>
-</main><script>
-const API="https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/teacher/submissions";
-const code=document.getElementById("teacherCode"),status=document.getElementById("status"),entries=document.getElementById("entries");
-let allRows=[],visibleRows=[];
-const titles={"divide-africa-day1":"Divide Africa Map · Day 1","day-2-hanoi-rat-hunt":"The Great Hanoi Rat Hunt · Day 2","pacific-case-files":"Pacific Case Files · Day 3","wwi-alliance-chain-reaction":"WWI Alliance Chain Reaction · Day 4","write-the-peace-treaty":"Cartoon Decoder · Day 6","day6-world-in-crisis":"A World in Crisis · Day 6","day7-maus-reading-checks":"Maus I Reading Checks · Day 7","day7-warning-signs":"Previous standalone: Warning Signs · Day 8","day8-wwii-combined":"World War II: Decisions & Warning Signs · Day 8","day8-wwii-decision-map":"Previous standalone: Decision Map · Day 8","day9-maus2-reading-checks":"Maus II Reading Checks · Day 9","day9-anne-frank-quick-write":"Anne Frank Diary Quick Write · Previous assignment","wwii-graphic-reading-day1":"World War II Graphic Reading · Day 1","wwii-graphic-reading-day2":"World War II Graphic Reading · Day 2","wwii-graphic-reading-day3":"World War II Graphic Reading · Day 3"};
-code.value=sessionStorage.getItem("teacher-code")||"";
-function safe(value){return String(value??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
-async function load(){const key=code.value.trim();if(!key){status.textContent="Enter the teacher code.";return}status.textContent="Loading turn-ins…";try{const response=await fetch(API,{headers:{"X-Teacher-Key":key},cache:"no-store"});const data=await response.json();if(!response.ok)throw new Error(data.error||"Could not load turn-ins.");allRows=data.submissions||[];sessionStorage.setItem("teacher-code",key);render();status.textContent=allRows.length+" turn-in"+(allRows.length===1?"":"s")+" saved."}catch(error){allRows=[];render();status.textContent=error instanceof Error?error.message:"Could not load turn-ins."}}
-function render(){const q=document.getElementById("search").value.trim().toLowerCase(),assignment=document.getElementById("assignment").value;visibleRows=allRows.filter(r=>r.studentName.toLowerCase().includes(q)&&(assignment==="all"||r.assignmentId===assignment));document.getElementById("count").textContent=allRows.length;document.getElementById("csvBtn").disabled=!visibleRows.length;if(!visibleRows.length){entries.innerHTML='<div class="empty">'+(allRows.length?"No turn-ins match that search.":"Turn-ins will appear here.")+'</div>';return}entries.innerHTML=visibleRows.map(r=>'<article class="submission"><div class="top"><div><h3>'+safe(r.studentName)+'</h3><p>'+safe(titles[r.assignmentId]||r.assignmentTitle||r.assignmentId)+'</p></div><time>'+safe(new Date(r.submittedAt).toLocaleString())+'</time></div><details><summary>View answers</summary><dl>'+Object.entries(r.answers||{}).map(([k,v])=>'<div class="answer"><dt>'+safe(k)+'</dt><dd>'+safe(typeof v==="string"?v:JSON.stringify(v))+'</dd></div>').join("")+'</dl></details></article>').join("")}
-function csvCell(v){const s=typeof v==="string"?v:JSON.stringify(v??"");return '"'+s.replaceAll('"','""')+'"'}
-function downloadCsv(){const rows=[["Student","Assignment","Submitted","Answers"].map(csvCell).join(","),...visibleRows.map(r=>[r.studentName,titles[r.assignmentId]||r.assignmentTitle,r.submittedAt,r.answers].map(csvCell).join(","))];const blob=new Blob([rows.join("\r\n")],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="class-assignment-turn-ins.csv";a.click();URL.revokeObjectURL(url)}
-document.getElementById("loadBtn").addEventListener("click",load);document.getElementById("refreshBtn").addEventListener("click",load);document.getElementById("search").addEventListener("input",render);document.getElementById("assignment").addEventListener("change",render);document.getElementById("csvBtn").addEventListener("click",downloadCsv);document.getElementById("lockBtn").addEventListener("click",()=>{sessionStorage.removeItem("teacher-code");code.value="";allRows=[];render();status.textContent="Dashboard locked."});
-</script></body></html>
+<section class="panel">
+  <div class="row">
+    <label for="teacherCode">Teacher code</label>
+    <input id="teacherCode" type="password" autocomplete="off" placeholder="Enter teacher code">
+    <button id="loadBtn">View turn-ins</button>
+    <button class="light" id="refreshBtn">Refresh</button>
+    <button class="light" id="lockBtn">Lock</button>
+  </div>
+  <p class="status" id="status" role="status" aria-live="polite">Enter your teacher code to load student work.</p>
+</section>
+
+<section class="panel import" id="importPanel" hidden>
+  <h2>Copy old turn-ins into your Google Sheet</h2>
+  <p class="status">You only need to do this once. It copies everything from the old site into your Sheet, with names shortened to first name + last initial. Running it again won't make duplicates.</p>
+  <div class="row" style="margin-top:8px"><button id="importBtn">Copy old turn-ins</button></div>
+  <p class="status" id="importStatus" aria-live="polite"></p>
+</section>
+
+<div class="tabs" role="tablist" id="tabs"></div>
+<section class="panel tabpanel" id="tabpanel" role="tabpanel">
+  <div class="links" id="links"></div>
+  <div class="views" role="group" aria-label="View">
+    <button class="light" id="gridView" aria-pressed="true">Who turned in what</button>
+    <button class="light" id="listView" aria-pressed="false">Read answers</button>
+    <button class="light" id="csvBtn" disabled>Download CSV</button>
+  </div>
+  <div class="row" id="filters" hidden style="margin-bottom:10px">
+    <input id="search" placeholder="Search student" aria-label="Search student">
+    <select id="assignment" aria-label="Activity"></select>
+  </div>
+  <div id="out"><div class="empty">Turn-ins will appear here.</div></div>
+</section>
+</main>
+
+<script>
+// Set to false after you've copied the old turn-ins into Google and no longer need the old site.
+const READ_OLD_SITE = true;
+const OLD_API = "https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/teacher/submissions";
+const GOOGLE = (typeof GOOGLE_SAVER_URL === "string" && GOOGLE_SAVER_URL) ? GOOGLE_SAVER_URL : "";
+
+const COURSES = window.CLASS_COURSES, REG = window.CLASS_ASSIGNMENTS;
+const $ = id => document.getElementById(id);
+let rows = [], oldRows = [], tab = (COURSES[location.hash.slice(1)] && location.hash.slice(1)) || sessionStorage.getItem("dash-tab") || "us-history", view = "grid";
+
+const safe = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const titleOf = r => (REG[r.assignmentId] && REG[r.assignmentId].title) || r.assignmentTitle || r.assignmentId;
+const dateShort = iso => { const d = new Date(iso); return isNaN(d) ? "" : (d.getMonth()+1) + "/" + d.getDate(); };
+
+function normalize(r, source) {
+  const name = window.classShortName(r.studentName) || "(no name)";
+  const when = new Date(r.submittedAt);
+  return {
+    studentName: name,
+    assignmentId: String(r.assignmentId || ""),
+    assignmentTitle: r.assignmentTitle || "",
+    course: COURSES[r.course] ? r.course : window.classCourseFor(r.assignmentId),
+    submittedAt: isNaN(when) ? String(r.submittedAt || "") : when.toISOString(),
+    answers: r.answers || {},
+    kind: r.kind || "turn-in",
+    source
+  };
+}
+
+async function load() {
+  const code = $("teacherCode").value.trim();
+  if (!code) { $("status").textContent = "Enter the teacher code."; return; }
+  $("status").textContent = "Loading turn-ins…";
+  const notes = [], got = [];
+  const jobs = [];
+  if (GOOGLE) jobs.push(fetch(GOOGLE, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "list", code }) })
+    .then(r => r.json()).then(d => { if (!d.ok) throw new Error(d.error || "Google Sheet would not load."); const list = (d.submissions || []).map(x => normalize(x, "google")); got.push(...list); notes.push(list.length + " from your Google Sheet"); })
+    .catch(e => notes.push("<span class='warn'>Google Sheet: " + safe(e.message) + "</span>")));
+  if (READ_OLD_SITE) jobs.push(fetch(OLD_API, { headers: { "X-Teacher-Key": code }, cache: "no-store" })
+    .then(async r => { const d = await r.json(); if (!r.ok) throw new Error(d.error || "Old site would not load."); oldRows = d.submissions || []; const list = oldRows.map(x => normalize(x, "old")); got.push(...list); notes.push(list.length + " from the old site"); })
+    .catch(e => { oldRows = []; notes.push("<span class='warn'>Old site: " + safe(e.message) + "</span>"); }));
+  await Promise.all(jobs);
+
+  // Same student, same activity, same minute = same turn-in (shows once even if it's in both places).
+  const seen = new Map();
+  got.filter(r => r.kind !== "progress").forEach(r => {
+    const key = r.submittedAt.slice(0, 16) + "|" + r.studentName.toLowerCase() + "|" + r.assignmentId;
+    if (!seen.has(key) || r.source === "google") seen.set(key, r);
+  });
+  rows = [...seen.values()].sort((a, b) => b.submittedAt.localeCompare(a.submittedAt));
+  if (got.length) sessionStorage.setItem("teacher-code", code);
+  $("status").innerHTML = rows.length + " turn-ins loaded (" + notes.join(" · ") + ").";
+  $("importPanel").hidden = !(GOOGLE && READ_OLD_SITE && oldRows.length);
+  render();
+}
+
+function tabRows(t) { return rows.filter(r => r.course === t); }
+
+function renderTabs() {
+  $("tabs").innerHTML = Object.keys(COURSES).map(k =>
+    `<button class="tab" role="tab" data-tab="${k}" aria-selected="${k === tab}">${COURSES[k]}<span class="n">${tabRows(k).length}</span></button>`).join("");
+  $("tabs").querySelectorAll(".tab").forEach(b => b.onclick = () => { tab = b.dataset.tab; sessionStorage.setItem("dash-tab", tab); $("search").value = ""; render(); });
+  const acts = Object.entries(REG).filter(([, a]) => a.course === tab && a.path);
+  $("links").innerHTML = acts.length ? "<b style='color:var(--navy);margin-right:4px'>Student links:</b>" + acts.map(([, a]) => `<a href="../${a.path}" target="_blank" rel="noopener">${safe(a.title)}</a>`).join("")
+    : "<span class='status'>No activities in this class send work to the dashboard yet.</span>";
+}
+
+function activitiesFor(list) {
+  const order = Object.keys(REG), ids = [...new Set(list.map(r => r.assignmentId))];
+  return ids.sort((a, b) => (order.indexOf(a) + 1 || 999) - (order.indexOf(b) + 1 || 999));
+}
+
+function render() {
+  renderTabs();
+  const list = tabRows(tab);
+  $("gridView").setAttribute("aria-pressed", view === "grid");
+  $("listView").setAttribute("aria-pressed", view === "list");
+  $("filters").hidden = view !== "list";
+  const sel = $("assignment"), keep = sel.value;
+  sel.innerHTML = '<option value="all">All activities</option>' + activitiesFor(list).map(id => `<option value="${safe(id)}">${safe(titleOf({ assignmentId: id }))}</option>`).join("");
+  sel.value = [...sel.options].some(o => o.value === keep) ? keep : "all";
+  const shown = visible();
+  $("csvBtn").disabled = !shown.length;
+  if (!list.length) { $("out").innerHTML = `<div class="empty">${rows.length ? "No turn-ins for " + COURSES[tab] + " yet." : "Turn-ins will appear here."}</div>`; return; }
+  view === "grid" ? renderGrid(list) : renderList(shown);
+}
+
+function visible() {
+  const q = $("search").value.trim().toLowerCase(), a = $("assignment").value;
+  return tabRows(tab).filter(r => (view === "grid" || r.studentName.toLowerCase().includes(q)) && (view === "grid" || a === "all" || r.assignmentId === a));
+}
+
+function renderGrid(list) {
+  const acts = activitiesFor(list), students = [...new Set(list.map(r => r.studentName))].sort((a, b) => a.localeCompare(b));
+  const cell = (s, id) => {
+    const hits = list.filter(r => r.studentName === s && r.assignmentId === id);
+    if (!hits.length) return `<td class="miss">—</td>`;
+    return `<td class="done"><button data-s="${safe(s)}" data-a="${safe(id)}" title="Open answers">✓ ${dateShort(hits[0].submittedAt)}${hits.length > 1 ? " ×" + hits.length : ""}</button></td>`;
+  };
+  $("out").innerHTML = `<p class="status" style="margin:0 0 8px">${students.length} students · click a ✓ to read that student's answers.</p>
+    <div class="gridwrap"><table><thead><tr><th class="student">Student</th>${acts.map(id => `<th>${safe(titleOf({ assignmentId: id }))}</th>`).join("")}<th>Done</th></tr></thead>
+    <tbody>${students.map(s => `<tr><td class="student">${safe(s)}</td>${acts.map(id => cell(s, id)).join("")}<td>${new Set(list.filter(r => r.studentName === s).map(r => r.assignmentId)).size}/${acts.length}</td></tr>`).join("")}</tbody></table></div>`;
+  $("out").querySelectorAll("td.done button").forEach(b => b.onclick = () => { view = "list"; render(); $("search").value = b.dataset.s; $("assignment").value = b.dataset.a; render(); });
+}
+
+function showValue(v, depth = 0) {
+  if (v === null || v === undefined || v === "") return "<span>—</span>";
+  if (typeof v !== "object" || depth > 3) return `<span>${safe(typeof v === "object" ? JSON.stringify(v) : v)}</span>`;
+  const entries = Array.isArray(v) ? v.map((x, i) => [String(i + 1), x]) : Object.entries(v);
+  return `<ul class="ans">${entries.map(([k, x]) => `<li><b>${safe(k)}</b>${showValue(x, depth + 1)}</li>`).join("")}</ul>`;
+}
+
+function renderList(list) {
+  if (!list.length) { $("out").innerHTML = '<div class="empty">No turn-ins match that search.</div>'; return; }
+  $("out").innerHTML = `<div class="list">${list.map(r => `<article class="sub"><div class="top"><div><h3>${safe(r.studentName)}</h3><p>${safe(titleOf(r))}${r.source === "old" ? '<span class="tag">old site</span>' : ""}</p></div><time>${safe(new Date(r.submittedAt).toLocaleString())}</time></div>
+    <details${list.length <= 3 ? " open" : ""}><summary>View answers</summary>${showValue(r.answers)}</details></article>`).join("")}</div>`;
+}
+
+function flat(v) {
+  if (v === null || v === undefined) return "";
+  if (typeof v !== "object") return String(v);
+  return Object.entries(v).map(([k, x]) => k + ": " + (typeof x === "object" ? JSON.stringify(x) : x)).join("\n");
+}
+function downloadCsv() {
+  const cell = v => '"' + String(v ?? "").replace(/"/g, '""').replace(/^([=+\-@])/, "'$1") + '"';
+  const list = view === "grid" ? tabRows(tab) : visible();
+  const out = [["Student", "Class", "Activity", "Turned in", "Answers"].map(cell).join(","),
+    ...list.map(r => [r.studentName, COURSES[r.course], titleOf(r), new Date(r.submittedAt).toLocaleString(), flat(r.answers)].map(cell).join(","))];
+  const url = URL.createObjectURL(new Blob([out.join("\r\n")], { type: "text/csv;charset=utf-8" }));
+  const a = document.createElement("a"); a.href = url; a.download = COURSES[tab].replace(/\W+/g, "-").toLowerCase() + "-turn-ins.csv"; a.click(); URL.revokeObjectURL(url);
+}
+
+async function copyOld() {
+  const code = $("teacherCode").value.trim(), btn = $("importBtn"), st = $("importStatus");
+  btn.disabled = true; let added = 0, skipped = 0;
+  try {
+    const payload = oldRows.map(r => ({ studentName: r.studentName, assignmentId: r.assignmentId, assignmentTitle: titleOf(r), course: window.classCourseFor(r.assignmentId), submittedAt: r.submittedAt, answers: r.answers }));
+    for (let i = 0; i < payload.length; i += 200) {
+      st.textContent = `Copying ${Math.min(i + 200, payload.length)} of ${payload.length}…`;
+      const d = await fetch(GOOGLE, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "import", code, rows: payload.slice(i, i + 200) }) }).then(r => r.json());
+      if (!d.ok) throw new Error(d.error || "Copy failed.");
+      added += d.added; skipped += d.skipped;
+    }
+    st.textContent = `Done. ${added} copied into your Google Sheet${skipped ? ", " + skipped + " were already there" : ""}.`;
+    load();
+  } catch (e) { st.innerHTML = "<span class='warn'>" + safe(e.message) + " Nothing was lost. Try again.</span>"; }
+  btn.disabled = false;
+}
+
+$("teacherCode").value = sessionStorage.getItem("teacher-code") || "";
+$("teacherCode").addEventListener("keydown", e => { if (e.key === "Enter") load(); });
+$("loadBtn").onclick = load; $("refreshBtn").onclick = load;
+$("lockBtn").onclick = () => { sessionStorage.removeItem("teacher-code"); $("teacherCode").value = ""; rows = []; oldRows = []; $("importPanel").hidden = true; render(); $("status").textContent = "Dashboard locked."; };
+$("gridView").onclick = () => { view = "grid"; render(); };
+$("listView").onclick = () => { view = "list"; render(); };
+$("search").oninput = render; $("assignment").onchange = render;
+$("csvBtn").onclick = downloadCsv; $("importBtn").onclick = copyOld;
+render();
+if ($("teacherCode").value) load();
+</script>
+</body>
+</html>
