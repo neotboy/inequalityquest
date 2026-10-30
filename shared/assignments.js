@@ -1,12 +1,13 @@
 // List of every activity that turns work in, and which class it belongs to.
 // The teacher dashboard uses this to put each turn-in under the right tab.
 // To add a new activity: copy one line, change the id, title, course, and path (its folder).
-// course must be one of: "us-history", "world-history", "sociology", "government"
+// course must be one of: "us-history", "world-history", "sociology", "government", "civics"
 window.CLASS_COURSES = {
   "us-history":    "U.S. History",
   "world-history": "World History",
   "sociology":     "Sociology",
-  "government":    "Government"
+  "government":    "Government",
+  "civics":        "Civics"
 };
 
 window.CLASS_ASSIGNMENTS = {
@@ -36,7 +37,13 @@ window.CLASS_ASSIGNMENTS = {
   "sociology-unit2-arrival-culture":  { course: "sociology", title: "Unit 2 · The Arrival: A New Culture", path: "sociology/arrival-culture/" },
 
   // ---- Government ----
-  "civics-test-s1-founders-defense":  { course: "government", title: "Civics Test Section 1 · Founders' Defense", path: "civics/civics-test-s1-founders-defense/" }
+  "gov-democracy-visualized-day1":    { course: "government", title: "Day 1 · Democracy Visualized Reading", path: "civics/democracy-visualized/" },
+  "gov-democracy-visualized-day2":    { course: "government", title: "Day 2 · Democracy Visualized Reading" },
+  "gov-democracy-visualized-day7":    { course: "government", title: "Day 7 · Democracy Visualized Reading" },
+  "gov-democracy-visualized-day9":    { course: "government", title: "Day 9 · Democracy Visualized Reading" },
+
+  // ---- Civics (Iowa civics test prep) ----
+  "civics-test-s1-founders-defense":  { course: "civics", title: "Civics Test Section 1 · Founders' Defense", path: "civics/civics-test-s1-founders-defense/" }
 };
 
 // Works out the class for any id, even one not listed above.
@@ -45,7 +52,8 @@ window.classCourseFor = function (id) {
   const known = window.CLASS_ASSIGNMENTS[id];
   if (known) return known.course;
   if (id.startsWith("sociology-")) return "sociology";
-  if (id.startsWith("gov-") || id.startsWith("civics-")) return "government";
+  if (id.startsWith("civics-")) return "civics";
+  if (id.startsWith("gov-")) return "government";
   if (id.startsWith("ush-") || id.startsWith("us-history-") || id.startsWith("wwii-graphic-reading")) return "us-history";
   return "world-history";
 };
