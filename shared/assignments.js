@@ -26,11 +26,11 @@ window.CLASS_ASSIGNMENTS = {
   "day9-anne-frank-quick-write": { course: "world-history", title: "Anne Frank Diary Quick Write", path: "day9-anne-frank-quick-write/" },
 
   // ---- U.S. History ----
-  "wwii-graphic-reading-day1":   { course: "us-history", title: "WWII Graphic Reading · Day 1", path: "wwii-graphic-reading/" },
-  "wwii-graphic-reading-day2":   { course: "us-history", title: "WWII Graphic Reading · Day 2" },
-  "wwii-graphic-reading-day3":   { course: "us-history", title: "WWII Graphic Reading · Day 3" },
-  "wwii-graphic-reading-day4":   { course: "us-history", title: "WWII Graphic Reading · Day 4" },
-  "wwii-graphic-reading-day5":   { course: "us-history", title: "WWII Graphic Reading · Day 5" },
+  "wwii-graphic-reading-day1":   { course: "us-history", title: "WWII Graphic Reading · Day 1", path: "wwii-graphic-reading/#day1" },
+  "wwii-graphic-reading-day2":   { course: "us-history", title: "WWII Graphic Reading · Day 2", path: "wwii-graphic-reading/#day2" },
+  "wwii-graphic-reading-day3":   { course: "us-history", title: "WWII Graphic Reading · Day 3", path: "wwii-graphic-reading/#day3" },
+  "wwii-graphic-reading-day4":   { course: "us-history", title: "WWII Graphic Reading · Day 4", path: "wwii-graphic-reading/#day4" },
+  "wwii-graphic-reading-day5":   { course: "us-history", title: "WWII Graphic Reading · Day 5", path: "wwii-graphic-reading/#day5" },
 
   // ---- Sociology ----
   "sociology-theory-casebook":        { course: "sociology", title: "Theory Casebook", path: "day-4-theory-casebook/" },
