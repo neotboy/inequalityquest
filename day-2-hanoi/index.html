@@ -18,8 +18,8 @@ label{display:block;font-weight:750;margin:9px 0 6px}input,textarea{width:100%;f
 <main><div class="intro"><strong>How to finish:</strong> Read the page groups in order, answer all four questions with details from the book, and turn in your work. Your draft saves on this device.</div>
 <div class="layout">
 <section class="panel reading" aria-label="Selected book pages"><p class="eyebrow">The reading</p><h2>Selected pages from the book</h2><p class="reading-note">Use the page numbers beside each question. If the embedded reader does not load, open the PDF in another tab.</p>
-<p><a href="https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/great-hanoi-rat-hunt-reading.pdf#page=1" target="_blank" rel="noopener">Open the reading PDF ↗</a></p>
-<iframe id="reader" title="The Great Hanoi Rat Hunt selected reading pages" src="https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/great-hanoi-rat-hunt-reading.pdf#page=1&view=FitH"></iframe></section>
+<p><a href="great-hanoi-rat-hunt-reading%20(1).pdf#page=1" target="_blank" rel="noopener">Open the reading PDF ↗</a></p>
+<iframe id="reader" title="The Great Hanoi Rat Hunt selected reading pages" src="great-hanoi-rat-hunt-reading%20(1).pdf#page=1&view=FitH"></iframe></section>
 <section class="panel"><h2>Your reading checks</h2><label for="studentName">Your first and last name</label><input id="studentName" maxlength="100" autocomplete="name" placeholder="Type your name" required>
 <p class="status" id="progress" aria-live="polite">0 of 4 checks answered</p>
 <div class="question"><p class="page-ref">Book pages 5–39 · Reader pages 1–6</p><h3>1. French plans for Hanoi</h3><label class="prompt" for="answer1">What did the French want Hanoi to become? Name one change they made.</label><textarea id="answer1" placeholder="Use a detail from these pages…"></textarea><button class="secondary pageBtn" type="button" data-page="1">Go to pages ↖</button></div>
@@ -41,7 +41,7 @@ const $=id=>document.getElementById(id);
 fields.forEach(id=>{const field=$(id);field.value=localStorage.getItem(PREFIX+id)||"";field.addEventListener("input",save)});
 function save(){fields.forEach(id=>localStorage.setItem(PREFIX+id,$(id).value));$("progress").textContent=[1,2,3,4].filter(i=>$("answer"+i).value.trim()).length+" of 4 checks answered"}
 save();
-document.querySelectorAll(".pageBtn").forEach(button=>button.addEventListener("click",()=>{const base="https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/great-hanoi-rat-hunt-reading.pdf";$("reader").src=base+"#page="+button.dataset.page+"&view=FitH";document.querySelector(".reading").scrollIntoView({behavior:"smooth",block:"start"})}));
+document.querySelectorAll(".pageBtn").forEach(button=>button.addEventListener("click",()=>{const base="great-hanoi-rat-hunt-reading%20(1).pdf";$("reader").src=base+"#page="+button.dataset.page+"&view=FitH";document.querySelector(".reading").scrollIntoView({behavior:"smooth",block:"start"})}));
 $("clearBtn").addEventListener("click",()=>{if(!confirm("Clear this draft on this device?"))return;fields.forEach(id=>{$(id).value="";localStorage.removeItem(PREFIX+id)});save();$("submitStatus").textContent="Draft cleared."});
 $("submitBtn").addEventListener("click",async()=>{const name=$("studentName").value.trim(),status=$("submitStatus"),button=$("submitBtn");status.className="status";if(!name){status.textContent="Enter your first and last name.";status.classList.add("error");$("studentName").focus();return}if([1,2,3,4].some(i=>!$("answer"+i).value.trim())){status.textContent="Answer all four reading checks before turning in.";status.classList.add("error");return}
 const answers=Object.fromEntries(questions.map((q,i)=>[q,$("answer"+(i+1)).value.trim()]));button.disabled=true;status.textContent="Sending your work…";
