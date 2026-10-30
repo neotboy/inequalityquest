@@ -42,10 +42,10 @@ window.CLASS_ASSIGNMENTS = {
   "sociology-day-7-research-ethics":          { course: "sociology", title: "Day 7 · Ethics in Sociological Research (Reading)", path: "sociology/day-7-research-ethics/" },
 
   // ---- Government ----
-  "gov-democracy-visualized-day1":    { course: "government", title: "Day 1 · Democracy Visualized Reading", path: "civics/democracy-visualized/" },
-  "gov-democracy-visualized-day2":    { course: "government", title: "Day 2 · Democracy Visualized Reading" },
-  "gov-democracy-visualized-day7":    { course: "government", title: "Day 7 · Democracy Visualized Reading" },
-  "gov-democracy-visualized-day9":    { course: "government", title: "Day 9 · Democracy Visualized Reading" },
+  "gov-democracy-visualized-day1":    { course: "government", title: "Day 1 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day1" },
+  "gov-democracy-visualized-day2":    { course: "government", title: "Day 2 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day2" },
+  "gov-democracy-visualized-day7":    { course: "government", title: "Day 7 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day7" },
+  "gov-democracy-visualized-day9":    { course: "government", title: "Day 9 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day9" },
 
   // ---- Civics (Iowa civics test prep) ----
   "civics-test-s1-founders-defense":  { course: "civics", title: "Civics Test Section 1 · Founders' Defense", path: "civics/civics-test-s1-founders-defense/" }

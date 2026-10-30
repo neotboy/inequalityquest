@@ -11,8 +11,8 @@
 <header><div class="topline"><span class="mark" aria-hidden="true">D</span><span>Government Foundations · Graphic Reading</span></div><h1>Democracy Visualized</h1><p class="sub">Read each assigned page, answer its question, and finish with a short response. Plan for about 10 minutes.</p></header>
 <div class="layout"><nav class="sidebar" aria-label="Choose a reading day"><p class="side-title">Reading days</p><div class="days" id="days"></div><div class="progress"><span id="progressText">0 of 4 readings finished</span><div class="progressbar"><span id="progressFill"></span></div></div></nav><main class="main" id="main" tabindex="-1"></main></div>
 <footer class="source"><div class="sourcebox"><p><strong>About this reading</strong></p><p>Selected pages from <em>This Is What Democracy Looks Like: A Graphic Guide to Governance</em>, created by the Center for Cartoon Studies.</p><p><a href="https://cartoonstudies.org/democracy" target="_blank" rel="noopener">Visit the creators’ page</a>. PDF page numbers are shown above each reading.</p></div></footer>
-<script src="../../shared/assignments.js?v=20261030a"></script>
-<script src="../../shared/turnin.js?v=20261030a"></script>
+<script src="../../shared/assignments.js?v=20261030b"></script>
+<script src="../../shared/turnin.js?v=20261030b"></script>
 <script>
 const data=[
 {day:1,title:'Purposes and Origins of Government',standards:'SS.9-12.Gov.1 · SS.9-12.Gov.5',pages:[
@@ -51,6 +51,8 @@ function readyToFinish(){const response=document.getElementById('response');if(!
 function format(s){return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`}
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
 function zoom(delta){const im=document.getElementById('bookpage');let z=Number(im.dataset.zoom||1);z=Math.max(.75,Math.min(1.8,z+delta));im.dataset.zoom=z;im.style.width=(z*100)+'%';im.style.maxWidth='none'}
+(function(){const m=location.hash.match(/day(\d+)/);if(m){const i=data.findIndex(d=>String(d.day)===m[1]);if(i>-1)current=i;}})();
+addEventListener('hashchange',()=>{const m=location.hash.match(/day(\d+)/);if(m){const i=data.findIndex(d=>String(d.day)===m[1]);if(i>-1&&i!==current){current=i;startDay();}}});
 startDay();
 </script>
 </body>
