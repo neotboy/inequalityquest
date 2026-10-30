@@ -45,7 +45,6 @@ window.CLASS_ASSIGNMENTS = {
   "day8-wwii-combined":          { course: "world-history", unit: 1, day: 8, title: "Day 8 · WWII Decisions & Warning Signs", path: "day8-wwii-decision-map/" },
   "day8-wwii-decision-map":      { course: "world-history", unit: 1, day: 8, title: "Day 8 · Decision Map (older version)" },
   "day9-maus2-reading-checks":   { course: "world-history", unit: 1, day: 9, title: "Day 9 · Maus II Reading Checks", path: "day9-maus2/" },
-  "day9-anne-frank-quick-write": { course: "world-history", unit: 1, day: 9, title: "Day 9 · Anne Frank Diary Quick Write", path: "day9-anne-frank-quick-write/" },
 
   // ---- U.S. History · Unit 2 (World War II) ----
   "wwii-graphic-reading-day1":   { course: "us-history", unit: 2, day: 1, title: "Day 1 · WWII Graphic Reading", path: "wwii-graphic-reading/#day1" },
