@@ -49,7 +49,15 @@ const GOOGLE_SAVER_URL = "";
 
     // Old site: same as before, just with the shorter name.
     if (!GOOGLE_SAVER_URL) {
-      return fetch(oldUrl, Object.assign({}, options, { body: JSON.stringify(body) }));
+      const res = await fetch(oldUrl, Object.assign({}, options, { body: JSON.stringify(body) }));
+      if (res.status === 400) {
+        const data = await res.clone().json().catch(() => ({}));
+        // The old site only knows older activities. Say so plainly instead of "Unknown assignment."
+        if (/unknown assignment/i.test(data.error || "")) {
+          return fakeResponse(400, { error: "Turn-in for this activity isn't switched on yet. Keep this page open and tell your teacher." });
+        }
+      }
+      return res;
     }
 
     // Google Sheet saver.
