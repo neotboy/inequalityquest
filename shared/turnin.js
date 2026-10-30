@@ -6,7 +6,7 @@
 //  It looks like: https://script.google.com/macros/s/AKfy.../exec
 //  While it is empty, work keeps going to the old site, so nothing breaks.
 // =====================================================================
-const GOOGLE_SAVER_URL = "";
+const GOOGLE_SAVER_URL = "https://script.google.com/macros/s/AKfycbwWV93yudtLuny7OwiCluP5nyF7OZ4lJ5c7RBD1vDTYl_ezOYFAXx00XJLctKTdzZmENw/exec";
 
 (function () {
   "use strict";
