@@ -33,10 +33,10 @@ window.CLASS_ASSIGNMENTS = {
 
   // ---- Sociology ----
   "sociology-theory-casebook":        { course: "sociology", title: "Theory Casebook", path: "day-4-theory-casebook/" },
-  "sociology-unit2-arrival-culture":  { course: "sociology", title: "Unit 2 · The Arrival: A New Culture", path: "sociology/arrival-culture/" }
+  "sociology-unit2-arrival-culture":  { course: "sociology", title: "Unit 2 · The Arrival: A New Culture", path: "sociology/arrival-culture/" },
 
   // ---- Government ----
-  // (Government games don't turn work in yet. Add them here when they do.)
+  "civics-test-s1-founders-defense":  { course: "government", title: "Civics Test Section 1 · Founders' Defense", path: "civics/civics-test-s1-founders-defense/" }
 };
 
 // Works out the class for any id, even one not listed above.
