@@ -174,6 +174,7 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 .color-choice{display:flex;align-items:center;justify-content:center;gap:8px}
 .map-card .map-svg{width:min(100%,620px)!important;max-height:72vh!important}
 @media(max-width:850px){.transfer-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+.welcome-back{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;margin:0 0 16px;padding:12px 16px;border-radius:12px;background:#e8f6ef;border:1px solid #9fd3b8;color:#14532d;font-weight:600}.restart-link{background:none;border:none;color:#1d4ed8;text-decoration:underline;font:inherit;font-weight:600;cursor:pointer;padding:4px}
 </style>
 <script src="../shared/assignments.js?v=20261030d"></script><script src="../shared/turnin.js?v=20261030d"></script></head>
 <body>
@@ -319,15 +320,15 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 </main>
 <script>
 const places=[
- {id:"egypt",name:"Egypt",clue:"This land in the northeast corner of Africa has a canal that links the Mediterranean Sea to the Red Sea.",power:"Britain",whyQ:"Why did this power want it?",why:"To protect its sea route to India"},
- {id:"algeria",name:"Algeria",clue:"This huge North African land is mostly Sahara Desert, but its coast has rich farmland.",power:"France",whyQ:"Why did this power want it?",why:"To give European settlers farmland"},
- {id:"congo",name:"Congo",clue:"This giant rainforest land in Central Africa was once owned by one European king.",power:"Belgium",whyQ:"Why did this power want it?",why:"To make money from rubber",avoid:["angola"]},
- {id:"libya",name:"Libya",clue:"This desert land was part of the Ottoman Empire until 1911.",power:"Italy",whyQ:"Why did this power want it?",why:"To build an empire after losing Ethiopia"},
- {id:"tanzania",name:"Tanzania",clue:"This East African land has Mount Kilimanjaro. In 1905, its people fought the Maji Maji uprising.",power:"Germany",whyQ:"Why did this power want it?",why:"To prove it was a world power"},
- {id:"nigeria",name:"Nigeria",clue:"This West African land is named after the Niger River.",power:"Britain",whyQ:"Why did this power want it?",why:"To buy palm oil for its companies"},
- {id:"angola",name:"Angola",clue:"Europeans first came to this land in southwest Africa in the 1500s.",power:"Portugal",whyQ:"Why did this power want it?",why:"To keep forcing Africans to work",avoid:["congo"]},
- {id:"ethiopia",name:"Ethiopia",clue:"This land in the Horn of Africa was invaded by Italy in 1896.",power:"Independent",whyQ:"Why did it stay independent?",why:"Its army won the Battle of Adwa",fakes:["Britain protected it as an ally","It paid Italy to leave it alone","Europe saw nothing there worth taking"]},
- {id:"south-africa",name:"South Africa",clue:"This land at the southern tip of Africa has some of the richest mines in the world.",power:"Britain",whyQ:"Why did this power want it?",why:"To control gold and diamond mines"},
+ {id:"egypt",name:"Egypt",clue:"Ships from Europe could save thousands of miles on the trip to Asia by passing through this land instead of sailing all the way around Africa.",power:"Britain",whyQ:"Why did this power want it?",why:"To protect its sea route to India"},
+ {id:"algeria",name:"Algeria",clue:"Huge numbers of newcomers from Europe made new homes here and moved onto fields that local families had worked for generations.",power:"France",whyQ:"Why did this power want it?",why:"To give European settlers farmland"},
+ {id:"congo",name:"Congo",clue:"Villagers here had to gather sap from wild vines to meet a quota. Those who fell short could lose a hand or even their life, while one ruler far away got rich.",power:"Belgium",whyQ:"Why did this power want it?",why:"To make money from rubber",avoid:["angola"]},
+ {id:"libya",name:"Libya",clue:"This dry coastland was taken from a weakening empire by a country that was still bitter about losing a war somewhere else in Africa.",power:"Italy",whyQ:"Why did this power want it?",why:"To build an empire after losing Ethiopia"},
+ {id:"tanzania",name:"Tanzania",clue:"Farmers here were ordered to grow a crop for faraway clothing factories instead of food. They rose up together, believing blessed water would protect them from bullets.",power:"Germany",whyQ:"Why did this power want it?",why:"To prove it was a world power",avoid:["angola","congo"]},
+ {id:"nigeria",name:"Nigeria",clue:"Traders here bought oil pressed from the fruit of a tree. Factories in Europe used it to make soap and to grease machines.",power:"Britain",whyQ:"Why did this power want it?",why:"To buy palm oil for its companies"},
+ {id:"angola",name:"Angola",clue:"For more than 300 years, slave ships left this land's coast carrying captives across the ocean to Brazil.",power:"Portugal",whyQ:"Why did this power want it?",why:"To keep forcing Africans to work",avoid:["congo"]},
+ {id:"ethiopia",name:"Ethiopia",clue:"An emperor's army crushed a European invasion force in these mountains, so this kingdom never became a colony.",power:"Independent",whyQ:"Why did it stay independent?",why:"Its army won the Battle of Adwa",fakes:["Britain protected it as an ally","It paid Italy to leave it alone","Europe saw nothing there worth taking"]},
+ {id:"south-africa",name:"South Africa",clue:"Deep mines here pulled out the yellow metal and sparkling stones that made fortunes for companies in London.",power:"Britain",whyQ:"Why did this power want it?",why:"To control gold and diamond mines"},
  {id:"liberia",name:"Liberia",clue:"This small West African land has a capital city named after U.S. President James Monroe.",power:"Independent",whyQ:"Who settled this land?",why:"Freed Black Americans",fakes:["Italian soldiers","Portuguese traders","French farm families"]}
 ];
 const powers=["Britain","France","Belgium","Germany","Italy","Portugal","Independent"];
@@ -464,7 +465,41 @@ mapRegions.forEach(r=>{
  r.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open()}});
 });
 document.querySelectorAll(".map-marker").forEach(m=>m.addEventListener("click",()=>selectPlace(m.dataset.for)));
-setupClue();
+const SAVE_KEY="divide-africa-progress-v2";
+function saveProgress(){if(window.daWipe)return;try{localStorage.setItem(SAVE_KEY,JSON.stringify({idx,solved,whySolved,misses,mapAssignments,mapMisses,partOneDone:!$("part-one-done").hidden,phase2:!phaseTwo.hidden,name:$("student-name").value}))}catch(e){}}
+document.addEventListener("click",()=>setTimeout(saveProgress,0),true);
+$("student-name").addEventListener("input",saveProgress);
+function welcomeBanner(msg){
+ const box=document.createElement("div");box.className="welcome-back";box.setAttribute("role","status");
+ const t=document.createElement("span");t.textContent=msg;
+ const r=document.createElement("button");r.type="button";r.className="restart-link";r.textContent="Start over";
+ r.addEventListener("click",()=>{if(r.dataset.armed){window.daWipe=true;try{localStorage.removeItem(SAVE_KEY)}catch(e){}location.reload()}else{r.dataset.armed="1";r.textContent="Click again to erase your work"}});
+ box.append(t,r);document.querySelector("main").prepend(box);
+}
+(function restore(){
+ let s=null;try{s=JSON.parse(localStorage.getItem(SAVE_KEY)||"null")}catch(e){}
+ if(!s||!s.misses){setupClue();return}
+ Object.assign(solved,s.solved||{});Object.assign(whySolved,s.whySolved||{});
+ places.forEach(p=>{if(s.misses[p.id])misses[p.id]=s.misses[p.id];if(s.mapMisses&&typeof s.mapMisses[p.id]==="number")mapMisses[p.id]=s.mapMisses[p.id]});
+ Object.assign(mapAssignments,s.mapAssignments||{});
+ if(s.name)$("student-name").value=s.name;
+ idx=Math.max(0,Math.min(s.idx||0,TOTAL-1));
+ const done=Object.keys(whySolved).length,colored=Object.keys(mapAssignments).length;
+ if(!done&&!Object.keys(solved).length&&!s.name){setupClue();return}
+ if(s.phase2){
+  setupClue();document.querySelector(".clue-box").hidden=true;
+  $("phase-one").hidden=true;document.querySelector(".facts").hidden=true;phaseTwo.hidden=false;renderMap();updateProgress();
+  welcomeBanner("Welcome back! You're on Part 2. "+colored+" of "+TOTAL+" places are colored.");
+ }else if(s.partOneDone){
+  setupClue();document.querySelector(".clue-box").hidden=true;$("part-one-done").hidden=false;updateProgress();
+  welcomeBanner("Welcome back! Part 1 is done. Open the map to start Part 2.");
+ }else{
+  setupClue();const p=places[idx];
+  if(solved[p.id])choosePower(p.power);
+  if(whySolved[p.id])chooseWhy(p.why);
+  welcomeBanner("Welcome back! You're on mystery place "+(idx+1)+" of "+TOTAL+".");
+ }
+})();
 function scoreInfo(){
  let first=0;
  places.forEach(p=>{if(!misses[p.id].power)first++;if(!misses[p.id].why)first++;if(!mapMisses[p.id])first++});
