@@ -35,6 +35,11 @@ window.CLASS_ASSIGNMENTS = {
   // ---- Sociology ----
   "sociology-theory-casebook":        { course: "sociology", title: "Theory Casebook", path: "day-4-theory-casebook/" },
   "sociology-unit2-arrival-culture":  { course: "sociology", title: "Unit 2 · The Arrival: A New Culture", path: "sociology/arrival-culture/" },
+  "sociology-day-1-reading":                  { course: "sociology", title: "Day 1 · What Is Sociology? (Reading)", path: "sociology/day-1-reading/" },
+  "sociology-day-2-sociological-imagination": { course: "sociology", title: "Day 2 · The Sociological Imagination (Reading)", path: "sociology/day-2-sociological-imagination/" },
+  "sociology-day-3-founders":                 { course: "sociology", title: "Day 3 · Origins and Founders (Reading)", path: "sociology/day-3-founders/" },
+  "sociology-day-4-perspectives":             { course: "sociology", title: "Day 4 · Sociological Perspectives (Reading)", path: "sociology/day-4-perspectives/" },
+  "sociology-day-7-research-ethics":          { course: "sociology", title: "Day 7 · Ethics in Sociological Research (Reading)", path: "sociology/day-7-research-ethics/" },
 
   // ---- Government ----
   "gov-democracy-visualized-day1":    { course: "government", title: "Day 1 · Democracy Visualized Reading", path: "civics/democracy-visualized/" },
