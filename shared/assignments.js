@@ -48,11 +48,11 @@ window.CLASS_ASSIGNMENTS = {
   "day9-maus2-reading-checks":   { course: "world-history", unit: 1, day: 9, title: "Day 9 · Maus II Reading Checks", path: "day9-maus2/" },
 
   // ---- U.S. History · Unit 2 (World War II) ----
-  "wwii-graphic-reading-day1":   { course: "us-history", unit: 2, day: 1, title: "Day 1 · WWII Graphic Reading", path: "wwii-graphic-reading/#day1" },
-  "wwii-graphic-reading-day2":   { course: "us-history", unit: 2, day: 2, title: "Day 2 · WWII Graphic Reading", path: "wwii-graphic-reading/#day2" },
-  "wwii-graphic-reading-day3":   { course: "us-history", unit: 2, day: 3, title: "Day 3 · WWII Graphic Reading", path: "wwii-graphic-reading/#day3" },
-  "wwii-graphic-reading-day4":   { course: "us-history", unit: 2, day: 4, title: "Day 4 · WWII Graphic Reading", path: "wwii-graphic-reading/#day4" },
-  "wwii-graphic-reading-day5":   { course: "us-history", unit: 2, day: 5, title: "Day 5 · WWII Graphic Reading", path: "wwii-graphic-reading/#day5" },
+  "wwii-graphic-reading-day1":   { course: "us-history", unit: 2, day: 1, title: "Day 1 · Maus I Reading", path: "wwii-graphic-reading/#day1" },
+  "wwii-graphic-reading-day2":   { course: "us-history", unit: 2, day: 2, title: "Day 2 · Maus II Reading", path: "wwii-graphic-reading/#day2" },
+  "wwii-graphic-reading-day3":   { course: "us-history", unit: 2, day: 3, title: "Day 3 · Anne Frank’s Diary Reading", path: "wwii-graphic-reading/#day3" },
+  "wwii-graphic-reading-day4":   { course: "us-history", unit: 2, day: 4, title: "Day 4 · Home Front Comic Reading", path: "wwii-graphic-reading/#day4" },
+  "wwii-graphic-reading-day5":   { course: "us-history", unit: 2, day: 5, title: "Day 5 · Japanese American Incarceration Comics", path: "wwii-graphic-reading/#day5" },
 
   // ---- Sociology · Unit 1 ----
   "sociology-day-1-reading":                  { course: "sociology", unit: 1, day: 1, title: "Day 1 · What Is Sociology? (Reading)", path: "sociology/day-1-reading/" },
