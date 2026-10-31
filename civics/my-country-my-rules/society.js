@@ -13,11 +13,26 @@ function scores(state,events,through=Infinity){
  for(const key in checks)n[key]+=checks[key];
  const bound=()=>{for(const key in n)n[key]=Math.max(5,Math.min(95,n[key]));};
  bound();
- for(const d of decisions(state,events))if(d.event<=through){for(const key in events[d.event].choices[d.choice].effect)n[key]+=events[d.event].choices[d.choice].effect[key]*3;bound();}
+ // Each step: a scenario decision (at its round) or a surprise crisis (half a step later).
+ // Losses hit harder than gains. Neglected meters drag the others down (a spiral).
+ const steps=decisions(state,events).filter(d=>d.event<=through).map(d=>({at:d.event,effect:events[d.event].choices[d.choice].effect}))
+  .concat(crises(state,through).filter(c=>c.choice!==null&&c.choice!==undefined).map(c=>({at:c.slot+.5,effect:c.effect||{}}))).sort((a,b)=>a.at-b.at);
+ for(const step of steps){
+  for(const key in step.effect){const v=step.effect[key];n[key]+=v>=0?v*3:key==='budget'?v*1.5:v*4;}
+  n.budget+=3; // tax income arrives each step
+  bound();
+  if(n.budget<20){n.order-=4;n.approval-=4;}
+  if(n.trust<25){n.approval-=3;n.order-=3;}
+  if(n.liberty<25)n.trust-=3;
+  bound();
+ }
+ for(const key in n)n[key]=Math.round(n[key]);
  return n;
 }
-const stories=[[{"scene": "privacy", "voices": [["Maya · resident", "Police get vehicle clues, with limits on searches."], ["Alex · worker", "Reviews cost money. Some people still worry about privacy."]]}, {"scene": "shops", "voices": [["Maya · resident", "No new plate records are collected."], ["Alex · worker", "Police have one less source of clues."]]}, {"scene": "oops", "voices": [["Maya · resident", "Your public copy exposes people’s trips. A resident is attacked and hurt."], ["Alex · worker", "Your privacy chief resigns. People demand an investigation."]]}], [{"scene": "homes", "voices": [["Maya · resident", "Rent aid keeps us housed. Other services must wait."], ["Alex · worker", "Building takes time, even with help."]]}, {"scene": "building", "voices": [["Maya · resident", "More homes may lower rent later."], ["Alex · worker", "Some neighbors object to the new buildings."]]}, {"scene": "protest", "voices": [["Maya · resident", "A rushed building collapses. Three people die."], ["Alex · worker", "Courts halt projects. Your housing minister resigns."]]}], [{"scene": "school", "voices": [["Maya · resident", "Our school can test an AI rule."], ["Alex · worker", "Moving to another school may mean different rules."]]}, {"scene": "hearing", "voices": [["Maya · resident", "Congress debates a shared AI law."], ["Alex · worker", "Clear rules take time. Some schools want more freedom."]]}, {"scene": "court", "voices": [["Maya · resident", "False alerts punish honest students. Schools walk out."], ["Alex · worker", "Courts order hearings. Your education chief quits."]]}], [{"scene": "protest", "voices": [["Maya · resident", "Peaceful people can still criticize the leader."], ["Alex · worker", "Shops reopen slowly. Police investigate damage."]]}, {"scene": "court", "voices": [["Maya · resident", "The safety zone reduces damage but also moves peaceful people."], ["Alex · worker", "The limit has an end date. Courts can review it."]]}, {"scene": "protest", "voices": [["Maya · resident", "Clashes leave twelve people hurt and one dead."], ["Alex · worker", "A national strike begins. Congress investigates your orders."]]}], [{"scene": "voting", "voices": [["Maya · resident", "Voting continues. Workers explain the evidence."], ["Alex · worker", "The leader might lose, but people keep their vote."]]}, {"scene": "court", "voices": [["Maya · resident", "A court reviews evidence while voting stays open."], ["Alex · worker", "The review takes time. Supporters grow impatient."]]}, {"scene": "protest", "voices": [["Maya · resident", "Six people are hurt in clashes. Your guards refuse your order."], ["Alex · worker", "Congress removes your leader. Your cabinet takes over."]]}]];
-function impact(state,events,round){const d=decisions(state,events).find(d=>d.event===round);if(!d)return null;const before=scores(state,events,round-1),after=scores(state,events,round);return {...stories[round][d.choice],round,choice:d.choice,before,after};}
+// Surprise crises live in the guide record. A crisis after round k counts once the game passes k+0.5.
+function crises(state,through=Infinity){return ((state.guide&&state.guide.crises)||[]).filter(c=>c&&Number.isInteger(c.slot)&&c.slot+.5<=through);}
+const stories=[[{"scene": "privacy", "voices": [["Maya · resident", "Police get vehicle clues, with limits on searches."], ["Alex · worker", "Reviews cost money. Some people still worry about privacy."]]}, {"scene": "shops", "voices": [["Maya · resident", "No new plate records are collected."], ["Alex · worker", "Police have one less source of clues."]]}, {"scene": "oops", "voices": [["Maya · resident", "A stalker used the public records. A woman was killed."], ["Alex · worker", "Your privacy chief resigns. People demand an investigation."]]}], [{"scene": "homes", "voices": [["Maya · resident", "Rent aid keeps us housed. Other services must wait."], ["Alex · worker", "Building takes time, even with help."]]}, {"scene": "building", "voices": [["Maya · resident", "More homes may lower rent later."], ["Alex · worker", "Some neighbors object to the new buildings."]]}, {"scene": "protest", "voices": [["Maya · resident", "A rushed building collapses. Six people die."], ["Alex · worker", "Courts halt projects. Your housing minister resigns."]]}], [{"scene": "school", "voices": [["Maya · resident", "Our school can test an AI rule."], ["Alex · worker", "Moving to another school may mean different rules."]]}, {"scene": "hearing", "voices": [["Maya · resident", "Congress debates a shared AI law."], ["Alex · worker", "Clear rules take time. Some schools want more freedom."]]}, {"scene": "court", "voices": [["Maya · resident", "False alerts punish honest students. Schools walk out."], ["Alex · worker", "Courts order hearings. Your education chief quits."]]}], [{"scene": "protest", "voices": [["Maya · resident", "Peaceful people can still criticize the leader."], ["Alex · worker", "Shops reopen slowly. Police investigate damage."]]}, {"scene": "court", "voices": [["Maya · resident", "The safety zone reduces damage but also moves peaceful people."], ["Alex · worker", "The limit has an end date. Courts can review it."]]}, {"scene": "protest", "voices": [["Maya · resident", "Clashes leave four dead and 30 hurt."], ["Alex · worker", "A national strike begins. Congress investigates your orders."]]}], [{"scene": "voting", "voices": [["Maya · resident", "Voting continues. Workers explain the evidence."], ["Alex · worker", "The leader might lose, but people keep their vote."]]}, {"scene": "court", "voices": [["Maya · resident", "A court reviews evidence while voting stays open."], ["Alex · worker", "The review takes time. Supporters grow impatient."]]}, {"scene": "protest", "voices": [["Maya · resident", "Clashes kill 3 and hurt 20. Your guards refuse your order."], ["Alex · worker", "Congress removes your leader. Your cabinet takes over."]]}]];
+function impact(state,events,round){const d=decisions(state,events).find(d=>d.event===round);if(!d)return null;const before=scores(state,events,round-.5),after=scores(state,events,round);return {...stories[round][d.choice],round,choice:d.choice,before,after};}
 function residents(score){return [
 {name:'Maya · parent',icon:'👩🏽',mood:score.budget<25?'worried':score.trust>=60?'hopeful':'unsure',text:score.budget<25?'Public money is low. Some repairs and services may have to wait.':score.trust>=60?'People feel heard when the government makes decisions.':'People want clearer plans before they trust their leaders.'},
 {name:'Ari · student',icon:'🧑🏾',mood:score.liberty>=60?'hopeful':score.liberty<35?'worried':'unsure',text:score.liberty>=60?'People have room to speak, protest, and question leaders.':score.liberty<35?'People worry about speaking against the government.':'People disagree about whether their freedoms are safe.'}
@@ -39,7 +54,7 @@ function changeDecision(state,events,round,choice,goal){
 }
 function unrest(state,events,through=Infinity){
  const n=scores(state,events,through),moves=decisions(state,events).filter(d=>d.event<=through);
- const abuses=moves.filter(d=>{const p=events[d.event].choices[d.choice].power||{};return p.rights||p.bypass||p.cancelElection;}).length;
+ const abuses=moves.filter(d=>{const p=events[d.event].choices[d.choice].power||{};return p.rights||p.bypass||p.cancelElection;}).length+crises(state,through).filter(c=>c.abuse).length;
  return ['Rights','Services','Voice'].map((priority,i)=>{
   const weights=[[.45,.45,.1],[.45,.2,.35],[.65,.25,.1]][i];
   const pressure=Math.round((100-n.trust)*weights[0]+(100-n.liberty)*weights[1]+(100-n.budget)*weights[2]);
@@ -56,6 +71,7 @@ function consequences(state,events,through=Infinity){
   for(const r of rebels)if(!seen.has(r.index)){seen.add(r.index);result.rebellion.push(r.name);result.uprisingDeaths++;result.uprisingInjuries+=4;}
   if(rebels.length===3)result.removed=true;
  }
+ for(const c of crises(state,through)){const b=c.base||{},h=c.harm||{};result.deaths+=(b.deaths||0)+(h.deaths||0);result.injuries+=(b.injuries||0)+(h.injuries||0);if(h.resigned)result.resignations.push(h.resigned);result.crisisDeaths=(result.crisisDeaths||0)+(b.deaths||0)+(h.deaths||0);}
  result.deaths+=result.uprisingDeaths;result.injuries+=result.uprisingInjuries;
  return result;
 }
@@ -74,5 +90,5 @@ function alignment(state,events,round,choice){
  if(p.rights&&state.oversight==='courts')add('Checks and balances','You chose court review. Expect a legal challenge if people’s rights are harmed.');
  return {warnings,authoritarian:!!(p.rights||p.cancelElection||p.bypass)};
 }
-const api={unrest,consequences,alignment,scores,decisions,impact,residents,purposeOptions,changeDecision,stories};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CountrySociety=api;
+const api={crises,unrest,consequences,alignment,scores,decisions,impact,residents,purposeOptions,changeDecision,stories};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CountrySociety=api;
 })(typeof window!=='undefined'?window:this);
