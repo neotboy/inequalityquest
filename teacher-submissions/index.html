@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Teacher Dashboard · All Classes</title>
-<script src="../shared/assignments.js?v=20261031h"></script>
+<script src="../shared/assignments.js?v=20261031i"></script>
 <script src="../shared/turnin.js?v=20261030f"></script>
 <style>
 :root{--navy:#19364b;--red:#a33d36;--green:#2f6b3a;--paper:#f4efe4;--card:#fffdf8;--ink:#22313b;--muted:#536571;--line:#d8cfbd}
@@ -69,6 +69,17 @@ summary{font-weight:800;color:var(--navy);cursor:pointer}
 .unitblock{margin:0 0 18px}
 .unithead{font-size:1.05rem;margin:6px 0 6px;color:var(--navy)}
 .unitcount{font-size:.82rem;font-weight:600;color:var(--muted);margin-left:6px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:.85rem;color:var(--muted);margin:0 0 6px}
+.legend .lv{display:inline-block;border-radius:6px;padding:2px 8px;font-weight:800}
+.lv{font-weight:800}.lv small{display:block;font-size:.72rem;font-weight:600;color:var(--muted)}
+.lv.l3,td.done.l3 button{background:#dff0e2;color:#1f5e2c}.lv.l2,td.done.l2 button{background:#fff1c9;color:#7a5a00}.lv.l1,td.done.l1 button{background:#f8dcd8;color:#8e2a20}
+.lv.none{background:#f3efe6;color:#9a8f7a}.lv.check{background:#e4ecf5;color:#24496d}
+table.mastery th small{display:block;font-weight:600;font-size:.7rem;color:var(--muted);text-transform:none}
+td.needs{color:#8e2a20;font-weight:800}
+.stdtag{display:block;font-size:.68rem;font-weight:700;color:var(--red);margin-top:3px}
+.stdkey{margin-top:12px}.stdkey ul{margin:8px 0 0;padding-left:18px}.stdkey li{margin:0 0 8px}
+.mdetail{margin:10px 0 0;padding:10px 12px;background:#fff;border:1px solid var(--line);border-radius:10px;min-height:0}.mdetail:empty{display:none}.mdetail ul{margin:6px 0 0;padding-left:18px}td.lv[data-c]{cursor:pointer}td.lv.picked{outline:3px solid var(--navy);outline-offset:-3px}
+.views{flex-wrap:wrap}table.mastery th:not(.student),table.mastery td.lv{min-width:118px}@media(max-width:600px){table.mastery th small{display:none}.views button{flex:1 1 40%}}
 </style>
 </head>
 <body>
@@ -101,6 +112,7 @@ summary{font-weight:800;color:var(--navy);cursor:pointer}
   <div class="views" role="group" aria-label="View">
     <button class="light" id="gridView" aria-pressed="true">Who turned in what</button>
     <button class="light" id="listView" aria-pressed="false">Read answers</button>
+    <button class="light" id="masteryView" aria-pressed="false">Standards &amp; mastery</button>
     <button class="light" id="csvBtn" disabled>Download CSV</button>
   </div>
   <div class="row" id="filters" hidden style="margin-bottom:10px">
@@ -199,6 +211,74 @@ function renderTabs() {
     : "<span class='status'>No activities in this class send work to the dashboard yet.</span>";
 }
 
+
+// ---- Standards & mastery ----
+// Levels from first-try accuracy across every assignment for a standard (Fynn's cutoffs):
+// 90%+ = on track for 3 (teacher confirms 3/4 with written work or the unit test) · 70–89% = 2 · under 70% = 1 · nothing turned in = no evidence (credit needs at least a 1).
+const STDTXT = window.CLASS_STANDARDS || {};
+const STD_RE = /SS\.9-12\.(?:WH|US|Gov|Soc)\.\d+/g;
+const shortStd = c => c.replace("SS.9-12.", "");
+function stdsOf(r) { const got = String((r.answers || {}).Standard || "").match(STD_RE); return [...new Set(got && got.length ? got : (REG[r.assignmentId] && REG[r.assignmentId].std) || [])]; }
+function ftOf(r) { const m = String((r.answers || {})["First-try correct"] || "").match(/(\d+)\s*(?:of|\/)\s*(\d+)/); return m && +m[2] ? { right: +m[1], total: +m[2] } : null; }
+function levelOf(pct) { return pct >= 90 ? { n: 3, label: "On track for 3", cls: "l3" } : pct >= 70 ? { n: 2, label: "2", cls: "l2" } : { n: 1, label: "1", cls: "l1" }; }
+function pctClass(ft) { if (!ft) return ""; const p = ft.right / ft.total * 100; return p >= 90 ? "l3" : p >= 70 ? "l2" : "l1"; }
+function courseStandards(course) {
+  const order = [];
+  sortIds(Object.keys(REG).filter(id => REG[id].course === course && REG[id].path)).forEach(id => (REG[id].std || []).forEach(c => { if (!order.includes(c)) order.push(c); }));
+  return order;
+}
+// { student: { code: { right, total, items: [{title, ft}], unscored } } } using each student's latest turn-in per assignment.
+function masteryData(list) {
+  const latest = new Map();
+  list.forEach(r => { const k = r.studentName + "|" + r.assignmentId; if (!latest.has(k)) latest.set(k, r); });
+  const out = {};
+  latest.forEach(r => {
+    const ft = ftOf(r), s = out[r.studentName] = out[r.studentName] || {};
+    stdsOf(r).forEach(c => {
+      const cell = s[c] = s[c] || { right: 0, total: 0, items: [], unscored: 0 };
+      cell.items.push({ title: titleOf(r), ft });
+      if (ft) { cell.right += ft.right; cell.total += ft.total; } else cell.unscored++;
+    });
+  });
+  return out;
+}
+function renderMastery(list) {
+  const codes = courseStandards(tab), data = masteryData(list);
+  Object.values(data).forEach(s => Object.keys(s).forEach(c => { if (!codes.includes(c)) codes.push(c); }));
+  const students = Object.keys(data).sort((a, b) => a.localeCompare(b));
+  const cellHtml = (s, c) => {
+    const d = data[s][c];
+    if (!d) return `<td class="lv none" data-s="${safe(s)}" data-c="${safe(c)}" title="No work turned in for this standard yet">—</td>`;
+    const tip = d.items.map(x => x.title + (x.ft ? ": " + x.ft.right + "/" + x.ft.total : ": turned in, no score")).join("\n");
+    if (!d.total) return `<td class="lv check" data-s="${safe(s)}" data-c="${safe(c)}" title="${safe(tip)}">Check<small>${d.items.length} turned in</small></td>`;
+    const pct = Math.round(d.right / d.total * 100), L = levelOf(pct);
+    return `<td class="lv ${L.cls}" data-s="${safe(s)}" data-c="${safe(c)}" title="${safe(tip)}">${L.label}<small>${pct}% · ${d.items.length} ${d.items.length === 1 ? "activity" : "activities"}</small></td>`;
+  };
+  const missing = s => codes.filter(c => !data[s][c]).length;
+  $("out").innerHTML = `<div class="legend"><span class="lv l3">On track for 3</span> 90%+ right on the first try <span class="lv l2">2</span> 70–89% <span class="lv l1">1</span> under 70% <span class="lv none">—</span> no evidence yet <span class="lv check">Check</span> turned in, no auto score</div>
+  <p class="status" style="margin:4px 0 10px">${students.length} students · ${codes.length} standards · Level is figured from first-try answers across every activity for that standard. You confirm a 3 or 4 from written answers and the unit test. Tap any score to see which activities it came from.</p>
+  <div class="gridwrap"><table class="mastery"><thead><tr><th class="student">Student</th>${codes.map(c => `<th title="${safe(STDTXT[c] || "")}">${safe(shortStd(c))}<small>${safe((STDTXT[c] || "").slice(0, 60))}${(STDTXT[c] || "").length > 60 ? "…" : ""}</small></th>`).join("")}<th>No evidence</th></tr></thead>
+  <tbody>${students.map(s => `<tr><td class="student">${safe(s)}</td>${codes.map(c => cellHtml(s, c)).join("")}<td class="${missing(s) ? "needs" : ""}">${missing(s) ? missing(s) + " of " + codes.length : "✓"}</td></tr>`).join("")}</tbody></table></div>
+  <div id="mdetail" class="mdetail" aria-live="polite"></div>
+  <details class="stdkey"><summary>Standards in this class (${codes.length})</summary><ul>${codes.map(c => `<li><b>${safe(c)}</b> ${safe(STDTXT[c] || "")}<br><span class="status">${safe(sortIds(Object.keys(REG).filter(id => REG[id].course === tab && REG[id].path && (REG[id].std || []).includes(c))).map(id => REG[id].title).join(" · ") || "From turn-ins")}</span></li>`).join("")}</ul></details>`;
+  $("out").querySelectorAll("td.lv[data-c]").forEach(td => td.onclick = () => {
+    const d = data[td.dataset.s][td.dataset.c], c = td.dataset.c;
+    $("out").querySelectorAll("td.lv.picked").forEach(x => x.classList.remove("picked")); td.classList.add("picked");
+    $("mdetail").innerHTML = `<b>${safe(td.dataset.s)} · ${safe(shortStd(c))}</b> <span class="status">${safe(STDTXT[c] || "")}</span>` + (d ? `<ul>${d.items.map(x => `<li>${safe(x.title)}: ${x.ft ? x.ft.right + " of " + x.ft.total + " right on the first try" : "turned in, no auto score (check their written answers)"}</li>`).join("")}</ul>` : `<p>No work turned in for this standard yet. They need at least a 1 here for credit.</p>`);
+  });
+}
+function masteryCsvRows(list) {
+  const codes = courseStandards(tab), data = masteryData(list);
+  const rowsOut = [["Student", "Standard", "Standard text", "Level", "First-try right", "First-try total", "Percent", "Activities"]];
+  Object.keys(data).sort().forEach(s => codes.forEach(c => {
+    const d = data[s][c];
+    if (!d) { rowsOut.push([s, c, STDTXT[c] || "", "No evidence", "", "", "", ""]); return; }
+    const pct = d.total ? Math.round(d.right / d.total * 100) : "";
+    rowsOut.push([s, c, STDTXT[c] || "", d.total ? levelOf(pct).label : "Check", d.right, d.total, pct, d.items.map(x => x.title).join("; ")]);
+  }));
+  return rowsOut;
+}
+
 function activitiesFor(list) {
   return sortIds([...new Set(list.map(r => r.assignmentId))]);
 }
@@ -208,19 +288,20 @@ function render() {
   const list = tabRows(tab);
   $("gridView").setAttribute("aria-pressed", view === "grid");
   $("listView").setAttribute("aria-pressed", view === "list");
+  $("masteryView").setAttribute("aria-pressed", view === "mastery");
   $("filters").hidden = view !== "list";
   const sel = $("assignment"), keep = sel.value;
   sel.innerHTML = '<option value="all">All activities</option>' + byUnit(activitiesFor(list), tab).map(g => `<optgroup label="${safe(g.name)}">${g.ids.map(id => `<option value="${safe(id)}">${safe(titleOf({ assignmentId: id }))}</option>`).join("")}</optgroup>`).join("");
   sel.value = [...sel.options].some(o => o.value === keep) ? keep : "all";
   const shown = visible();
-  $("csvBtn").disabled = !shown.length;
+  $("csvBtn").disabled = view === "mastery" ? !list.length : !shown.length;
   if (!list.length) { $("out").innerHTML = `<div class="empty">${rows.length ? "No turn-ins for " + COURSES[tab] + " yet." : "Turn-ins will appear here."}</div>`; return; }
-  view === "grid" ? renderGrid(list) : renderList(shown);
+  view === "grid" ? renderGrid(list) : view === "mastery" ? renderMastery(list) : renderList(shown);
 }
 
 function visible() {
   const q = $("search").value.trim().toLowerCase(), a = $("assignment").value;
-  return tabRows(tab).filter(r => (view === "grid" || r.studentName.toLowerCase().includes(q)) && (view === "grid" || a === "all" || r.assignmentId === a));
+  return tabRows(tab).filter(r => (view !== "list" || r.studentName.toLowerCase().includes(q)) && (view !== "list" || a === "all" || r.assignmentId === a));
 }
 
 function renderGrid(list) {
@@ -229,18 +310,19 @@ function renderGrid(list) {
     const hits = list.filter(r => r.studentName === s && r.assignmentId === id);
     if (!hits.length) return `<td class="miss">—</td>`;
     const ft = String((hits[0].answers || {})["First-try correct"] || "").replace(/\s*\(.*$/, "").replace(" of ", "/");
-    return `<td class="done"><button data-s="${safe(s)}" data-a="${safe(id)}" title="Open answers${ft ? " · first-try correct " + safe(ft) : ""}">✓ ${dateShort(hits[0].submittedAt)}${hits.length > 1 ? " ×" + hits.length : ""}${ft ? `<span class="ft">${safe(ft)}</span>` : ""}</button></td>`;
+    const ftc = pctClass(ftOf(hits[0]));
+    return `<td class="done ${ftc}"><button data-s="${safe(s)}" data-a="${safe(id)}" title="Open answers${ft ? " · first-try correct " + safe(ft) : ""}">✓ ${dateShort(hits[0].submittedAt)}${hits.length > 1 ? " ×" + hits.length : ""}${ft ? `<span class="ft">${safe(ft)}</span>` : ""}</button></td>`;
   };
   // One table per unit, Unit 1 first. Each unit only shows students who turned in something in it.
   // Show every day of a unit (not just ones with turn-ins) so missing work stands out.
   const unitsUsed = new Set(list.map(r => unitOf(r.assignmentId)));
   const units = byUnit([...new Set([...activitiesFor(list), ...Object.keys(REG).filter(id => REG[id].course === tab && REG[id].path && REG[id].turnIn !== false && unitsUsed.has(unitOf(id)))])], tab);
-  $("out").innerHTML = `<p class="status" style="margin:0 0 8px">${students.length} students · grouped by unit, in day order · the small number under a ✓ is questions right on the first try · click a ✓ to read that student's answers.</p>` +
+  $("out").innerHTML = `<p class="status" style="margin:0 0 8px">${students.length} students · grouped by unit, in day order · the small number under a ✓ is questions right on the first try (green 90%+, yellow 70–89%, red under 70%) · click a ✓ to read that student's answers.</p>` +
     units.map(g => {
       const inUnit = list.filter(r => g.ids.includes(r.assignmentId));
       const who = [...new Set(inUnit.map(r => r.studentName))].sort((a, b) => a.localeCompare(b));
       return `<section class="unitblock"><h2 class="unithead">${safe(g.name)} <span class="unitcount">${g.ids.length} ${g.ids.length === 1 ? "activity" : "activities"} · ${who.length} ${who.length === 1 ? "student" : "students"}</span></h2>
-    <div class="gridwrap"><table><thead><tr><th class="student">Student</th>${g.ids.map(id => `<th>${safe(titleOf({ assignmentId: id }))}</th>`).join("")}<th>Done</th></tr></thead>
+    <div class="gridwrap"><table><thead><tr><th class="student">Student</th>${g.ids.map(id => `<th>${safe(titleOf({ assignmentId: id }))}${(REG[id] && REG[id].std || []).length ? `<small class="stdtag">${safe(REG[id].std.map(shortStd).join(" · "))}</small>` : ""}</th>`).join("")}<th>Done</th></tr></thead>
     <tbody>${who.map(s => `<tr><td class="student">${safe(s)}</td>${g.ids.map(id => cell(s, id)).join("")}<td>${new Set(inUnit.filter(r => r.studentName === s).map(r => r.assignmentId)).size}/${g.ids.length}</td></tr>`).join("")}</tbody></table></div></section>`;
     }).join("");
   $("out").querySelectorAll("td.done button").forEach(b => b.onclick = () => { view = "list"; render(); $("search").value = b.dataset.s; $("assignment").value = b.dataset.a; render(); });
@@ -266,6 +348,7 @@ function flat(v) {
 }
 function downloadCsv() {
   const cell = v => '"' + String(v ?? "").replace(/"/g, '""').replace(/^([=+\-@])/, "'$1") + '"';
+  if (view === "mastery") { const out = masteryCsvRows(tabRows(tab)).map(r => r.map(cell).join(",")); const url = URL.createObjectURL(new Blob([out.join("\r\n")], { type: "text/csv;charset=utf-8" })); const a = document.createElement("a"); a.href = url; a.download = COURSES[tab].replace(/\W+/g, "-").toLowerCase() + "-mastery.csv"; a.click(); URL.revokeObjectURL(url); return; }
   const list = view === "grid" ? tabRows(tab) : visible();
   const out = [["Student", "Class", "Activity", "Turned in", "Answers"].map(cell).join(","),
     ...list.map(r => [r.studentName, COURSES[r.course], titleOf(r), new Date(r.submittedAt).toLocaleString(), flat(r.answers)].map(cell).join(","))];
@@ -296,6 +379,7 @@ $("loadBtn").onclick = load; $("refreshBtn").onclick = load;
 $("lockBtn").onclick = () => { sessionStorage.removeItem("teacher-code"); $("teacherCode").value = ""; rows = []; oldRows = []; $("importPanel").hidden = true; render(); $("status").textContent = "Dashboard locked."; };
 $("gridView").onclick = () => { view = "grid"; render(); };
 $("listView").onclick = () => { view = "list"; render(); };
+$("masteryView").onclick = () => { view = "mastery"; render(); };
 $("search").oninput = render; $("assignment").onchange = render;
 $("csvBtn").onclick = downloadCsv; $("importBtn").onclick = copyOld;
 render();
