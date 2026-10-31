@@ -80,6 +80,13 @@ td.needs{color:#8e2a20;font-weight:800}
 .stdkey{margin-top:12px}.stdkey ul{margin:8px 0 0;padding-left:18px}.stdkey li{margin:0 0 8px}
 .mdetail{margin:10px 0 0;padding:10px 12px;background:#fff;border:1px solid var(--line);border-radius:10px;min-height:0}.mdetail:empty{display:none}.mdetail ul{margin:6px 0 0;padding-left:18px}td.lv[data-c]{cursor:pointer}td.lv.picked{outline:3px solid var(--navy);outline-offset:-3px}
 .views{flex-wrap:wrap}table.mastery th:not(.student),table.mastery td.lv{min-width:118px}@media(max-width:600px){table.mastery th small{display:none}.views button{flex:1 1 40%}}
+td.done button{display:block;width:100%;min-width:96px;text-align:center;line-height:1.15;padding:5px 6px}
+td.done .grade{display:block;font-size:1.05rem;font-weight:900}
+td.done .lvl{display:block;font-size:.72rem;font-weight:800}
+td.done .when{display:block;font-size:.68rem;font-weight:600;color:var(--muted);margin-top:2px}
+td.done.check button{background:#e4ecf5;color:#24496d}
+td.sum{font-size:.85rem;min-width:110px}td.sum .lvl{display:block;font-size:.75rem;font-weight:800}
+td.sum.l3{background:#eef7f0;color:#1f5e2c}td.sum.l2{background:#fff8e2;color:#7a5a00}td.sum.l1{background:#fbecea;color:#8e2a20}
 </style>
 </head>
 <body>
@@ -309,21 +316,30 @@ function renderGrid(list) {
   const cell = (s, id) => {
     const hits = list.filter(r => r.studentName === s && r.assignmentId === id);
     if (!hits.length) return `<td class="miss">—</td>`;
-    const ft = String((hits[0].answers || {})["First-try correct"] || "").replace(/\s*\(.*$/, "").replace(" of ", "/");
-    const ftc = pctClass(ftOf(hits[0]));
-    return `<td class="done ${ftc}"><button data-s="${safe(s)}" data-a="${safe(id)}" title="Open answers${ft ? " · first-try correct " + safe(ft) : ""}">✓ ${dateShort(hits[0].submittedAt)}${hits.length > 1 ? " ×" + hits.length : ""}${ft ? `<span class="ft">${safe(ft)}</span>` : ""}</button></td>`;
+    const f = ftOf(hits[0]), when = dateShort(hits[0].submittedAt) + (hits.length > 1 ? " · ×" + hits.length : "");
+    if (!f) return `<td class="done check"><button data-s="${safe(s)}" data-a="${safe(id)}" title="Turned in with no auto score. Open to read their answers."><b class="grade">Check</b><span class="lvl">no auto score</span><span class="when">${when}</span></button></td>`;
+    const pct = Math.round(f.right / f.total * 100), L = levelOf(pct);
+    return `<td class="done ${L.cls}"><button data-s="${safe(s)}" data-a="${safe(id)}" title="${f.right} of ${f.total} right on the first try. Open to read their answers."><b class="grade">${pct}%</b><span class="lvl">${L.n === 3 ? "On track for 3" : "Level " + L.n} · ${f.right}/${f.total}</span><span class="when">${when}</span></button></td>`;
+  };
+  // Unit summary for one student: activities done + average first-try % across scored ones.
+  const unitSum = (s, ids, inUnit) => {
+    const done = new Set(inUnit.filter(r => r.studentName === s).map(r => r.assignmentId));
+    let right = 0, total = 0;
+    ids.forEach(id => { const r = list.find(x => x.studentName === s && x.assignmentId === id); const f = r && ftOf(r); if (f) { right += f.right; total += f.total; } });
+    const pct = total ? Math.round(right / total * 100) : null, L = pct === null ? null : levelOf(pct);
+    return `<td class="sum ${L ? L.cls : ""}"><b>${done.size}/${ids.length}</b> done${pct === null ? "" : `<span class="lvl">${pct}% · ${L.n === 3 ? "On track for 3" : "Level " + L.n}</span>`}</td>`;
   };
   // One table per unit, Unit 1 first. Each unit only shows students who turned in something in it.
   // Show every day of a unit (not just ones with turn-ins) so missing work stands out.
   const unitsUsed = new Set(list.map(r => unitOf(r.assignmentId)));
   const units = byUnit([...new Set([...activitiesFor(list), ...Object.keys(REG).filter(id => REG[id].course === tab && REG[id].path && REG[id].turnIn !== false && unitsUsed.has(unitOf(id)))])], tab);
-  $("out").innerHTML = `<p class="status" style="margin:0 0 8px">${students.length} students · grouped by unit, in day order · the small number under a ✓ is questions right on the first try (green 90%+, yellow 70–89%, red under 70%) · click a ✓ to read that student's answers.</p>` +
+  $("out").innerHTML = `<p class="status" style="margin:0 0 8px">${students.length} students · grouped by unit, in day order · each box is that day's grade: percent right on the first try and its level (green = on track for 3 at 90%+, yellow = Level 2 at 70–89%, red = Level 1 under 70%) · “Check” means turned in with no auto score · click any grade to read that student's answers.</p>` +
     units.map(g => {
       const inUnit = list.filter(r => g.ids.includes(r.assignmentId));
       const who = [...new Set(inUnit.map(r => r.studentName))].sort((a, b) => a.localeCompare(b));
       return `<section class="unitblock"><h2 class="unithead">${safe(g.name)} <span class="unitcount">${g.ids.length} ${g.ids.length === 1 ? "activity" : "activities"} · ${who.length} ${who.length === 1 ? "student" : "students"}</span></h2>
-    <div class="gridwrap"><table><thead><tr><th class="student">Student</th>${g.ids.map(id => `<th>${safe(titleOf({ assignmentId: id }))}${(REG[id] && REG[id].std || []).length ? `<small class="stdtag">${safe(REG[id].std.map(shortStd).join(" · "))}</small>` : ""}</th>`).join("")}<th>Done</th></tr></thead>
-    <tbody>${who.map(s => `<tr><td class="student">${safe(s)}</td>${g.ids.map(id => cell(s, id)).join("")}<td>${new Set(inUnit.filter(r => r.studentName === s).map(r => r.assignmentId)).size}/${g.ids.length}</td></tr>`).join("")}</tbody></table></div></section>`;
+    <div class="gridwrap"><table><thead><tr><th class="student">Student</th>${g.ids.map(id => `<th>${safe(titleOf({ assignmentId: id }))}${(REG[id] && REG[id].std || []).length ? `<small class="stdtag">${safe(REG[id].std.map(shortStd).join(" · "))}</small>` : ""}</th>`).join("")}<th>Unit so far</th></tr></thead>
+    <tbody>${who.map(s => `<tr><td class="student">${safe(s)}</td>${g.ids.map(id => cell(s, id)).join("")}${unitSum(s, g.ids, inUnit)}</tr>`).join("")}</tbody></table></div></section>`;
     }).join("");
   $("out").querySelectorAll("td.done button").forEach(b => b.onclick = () => { view = "list"; render(); $("search").value = b.dataset.s; $("assignment").value = b.dataset.a; render(); });
 }
