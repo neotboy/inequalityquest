@@ -64,7 +64,7 @@ input:focus,textarea:focus,button:focus{outline:3px solid #6aa5bf;outline-offset
 @media(max-width:900px){.layout{grid-template-columns:1fr}.scan{height:68vh;min-height:400px}.directions ol{display:block}}
 @media print{header{background:white;color:black;border-bottom:2px solid black}.reading,.day-tabs,.actions,.reader-tools{display:none!important}.layout{display:block}.panel{box-shadow:none}}
 </style>
-<script src="../shared/assignments.js?v=20261030d"></script><script src="../shared/turnin.js?v=20261030d"></script></head>
+<script src="../shared/assignments.js?v=20261031h"></script><script src="../shared/turnin.js?v=20261030d"></script></head>
 <body>
 <header><div class="wrap"><div class="kicker">U.S. History · World War II</div><h1>Read. Look. Answer.</h1></div></header>
 <main class="wrap">
@@ -263,12 +263,23 @@ $('usAnswer').addEventListener('input',()=>{saveCurrent();$('status').textConten
 $('prevPage').addEventListener('click',()=>setPage(pageNow-1));
 $('nextPage').addEventListener('click',()=>{if(isCurrentCorrect())setPage(pageNow+1)});
 $('zoomBtn').addEventListener('click',()=>{zoomed=!zoomed;$('pageImage').classList.toggle('zoomed',zoomed);$('zoomBtn').textContent=zoomed?'Fit page':'Make page bigger';$('zoomBtn').setAttribute('aria-pressed',String(zoomed))});
+
+const STD={
+ 'wwii-graphic-reading-day1':'SS.9-12.US.29 (Evaluate the multiple causes and effects of World War II); SS.9-12.US.30 (Evaluate the American response to the Holocaust)',
+ 'wwii-graphic-reading-day2':'SS.9-12.US.29 (Evaluate the multiple causes and effects of World War II); SS.9-12.US.30 (Evaluate the American response to the Holocaust)',
+ 'wwii-graphic-reading-day3':'SS.9-12.US.30 (Evaluate the American response to the Holocaust)',
+ 'wwii-graphic-reading-day4':'SS.9-12.US.29 (Evaluate the multiple causes and effects of World War II); SS.9-12.US.31 (Analyze how labor and government actions during World War II influenced American economic systems, urbanization, and cultural development); SS.9-12.US.33 (Analyze diverse ideologies through primary and secondary sources during World War II)',
+ 'wwii-graphic-reading-day5':'SS.9-12.US.31 (Analyze how labor and government actions during World War II influenced American economic systems, urbanization, and cultural development); SS.9-12.US.33 (Analyze diverse ideologies through primary and secondary sources during World War II)'};
+function ftKey(dI){return 'wwii-firsttry-day'+(dI+1)}
+function ftLoad(dI){try{return JSON.parse(localStorage.getItem(ftKey(dI)))||{done:{},miss:false}}catch(e){return{done:{},miss:false}}}
+function ftMark(dI,page,ok){const f=ftLoad(dI);if(ok){if(!(page in f.done))f.done[page]=!f.miss;f.miss=false}else f.miss=true;try{localStorage.setItem(ftKey(dI),JSON.stringify(f))}catch(e){}}
+function ftText(dI){const v=Object.values(ftLoad(dI).done);return v.filter(Boolean).length+' of '+v.length}
 $('checkPageAnswer').addEventListener('click',()=>{
  if(selectedChoice<0||!sectionRead.has(pageNow))return;
  if(currentChoices[selectedChoice]===pageQuestion()[1]){
-  localStorage.setItem(pageAnswerKey(dayIndex,pageNow),currentChoices[selectedChoice]);$('pageFeedback').textContent='That is right. The next page is open.';$('pageFeedback').className='page-feedback success';selectedChoice=-1;updateReadState(0);updateProgress()
+  ftMark(dayIndex,pageNow,true);localStorage.setItem(pageAnswerKey(dayIndex,pageNow),currentChoices[selectedChoice]);$('pageFeedback').textContent='That is right. The next page is open.';$('pageFeedback').className='page-feedback success';selectedChoice=-1;updateReadState(0);updateProgress()
  }else{
-  $('pageFeedback').textContent='Not yet. Read this page again and try another answer.';$('pageFeedback').className='page-feedback error';
+  ftMark(dayIndex,pageNow,false);$('pageFeedback').textContent='Not yet. Read this page again and try another answer.';$('pageFeedback').className='page-feedback error';
   const before=currentChoices.join('|');currentChoices=shuffled([pageQuestion()[1],pageQuestion()[2],pageQuestion()[3]]);if(currentChoices.join('|')===before)currentChoices.push(currentChoices.shift());selectedChoice=-1;updateReadState(0)
  }
 });
@@ -279,7 +290,7 @@ $('submitBtn').addEventListener('click',async()=>{
  if(!name){status.textContent='Type your name first.';status.classList.add('error');$('studentName').focus();return}
  if(d.checks.some((_,i)=>!getAnswer(i,'us').trim())){status.textContent='Answer all 6 U.S. questions first.';status.classList.add('error');return}
  if(d.checks.some((_,i)=>!sectionIsRead(dayIndex,i)||!sectionHasAllCorrect(dayIndex,i))){status.textContent='Read and answer all '+pageTotal(d)+' reading questions before turning in your work.';status.classList.add('error');return}
- const answers=Object.fromEntries(d.checks.map((_,i)=>{const first=d.start+i*groupSize(d);const book=Array.from({length:groupSize(d)},(_,n)=>pageLabel(d,first+n)+': '+getPageAnswer(dayIndex,first+n)).join('\n');return['check'+(i+1),'Book questions:\n'+book+'\nU.S. connection: '+getAnswer(i,'us').trim()]}));
+ const answers=Object.assign({Standard:STD[d.id]||'','First-try correct':ftText(dayIndex)},Object.fromEntries(d.checks.map((_,i)=>{const first=d.start+i*groupSize(d);const book=Array.from({length:groupSize(d)},(_,n)=>pageLabel(d,first+n)+': '+getPageAnswer(dayIndex,first+n)).join('\n');return['check'+(i+1),'Book questions:\n'+book+'\nU.S. connection: '+getAnswer(i,'us').trim()]})));
  btn.disabled=true;status.textContent='Sending…';
  try{const res=await classTurnIn(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({studentName:name,assignmentId:d.id,answers})});const result=await res.json();if(!res.ok)throw new Error(result.error||'Could not turn this in. Try again.');status.textContent='Turned in! Your teacher has your work.';status.classList.add('success')}
  catch(err){status.textContent=err instanceof Error?err.message:'Could not turn this in. Try again.';status.classList.add('error')}
