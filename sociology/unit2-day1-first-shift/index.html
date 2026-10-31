@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>First Shift · Status, Roles & Norms | Sociology Unit 2 Day 1</title>
+<meta name="description" content="Work a shift at a diner and learn the written and unwritten rules that shape behavior.">
+<style>
+:root{--ink:#1f2b33;--muted:#55626b;--paper:#fbf7ef;--card:#fffefb;--line:#e2d8c6;--red:#b23a2e;--teal:#1e6b6b;--mustard:#f2c14e;--green:#2a6b45;--bad:#a2392f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.5 system-ui,Segoe UI,Arial,sans-serif}
+header{background:#fff;border-bottom:6px solid var(--red);background-image:repeating-linear-gradient(90deg,var(--red) 0 18px,#fff 18px 36px);background-size:100% 8px;background-repeat:no-repeat;padding:16px max(16px,calc((100vw - 900px)/2)) 12px}
+.k{font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin:6px 0 0}
+h1{margin:2px 0 4px;font-size:clamp(1.7rem,3.4vw,2.3rem);color:var(--ink)}
+.std{margin:2px 0;font-size:.92rem;color:var(--muted)}.std b{color:var(--ink)}
+.hud{position:sticky;top:0;z-index:5;background:var(--ink);color:#fff;padding:8px max(16px,calc((100vw - 900px)/2));display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-weight:800;font-size:.95rem}
+.hud .bar{flex:1;min-width:140px;height:10px;background:#ffffff33;border-radius:9px;overflow:hidden}.hud .bar span{display:block;height:100%;width:0;background:var(--mustard);transition:width .4s}
+.pill{background:#ffffff1a;border-radius:20px;padding:3px 10px;white-space:nowrap}.pill .on{color:var(--mustard)}.pill .off{color:#ffffff40}
+main{max-width:900px;margin:auto;padding:14px 16px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 3px 12px #1f2b330d}
+.kicker{font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin:0}
+h2{margin:2px 0 10px;font-size:1.45rem}
+.teach{background:#eef6f5;border-left:5px solid var(--teal);border-radius:9px;padding:10px 14px;margin:0 0 12px}
+.teach p{margin:4px 0}.teach b{color:var(--teal)}
+.block{margin:14px 0;padding:14px;border-radius:12px;border:2px solid var(--line);background:#fff}
+.block.current{border-color:var(--ink);box-shadow:0 0 0 4px #f2c14e55}
+.block.past{opacity:.92}
+.block h3{margin:0 0 10px;font-size:1.08rem;line-height:1.35}
+.event{background:#fffaf0;border-style:dashed;border-color:#cdb68b}
+.event.current{border-style:solid}
+.ticket{font-weight:900;color:var(--red);text-transform:uppercase;font-size:.78rem;letter-spacing:.1em;margin:0 0 4px}
+.event-body p{margin:4px 0}
+.picked{margin:10px 0 4px;color:var(--muted)}
+.result{background:#f4efe3;border-radius:9px;padding:9px 12px}
+.result.good,.result .good{color:var(--green)} .sanction{display:inline-block;font-weight:900;font-size:.8rem;border-radius:12px;padding:2px 9px;margin-right:6px}
+.sanction.pos{background:#dcefe2;color:var(--green)} .sanction.neg{background:#f6dcd8;color:var(--bad)}
+.qlabel{font-size:.75rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin:0 0 4px}
+.choices{display:grid;gap:8px}
+@media(min-width:700px){.q .choices{grid-template-columns:1fr 1fr}}
+button{font:inherit;cursor:pointer;border-radius:10px;min-height:46px}
+.choice{text-align:left;background:#fff;color:var(--ink);border:2px solid #cfc6b6;padding:10px 12px;font-weight:650;line-height:1.3}
+.choice:hover:not(:disabled){border-color:var(--ink);background:#fffdf5}
+.choice:disabled{opacity:.5;cursor:not-allowed}
+.go{margin-top:12px;background:var(--red);color:#fff;border:0;padding:11px 18px;font-weight:900}
+.go:disabled{opacity:.6}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #2f7dbd;outline-offset:2px}
+.answered{font-weight:800;color:var(--green);margin:4px 0}.why{margin:2px 0;color:var(--muted)}
+.msg{min-height:1.3em;font-weight:750;margin:8px 0 0}.msg.bad{color:var(--bad)}.msg.good{color:var(--green)}
+label{display:block;font-weight:850;margin:14px 0 4px}.stem{margin:0 0 4px;color:var(--muted);font-size:.92rem}
+input,textarea{width:100%;font:inherit;border:2px solid #cfc6b6;border-radius:9px;padding:10px;background:#fff;color:var(--ink)}
+.steps{display:grid;gap:6px;margin:10px 0;padding:0;list-style:none}.steps li{background:#f4efe3;border-radius:9px;padding:8px 12px;font-weight:700}
+.cast{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin:10px 0}.cast div{background:#f4efe3;border-radius:9px;padding:8px 10px;font-size:.93rem}.cast b{display:block}
+.report{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:8px 0 6px}.report div{background:#f4efe3;border-radius:10px;padding:10px;text-align:center}.report b{display:block;font-size:1.5rem}
+.welcome{background:#e6f1ea;color:var(--green);font-weight:800;border-radius:9px;padding:8px 12px;margin:0 0 10px}
+.foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px;color:var(--muted);font-size:.85rem}
+.foot button{background:#ece6da;border:0;padding:8px 12px;font-weight:800;color:var(--ink)}
+@media print{.hud,.foot,.go{display:none}}
+</style>
+<script src="../../shared/assignments.js?v=20261031a"></script>
+<script src="../../shared/turnin.js?v=20261031a"></script>
+<script src="../../shared/unit-game.js?v=20261031a"></script>
+</head><body>
+<header>
+  <p class="k">Sociology · Unit 2 · Day 1</p>
+  <h1>First Shift</h1>
+  <p class="std"><b>SS.9-12.Soc.5</b> Describe the components of culture. &nbsp;<b>SS.9-12.Soc.6</b> Analyze how culture influences individuals, including themselves. &nbsp;<b>SS.9-12.Soc.7</b> Evaluate important social institutions and how they respond to social needs.</p>
+  <p class="std"><b>Goal:</b> Explain how statuses, roles, norms, and institutions shape what people do. · About 25 minutes.</p>
+</header>
+<div class="hud" aria-label="Shift status">
+  <span class="pill" id="progressText">0 checks done</span>
+  <div class="bar" aria-hidden="true"><span id="progressFill"></span></div>
+  <span class="pill" id="tipsPill">Tips: $0</span>
+  <span class="pill" id="starsPill">Manager rating: 3/5</span>
+</div>
+<main>
+  <p class="welcome" id="welcome" hidden></p>
+  <div id="app"></div>
+  <div class="foot"><span>Progress saves on this device. Your teacher sees your work after you turn it in.</span><button type="button" id="restartBtn">Start over</button></div>
+</main>
+<script>
+const R = (cls, txt) => `<span class="sanction ${cls}">${txt}</span>`;
+UnitGame.start({
+  key: "soc-u2d1-first-shift-v1",
+  assignmentId: "sociology-unit2-day1-first-shift",
+  title: "Sociology Unit 2 · Day 1 · First Shift",
+  standard: "SS.9-12.Soc.5, SS.9-12.Soc.6, SS.9-12.Soc.7",
+  oldApi: "https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",
+  startFx: { tips: 10, stars: 3 },
+  wrongFx: { tips: -1 },
+  clampFx: fx => { fx.tips = Math.max(0, fx.tips); fx.stars = Math.max(1, Math.min(5, fx.stars)); },
+  hud: st => {
+    document.getElementById("tipsPill").textContent = "Tips: $" + (st.fx.tips || 0);
+    const s = st.fx.stars || 0;
+    document.getElementById("starsPill").innerHTML = "Manager rating: <span class='on'>" + "★".repeat(s) + "</span><span class='off'>" + "★".repeat(5 - s) + "</span> " + s + "/5";
+  },
+  startLabel: "Clock in",
+  introHtml: `<p class="kicker">Your first job</p><h2>Welcome to Cedar Grill</h2>
+    <p>You just got hired at Cedar Grill, a busy diner. Nobody hands you every rule. Some rules are written down. Some you only learn when people react to what you do.</p>
+    <div class="cast"><div><b>Dana</b>Shift manager</div><div><b>Marcus</b>Cook, 10 years here</div><div><b>Ms. Ortiz</b>A regular customer</div><div><b>You</b>New hire, student, older sibling</div></div>
+    <ul class="steps"><li>1. Work your shift and make choices.</li><li>2. Answer each check. Wrong answers cost $1 in tips.</li><li>3. Write 2 short answers and turn in.</li></ul>
+    <p>You start with $10 in tips and a 3-star rating.</p>`,
+  scenes: [
+    { kicker: "Part 1 of 4 · Saturday 10:30 AM", title: "Clock In: Who Are You Here?",
+      teach: `<p>A <b>status</b> is a position a person holds in a group, like <i>manager</i> or <i>sister</i>.</p>
+        <p>An <b>ascribed status</b> is one you did not choose. An <b>achieved status</b> is one you earned or chose.</p>
+        <p>A <b>role</b> is the behavior people expect from someone because of their status.</p>`,
+      blocks: [
+        { type: "note", html: `<p class="ticket">Status check</p><p>Dana hands you a name tag and says: "Everybody here has more than one status. Let's sort yours." Decide if each one is <b>ascribed</b> or <b>achieved</b>.</p>` },
+        { type: "q", id: "s1", std: "Soc.6", label: "Sort 1 of 6", short: "Sort: 17 years old", prompt: "Being 17 years old", options: ["Ascribed status", "Achieved status"], hint: "Did you do anything to earn your age?", why: "You can't choose or earn your age, so it is ascribed." },
+        { type: "q", id: "s2", std: "Soc.6", label: "Sort 2 of 6", short: "Sort: new hire", prompt: "New hire at Cedar Grill", options: ["Achieved status", "Ascribed status"], hint: "Think about the application and interview.", why: "You applied and got hired, so this status was achieved." },
+        { type: "q", id: "s3", std: "Soc.6", label: "Sort 3 of 6", short: "Sort: older sibling", prompt: "Older sibling", options: ["Ascribed status", "Achieved status"], hint: "Did you pick the order you were born in?", why: "Birth order is not chosen, so it is ascribed." },
+        { type: "q", id: "s4", std: "Soc.6", label: "Sort 4 of 6", short: "Sort: shift manager", prompt: "Dana's status: shift manager", options: ["Achieved status", "Ascribed status"], hint: "How does someone become a manager?", why: "Dana worked her way up, so manager is achieved." },
+        { type: "q", id: "s5", std: "Soc.6", label: "Sort 5 of 6", short: "Sort: driver's license", prompt: "Licensed driver", options: ["Achieved status", "Ascribed status"], hint: "What do you have to do to get a license?", why: "You pass tests to get a license, so it is achieved." },
+        { type: "q", id: "s6", std: "Soc.6", label: "Sort 6 of 6", short: "Sort: son or daughter", prompt: "Someone's son or daughter", options: ["Ascribed status", "Achieved status"], hint: "Did you choose your parents?", why: "You are born into this status, so it is ascribed." },
+        { type: "q", id: "role1", std: "Soc.6", short: "Role for 'new hire'", prompt: "Your status here is <b>new hire</b>. Which of these is a <b>role</b> that comes with that status?", options: ["Learning the menu and following training", "Being the oldest kid in your whole family", "Turning seventeen years old this summer", "Having your first name on your name tag"], hint: "A role is something people expect you to DO because of the status.", why: "A role is expected behavior. New hires are expected to learn and follow training." }
+      ] },
+    { kicker: "Part 2 of 4 · 12:00 PM rush", title: "The Lunch Rush: Rules You Can See and Can't",
+      teach: `<p>A <b>norm</b> is a rule or expectation for how to act. Norms are part of <b>culture</b>.</p>
+        <p><b>Formal norms</b> are written down, like laws and handbook rules. <b>Informal norms</b> are unwritten. People just expect them.</p>
+        <p>A <b>sanction</b> is a reward or punishment that pushes people to follow a norm. A <b>positive sanction</b> rewards. A <b>negative sanction</b> punishes or discourages.</p>
+        <p>Norms grow out of <b>values</b>: shared beliefs about what is important.</p>`,
+      blocks: [
+        { type: "event", id: "e1", short: "Handwashing", html: `<p class="ticket">Order up</p><p>You just took out the trash. A sign by the sink says: <b>"Employees must wash hands before returning to work."</b> Orders are piling up.</p>`,
+          choices: [
+            { label: "Wash my hands first, even though it's busy", fx: { stars: 1 }, result: `<p>${R("pos","Positive sanction")}Dana nods: "Good habit. That's how we pass inspection." <b>+1 star.</b></p>` },
+            { label: "Go straight to the line to save time", fx: { stars: -1, tips: -2 }, result: `<p>${R("neg","Negative sanction")}Dana stops you: "Hands. Now. That's written policy and the health code." She writes a warning in the log. <b>−1 star, −$2.</b></p>` }
+          ] },
+        { type: "q", id: "n1", std: "Soc.5", short: "Handwashing rule type", prompt: "The handwashing rule is posted and in the employee handbook. What kind of norm is it?", options: ["A formal norm, because it is written down", "An informal norm, since people just expect it", "Not a norm, because it is only a good habit", "A role, because only cooks are told to do it"], hint: "Look back at the sign. Where does this rule come from?", why: "It is written in policy and health code, so it is a formal norm." },
+        { type: "event", id: "e2", short: "Booth 4", html: `<p class="ticket">Seating</p><p>A family of four wants a booth. The only open one is <b>booth 4</b>. Nobody has told you anything about booth 4.</p>`,
+          choices: [
+            { label: "Seat the family in booth 4", fx: { tips: -3 }, result: `<p>${R("neg","Negative sanction")}At noon Ms. Ortiz walks in and stares at booth 4. Marcus mutters, "That's Ms. Ortiz's booth. Everybody knows that." She sits at the counter and leaves no tip. <b>−$3.</b></p><p>Nobody wrote this rule down. You learned it from people's reactions.</p>` },
+            { label: "Ask the family to wait 5 minutes for a different booth", fx: { tips: 5 }, result: `<p>${R("pos","Positive sanction")}At noon Ms. Ortiz walks in and sits in booth 4, like she does every day. Marcus grins: "Good call. That's her booth." She leaves you $5. <b>+$5.</b></p><p>Nobody wrote this rule down. You got lucky this time.</p>` }
+          ] },
+        { type: "q", id: "n2", std: "Soc.5", short: "Booth 4 rule type", prompt: "The \"booth 4 belongs to Ms. Ortiz\" rule is not written anywhere. What is it?", options: ["An informal norm that people expect anyway", "A formal norm that is in the store policy", "A status that Ms. Ortiz earned by eating", "A sanction that the manager puts in the log"], hint: "Is the rule written down? Do people still expect it?", why: "It is unwritten but expected, so it is an informal norm." },
+        { type: "q", id: "n3", std: "Soc.5", short: "How informal norms are learned", prompt: "How do new workers usually learn an <b>informal</b> norm like the booth 4 rule?", options: ["By noticing how others react to what they do", "By reading the rule in the employee handbook", "By passing a written test before the first day", "By looking it up in Iowa's restaurant laws"], hint: "Think about how you found out about booth 4.", why: "Informal norms aren't written, so people learn them from others' reactions, which are sanctions." },
+        { type: "event", id: "e3", short: "Phone", html: `<p class="ticket">Slow minute</p><p>It's quiet for a minute. Your phone buzzes. The handbook says <b>"No personal phone use on the floor."</b></p>`,
+          choices: [
+            { label: "Check it quickly behind the counter", fx: { stars: -1 }, result: `<p>${R("neg","Negative sanction")}Dana walks by: "Phone away, please. Break is at 2." <b>−1 star.</b></p>` },
+            { label: "Wait and check it on break in the back", fx: { stars: 1 }, result: `<p>${R("pos","Positive sanction")}Dana notices you waited and says, "Thanks for keeping the floor covered." <b>+1 star.</b></p>` }
+          ] },
+        { type: "q", id: "n4", std: "Soc.5", short: "Phone away = sanction type", prompt: "When Dana says <i>\"Phone away, please,\"</i> what is she doing?", options: ["Giving a negative sanction to stop a behavior", "Giving a positive sanction to reward a behavior", "Creating a brand-new formal norm for the diner", "Changing her status from manager to coworker"], hint: "Is she rewarding the behavior or discouraging it?", why: "She is discouraging phone use, so it is a negative sanction." },
+        { type: "event", id: "e4", short: "Ms. Ortiz compliment", html: `<p class="ticket">End of the rush</p><p>Ms. Ortiz tells Dana you did a great job today. Dana says: "Want the window section tomorrow? That's where the best tips are."</p>`,
+          choices: [ { label: "Say thanks and take the window section", fx: { tips: 4, stars: 1 }, result: `<p>${R("pos","Positive sanction")}You get the best section tomorrow. <b>+$4, +1 star.</b></p>` } ] },
+        { type: "q", id: "n5", std: "Soc.5", short: "Best section = sanction type", prompt: "Dana giving you the best section is an example of a…", options: ["Positive sanction that rewards good work", "Negative sanction that punishes bad work", "Formal norm that is written in the handbook", "Ascribed status that comes with being born"], hint: "Did something good or bad happen to you?", why: "A reward for good behavior is a positive sanction." },
+        { type: "q", id: "n6", std: "Soc.5", short: "Regulars come first = value", prompt: "Everyone at Cedar Grill believes <b>regulars come first</b>. That shared belief about what matters is a…", options: ["Value", "Norm", "Sanction", "Status"], hint: "Is it a rule for how to act, or a belief about what is important?", why: "A shared belief about what is important is a value. The booth 4 rule is the norm that grows out of it." },
+        { type: "q", id: "n7", std: "Soc.5", short: "Material vs nonmaterial culture", prompt: "Which pair shows <b>material</b> culture and then <b>nonmaterial</b> culture at Cedar Grill?", options: ["Your name tag, and the booth 4 rule", "The booth 4 rule, and your name tag", "The menu board, and the kitchen grill", "Respect for regulars, and handwashing"], hint: "Material = things you can touch. Nonmaterial = ideas and rules.", why: "A name tag is a physical object (material). The booth 4 rule is an idea people share (nonmaterial)." }
+      ] },
+    { kicker: "Part 3 of 4 · 5:30 PM", title: "Too Many Roles at Once",
+      teach: `<p><b>Role conflict</b>: the roles of two <i>different</i> statuses clash. (A coach whose own kid is on the team.)</p>
+        <p><b>Role strain</b>: <i>one</i> status has so many expectations it's hard to keep up. (A student with four tests on one day.)</p>`,
+      blocks: [
+        { type: "event", id: "e5", short: "Thursday shift text", html: `<p class="ticket">New text from Dana</p><p><b>"Can you cover Thursday 3–9? Someone called in."</b></p><p>But Thursday you have a <b>make-up test after school</b>, and you promised to <b>watch your little brother</b>.</p>`,
+          choices: [
+            { label: "Cover the shift. I need the money.", fx: { tips: 6 }, result: `<p>You earn about $6 more in tips and Dana is grateful. But you miss the make-up test, and your mom has to leave work early to get your brother. Every choice cost something.</p>` },
+            { label: "Say no. Explain the test and my brother.", fx: {}, result: `<p>Dana says, "Okay, thanks for telling me early." You take the test and watch your brother. You miss the extra money. Every choice cost something.</p>` },
+            { label: "Offer to cover only 6–9, after the test", fx: { tips: 3 }, result: `<p>Dana takes the deal. You take the test, then ask a neighbor to watch your brother for 2 hours. You earn about $3. Even a compromise cost something.</p>` }
+          ] },
+        { type: "q", id: "r1", std: "Soc.6", short: "Thursday = conflict or strain", prompt: "Worker, student, and older sibling all want your Thursday. What is this?", options: ["Role conflict: roles of different statuses clash", "Role strain: one status has too many demands", "A formal norm: written rules from a handbook", "An ascribed status: something you didn't choose"], hint: "How many different statuses are pulling on you?", why: "Three different statuses (worker, student, sibling) clash, so it is role conflict." },
+        { type: "event", id: "e6", short: "Dinner rush", html: `<p class="ticket">Dinner rush</p><p>You have <b>6 tables</b>. Table 2 wants refills, table 5 is ready to order, table 1 wants the check, and the register line is growing. All of this is part of being a server.</p>`,
+          choices: [
+            { label: "Ask Marcus to run the register for 5 minutes", fx: { stars: 1 }, result: `<p>Marcus helps out. Things calm down. Dana likes that you asked for help. <b>+1 star.</b></p>` },
+            { label: "Try to do it all myself as fast as I can", fx: { tips: -2 }, result: `<p>You get it done, but table 5 waits 15 minutes and tips less. <b>−$2.</b></p>` }
+          ] },
+        { type: "q", id: "r2", std: "Soc.6", short: "Dinner rush = conflict or strain", prompt: "Six tables, refills, orders, and the register, all as a server. What is this?", options: ["Role strain: one status has too many demands", "Role conflict: roles of different statuses clash", "A positive sanction: a reward for working hard", "An informal norm: an unwritten diner rule"], hint: "Is this one status or several?", why: "It's all one status (server) with too many expectations, so it is role strain." }
+      ] },
+    { kicker: "Part 4 of 4 · 9:00 PM close", title: "Bigger Than the Diner: Institutions",
+      teach: `<p>A <b>social institution</b> is an organized system that meets a big need in society.</p>
+        <p>Five major ones: <b>family, education, religion, the economy,</b> and <b>government</b>. Cedar Grill is part of the <b>economy</b>.</p>
+        <p>Institutions also <b>respond</b> when society's needs change.</p>`,
+      blocks: [
+        { type: "note", html: `<p class="ticket">Closing time</p><p>While you wipe tables, you think about how your shift connects to bigger systems. Match each need to the institution that meets it.</p>` },
+        { type: "q", id: "i1", std: "Soc.7", label: "Need 1 of 5", short: "Need: jobs, buying, selling", prompt: "People need jobs, paychecks, and a way to buy and sell food.", options: ["Economy", "Education", "Religion", "Family"], hint: "Which institution is about work, money, and goods?", why: "Jobs and buying and selling are the economy. Cedar Grill is part of it." },
+        { type: "q", id: "i2", std: "Soc.7", label: "Need 2 of 5", short: "Need: safe food", prompt: "Someone needs to make sure restaurant food is safe to eat.", options: ["Government", "Economy", "Family", "Education"], hint: "Who sends inspectors and makes health codes?", why: "Health codes and inspections come from government." },
+        { type: "q", id: "i3", std: "Soc.7", label: "Need 3 of 5", short: "Need: skills, diploma", prompt: "Teens need to learn skills and earn a diploma.", options: ["Education", "Government", "Religion", "Economy"], hint: "Which institution runs schools?", why: "Schools are the institution of education." },
+        { type: "q", id: "i4", std: "Soc.7", label: "Need 4 of 5", short: "Need: care for kids", prompt: "Kids need care, love, and someone to raise them.", options: ["Family", "Education", "Government", "Religion"], hint: "Who usually raises children first?", why: "Raising and caring for children is the main job of family." },
+        { type: "q", id: "i5", std: "Soc.7", label: "Need 5 of 5", short: "Need: meaning, shared beliefs", prompt: "People look for meaning, shared beliefs, and traditions with a community.", options: ["Religion", "Family", "Economy", "Government"], hint: "Which institution is built around faith and shared beliefs?", why: "Religion meets the need for meaning, shared beliefs, and community traditions." },
+        { type: "q", id: "i6", std: "Soc.7", short: "Institution responding to a need", prompt: "Lots of teens work evening shifts and also go to school. Which is an example of an institution <b>responding to that need</b>?", options: ["A school adds flexible hours for working students", "A school adds more homework to raise test scores", "A diner raises prices when food costs go up", "A teen asks the boss for fewer hours on weekdays"], hint: "Which choice changes a system because of the working-teen problem?", why: "The school (education) changed how it works because working teens needed it. That's an institution responding to a social need." }
+      ] }
+  ],
+  finale: {
+    title: "Shift Report",
+    report: st => `<div class="report"><div><b>$${st.fx.tips}</b>tips earned</div><div><b>${st.fx.stars} of 5 ★</b>manager rating</div></div><p>Your tips and rating came from your choices <i>and</i> from rules you didn't know yet. That's how norms work.</p><p>Answer both in 1–2 sentences each.</p>`,
+    prompts: [
+      { id: "norm", short: "One norm, its sanction, and the value behind it", label: "1. Pick one norm from your shift. Is it formal or informal? What sanction showed you the rule, and what value is behind it?", stem: "The ___ rule is a (formal / informal) norm because ___. I knew it was a rule when ___. It shows Cedar Grill values ___.", min: 90, mustAll: [["formal", "informal"], ["sanction", "react", "warn", "tip", "star", "said", "told", "stare", "mutter", "nod"]], mustMsg: "In answer 1, say if the norm is formal or informal AND what reaction (sanction) showed you the rule." },
+      { id: "inst", short: "Evaluate one institution for teens", label: "2. Pick one social institution (family, education, religion, the economy, or government). How well does it meet a need for teens like you? Give one thing it does well and one way it falls short.", stem: "The ___ meets teens' need for ___. It does well at ___, but it falls short because ___.", min: 90, mustInclude: ["family", "education", "school", "religion", "church", "economy", "business", "job", "work", "government"], mustMsg: "In answer 2, name one institution: family, education, religion, the economy, or government." }
+    ]
+  },
+  extraAnswers: st => ({ "Tips earned": "$" + st.fx.tips, "Manager rating": st.fx.stars + " of 5 stars" })
+});
+</script>
+</body></html>

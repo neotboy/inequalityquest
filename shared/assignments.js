@@ -25,7 +25,8 @@ window.CLASS_UNITS = {
     2: "Culture, Institutions & Society"
   },
   "government": {
-    1: "Foundations of the U.S. Constitution"
+    1: "Foundations of the U.S. Constitution",
+    2: "Political Beliefs, Linkage Institutions & Citizenship"
   },
   "civics": {
     1: "The Missing Constitution"
@@ -62,6 +63,7 @@ window.CLASS_ASSIGNMENTS = {
   "sociology-day-7-research-ethics":          { course: "sociology", unit: 1, day: 7, title: "Day 7 · Ethics in Sociological Research (Reading)", path: "sociology/day-7-research-ethics/" },
 
   // ---- Sociology · Unit 2 ----
+  "sociology-unit2-day1-first-shift":         { course: "sociology", unit: 2, day: 1, title: "Day 1 · First Shift: Status, Roles & Norms", path: "sociology/unit2-day1-first-shift/" },
   "sociology-unit2-arrival-culture":          { course: "sociology", unit: 2, day: 2, title: "Day 2 · The Arrival: A New Culture", path: "sociology/arrival-culture/" },
 
   // ---- Government · Unit 1 ----
@@ -71,6 +73,9 @@ window.CLASS_ASSIGNMENTS = {
   "gov-democracy-visualized-day2":    { course: "government", unit: 1, day: 2, title: "Day 2 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day2" },
   "gov-democracy-visualized-day7":    { course: "government", unit: 1, day: 7, title: "Day 7 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day7" },
   "gov-democracy-visualized-day9":    { course: "government", unit: 1, day: 9, title: "Day 9 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day9" },
+
+  // ---- Government · Unit 2 ----
+  "gov-unit2-day1-the-feed":          { course: "government", unit: 2, day: 1, title: "Day 1 · The Feed: Where Beliefs Come From", path: "civics/unit2-day1-the-feed/" },
 
   // ---- Civics (Iowa civics test prep) · Friday 1 ----
   "civics-test-s1-founders-defense":  { course: "civics", unit: 1, title: "Founders' Defense", path: "civics/civics-test-s1-founders-defense/" }
