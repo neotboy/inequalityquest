@@ -1,138 +1,78 @@
 /* A fictional society model. Economic labels do not change the scores. */
 (function(root){
 'use strict';
-const E=()=>root.CountryCreator||(typeof require==='function'?require('./engine.js'):null);
-const KEYS=['approval','budget','order','trust','liberty'];
-const clamp=(v,lo=3,hi=97)=>Math.max(lo,Math.min(hi,Math.round(v)));
-const polityMods={democracy:{approval:12,trust:18,liberty:22,order:-6,budget:-4},republic:{approval:10,trust:16,liberty:20,order:-2,budget:-4},oligarchy:{approval:-6,trust:-12,liberty:-8,order:12,budget:4},autocracy:{approval:-6,trust:-10,liberty:-18,order:18,budget:2},totalitarian:{approval:-12,trust:-16,liberty:-30,order:24,budget:2}};
-const divisionMods={federal:{trust:3,budget:-2},unitary:{order:3,trust:-1},confederate:{liberty:3,order:-4,budget:-4}};
-const checkMods={courts:{liberty:4,trust:3,budget:-2},congress:{budget:4,trust:2,approval:-2},time:{liberty:3,trust:2,order:-2},none:{order:4,liberty:-6,trust:-5}};
-function add(m,fx){for(const k in fx||{})if(k in m)m[k]=clamp(m[k]+fx[k]);}
-function chosenPlaces(s){const ids=(s.guide&&s.guide.places)||[];return ids.map(p=>E().places.find(x=>x.id===p.id)).filter(Boolean);}
-function base(s){
- const m={approval:50,budget:58,order:50,trust:50,liberty:50};
- add(m,polityMods[s.polity]);add(m,divisionMods[s.division]);add(m,checkMods[s.oversight]);
- for(const p of chosenPlaces(s))add(m,p.fx);
- return m;
+function decisions(state,events){const byRound=new Map();for(const d of state.decisions||[])if(Number.isInteger(d.event)&&events[d.event]?.choices[d.choice])byRound.set(d.event,d);return [...byRound.values()].sort((a,b)=>a.event-b.event);}
+function scores(state,events,through=Infinity){
+ const n={order:50,trust:50,liberty:50,approval:50,budget:55};
+ if(state.approach==='hard'){n.order+=24;n.trust-=14;n.liberty-=22;n.approval-=8;n.budget+=2;}
+ else if(state.approach==='firm'){n.order+=8;n.trust+=2;n.liberty+=2;n.approval+=4;n.budget-=2;}
+ else{n.order-=7;n.trust+=12;n.liberty+=13;n.approval+=7;n.budget-=5;}
+ const changes={democracy:{trust:8,liberty:10,approval:8},republic:{trust:8,liberty:10,approval:7},oligarchy:{order:8,trust:-14,liberty:-8,approval:-8},autocracy:{order:12,trust:-10,liberty:-17,approval:-8},totalitarian:{order:18,trust:-18,liberty:-28,approval:-15}}[state.polity]||{};
+ for(const key in changes)n[key]+=changes[key];
+ const checks={courts:{liberty:3,trust:2,budget:-1},congress:{budget:3,trust:1,approval:-1},time:{order:-2,liberty:3,trust:2}}[state.oversight]||{};
+ for(const key in checks)n[key]+=checks[key];
+ const bound=()=>{for(const key in n)n[key]=Math.max(5,Math.min(95,n[key]));};
+ bound();
+ for(const d of decisions(state,events))if(d.event<=through){for(const key in events[d.event].choices[d.choice].effect)n[key]+=events[d.event].choices[d.choice].effect[key]*3;bound();}
+ return n;
 }
-const pick=(v,open)=>v&&typeof v==='object'?(open?v.open:v.closed):v;
-function pressureOf(m){return [[.45,.45,.1],[.45,.2,.35],[.65,.25,.1]].map(w=>Math.round((100-m.trust)*w[0]+(100-m.liberty)*w[1]+(100-m.budget)*w[2]));}
-function statesFrom(s,m,abuses,moves){
- return ['Rights','Services','Voice'].map((priority,i)=>{
-  const pressure=pressureOf(m)[i],rebellion=abuses>=3&&m.trust<30&&pressure>=[74,80,76][i];
-  return {index:i,name:s.regions[i],priority,pressure,phase:rebellion?'insurrection':pressure>=55&&moves?'protests':'calm',reason:i===0?'People say the leader is taking their rights.':i===1?'People say their needs are being ignored.':'People say the leader will not hear them.'};
- });
-}
-function defOf(item){const C=E();return item.kind==='surprise'?C.surprises.find(x=>x.id===item.id):C.governanceEvents[item.event];}
-function context(s,m,rival,abuses,has){
- const states=statesFrom(s,m,abuses,1),hot=states.slice().sort((a,b)=>b.pressure-a.pressure)[0];
- return {m:{...m},rival,abuses,has,open:E().isOpen(s.polity),hotState:hot.name,states};
-}
-/* Replay the whole year from the setup and the timeline. Everything on screen comes from this. */
-function run(s,upto=Infinity){
- const C=E(),open=C.isOpen(s.polity),m=base(s),has={};
- for(const p of chosenPlaces(s))has[p.id]=true;
- let rival=clamp(C.rival.start+chosenPlaces(s).reduce((n,p)=>n+(p.rival||0),0),0,100);
- const harm={deaths:0,injuries:0,resigned:[],strike:false,rebels:[]};let abuses=0,takeover=null,overthrown=false,outAt=-1;const steps=[];
- (s.timeline||[]).slice(0,upto).forEach((item,index)=>{
-  const def=defOf(item),ch=def&&def.choices[item.choice];if(!ch)return;
-  const before={...m},rivalBefore=rival;let result=ch.result,rq=pick(ch.rq,open),ok=true;
-  if(ch.test){ok=!!ch.test(context(s,m,rival,abuses,has));if(!ok){result=ch.resultFail;rq=ch.rqFail;}}
-  if(item.kind==='decision'&&ch.power&&ch.power.cancelElection)result=open?ch.resultOpen:ch.resultClosed;
-  add(m,ch.fx);rival=clamp(rival+(pick(ch.rival,open)||0),0,100);
-  const p=ch.power||{};if(p.rights||p.bypass||p.cancelElection)abuses++;
-  const h=ch.harm||{};harm.deaths+=h.deaths||0;harm.injuries+=h.injuries||0;if(h.resigned)harm.resigned.push(h.resigned);if(h.strike)harm.strike=true;
-  const wasOut=!!(takeover||overthrown);
-  if(!ok&&!wasOut){takeover='coup';rival=Math.max(rival,85);}
-  if(item.kind==='decision'&&p.cancelElection&&open&&!wasOut)takeover='impeached';
-  /* Rival power drifts with public mood. */
-  rival=clamp(rival+Math.round((50-m.approval)/8)+(m.trust<35?2:0),0,100);
-  let election='';
-  if(item.kind==='decision'&&p.election&&!takeover&&!overthrown){if(rival>=60){takeover='election';election='lost';result+=' Vera Kane wins the vote. You hand over power peacefully.';}else{election='won';result+=' You win the vote.';}}
-  const states=statesFrom(s,m,abuses,index+1),newRebels=[];
-  for(const r of states)if(r.phase==='insurrection'&&!harm.rebels.includes(r.name)){harm.rebels.push(r.name);newRebels.push(r.name);harm.deaths+=1;harm.injuries+=4;}
-  if(states.every(r=>r.phase==='insurrection')&&!takeover)overthrown=true;
-  const removedNow=!wasOut&&!!(takeover||overthrown);if(removedNow)outAt=index;
-  steps.push({item,index,def,choice:ch,before,after:{...m},rivalBefore,rivalAfter:rival,result,rq,ok,election,newRebels,removedNow,out:!!(takeover||overthrown),warnings:alignment(s,item,item.choice)});
- });
- return {m,rival,harm,abuses,takeover,overthrown,outAt,steps,has,open,states:statesFrom(s,m,abuses,steps.length)};
-}
-function scores(s){return run(s).m;}
-function unrest(s){return run(s).states;}
-function consequences(s){const r=run(s);return {deaths:r.harm.deaths,injuries:r.harm.injuries,resignations:r.harm.resigned,strike:r.harm.strike,removed:!!r.takeover||r.overthrown,rebellion:r.harm.rebels};}
-/* Pick the next surprise. It is caused by the meters and choices so far. */
-function nextSurprise(s,decisionIndex){
- const C=E(),r=run(s),out=!!(r.takeover||r.overthrown);
- const used=(s.timeline||[]).filter(i=>i.kind==='surprise').map(i=>i.id).concat(out?['coup','rebellion']:[]);
- if((s.timeline||[]).filter(i=>i.kind==='surprise').length>=3||decisionIndex>3)return null;
- const ctx=context(s,r.m,r.rival,r.abuses,r.has);
- for(const id of C.surprisePriority){if(used.includes(id))continue;const sp=C.surprises.find(x=>x.id===id);if(sp.when(ctx))return {id,why:sp.why(ctx),prompt:sp.prompt(ctx)};}
- const forced=(decisionIndex===1&&used.length===0)||(decisionIndex===3&&used.length<2);
- if(forced){for(const id of ['scandal','protest','strike']){if(used.includes(id))continue;const sp=C.surprises.find(x=>x.id===id);const why=id==='scandal'?sp.whyForced(ctx):id==='protest'?'Your last choice made some groups angry.':'Prices are rising faster than pay.';return {id,why,prompt:sp.prompt(ctx)};}}
- return null;
-}
-function alignment(s,item,choice){
- const C=E(),def=defOf(item),p=(def&&def.choices[choice]&&def.choices[choice].power)||{},w=[],sys=C.words[s.polity].name,open=C.isOpen(s.polity);
- if(p.cancelElection&&open)w.push('You chose a '+sys.toLowerCase()+'. Canceling the vote takes power away from voters.');
- else if(p.rights&&s.polity==='republic')w.push('Your constitutional republic promises rights and legal limits. This move breaks them.');
- else if(p.rights&&s.polity==='democracy')w.push('In a direct democracy, the people’s voice is the whole point. This move silences them.');
- if(p.bypass&&open&&!p.cancelElection&&!p.rights)w.push('You chose a '+sys.toLowerCase()+'. This move skips the people and officials who share power.');
- if(p.election&&!open)w.push('You chose '+(s.polity==='totalitarian'?'a ':'an ')+sys.toLowerCase()+'. A fair vote could let people replace you.');
- if(p.local&&p.bypass&&s.division==='federal')w.push('In a federal system, states and towns keep powers of their own. Overriding them breaks that split.');
- if(p.local&&p.bypass&&s.division==='confederate')w.push('In a confederation, states keep most power. Overriding them breaks your own rules.');
- if(p.national&&s.division==='confederate')w.push('In a confederation, the center only does jobs the states give it. A national school rule goes beyond that.');
- if(p.local&&!p.bypass&&s.polity==='totalitarian')w.push('A totalitarian regime controls schools and ideas. Letting states choose loosens that control.');
- if(p.seize&&s.ownership==='capitalism')w.push('You chose Capitalism (private ownership). Taking over private factories breaks with private ownership.');
- if(p.market&&(s.ownership==='socialism'||s.ownership==='communism'))w.push('You chose '+C.words[s.ownership].name+'. In your system the public or the state owns major industries, so there are no private owners to bargain.');
- if((p.bypass||p.cancelElection)&&s.oversight==='congress')w.push('You gave lawmakers control of the money. Expect them to fight this move.');
- if(p.rights&&s.oversight==='courts')w.push('You gave courts the power to cancel orders. Expect a judge to block this.');
- return w;
-}
-function residents(m){return [
- {name:'Maya · parent',icon:'👩🏽',text:m.budget<25?'Public money is low. Repairs and services have to wait.':m.trust>=60?'People feel heard when the government decides.':'People want clearer plans before they trust leaders.'},
- {name:'Ari · student',icon:'🧑🏾',text:m.liberty>=60?'People can speak, protest, and question leaders.':m.liberty<35?'People are afraid to speak against the government.':'People argue about whether their freedoms are safe.'}
+const stories=[[{"scene": "privacy", "voices": [["Maya · resident", "Police get vehicle clues, with limits on searches."], ["Alex · worker", "Reviews cost money. Some people still worry about privacy."]]}, {"scene": "shops", "voices": [["Maya · resident", "No new plate records are collected."], ["Alex · worker", "Police have one less source of clues."]]}, {"scene": "oops", "voices": [["Maya · resident", "Your public copy exposes people’s trips. A resident is attacked and hurt."], ["Alex · worker", "Your privacy chief resigns. People demand an investigation."]]}], [{"scene": "homes", "voices": [["Maya · resident", "Rent aid keeps us housed. Other services must wait."], ["Alex · worker", "Building takes time, even with help."]]}, {"scene": "building", "voices": [["Maya · resident", "More homes may lower rent later."], ["Alex · worker", "Some neighbors object to the new buildings."]]}, {"scene": "protest", "voices": [["Maya · resident", "A rushed building collapses. Three people die."], ["Alex · worker", "Courts halt projects. Your housing minister resigns."]]}], [{"scene": "school", "voices": [["Maya · resident", "Our school can test an AI rule."], ["Alex · worker", "Moving to another school may mean different rules."]]}, {"scene": "hearing", "voices": [["Maya · resident", "Congress debates a shared AI law."], ["Alex · worker", "Clear rules take time. Some schools want more freedom."]]}, {"scene": "court", "voices": [["Maya · resident", "False alerts punish honest students. Schools walk out."], ["Alex · worker", "Courts order hearings. Your education chief quits."]]}], [{"scene": "protest", "voices": [["Maya · resident", "Peaceful people can still criticize the leader."], ["Alex · worker", "Shops reopen slowly. Police investigate damage."]]}, {"scene": "court", "voices": [["Maya · resident", "The safety zone reduces damage but also moves peaceful people."], ["Alex · worker", "The limit has an end date. Courts can review it."]]}, {"scene": "protest", "voices": [["Maya · resident", "Clashes leave twelve people hurt and one dead."], ["Alex · worker", "A national strike begins. Congress investigates your orders."]]}], [{"scene": "voting", "voices": [["Maya · resident", "Voting continues. Workers explain the evidence."], ["Alex · worker", "The leader might lose, but people keep their vote."]]}, {"scene": "court", "voices": [["Maya · resident", "A court reviews evidence while voting stays open."], ["Alex · worker", "The review takes time. Supporters grow impatient."]]}, {"scene": "protest", "voices": [["Maya · resident", "Six people are hurt in clashes. Your guards refuse your order."], ["Alex · worker", "Congress removes your leader. Your cabinet takes over."]]}]];
+function impact(state,events,round){const d=decisions(state,events).find(d=>d.event===round);if(!d)return null;const before=scores(state,events,round-1),after=scores(state,events,round);return {...stories[round][d.choice],round,choice:d.choice,before,after};}
+function residents(score){return [
+{name:'Maya · parent',icon:'👩🏽',mood:score.budget<25?'worried':score.trust>=60?'hopeful':'unsure',text:score.budget<25?'Public money is low. Some repairs and services may have to wait.':score.trust>=60?'People feel heard when the government makes decisions.':'People want clearer plans before they trust their leaders.'},
+{name:'Ari · student',icon:'🧑🏾',mood:score.liberty>=60?'hopeful':score.liberty<35?'worried':'unsure',text:score.liberty>=60?'People have room to speak, protest, and question leaders.':score.liberty<35?'People worry about speaking against the government.':'People disagree about whether their freedoms are safe.'}
 ];}
-/* ---------- Endings, score, and rank ---------- */
-function ending(s){
- const C=E(),r=run(s),m=r.m,rebels=r.states.filter(x=>x.phase==='insurrection').length;let key,sub='';
- if(r.takeover){key='takeover';sub=r.takeover;}
- else if(r.overthrown||(rebels>=2&&m.trust<25))key='revolution';
- else if(r.rival>=80){key='takeover';sub='rival';}
- else if(m.budget<=12||m.order<=15)key='collapse';
- else if(m.liberty<35&&m.order>=55)key='crackdown';
- else if(m.trust>=55&&m.liberty>=55&&m.budget>=20&&m.approval>=45&&m.order>=35)key='thriving';
- else key='divided';
- const info=C.endings[key];let title=info.title;
- if(key==='thriving')title=s.polity==='democracy'?'Thriving Democracy':s.polity==='republic'?'Thriving Republic':'Thriving Free Nation';
- if(key==='takeover')title={election:'Voted Out',impeached:'Removed from Office',coup:'Overthrown by a Coup',rival:'Rival Takeover'}[sub];
- return {key,sub,title,icon:key==='takeover'&&sub==='election'?'🗳️🤝':info.icon,tone:key==='takeover'&&sub==='election'?'mid':info.tone,why:why(s,r,key,sub),r};
+function purposeOptions(place){const name=String(place.text||place.name||'').toLowerCase(),category=place.category;
+ if(/school|college|library|research/.test(name))return [['learning','Help people learn'],['fun','Bring the community together']];
+ if(/hospital|shelter|food bank|housing|fire|police/.test(name))return [['health','Keep people safe and well'],['work','Provide useful local jobs']];
+ if(category==='government')return [['rights','Give people a voice'],['work','Run public services']];
+ if(category==='land')return [['nature','Care for land and water'],['fun','Give people a place to enjoy']];
+ if(/power|solar|wind|water plant|broadband/.test(name))return [['work','Keep daily life running'],['health','Help homes and hospitals']];
+ if(category==='infrastructure')return [['travel','Move people and supplies'],['work','Help local businesses']];
+ if(category==='economy')return [['work','Provide jobs and supplies'],['health','Meet families’ basic needs']];
+ return [['health','Help people in daily life'],['fun','Bring the community together']];
 }
-const listJoin=a=>a.length<3?a.join(' and '):a.slice(0,-1).join(', ')+', and '+a.at(-1);
-function worst(r){const steps=r.steps.filter(x=>x.choice.power&&(x.choice.power.rights||x.choice.power.bypass||x.choice.power.cancelElection));return steps.length?steps[steps.length-1].choice.title:'';}
-function why(s,r,key,sub){
- const C=E(),m=r.m,check=C.checkNames[s.oversight].toLowerCase(),bad=worst(r);
- const q=t=>'“'+t+'”';
- switch(key){
-  case 'thriving':return 'You kept rights and trust high (Trust '+m.trust+', Liberty '+m.liberty+') and still paid the bills. Your check on power, '+check+', meant people did not have to fear their leader. That is the idea behind <b>checks and balances</b>.';
-  case 'divided':return 'You made it through the year, but people are split (Trust '+m.trust+', Approval '+m.approval+'). '+(bad?'Moves like '+q(bad)+' cost you support. ':'Your safe choices still cost money and patience. ')+'Most real governments live in this messy middle.';
-  case 'crackdown':return 'You kept order ('+m.order+') by cutting freedoms (Liberty '+m.liberty+'). '+(bad?'Choices like '+q(bad)+' silenced critics. ':'')+'People obey out of fear, not trust. That is how <b>authoritarian</b> rule holds on.';
-  case 'revolution':return 'Your crackdowns turned '+(listJoin(r.harm.rebels)||'your states')+' against you. With trust at '+m.trust+', people stopped believing peaceful change was possible. That is how an <b>insurrection</b> starts.';
-  case 'collapse':return m.budget<=12?'The treasury fell to '+m.budget+'. With no money, services stopped and people stopped paying attention to your orders. A government needs resources to do its basic jobs.':'Order fell to '+m.order+'. Stores were looted and police could not keep up. Protecting people is one of government’s basic purposes.';
-  case 'takeover':
-   if(sub==='election')return 'You kept the vote fair, and Vera Kane won (her power: '+r.rival+'). You handed over power peacefully. That is what a <b>republic</b> is supposed to do, even when it hurts.';
-   if(sub==='impeached')return 'You tried to cancel an election. Lawmakers used <b>impeachment</b> to remove you, and Vera Kane took over. That is <b>checks and balances</b> stopping a leader.';
-   if(sub==='coup')return 'Trust was too low ('+m.trust+') for people to defend you. The generals sided with Vera Kane. A <b>coup</b> skips elections and takes power by force.';
-   return 'Vera Kane’s power hit '+r.rival+'. Every mistake made her stronger, and now she runs '+(s.name||'your country')+'. '+(r.open?'In an open system, voters can replace leaders who lose their trust.':'Even closed systems fall when rivals gain enough support.');
+function changeDecision(state,events,round,choice,goal){
+ if(!Number.isInteger(round)||!events[round]?.choices[choice])return false;
+ const old=decisions(state,events).find(d=>d.event===round),changed=!!old&&(old.choice!==choice||old.goal!==goal);
+ state.decisions=decisions(state,events).filter(d=>d.event!==round).concat({event:round,choice,goal,revisions:(old?.revisions||0)+(changed?1:0)}).sort((a,b)=>a.event-b.event);return true;
+}
+function unrest(state,events,through=Infinity){
+ const n=scores(state,events,through),moves=decisions(state,events).filter(d=>d.event<=through);
+ const abuses=moves.filter(d=>{const p=events[d.event].choices[d.choice].power||{};return p.rights||p.bypass||p.cancelElection;}).length;
+ return ['Rights','Services','Voice'].map((priority,i)=>{
+  const weights=[[.45,.45,.1],[.45,.2,.35],[.65,.25,.1]][i];
+  const pressure=Math.round((100-n.trust)*weights[0]+(100-n.liberty)*weights[1]+(100-n.budget)*weights[2]);
+  const rebellion=abuses>=2&&n.trust<35&&pressure>=[70,76,72][i];
+  return {index:i,name:state.regions[i],priority,pressure,phase:rebellion?'insurrection':pressure>=55&&moves.length?'protests':'calm',reason:i===0?'People say the leader is taking their rights.':i===1?'People say their needs are being ignored.':'People say the leader will not hear them.'};
+ });
+}
+function consequences(state,events,through=Infinity){
+ const result={deaths:0,injuries:0,resignations:[],strike:false,removed:false,rebellion:[],uprisingDeaths:0,uprisingInjuries:0};
+ const seen=new Set();
+ for(const d of decisions(state,events))if(d.event<=through){
+  const h=events[d.event].choices[d.choice].harm||{};result.deaths+=h.deaths||0;result.injuries+=h.injuries||0;if(h.resigned)result.resignations.push(h.resigned);result.strike=result.strike||!!h.strike;result.removed=result.removed||!!h.removed;
+  const rebels=unrest(state,events,d.event).filter(r=>r.phase==='insurrection');
+  for(const r of rebels)if(!seen.has(r.index)){seen.add(r.index);result.rebellion.push(r.name);result.uprisingDeaths++;result.uprisingInjuries+=4;}
+  if(rebels.length===3)result.removed=true;
  }
- return '';
+ result.deaths+=result.uprisingDeaths;result.injuries+=result.uprisingInjuries;
+ return result;
 }
-function score(s,end,first,total){
- const m=end.r.m,avg=(m.approval+m.budget+m.order+m.trust+m.liberty)/5;
- const bonus={thriving:100,divided:70,crackdown:45,collapse:15,revolution:10,takeover:end.sub==='election'?60:25}[end.key];
- const checks=total?first/total*100:0;
- return clamp(avg*.5+checks*.3+bonus*.2,0,100);
+function alignment(state,events,round,choice){
+ const p=events[round]?.choices[choice]?.power||{},warnings=[];
+ const add=(basis,message)=>warnings.push({basis,message});
+ if(p.cancelElection&&['republic','democracy'].includes(state.polity))add('Who rules','You chose '+(state.polity==='republic'?'a constitutional republic':'direct democracy')+'. Canceling the vote takes power away from voters.');
+ else if(p.rights&&state.polity==='republic')add('Who rules','Your constitutional republic promises rights and legal limits. This move puts those limits at risk.');
+ else if(p.bypass&&state.polity==='republic')add('Who rules','You chose a constitutional republic. This move skips other officials who may have legal power.');
+ if(p.bypass&&state.polity==='democracy'&&!p.cancelElection)add('Who rules','You chose direct democracy. Here, your leader decides without a public vote.');
+ if(p.election&&['autocracy','oligarchy','totalitarian'].includes(state.polity))add('Who rules','You chose rule by one leader or a small group. Letting voters replace you gives the public more power.');
+ if(p.local&&state.division==='confederate'&&round===1)add('Shared power','You chose a confederation, where states keep most power. Your order overrides local decisions.');
+ if(p.bypass&&state.approach==='consult')add('Leadership','You chose to build agreement. This move skips agreement and uses command.');
+ if(p.input&&state.approach==='hard')add('Leadership','You chose rule by command. This move uses input or shared decisions instead.');
+ if(p.bypass&&state.oversight==='congress')add('Checks and balances','You chose Congress review. This move tries to act without that check.');
+ if(p.rights&&state.oversight==='courts')add('Checks and balances','You chose court review. Expect a legal challenge if people’s rights are harmed.');
+ return {warnings,authoritarian:!!(p.rights||p.cancelElection||p.bypass)};
 }
-function rank(end,points){const C=E();const set=end.key==='takeover'?C.ranks.takeover[end.sub]:C.ranks[end.key];return points>=70?set[0]:set[1];}
-const api={run,base,scores,unrest,consequences,nextSurprise,alignment,residents,ending,score,rank,KEYS};
-if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CountrySociety=api;
+const api={unrest,consequences,alignment,scores,decisions,impact,residents,purposeOptions,changeDecision,stories};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.CountrySociety=api;
 })(typeof window!=='undefined'?window:this);

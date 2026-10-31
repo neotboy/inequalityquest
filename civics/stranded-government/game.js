@@ -11,7 +11,7 @@ const BEATS=[
  choices:[
  {t:'Make water rules together',sub:'Everyone gives up a little freedom',d:[0,5,6,-8],ren:-5,say:'Fine. Talk all you want. I’m still thirsty.',head:'A deal everyone agrees to',res:'Two cups each a day, and nobody grabs. Everyone gave up some freedom to get safety.',learn:'You just made a <b>social contract</b>: people agree to give up some freedom so a government can protect them.',key:'Made water rules together',flags:{water:1,power:'Shared rules'}},
  {t:'Let Ren guard the barrel',sub:'Fast order, one person in charge',d:[5,10,-8,-10],ren:15,say:'Smart. Somebody has to be in charge.',head:'Ren holds the ladle',res:'Ren’s crew hands out water. The line is calm, but Ren’s friends drink first.',learn:'You traded freedom for order. That trade is the heart of a <b>social contract</b>. But nobody set <b>limits</b> on Ren’s power. That will matter.',key:'Let Ren guard the water',flags:{water:1,power:'Ren’s crew'}},
- {t:'No rules. Take your share',sub:'Total freedom, no one in charge',d:[-15,-10,-5,10],ren:5,say:'See? Without me, it’s chaos.',head:'The barrel tips over',res:'A shoving match knocks the barrel over. Half the water soaks into the sand.',learn:'Thinker Thomas Hobbes called life with no government the <b>state of nature</b>: a free-for-all where the strong win. Avoiding it is one reason people create government.',key:'No rules, everyone grabbed',flags:{water:0},art:'fight'}]},
+ {t:'No rules. Take your share',sub:'Total freedom, no one in charge',d:[-15,-10,-5,10],ren:5,say:'See? Without me, it’s chaos.',head:'The barrel tips over',res:'A shoving match knocks the barrel over. Half the water soaks into the sand.',learn:'Thinker Thomas Hobbes called life with no government the <b>state of nature</b>: a free-for-all where the strong win. Avoiding it is one reason people create government. Agreeing to rules to escape it is called a <b>social contract</b>.',key:'No rules, everyone grabbed',flags:{water:0},art:'fight'}]},
 {id:'power',loc:'hall',title:'Who Holds the Power?',tag:'THREE POWERS',concept:'Three powers',
  story:()=>'Every camp needs three jobs done: make the rules, carry them out, and settle fights about them. Who gets those jobs?',
  choices:[
@@ -41,7 +41,7 @@ const BEATS=[
  choices:[
  {t:'Fix the water for everyone',sub:'Costs 15 supplies',need:15,d:[-15,0,8,0],ren:0,say:'Water won’t stop the next ship.',head:'Clean water flows',res:'Jo rebuilds the station. Everyone drinks, but the lookout lies in pieces.',learn:'You chose to <b>promote the general welfare</b>: help with needs everyone shares. It’s one of six purposes of government in the U.S. Preamble.',key:'Fixed water (general welfare)',flags:{water:2}},
  {t:'Rebuild the lookout',sub:'Costs 15 supplies',need:15,d:[-15,15,-5,0],ren:5,say:'Good. Eyes on the water.',head:'Eyes on the sea',res:'The lookout stands again. People drink muddy rainwater for a week.',learn:'You chose to <b>provide for the common defense</b>: protect against outside threats. It’s one of six purposes of government in the U.S. Preamble.',key:'Rebuilt lookout (common defense)',flags:{guard:2}},
- {t:'Save supplies, fix nothing',sub:'Keep supplies for later',d:[5,-10,-10,0],ren:0,say:'So the leaders just… wait? Interesting.',head:'Waiting it out',res:'You keep your supplies. Three people get sick from bad water, and nobody watches the sea.',learn:'Doing nothing is still a <b>public policy</b> (a government’s plan for a problem). People feel it when shared needs go unmet.',key:'Saved supplies, fixed nothing',art:'storm'}]},
+ {t:'Save supplies, fix nothing',sub:'Keep supplies for later',d:[5,-10,-10,0],ren:0,say:'So the leaders just… wait? Interesting.',head:'Waiting it out',res:'You keep your supplies. Three people get sick from bad water, and nobody watches the sea.',learn:'Doing nothing is still a <b>public policy</b> (a government’s plan for a problem). People feel it when shared needs go unmet. Meeting shared needs is called <b>promoting the general welfare</b>, a purpose in the U.S. Preamble.',key:'Saved supplies, fixed nothing',art:'storm'}]},
 {id:'emergency',loc:'camp',title:'Emergency Powers',tag:'LIMITS ON POWER',concept:'Limited government',
  story:s=>(s.flags.model==='ren'||s.renControl)?'Ash posts notes mocking Ren. Ren wants more: “Ban criticism. Let my crew search any tent, any time.”':'Ash posts notes mocking the leaders. Ren sees his chance: “Give me emergency powers. Ban criticism. Let my crew search any tent.”',
  choices:[
@@ -58,6 +58,18 @@ const BEATS=[
  {t:'Promote the general welfare',sub:'Care for shared needs like food',d:[8,0,0,0],ren:0},
  {t:'Secure the blessings of liberty',sub:'Protect people’s freedoms',d:[0,0,0,8],ren:-5}]}
 ];
+
+/* "Prove it" checks: one per decision. A NEW situation, so students must apply the idea, not just remember the story. */
+const PROVE={
+barrel:{q:'A new town forms. People agree to pay taxes and obey traffic laws so the town will keep its roads safe. What is this?',opts:[['sc','A social contract: giving up some freedom for protection'],['sn','The state of nature: no rules, so the strongest wins'],['dr','Divine right: a ruler says God chose them to lead'],['dd','Direct democracy: every person votes on every law']],ans:'sc',hint:'Look at “What you just did.” What do people trade, and what do they get back?'},
+power:{q:'A city council bans texting while driving. Police start writing tickets. A judge decides if one driver broke the ban. Which power did the POLICE use?',opts:[['exe','Executive power: carrying out and enforcing the rules'],['leg','Legislative power: writing and passing the rules'],['jud','Judicial power: deciding what the rules mean'],['sov','Sovereignty: having the final say over the land']],ans:'exe',hint:'The police didn’t write the ban or judge the case. What did they do with it?'},
+thief:{q:'Two neighbors fight over where the fence line is. They go to court, and a judge hears both sides and decides. Which power settled it?',opts:[['jud','Judicial power: settling disputes about what rules mean'],['exe','Executive power: enforcing rules and running services'],['leg','Legislative power: making brand-new rules and laws'],['sov','Sovereignty: deciding who controls the territory']],ans:'jud',hint:'Who decided the case, and what kind of job is deciding a dispute?'},
+ship:{q:'A new country has people, land, and a government. But a stronger neighbor’s army decides all of its laws. Which feature of a state is missing?',opts:[['sov','Sovereignty: the final say over its own land and laws'],['pop','Population: the people who live inside the country'],['ter','Territory: the land and borders the country claims'],['gov','Government: a group that makes and enforces rules']],ans:'sov',hint:'It has people, land, and leaders. Who really has the final say?'},
+claim:{q:'An army general and his soldiers seize the capital and announce, “We are the government now.” Which theory explains where their power came from?',opts:[['for','Force theory: power taken by strength and fear'],['sc','Social contract: power given by the people’s agreement'],['evo','Evolutionary theory: power that grew out of families'],['div','Divine right: power that a ruler says came from God']],ans:'for',hint:'Did the people agree, did it grow from a family, or did someone take it?'},
+storm:{q:'A town spends its money on a water treatment plant so every family has clean water. Which Preamble purpose is that?',opts:[['gw','Promote the general welfare: care for shared needs'],['cd','Provide for the common defense: protect from attack'],['ej','Establish justice: make laws and trials fair to all'],['bl','Secure the blessings of liberty: protect freedoms']],ans:'gw',hint:'Clean water is a need everyone shares. Which purpose is about shared needs?'},
+emergency:{q:'A mayor wants to cancel next year’s election “until things calm down.” A court says no, because the city charter requires elections. Which idea did the court protect?',opts:[['lim','Limited government: leaders must follow the rules too'],['dr','Divine right: leaders get their power straight from God'],['for','Force theory: whoever is strongest gets to rule'],['dd','Direct democracy: citizens vote on every single law']],ans:'lim',hint:'The court stopped a leader from going past the rules. What is that idea called?'},
+charter:{q:'The Preamble says government should “insure domestic tranquility.” What does that mean in plain words?',opts:[['dt','Keep peace and order inside the country'],['cd','Protect the country from outside attacks'],['ej','Make sure courts and trials are fair'],['gw','Help people with needs they all share']],ans:'dt',hint:'“Domestic” means at home, inside the country. “Tranquility” means calm.'}};
+const PROVE_TOTAL=Object.keys(PROVE).length, CHECK_TOTAL=PROVE_TOTAL+4;
 /* Surprise events: checked in this order after beats 1-7. Max 3 per game, never two in a row. */
 const EVENTS=[
 {id:'coup',title:'Ren Seizes the Ridge',art:'riot',min:2,when:s=>s.ren>=65&&!s.renControl,cause:'Ren’s power got too high.',
@@ -113,7 +125,7 @@ function endingFor(s){const st=s.stats,min=Math.min(...st);
  if(st[3]<=25||st[2]<=20)return 'revolution';
  if(min>=45&&s.ren<=45)return 'republic';
  return 'fragile';}
-function scoreFor(s,firstTry){const avg=s.stats.reduce((a,b)=>a+b,0)/4;return Math.max(0,Math.min(100,Math.round(avg*0.7+firstTry*5+ENDINGS[endingFor(s)].bonus-Math.max(0,s.ren-50)*0.2)))}
+function scoreFor(s,firstTry){const avg=s.stats.reduce((a,b)=>a+b,0)/4;return Math.max(0,Math.min(100,Math.round(avg*0.5+firstTry/CHECK_TOTAL*30+ENDINGS[endingFor(s)].bonus-Math.max(0,s.ren-50)*0.2)))}
 const RANKS=[[85,'Founder of a Free Republic'],[72,'Trusted Island Leader'],[58,'Steady Survivor'],[45,'Shaky Chief'],[30,'Castaway in Chaos'],[0,'Lost at Sea']];
 function rankFor(score,ending){if(ending==='dictatorship')return 'Island Tyrant’s Sidekick';const r=RANKS.find(r=>score>=r[0])[1];return (r===RANKS[0][1]&&ending!=='republic')?RANKS[1][1]:r}
 function clamp(n){return Math.max(0,Math.min(100,n))}
@@ -146,7 +158,7 @@ const colors=['#e1ba77','#8dc4cc','#90ccb0','#c5a7de'];
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function plain(html){return String(html).replace(/<[^>]+>/g,'')}
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function freshState(){return {v:3,started:false,name:'Drift Island',color:'#ffbd69',player:{x:420,y:650},collected:[],step:0,phase:'map',stats:[...START_STATS],ren:START_REN,renControl:false,flags:{water:0,rules:0,guard:0,shelter:0,power:'Unclaimed',model:''},picks:{},eventPicks:{},log:[],events:[],lastWasEvent:false,pending:null,openEvent:null,renSay:'Someone has to take charge. Why not me?',concepts:[],ending:null,check:null,sentence:'',score:null,rank:'',submitted:false,studentName:''}}
+function freshState(){return {v:3,proof:{},logNote:'',started:false,name:'Drift Island',color:'#ffbd69',player:{x:420,y:650},collected:[],step:0,phase:'map',stats:[...START_STATS],ren:START_REN,renControl:false,flags:{water:0,rules:0,guard:0,shelter:0,power:'Unclaimed',model:''},picks:{},eventPicks:{},log:[],events:[],lastWasEvent:false,pending:null,openEvent:null,renSay:'Someone has to take charge. Why not me?',concepts:[],ending:null,check:null,sentence:'',score:null,rank:'',submitted:false,studentName:''}}
 let state=freshState();
 try{const old=JSON.parse(localStorage.getItem(KEY));if(old&&old.v===3)state={...state,...old,flags:{...state.flags,...old.flags}};}catch{}
 let target=null,keys={},sound=false,actx=null,toastTimeout,choiceLocked=false,charterPicks=[];
@@ -182,6 +194,11 @@ function render(){
 
 /* ---------- decision cards ---------- */
 function choiceButton(c,i){const short=c.need&&state.stats[0]<c.need;return `<button class="choice" data-choice="${i}" ${short?'disabled':''}><span class="letter">${i+1}</span><span><span class="ct">${esc(c.t)}</span><span class="fx">${short?`Need ${c.need} supplies. You have ${state.stats[0]}.`:esc(c.sub)}</span></span></button>`}
+
+/* Read first: choices unlock after a few seconds so nobody can click through without reading. Pauses while the tab is hidden. */
+let readTimer=null;
+function readLock(sec){clearInterval(readTimer);const btns=()=>document.querySelectorAll('#choiceList [data-choice], #choiceList [data-purpose]');const keep=new Set([...btns()].filter(b=>b.disabled));btns().forEach(b=>b.disabled=true);const foot=$('#eventFoot'),orig=foot.textContent;let left=sec;const tick=()=>{foot.textContent=`Read the story first. Choices open in ${left}…`};tick();
+ readTimer=setInterval(()=>{if(document.hidden)return;left--;if(left<=0){clearInterval(readTimer);btns().forEach(b=>{if(!keep.has(b))b.disabled=false});foot.textContent=orig;const f=document.querySelector('#choiceList button:not([disabled])');if(f)f.focus()}else tick()},1000)}
 function openBeat(){
  if(state.phase!=='map'||state.pending||state.openEvent||!state.started)return;
  target=null;keys={};const b=BEATS[state.step];
@@ -191,7 +208,7 @@ function openBeat(){
  $('#eventType').textContent=b.tag;$('#eventTitle').textContent=b.title;$('#eventStory').textContent=b.story(state);$('#decisionEcho').hidden=true;
  if(b.pick2){charterPicks=[];$('#choiceList').innerHTML=`<div class="charter-grid">${b.choices.map((c,i)=>`<button class="purpose" data-purpose="${i}" aria-pressed="false"><b>${esc(c.t)}</b><small>${esc(c.sub)}</small><em>${c.d.map((n,j)=>n?`${labels[j]} ${n>0?'+':''}${n}`:'').filter(Boolean).join(' · ')}</em></button>`).join('')}</div><button class="primary wide" id="signCharter" disabled>Pick 2 promises</button>`;$('#eventFoot').textContent='These are the six purposes in the U.S. Preamble. You can only keep two.';}
  else{$('#choiceList').innerHTML=b.choices.map(choiceButton).join('');$('#eventFoot').textContent='Every choice costs something. Tip: press 1, 2, or 3.';}
- $('#event').hidden=false;($('#choiceList button:not([disabled])')).focus();beep(440);
+ $('#event').hidden=false;readLock(state.step===0?8:6);beep(440);
 }
 function openSurprise(){
  const e=EVENTS.find(x=>x.id===state.openEvent);if(!e)return;target=null;keys={};
@@ -201,7 +218,7 @@ function openSurprise(){
  $('#eventType').textContent='YOUR EARLIER CHOICES CAUGHT UP WITH YOU';$('#eventTitle').textContent=e.title;$('#eventStory').textContent=e.story;
  $('#decisionEcho').hidden=false;$('#decisionEchoText').textContent=e.cause;
  $('#choiceList').innerHTML=e.choices.map(choiceButton).join('');$('#eventFoot').textContent='You must deal with this before you move on.';
- $('#event').hidden=false;$('#choiceList button').focus();beep(250,.25);
+ $('#event').hidden=false;readLock(5);beep(250,.25);
 }
 function choose(i){
  if(choiceLocked||state.pending)return;const isEvent=!!state.openEvent;
@@ -232,9 +249,31 @@ function showResult(){const p=state.pending;if(!p)return;
  $('#renSays').innerHTML=`<div class="portrait" style="--c:#d7a272"></div><p><b>REN:</b> “${esc(p.say)}”</p>`;
  $('#learning').innerHTML=`<strong>WHAT YOU JUST DID</strong><br>${p.learnHtml}`;
  $('#continue').textContent=(p.kind==='beat'&&p.id==='charter')?'See your ending →':'Back to the island →';
- $('#result').hidden=false;$('#continue').focus();beep(p.kind==='event'?300:660,.15);
+ $('#result').hidden=false;beep(p.kind==='event'?300:660,.15);
+ if(p.kind==='beat'&&PROVE[p.id])renderProof(p.id);else{$('#continue').disabled=false;$('#continue').focus();}
 }
-function next(){const p=state.pending;if(!p)return;state.pending=null;$('#result').hidden=true;
+
+let proofTimer=null;
+function renderProof(id,feedback){
+ state.proof=state.proof||{};const q=PROVE[id],st=state.proof[id]||(state.proof[id]={first:null,done:false});
+ let box=$('#proof');if(!box){box=document.createElement('div');box.id='proof';box.className='proof';$('#learning').after(box)}
+ const needLog=id==='emergency';const logOk=()=>!needLog||(state.logNote||'').trim().split(/\s+/).filter(Boolean).length>=8;
+ const cont=$('#continue');const setCont=()=>{cont.disabled=!(st.done&&logOk());cont.title=cont.disabled?'Answer the question first':''};
+ if(st.done){box.innerHTML=`<div class="proof-head">✓ PROVE IT</div><p class="proof-ok">${esc(q.q)}<br><b>✓ ${esc(q.opts.find(o=>o[0]===q.ans)[1])}</b></p>`+(needLog?logHtml():'');wireLog();setCont();if(!cont.disabled)cont.focus();return}
+ const opts=shuffle(q.opts);
+ box.innerHTML=`<div class="proof-head">PROVE IT · use what you just learned</div><p class="proof-q">${esc(q.q)}</p><div class="proof-opts">${opts.map(([k,t])=>`<button class="choice proof-opt" data-proof="${k}"><span class="ct">${esc(t)}</span></button>`).join('')}</div><div id="proofHint" class="task-hint ${feedback?'try-again':''}" role="status">${feedback?esc(feedback):''}</div>`;
+ setCont();
+ box.querySelectorAll('[data-proof]').forEach(b=>b.onclick=()=>{
+  if(b.dataset.proof===q.ans){if(st.first===null)st.first=true;st.done=true;if(window.classFirstTry)classFirstTry.right('prove-'+id);save();beep(700);renderProof(id)}
+  else{if(st.first===null)st.first=false;if(window.classFirstTry)classFirstTry.wrong();save();beep(220);renderProof(id,'Not quite. '+q.hint+' The answers moved.');lockProof(8)}
+ });
+ if(!feedback){const f=box.querySelector('[data-proof]');if(f)f.focus()}
+ function logHtml(){return `<div class="captain-log"><label for="logNote"><b>Captain’s log:</b> Why did you make that call? Try to use the word <i>limits</i> or <i>rights</i>. (8+ words)</label><div class="stem">I made that call because…</div><textarea id="logNote" rows="3" maxlength="300">${esc(state.logNote||'')}</textarea><div id="logHint" class="task-hint" role="status"></div></div>`}
+ function wireLog(){const t=$('#logNote');if(!t)return;const upd=()=>{state.logNote=t.value;save();const n=t.value.trim().split(/\s+/).filter(Boolean).length;$('#logHint').textContent=n>=8?'✓ Saved to your captain’s log.':`${n} of 8 words`;setCont()};t.oninput=upd;upd();if(cont.disabled)t.focus()}
+}
+function lockProof(sec){clearInterval(proofTimer);const bs=()=>document.querySelectorAll('[data-proof]');bs().forEach(b=>b.disabled=true);let left=sec;const h=$('#proofHint'),base=h.textContent;const tick=()=>{h.textContent=base+` Try again in ${left}…`};tick();proofTimer=setInterval(()=>{if(document.hidden)return;left--;if(left<=0){clearInterval(proofTimer);bs().forEach(b=>b.disabled=false);h.textContent=base}else tick()},1000)}
+
+function next(){const p=state.pending;if(!p)return;if(p.kind==='beat'&&PROVE[p.id]&&!(state.proof&&state.proof[p.id]&&state.proof[p.id].done))return;if(p.id==='emergency'&&p.kind==='beat'&&(state.logNote||'').trim().split(/\s+/).filter(Boolean).length<8)return;const pr=$('#proof');if(pr)pr.remove();state.pending=null;$('#result').hidden=true;
  if(p.kind==='event')state.lastWasEvent=true;
  else{state.step++;if(state.step<BEATS.length){const ev=nextEvent(state);if(ev){state.openEvent=ev.id;save();render();setTimeout(openSurprise,300);return}}state.lastWasEvent=false;}
  if(state.step>=BEATS.length){state.phase='ending';state.ending=endingFor(state);save();render();showEnding();return}
@@ -257,7 +296,7 @@ function questions(){const p=state.picks,Q={};
  const lm=[['You told Ren that leaders must follow rules too, and people keep free speech. Which idea is that?','You kept limits on leaders. That’s limited government.'],['You let Ren ban criticism and search any tent, with no end date. Which idea did that break?','Power with no limits breaks the idea of limited government.'],['You said Ren’s crew needs a judge’s OK before searching a tent. Which idea does that protect?','A judge’s OK is a limit on power. That’s limited government.']][p.emergency??0];
  Q.limits={q:lm[0],opts:OPTS.limits,ans:'lim',why:lm[1],clue:'Think about what your choice did to the leaders’ power.'};
  return Q;}
-function finalScore(){const first=state.check?Object.values(state.check.first).filter(Boolean).length:0;return {first,score:scoreFor(state,first)}}
+function finalScore(){const end=state.check?Object.values(state.check.first).filter(Boolean).length:0;const pf=Object.values(state.proof||{}).filter(x=>x&&x.first).length;const first=end+pf;return {first,score:scoreFor(state,first)}}
 function endingArt(kind){
  const base=(sky,ground)=>`<rect width="560" height="170" fill="${sky}"/><path d="M0 130Q140 112 280 126T560 120V170H0Z" fill="${ground}"/>`;
  const people=(x,n,c)=>Array.from({length:n},(_,i)=>`<circle cx="${x+i*18}" cy="${116-(i%2)*4}" r="6" fill="#dbb48b"/><path d="M${x+i*18-8} ${136-(i%2)*4}q8-16 16 0Z" fill="${c}"/>`).join('');
@@ -286,7 +325,7 @@ function showEnding(){
   $('#sentence').focus();
  }else if(state.phase==='score'){
   const f=finalScore(),avg=Math.round(state.stats.reduce((a,b)=>a+b,0)/4);
-  box.innerHTML=`<div class="eyebrow">STEP 10 OF 10 · FINAL SCORE</div><div class="score-big"><b>${state.score}</b><span>/100</span></div><div class="rank">${esc(state.rank)}</div><p class="ending-line">${e.badge} ${esc(e.title)} · ${f.first} of 4 checks right on the first try</p><p class="compare">Compare your score with your class.</p><p class="fine-note">Score = your four meters (average ${avg}) + 5 per first-try check + an ending bonus${state.ren>50?' − a penalty for Ren’s power':''}.</p>
+  box.innerHTML=`<div class="eyebrow">STEP 10 OF 10 · FINAL SCORE</div><div class="score-big"><b>${state.score}</b><span>/100</span></div><div class="rank">${esc(state.rank)}</div><p class="ending-line">${e.badge} ${esc(e.title)} · ${f.first} of ${CHECK_TOTAL} checks right on the first try</p><p class="compare">Compare your score with your class.</p><p class="fine-note">Score = your four meters (average ${avg}) + first-try checks (up to 30 points) + an ending bonus${state.ren>50?' − a penalty for Ren’s power':''}.</p>
   <div class="turnin"><label for="studentName">First name + last initial (like Jordan M.)</label><input id="studentName" maxlength="40" autocomplete="off" value="${esc(state.studentName)}" placeholder="Jordan M."><button class="primary wide" id="turnIn">Turn in to my teacher</button><div id="turnStatus" role="status" class="turn-status ${state.submitted?'ok':''}">${state.submitted?'✓ Turned in! Your teacher can see your work. You can send it again if you need to.':''}</div></div>
   <div class="end-actions"><button class="text-button" id="finalDownload">Download my island report ↓</button><button class="text-button" id="journalEnd">Read my captain’s log</button><button class="text-button" id="replay">Play again</button></div>`;
   $('#studentName').oninput=e=>{state.studentName=e.target.value;save()};$('#turnIn').onclick=turnIn;$('#finalDownload').onclick=download;$('#journalEnd').onclick=journal;$('#replay').onclick=restart;
@@ -304,7 +343,7 @@ function renderCheck(feedback){
  if(!feedback)$('.check-opt').focus();
 }
 function decisionAnswers(){const names={barrel:'1. Water barrel',power:'2. Who holds power',thief:'3. Food thief',ship:'4. The ship',claim:'5. Right to rule',storm:'6. The storm',emergency:'7. Emergency powers',charter:'8. Charter promises'};const out={};state.log.filter(l=>l.kind==='beat').forEach(l=>{out[names[l.id]]=l.key});return out}
-function buildAnswers(){const f=finalScore();return {Standard:STANDARD,'First-try correct':`${f.first} of 4`,Score:`${state.score??f.score} / 100`,Rank:state.rank||rankFor(f.score,state.ending),Ending:ENDINGS[state.ending]?.title||'',...decisionAnswers(),'Surprise events':state.log.filter(l=>l.kind==='event').map(l=>`${l.title} → ${l.key}`).join('; ')||'None','Final meters':`Supplies ${state.stats[0]} · Safety ${state.stats[1]} · Trust ${state.stats[2]} · Freedom ${state.stats[3]} · Ren ${state.ren}`,'My sentence':'Our island needed a government because '+state.sentence.trim()}}
+function buildAnswers(){const f=finalScore();return {Standard:STANDARD,'First-try correct':`${f.first} of ${CHECK_TOTAL}`,Score:`${state.score??f.score} / 100`,Rank:state.rank||rankFor(f.score,state.ending),Ending:ENDINGS[state.ending]?.title||'',...decisionAnswers(),'Surprise events':state.log.filter(l=>l.kind==='event').map(l=>`${l.title} → ${l.key}`).join('; ')||'None','Final meters':`Supplies ${state.stats[0]} · Safety ${state.stats[1]} · Trust ${state.stats[2]} · Freedom ${state.stats[3]} · Ren ${state.ren}`,'Captain’s log (emergency powers)':state.logNote?('I made that call because '+state.logNote.trim()):'—','My sentence':'Our island needed a government because '+state.sentence.trim()}}
 async function turnIn(){
  const name=$('#studentName').value.trim(),st=$('#turnStatus'),btn=$('#turnIn');const say=(t,ok)=>{st.textContent=t;st.className='turn-status '+(ok?'ok':'bad')};
  if(!name){say('Type your first name + last initial (like Jordan M.).');$('#studentName').focus();return}
