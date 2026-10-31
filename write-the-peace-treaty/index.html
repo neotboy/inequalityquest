@@ -92,12 +92,13 @@ textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
 @keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:760px){.case-layout{grid-template-columns:1fr}.cartoon-panel img{max-height:420px}.cartoon-pdf{height:360px}.decode-panel{padding:13px}.game-head{align-items:flex-start}}
 @media print{header .directions,.refreshers,.controls,.finish-actions{display:none!important}body{background:white}.game{box-shadow:none}.case-layout{grid-template-columns:1fr 1fr}.cartoon-panel img{max-height:450px}}
+.std-line{font-size:.92rem;margin:0 0 4px;line-height:1.35}.goal-line{margin:0 0 4px}.welcome-back{background:#e4f3e9;color:#14532d;border:1px solid #83b394;border-radius:10px;padding:9px 12px;margin:0 0 12px;font-weight:700}.stem{font-size:.92rem;margin:2px 0 6px}
 </style>
 <script src="../shared/assignments.js?v=20261030d"></script><script src="../shared/turnin.js?v=20261030d"></script></head>
 <body>
 <header>
 <div class="wrap">
-<div class="topline">DAY 6 · WORLD HISTORY · WH.28 / WH.31</div>
+<div class="topline">DAY 5 · WORLD HISTORY · SS.9-12.WH.31</div>
 <h1>Cartoon Decoder</h1>
 <p>Four real cartoons. Four history mysteries. Can you crack the artist’s message?</p>
 <details class="directions">
@@ -106,7 +107,7 @@ textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
 <b>Play on your own</b>
 <ol>
 <li>Copy one word from the cartoon before the questions unlock.</li>
-<li>Answer five quick questions to crack its message.</li>
+<li>Answer three quick questions to crack its message.</li>
 <li>If you miss, use the clue and try again.</li>
 <li>Decode all four cartoons. Then finish one short reflection.</li>
 </ol>
@@ -119,10 +120,10 @@ textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
 <main class="wrap">
 <section class="intro">
 <div class="intro-mark" aria-hidden="true">⌕</div>
-<div><strong>Look for labels, symbols, and who has power.</strong><p>Cartoonists use pictures to share an opinion. Your job is to find the clue and explain the message.</p></div>
+<div><p class="std-line"><b>Standard SS.9-12.WH.31</b> — Assess the political and economic consequences and cultural developments after World War I and World War II.</p><p class="goal-line"><b>Today's goal:</b> Use four real cartoons to explain how the world changed after World War I.</p><p>For each cartoon: find the word, then answer 3 quick questions. <b>Done</b> = all 4 cartoons plus one short answer, then press <b>Turn in</b>. About 20 minutes. Your work saves on this device.</p></div>
 </section>
 <details class="refreshers">
-<summary>Need a quick refresher? Open a class video.</summary>
+<summary>Optional: need a refresher? Open a class video.</summary>
 <div class="video-links">
 <a href="https://www.youtube.com/watch?v=9N8hsXQapjY&amp;t=177s" target="_blank" rel="noopener">Lenin and the Russian Revolution ↗</a>
 <a href="https://www.youtube.com/watch?v=omaGfvDOBh4" target="_blank" rel="noopener">China’s May Fourth Movement ↗</a>
@@ -130,6 +131,7 @@ textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
 <a href="https://www.youtube.com/watch?v=PoV7GGN-u7Q" target="_blank" rel="noopener">The Great Depression ↗</a>
 </div>
 </details>
+<div class="welcome-back" id="welcomeBack" hidden></div>
 <section class="game" aria-live="polite">
 <div id="playView">
 <div class="game-head"><div><div class="eyebrow">THE CARTOON CASE FILES</div><h2>Crack the message</h2></div><span class="progress-count" id="caseCount">CASE 1 OF 4</span></div>
@@ -146,7 +148,7 @@ textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
 <p class="context" id="context"></p>
 <div class="evidence-lock" id="evidenceLock"><div class="step-label">EYES ON THE CARTOON</div><div class="question" id="evidencePrompt"></div><label for="evidenceWord">Type the word you find</label><div class="evidence-input-row"><input id="evidenceWord" type="text" maxlength="30" autocomplete="off" spellcheck="false" placeholder="Type one word"><button class="secondary" id="checkEvidence" type="button">Check word</button></div><div class="evidence-feedback" id="evidenceFeedback" role="status" aria-live="polite"></div></div>
 <div id="questionBlock">
-<div class="step-label" id="stepLabel">CLUE 1 OF 3</div>
+<div class="step-label" id="stepLabel"></div>
 <div class="question" id="question"></div>
 <div class="answers" id="answers"></div>
 <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
@@ -161,14 +163,15 @@ textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
 <div class="finish-icon">🏆</div>
 <div class="eyebrow">ALL CASES DECODED</div>
 <h3>You cracked the cartoons.</h3>
-<p>These artists used humor and symbols to show real conflicts: revolution, foreign control, the fight for independence, and the Great Depression.</p>
+<p>These artists used humor and symbols to show what came after World War I: revolution, foreign control, the fight for independence, and the Great Depression.</p>
 <div class="write-box">
 <div class="step-label">FINAL QUICK CHECK</div>
-<p><b>Which cartoon had the strongest message?</b> Name one clue in the picture that helped you understand it.</p>
+<p><b>Pick one cartoon. What change after World War I does it show?</b> Name one clue in the picture that proves it.</p>
+<p class="stem">Sentence starter: <b>The ___ cartoon shows that after World War I, ___. I know because the cartoon shows ___.</b></p>
 <label for="finalAnswer">Write one or two sentences</label>
-<textarea id="finalAnswer" placeholder="The ___ cartoon stood out because I noticed..."></textarea>
-<label for="studentName">Your first and last name</label>
-<input id="studentName" type="text" maxlength="100" autocomplete="name" placeholder="First and last name">
+<textarea id="finalAnswer" placeholder="The ___ cartoon shows that after World War I, ___. I know because the cartoon shows ___."></textarea>
+<label for="studentName">First name + last initial (like Jordan M.)</label>
+<input id="studentName" type="text" maxlength="100" autocomplete="off" placeholder="First name + last initial (like Jordan M.)">
 <div class="finish-actions">
 <button class="primary" id="submitWork" type="button">Turn in work</button>
 <button class="secondary" type="button" onclick="window.print()">Print answers</button>
@@ -179,7 +182,6 @@ textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
 </div>
 </div>
 </section>
-<p class="small" style="text-align:center;margin-top:12px">Standards: SS.9-12.WH.28 · SS.9-12.WH.31</p>
 </main>
 <script>
 const cases=[
@@ -187,60 +189,52 @@ const cases=[
 evidence:{prompt:"Zoom in on Lenin’s speech bubble. Type the word he says Russia needs.",answer:"BRAINS"},
 tag:"CASE 01 · RUSSIA",
 title:"Lenin tries to rebuild Russia",
-context:"After the Russian Revolution, Lenin’s new government faced huge problems. This American cartoon was made in 1921.",
+context:"After the Russian Revolution (1917), Lenin’s Communist government took over. Russia left World War I in 1918, then fought a civil war. By 1921, Russia was poor and hungry. This American cartoon was made in 1921.",
 image:'<img src="https://tile.loc.gov/storage-services/service/pnp/acd/2a10000/2a10700/2a10785r.jpg" alt="1921 cartoon showing Lenin beside a figure labeled Russia on an operating table">',
 caption:'“Lenine calls for return of intellectuals,” Lute Pease, about 1921. <a href="https://www.loc.gov/item/2016683903/" target="_blank" rel="noopener">See the Library of Congress record ↗</a>',
 questions:[
-{label:"SPOT A CLUE",q:"Who is lying on the table?",hint:"Look for a label on the person’s body.",options:[["Russia",true],["Lenin",false],["The United States",false]]},
-{label:"CRACK THE MESSAGE",q:"What is the cartoon saying about the revolution?",hint:"Lenin points out that Russia still needs its “brains.”",options:[["Russia still needed experts to rebuild.",true],["Lenin wanted the tsar to return.",false],["Russia no longer needed workers.",false]]},
-{label:"CONNECT TO HISTORY",q:"What can happen after a revolution?",hint:"A new government still has to run a whole country.",options:[["New leaders still need workers to run services.",true],["A new leader can quickly fix daily problems.",false],["A revolution ends the need for public services.",false]]},
-{label:"SPOT A CLUE",q:"What word does Lenin say Russia needs?",hint:"Look closely at the speech bubble.",options:[["Brains",true],["Gold",false],["Weapons",false]]},
-{label:"CONNECT TO HISTORY",q:"Why would a new government need experts?",hint:"Think about who can help solve a country’s problems.",options:[["Experts help run services and rebuild.",true],["Experts bring back the old ruler.",false],["Experts replace all the workers.",false]]}
+{label:"SPOT A CLUE",q:"Who is lying on the operating table?",hint:"Look for a label on the person’s body.",why:"The artist shows the whole country as a sick patient.",options:[["Russia",true],["The Russian army",false],["The tsar",false]]},
+{label:"CRACK THE MESSAGE",q:"Russia is on an operating table, and Lenin says it needs “brains.” What is the artist saying?",hint:"Think about why a patient needs a doctor, and what “brains” means here.",why:"After the revolution, even Lenin needed educated experts to fix Russia.",options:[["Lenin’s Russia was sick and needed educated experts to recover.",true],["Lenin’s Russia was healthy and no longer needed any experts.",false],["Lenin wanted the tsar and nobles to return and fix Russia.",false]]},
+{label:"CONNECT TO HISTORY",q:"Read the case notes. Why would Lenin’s government need experts by 1921?",hint:"Look at what happened in Russia between 1917 and 1921.",why:"World War I and the civil war left Russia’s economy in ruins — a big consequence of the war.",options:[["Years of war had wrecked Russia’s farms, factories, and services.",true],["Russia had won World War I and gained a lot of new land to run.",false],["The tsar’s army still controlled most of Russia’s big cities.",false]]}
 ]
 },
 {
 evidence:{prompt:"Read the paper held by the figure behind China. Type its label.",answer:"DEMANDS"},
 tag:"CASE 02 · CHINA",
 title:"China faces foreign demands",
-context:"This cartoon is from 1915. Four years later, the Treaty of Versailles gave Japan control of Germany’s former land in Shandong. Chinese students protested in the May Fourth Movement.",
+context:"This cartoon is from 1915, when Japan sent China the Twenty-One Demands (a list asking for more control in China). In 1919, the Treaty of Versailles (the peace treaty after World War I) gave Japan Germany’s old rights in Shandong, a part of China. Chinese students protested in the May Fourth Movement.",
 image:'<img src="https://tile.loc.gov/storage-services/service/pnp/cph/3b30000/3b30000/3b30600/3b30636r.jpg" alt="1915 cartoon showing China holding a document marked My Rights while a Japanese figure holds a paper marked Demands">',
 caption:'“Now to see perhaps how the idea works out,” Luther Bradley, 1915. <a href="https://www.loc.gov/pictures/item/2009616341/" target="_blank" rel="noopener">See the Library of Congress record ↗</a>',
 questions:[
-{label:"SPOT A CLUE",q:"What is the figure behind China holding?",hint:"Read the word on the paper.",options:[["Demands",true],["A peace treaty",false],["A trade agreement",false]]},
-{label:"CRACK THE MESSAGE",q:"What is the artist worried Japan might do?",hint:"China holds a paper called “My Rights.” Japan stands behind with demands.",options:[["Japan might pressure China and seize control.",true],["Japan might help China protect its rights.",false],["Japan might give Shandong back to China.",false]]},
-{label:"CONNECT TO HISTORY",q:"Why did students protest in China in 1919?",hint:"The Treaty of Versailles handed Shandong to Japan.",options:[["They opposed Japan taking control of Shandong.",true],["They supported Japan taking control of Shandong.",false],["They wanted the Qing emperor back in power.",false]]},
-{label:"SPOT A CLUE",q:"What words are on the paper China holds?",hint:"Read the paper in China’s hands.",options:[["My Rights",true],["Japan’s Demands",false],["Wilson’s Ideas",false]]},
-{label:"CONNECT TO HISTORY",q:"What did the Treaty of Versailles give Japan?",hint:"It transferred Germany’s former rights in Shandong.",options:[["Germany’s former land in Shandong.",true],["All land in China and Korea.",false],["A colony in India for Japan.",false]]}
+{label:"SPOT A CLUE",q:"What words are on the paper China holds?",hint:"Read the paper in China’s hands.",why:"China’s paper stands for its right to run its own country.",options:[["My Rights",true],["Japan’s Demands",false],["Wilson’s Ideas",false]]},
+{label:"CRACK THE MESSAGE",q:"China holds “My Rights” while Japan stands behind with “Demands.” What is the artist worried about?",hint:"Compare the two papers. Who is pushing whom?",why:"The artist saw Japan’s demands as a threat to China’s control of its own land.",options:[["Japan’s demands could take away China’s rights.",true],["Japan’s demands could help China protect its rights.",false],["China’s rights could force Japan to leave Asia.",false]]},
+{label:"CONNECT TO HISTORY",q:"Read the case notes. Why did Chinese students protest in 1919?",hint:"Look at what the Treaty of Versailles did with Shandong.",why:"The peace treaty after World War I handed Chinese land rights to Japan, and anger became a protest movement.",options:[["The peace treaty gave Japan rights in Shandong instead of China.",true],["The peace treaty gave Shandong back to China, but too slowly.",false],["The peace treaty made China pay Japan for the whole war.",false]]}
 ]
 },
 {
 evidence:{prompt:"Look just below the cartoon. Type the bold name printed there.",answer:"GANDHI"},
 tag:"CASE 03 · INDIA",
 title:"Gandhi leads India toward freedom",
-context:"This European cartoon shows India moving toward freedom with Gandhi’s leadership, while British force tries to stop it.",
+context:"Many Indians fought for Britain in World War I and hoped for self-rule afterward. Instead, Britain kept control. This European cartoon shows India moving toward freedom with Gandhi’s leadership, while British force tries to stop it.",
 image:'<iframe class="cartoon-pdf" title="Historical cartoon of Gandhi and India’s independence struggle, from Gandhi in Cartoons, page 46" src="https://www.mkgandhi.org/ebks/Gandhi-in-cartoons.pdf#page=46&amp;zoom=70&amp;toolbar=0&amp;navpanes=0"></iframe><div class="cartoon-pdf-fallback">If the cartoon does not show, <a href="https://www.mkgandhi.org/ebks/Gandhi-in-cartoons.pdf#page=46" target="_blank" rel="noopener">open the scan here ↗</a>.</div>',
 caption:'European cartoon about Gandhi and India’s independence struggle. From the Gandhi Heritage Portal’s <a href="https://www.mkgandhi.org/ebks/Gandhi-in-cartoons.pdf#page=46" target="_blank" rel="noopener">Gandhi in Cartoons collection ↗</a>.',
 questions:[
-{label:"SPOT A CLUE",q:"What is Gandhi helping India do?",hint:"Look at where the central figure is moving.",options:[["Move toward freedom.",true],["Stay under British rule.",false],["Join Britain’s army.",false]]},
-{label:"CRACK THE MESSAGE",q:"What is Gandhi helping India move toward?",hint:"Look at the direction the central figure is moving and what the soldiers are trying to stop.",options:[["Freedom from British rule.",true],["More British control over India.",false],["A war against every neighbor.",false]]},
-{label:"CONNECT TO HISTORY",q:"What did Gandhi’s movement want?",hint:"Think about who should control India.",options:[["India ruling itself, not Britain.",true],["More British control in India.",false],["A British king for India.",false]]},
-{label:"SPOT A CLUE",q:"What are the soldiers trying to stop?",hint:"Look at the direction India is moving in the cartoon.",options:[["India moving toward freedom.",true],["Gandhi joining the British army.",false],["A ship leaving India.",false]]},
-{label:"CONNECT TO HISTORY",q:"How did Gandhi challenge British rule?",hint:"He organized peaceful protests and civil disobedience.",options:[["By holding peaceful marches.",true],["By joining the British army.",false],["By leading an armed revolt.",false]]}
+{label:"SPOT A CLUE",q:"What are the soldiers in the cartoon trying to stop?",hint:"Look at the direction India is moving in the cartoon.",why:"The soldiers stand for British force holding India back.",options:[["India moving toward freedom.",true],["Gandhi leading an army into Britain.",false],["Indian workers leaving for Africa.",false]]},
+{label:"CRACK THE MESSAGE",q:"Gandhi leads India forward while British soldiers push back. What is the artist’s message?",hint:"Look at who is moving forward and who is pushing back.",why:"The artist shows Britain’s force failing to stop India’s push for self-rule.",options:[["Britain used force, but India’s push for freedom kept moving.",true],["Britain was helping India, but Gandhi was slowing it down.",false],["Gandhi and Britain worked together to keep India the same.",false]]},
+{label:"CONNECT TO HISTORY",q:"How did Gandhi’s movement challenge British rule after World War I?",hint:"Gandhi was famous for nonviolence (refusing to use violence).",why:"Gandhi used civil disobedience (peacefully breaking unfair laws) to push Britain out.",options:[["With peaceful protests and refusing to obey unfair laws.",true],["With an armed revolt by soldiers back from the war.",false],["With a vote in Britain’s Parliament to free India.",false]]}
 ]
 },
 {
 evidence:{prompt:"Read the sign over the apples. Type what is being sold.",answer:"APPLES"},
 tag:"CASE 04 · GREAT DEPRESSION",
 title:"A very strange “philanthropist”",
-context:"During the Great Depression, millions of people could not find work. This cartoon appeared in a newspaper in 1930.",
+context:"During the Great Depression (the worldwide economic crash that began in 1929), millions of people could not find work. This cartoon appeared in a newspaper in 1930.",
 image:'<img src="https://tile.loc.gov/storage-services/service/pnp/ppmsc/03300/03389r.jpg" alt="1930 cartoon of a well-dressed man eating apples while an unemployed man sells apples for five cents">',
 caption:'“The Philanthropist,” Herbert Block, December 5, 1930. <a href="https://www.loc.gov/pictures/item/00652174/" target="_blank" rel="noopener">See the Library of Congress record ↗</a>',
 questions:[
-{label:"SPOT A CLUE",q:"What is the unemployed man selling?",hint:"Read the sign beside him.",options:[["Apples for five cents.",true],["Bread for one dollar.",false],["Tickets to a job fair.",false]]},
-{label:"CRACK THE MESSAGE",q:"Why is the title “The Philanthropist” funny?",hint:"Compare the rich man with the person selling apples.",options:[["The rich man eats while the jobless man sells apples.",true],["The rich man hires the jobless man to sell apples.",false],["The jobless man gives the rich man free apples.",false]]},
-{label:"CONNECT TO HISTORY",q:"What problem does this cartoon show?",hint:"The Great Depression brought lost jobs and poverty.",options:[["The crash left many people jobless and poor.",true],["The crash made many families rich and secure.",false],["Only farmers lost their jobs in the crash.",false]]},
-{label:"SPOT A CLUE",q:"Who is eating an apple?",hint:"Look at the rich man in the picture.",options:[["The rich man.",true],["The unemployed man.",false],["A child selling bread.",false]]},
-{label:"CONNECT TO HISTORY",q:"Why did some people sell apples during the Depression?",hint:"Many people had lost their jobs and needed money.",options:[["They needed cash after losing their jobs.",true],["A program paid people to sell fruit.",false],["They wanted to build new farms in town.",false]]}
+{label:"SPOT A CLUE",q:"What is the jobless man selling, and for how much?",hint:"Read the sign beside him.",why:"Selling apples on the street was a sign of having no job.",options:[["Apples for five cents.",true],["Pencils for ten cents.",false],["Newspapers for two cents.",false]]},
+{label:"CRACK THE MESSAGE",q:"A philanthropist is a person who gives money to help others. Why is that title a joke here?",hint:"Compare what the rich man is doing with what the jobless man needs.",why:"The artist mocks rich people who did little while millions struggled.",options:[["The rich man eats apples while the jobless man still has nothing.",true],["The rich man hires the jobless man and pays him to sell apples.",false],["The jobless man gives the rich man free apples to say thank you.",false]]},
+{label:"CONNECT TO HISTORY",q:"Why did so many people sell apples on city streets in 1930?",hint:"Read the case notes about the Great Depression.",why:"The Depression was one of the biggest economic problems of the years after World War I.",options:[["The Depression cost millions their jobs, so they needed cash.",true],["A government program paid people to sell fruit in the cities.",false],["Farmers moved to the cities to open new fruit stores there.",false]]}
 ]
 }
 ];
@@ -250,6 +244,7 @@ try{const saved=JSON.parse(localStorage.getItem(stateKey)||"null");if(saved)stat
 state.responses=state.responses||{};
 state.evidenceDone=Array.isArray(state.evidenceDone)?state.evidenceDone:[false,false,false,false];
 while(state.evidenceDone.length<4)state.evidenceDone.push(false);
+if(state.caseIndex<4&&state.stepIndex>2)state.stepIndex=2;
 let selectedOrder=null;
 const $=id=>document.getElementById(id);
 function save(){localStorage.setItem(stateKey,JSON.stringify(state))}
@@ -263,7 +258,7 @@ $("caseCount").textContent="CASE "+(state.caseIndex+1)+" OF 4";
 $("progressFill").style.width=((state.caseIndex+(state.stepIndex/c.questions.length))/4*100)+"%";
 buildTabs();$("art").innerHTML=c.image;$("caption").innerHTML=c.caption;$("topicTag").textContent=c.tag;$("caseTitle").textContent=c.title;$("context").textContent=c.context;
 $("stepLabel").textContent=q.label+" · "+(state.stepIndex+1)+" OF "+c.questions.length;$("question").textContent=q.q;$("hint").textContent="CLUE: "+q.hint;$("hint").className="hint";
-$("feedback").textContent="";$("feedback").className="feedback";$("continueBtn").disabled=true;$("continueBtn").textContent=state.stepIndex===2?(state.caseIndex===3?"Finish cases →":"Next case →"):"Next clue →";
+$("feedback").textContent="";$("feedback").className="feedback";$("continueBtn").disabled=true;$("continueBtn").textContent=state.stepIndex===c.questions.length-1?(state.caseIndex===3?"Finish cases →":"Next case →"):"Next question →";
 const ordered=q.options.slice();for(let i=ordered.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ordered[i],ordered[j]]=[ordered[j],ordered[i]]}
 $("answers").innerHTML=ordered.map((a,i)=>'<button class="answer" type="button" data-correct="'+a[1]+'"><span class="letter">'+String.fromCharCode(65+i)+'</span><span>'+a[0]+'</span></button>').join("");
 $("answers").querySelectorAll(".answer").forEach(btn=>btn.addEventListener("click",()=>answer(btn,q)));
@@ -274,12 +269,12 @@ function answer(btn,q){
 if(btn.dataset.correct==="true"){
 state.responses["Case "+(state.caseIndex+1)+" · Q"+(state.stepIndex+1)+" · "+q.label]=btn.innerText.replace(/^[A-Z]\s*/,"").trim();save();
 btn.classList.add("correct");$("answers").querySelectorAll("button").forEach(b=>b.disabled=true);
-$("feedback").innerHTML="<b>Message decoded!</b>"+(state.stepIndex===cases[state.caseIndex].questions.length-1?"You found the history behind the artist’s opinion.":"That clue fits. Keep decoding this cartoon.");
+$("feedback").innerHTML="<b>Right.</b> "+q.why;
 $("feedback").className="feedback show good";$("hint").className="hint";
 $("continueBtn").disabled=false;
 }else{
 const answers=$("answers"),buttons=Array.from(answers.querySelectorAll(".answer")),previous=buttons.map(b=>b.querySelector(".letter").textContent+":"+b.innerText);for(let i=buttons.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[buttons[i],buttons[j]]=[buttons[j],buttons[i]]}if(buttons.map(b=>b.querySelector(".letter").textContent+":"+b.innerText).every((v,i)=>v===previous[i]))buttons.unshift(buttons.pop());buttons.forEach((b,i)=>{b.disabled=false;b.classList.remove("wrong","correct");b.querySelector(".letter").textContent=String.fromCharCode(65+i);answers.appendChild(b)});$("hint").className="hint show";
-$("feedback").innerHTML="<b>Not quite.</b>Read all three choices again. The choices moved.";
+$("feedback").innerHTML="<b>Not quite.</b> Look at the cartoon and the case notes again, then use the clue below. The choices moved.";
 $("feedback").className="feedback show retry";
 }
 }
@@ -296,20 +291,22 @@ save();render();
 });
 $("finalAnswer").addEventListener("input",e=>{state.answerText=e.target.value;save();$("savedStatus").textContent="Saved on this device."});
 $("studentName").addEventListener("input",e=>{state.studentName=e.target.value;save()});
-function startOver(){if(confirm("Start over and clear this activity’s saved answers?")){localStorage.removeItem(stateKey);state={caseIndex:0,stepIndex:0,done:[false,false,false,false],evidenceDone:[false,false,false,false],answerText:"",studentName:"",responses:{}};render();window.scrollTo({top:0,behavior:"smooth"})}}
+function startOver(){if(confirm("Start over and clear this activity’s saved answers?")){localStorage.removeItem(stateKey);$("welcomeBack").hidden=true;state={caseIndex:0,stepIndex:0,done:[false,false,false,false],evidenceDone:[false,false,false,false],answerText:"",studentName:"",responses:{}};render();window.scrollTo({top:0,behavior:"smooth"})}}
 async function submitWork(){
 const name=$("studentName").value.trim(),answerText=$("finalAnswer").value.trim(),status=$("submitStatus"),button=$("submitWork");
 state.studentName=name;state.answerText=answerText;save();
-if(!name){status.textContent="Add your first and last name first.";$("studentName").focus();return}
-if(!answerText){status.textContent="Write one or two sentences first.";$("finalAnswer").focus();return}
+const short=window.classShortName?window.classShortName(name):name;
+if(!name||!/ [A-Z]\.$/.test(short)){status.textContent="Type your first name + last initial (like Jordan M.).";$("studentName").focus();return}
+if(/_{2,}/.test(answerText)||answerText.split(/\s+/).filter(Boolean).length<10){status.textContent="Finish the sentence: fill in every ___ and write at least 10 words.";$("finalAnswer").focus();return}
 button.disabled=true;status.textContent="Sending your work…";
 try{
-const res=await classTurnIn("https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"write-the-peace-treaty",answers:{...state.responses,"Final reflection":answerText}})});
+const res=await classTurnIn("https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"write-the-peace-treaty",answers:{"Standard":"SS.9-12.WH.31",...state.responses,"Final reflection":answerText}})});
 const result=await res.json();if(!res.ok)throw new Error(result.error||"Could not send your work.");
-status.textContent="Turned in! Your work was sent to your teacher.";button.textContent="Turned in ✓";
+status.textContent="Turned in! Your work was sent to your teacher. You're done.";button.textContent="Turned in ✓";
 }catch(e){status.textContent=e instanceof Error?e.message:"Could not send your work. Try again.";button.disabled=false}
 }
 $("submitWork").addEventListener("click",submitWork);
+(function welcomeBack(){const started=state.caseIndex>0||state.stepIndex>0||state.evidenceDone.some(Boolean);if(!started)return;const box=$("welcomeBack");box.hidden=false;box.textContent=state.caseIndex>=4?"Welcome back! All 4 cartoons are done. Write your answer and turn in.":"Welcome back — you're on cartoon "+(state.caseIndex+1)+" of 4, question "+(state.stepIndex+1)+" of 3.";})();
 render();
 </script>
 </body>

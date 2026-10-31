@@ -174,6 +174,9 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 .color-choice{display:flex;align-items:center;justify-content:center;gap:8px}
 .map-card .map-svg{width:min(100%,620px)!important;max-height:72vh!important}
 @media(max-width:850px){.transfer-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+.std-line{margin:0 0 14px;padding:10px 14px;background:#fff;border:1px solid var(--line);border-radius:12px;font-size:14px;line-height:1.45;color:var(--ink)}.std-line p{margin:0}.std-line p+p{margin-top:4px}.std-code{font-weight:800;color:var(--navy)}
+.why-note{display:block;margin-top:6px;font-weight:650;font-size:15px;color:#24563d}
+.turn-in-status.error{color:#9b3932}
 .welcome-back{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;margin:0 0 16px;padding:12px 16px;border-radius:12px;background:#e8f6ef;border:1px solid #9fd3b8;color:#14532d;font-weight:600}.restart-link{background:none;border:none;color:#1d4ed8;text-decoration:underline;font:inherit;font-weight:600;cursor:pointer;padding:4px}
 </style>
 <script src="../shared/assignments.js?v=20261030d"></script><script src="../shared/turnin.js?v=20261030d"></script></head>
@@ -181,28 +184,33 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 <a class="skip-link" href="#activity">Skip to the map and questions</a>
 <header class="site-header"><div class="header-inner"><h1>DIVIDE AFRICA <span aria-hidden="true">|</span> READ, SOLVE &amp; COLOR</h1><div class="work-note"><span class="work-dot" aria-hidden="true"></span>Work on your own</div></div></header>
 <main id="activity">
+<section class="std-line" aria-label="Standard and goal">
+<p><span class="std-code">Standard SS.9-12.WH.24</span> — Describe the economic, political and cultural factors that contributed to a new wave of European imperialism in the 19th century.</p>
+<p><b>Today's goal:</b> Explain why European countries raced to take over Africa in the late 1800s — for money, for power, or for their beliefs.</p>
+<p><b>How to finish (about 20–25 minutes):</b> 1) Read the 7 fact cards. 2) Solve 10 mystery places. 3) Color the map from memory and press <b>Turn in</b> at the bottom. You are done when all 10 places are colored and it says "Turned in!"</p>
+</section>
 <section class="intro" aria-label="Activity facts and name">
 <div class="facts">
 <div class="facts-head"><h2>STEP 1: READ — WHO CONTROLLED AFRICA BY 1914?</h2></div>
 <p>Read all seven cards. You will need them to solve the mystery places below. They disappear in Part 2.</p>
 <div class="fact-grid">
-<div class="fact"><strong><span class="swatch" style="background:var(--britain)"></span>BRITAIN</strong><p>Wanted a short sea route to its colony in India, so it took over <b>Egypt</b> and the Suez Canal. It also ruled <b>Nigeria</b>, where British companies bought palm oil, and <b>South Africa</b>, where miners dug gold and diamonds.</p></div>
-<div class="fact"><strong><span class="swatch" style="background:var(--france)"></span>FRANCE</strong><p>Ruled the most land in Africa, mostly in the north and west. In <b>Algeria</b>, hundreds of thousands of European settlers moved in and took farmland from Algerians.</p></div>
+<div class="fact"><strong><span class="swatch" style="background:var(--britain)"></span>BRITAIN</strong><p>Wanted a short sea route to its colony (a land ruled by another country) in India, so it took over <b>Egypt</b> and the Suez Canal (a shortcut for ships between Europe and Asia). It also ruled <b>Nigeria</b>, where British companies bought palm oil, and <b>South Africa</b>, where miners dug gold and diamonds.</p></div>
+<div class="fact"><strong><span class="swatch" style="background:var(--france)"></span>FRANCE</strong><p>Ruled the most land in Africa, mostly in the north and west. In <b>Algeria</b>, hundreds of thousands of European settlers moved in and took farmland from Algerians. French leaders claimed they were "civilizing" Africans — a racist idea that French ways were better.</p></div>
 <div class="fact"><strong><span class="swatch" style="background:var(--belgium)"></span>BELGIUM</strong><p>King Leopold II owned the <b>Congo</b> as his personal property. People were forced to collect rubber and were beaten or killed if they fell short. In 1908, Belgium's government took over.</p></div>
-<div class="fact"><strong><span class="swatch" style="background:var(--germany)"></span>GERMANY</strong><p>Wanted colonies to prove it was a world power. In German East Africa (today's <b>Tanzania</b>), it forced farmers to grow cotton. People fought back in the Maji Maji uprising of 1905.</p></div>
-<div class="fact"><strong><span class="swatch" style="background:var(--italy)"></span>ITALY</strong><p>Tried to conquer Ethiopia and lost. Then, in 1911, Italy attacked the Ottoman Empire and took <b>Libya</b>, a desert land just across the sea from Italy.</p></div>
+<div class="fact"><strong><span class="swatch" style="background:var(--germany)"></span>GERMANY</strong><p>Wanted colonies to prove it was a world power. In German East Africa (today's <b>Tanzania</b>), it forced farmers to grow cotton. People fought back in the Maji Maji uprising (rebellion) of 1905.</p></div>
+<div class="fact"><strong><span class="swatch" style="background:var(--italy)"></span>ITALY</strong><p>Tried to conquer Ethiopia and lost. Then, in 1911, Italy attacked the Ottoman Empire (the Turkish empire) and took <b>Libya</b>, a desert land just across the sea from Italy.</p></div>
 <div class="fact"><strong><span class="swatch" style="background:var(--portugal)"></span>PORTUGAL</strong><p>Arrived in <b>Angola</b> in the 1500s and shipped enslaved Africans across the Atlantic. By 1914 it controlled most of Angola and forced many people to work for little or no pay.</p></div>
 <div class="fact"><strong><span class="swatch" style="background:var(--independent)"></span>INDEPENDENT</strong><p>Only two African countries stayed free. <b>Ethiopia</b>'s army beat Italy at the Battle of Adwa in 1896. <b>Liberia</b>, settled by freed Black Americans, kept its own government.</p></div>
 </div>
 </div>
-<div class="name-card"><label for="student-name">Name:</label><input id="student-name" autocomplete="name"></div>
+<div class="name-card"><label for="student-name">First name + last initial (like Jordan M.)</label><input id="student-name" autocomplete="off" placeholder="First name + last initial (like Jordan M.)"></div>
 </section>
 <section class="workflow" aria-label="Two-part activity">
 <section class="phase" id="phase-one" aria-labelledby="phase-one-title">
 <div class="phase-banner"><div><span class="phase-kicker">PART 1 OF 2</span><h2 id="phase-one-title">SOLVE 10 MYSTERY PLACES</h2></div><span class="phase-time">About 20–25 minutes total</span></div>
 <p class="phase-directions"><b>Step 2:</b> Read each clue and match it to a fact card. Pick who controlled the place, then answer why. Wrong answers reshuffle — read again and retry. <b>Step 3:</b> Color the map from memory and turn it in.</p>
 <div class="clue-box">
-<div class="clue-top"><span id="clue-number" class="clue-number">CLUE 1 OF 6</span><div class="progress-track" role="progressbar" aria-label="Clues solved" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><span id="progress-fill"></span></div></div>
+<div class="clue-top"><span id="clue-number" class="clue-number">MYSTERY PLACE 1 OF 10</span><div class="progress-track" role="progressbar" aria-label="Clues solved" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><span id="progress-fill"></span></div></div>
 <h3 id="clue-title">Mystery place #1</h3>
 <p id="clue-text" class="clue-text"></p>
 <p id="clue-prompt"></p>
@@ -311,7 +319,7 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 </section>
 </div>
 <section class="turn-in" aria-labelledby="turn-in-heading">
-<div><h3 id="turn-in-heading">Turn in your Day 1 activity</h3><p>Enter your first name and last initial at the top, and color all ten places.</p></div>
+<div><h3 id="turn-in-heading">Turn in your Day 1 activity</h3><p>Type your first name + last initial (like Jordan M.) at the top, and color all ten places.</p></div>
 <button id="turn-in-button" class="primary-button" type="button">Turn in to teacher</button>
 <p id="turn-in-status" class="turn-in-status" role="status" aria-live="polite"></p>
 </section>
@@ -320,16 +328,16 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 </main>
 <script>
 const places=[
- {id:"egypt",name:"Egypt",clue:"Ships from Europe could save thousands of miles on the trip to Asia by passing through this land instead of sailing all the way around Africa.",power:"Britain",whyQ:"Why did this power want it?",why:"To protect its sea route to India"},
- {id:"algeria",name:"Algeria",clue:"Huge numbers of newcomers from Europe made new homes here and moved onto fields that local families had worked for generations.",power:"France",whyQ:"Why did this power want it?",why:"To give European settlers farmland"},
- {id:"congo",name:"Congo",clue:"Villagers here had to gather sap from wild vines to meet a quota. Those who fell short could lose a hand or even their life, while one ruler far away got rich.",power:"Belgium",whyQ:"Why did this power want it?",why:"To make money from rubber",avoid:["angola"]},
- {id:"libya",name:"Libya",clue:"This dry coastland was taken from a weakening empire by a country that was still bitter about losing a war somewhere else in Africa.",power:"Italy",whyQ:"Why did this power want it?",why:"To build an empire after losing Ethiopia"},
- {id:"tanzania",name:"Tanzania",clue:"Farmers here were ordered to grow a crop for faraway clothing factories instead of food. They rose up together, believing blessed water would protect them from bullets.",power:"Germany",whyQ:"Why did this power want it?",why:"To prove it was a world power",avoid:["angola","congo"]},
- {id:"nigeria",name:"Nigeria",clue:"Traders here bought oil pressed from the fruit of a tree. Factories in Europe used it to make soap and to grease machines.",power:"Britain",whyQ:"Why did this power want it?",why:"To buy palm oil for its companies"},
- {id:"angola",name:"Angola",clue:"For more than 300 years, slave ships left this land's coast carrying captives across the ocean to Brazil.",power:"Portugal",whyQ:"Why did this power want it?",why:"To keep forcing Africans to work",avoid:["congo"]},
- {id:"ethiopia",name:"Ethiopia",clue:"An emperor's army crushed a European invasion force in these mountains, so this kingdom never became a colony.",power:"Independent",whyQ:"Why did it stay independent?",why:"Its army won the Battle of Adwa",fakes:["Britain protected it as an ally","It paid Italy to leave it alone","Europe saw nothing there worth taking"]},
- {id:"south-africa",name:"South Africa",clue:"Deep mines here pulled out the yellow metal and sparkling stones that made fortunes for companies in London.",power:"Britain",whyQ:"Why did this power want it?",why:"To control gold and diamond mines"},
- {id:"liberia",name:"Liberia",clue:"This small West African land has a capital city named after U.S. President James Monroe.",power:"Independent",whyQ:"Who settled this land?",why:"Freed Black Americans",fakes:["Italian soldiers","Portuguese traders","French farm families"]}
+ {id:"egypt",name:"Egypt",clue:"Ships from Europe could save thousands of miles on the trip to Asia by passing through this land instead of sailing all the way around Africa.",power:"Britain",whyQ:"Why did this power want it?",why:"To protect its sea route to India",note:"Political reason: the Suez Canal was Britain\u2019s shortcut to India, its richest colony, so Britain wanted to guard it."},
+ {id:"algeria",name:"Algeria",clue:"Huge numbers of newcomers from Europe made new homes here and moved onto fields that local families had worked for generations.",power:"France",whyQ:"Why did this power want it?",why:"To give European settlers farmland",note:"Economic and cultural reasons: settlers got Algerian farmland, and French leaders claimed they were spreading French \u201ccivilization.\u201d"},
+ {id:"congo",name:"Congo",clue:"Villagers here had to gather sap from wild vines to meet a quota (a set amount). Those who fell short could lose a hand or even their life, while one ruler far away got rich.",power:"Belgium",whyQ:"Why did this power want it?",why:"To make money from rubber",avoid:["angola"],note:"Economic reason: rubber was worth a fortune because factories needed it for tires and machines."},
+ {id:"libya",name:"Libya",clue:"This dry coastland was taken from a weakening empire by a country that was still bitter about losing a war somewhere else in Africa.",power:"Italy",whyQ:"Why did this power want it?",why:"To build an empire after losing Ethiopia",note:"Political reason: after losing at Adwa, Italy wanted an empire to show it was a great power too."},
+ {id:"tanzania",name:"Tanzania",clue:"Farmers here were ordered to grow a crop for faraway clothing factories instead of food. They rose up together, believing blessed water would protect them from bullets.",power:"Germany",whyQ:"Why did this power want it?",why:"To prove it was a world power",avoid:["angola","congo"],note:"Political reason: Germany wanted colonies to show it was as strong as Britain and France. Forced cotton farming also made money."},
+ {id:"nigeria",name:"Nigeria",clue:"Traders here bought oil pressed from the fruit of a tree. Factories in Europe used it to make soap and to grease machines.",power:"Britain",whyQ:"Why did this power want it?",why:"To buy palm oil for its companies",note:"Economic reason: palm oil was a raw material that European factories needed."},
+ {id:"angola",name:"Angola",clue:"For more than 300 years, slave ships left this land's coast carrying captives across the ocean to Brazil.",power:"Portugal",whyQ:"Why did this power want it?",why:"To keep forcing Africans to work",avoid:["congo"],note:"Economic reason: Portugal profited from forced African labor, first from the slave trade and later on its farms."},
+ {id:"ethiopia",name:"Ethiopia",clue:"An emperor's army crushed a European invasion force in these mountains, so this kingdom never became a colony.",power:"Independent",whyQ:"Why did it stay independent?",why:"Its army won the Battle of Adwa",fakes:["Britain protected it as an ally","It paid Italy to leave it alone","Europe saw nothing there worth taking"],note:"Resistance: Ethiopia\u2019s army had modern rifles and beat Italy, so Europe could not take it."},
+ {id:"south-africa",name:"South Africa",clue:"Deep mines here pulled out the yellow metal and sparkling stones that made fortunes for companies in London.",power:"Britain",whyQ:"Why did this power want it?",why:"To control gold and diamond mines",note:"Economic reason: gold and diamond mines made British companies rich."},
+ {id:"liberia",name:"Liberia",clue:"This small West African land has a capital city named after U.S. President James Monroe.",power:"Independent",whyQ:"Who settled this land?",why:"Freed Black Americans",fakes:["Freed Black Britons","Freed people from Brazil","Freed people from Haiti"],note:"Liberia kept its own government \u2014 one of only two places in Africa that Europe did not take over."}
 ];
 const powers=["Britain","France","Belgium","Germany","Italy","Portugal","Independent"];
 const colors={Britain:"var(--britain)",France:"var(--france)",Belgium:"var(--belgium)",Germany:"var(--germany)",Italy:"var(--italy)",Portugal:"var(--portugal)",Independent:"var(--independent)"};
@@ -378,7 +386,7 @@ function choosePower(choice){
   clueChoices.querySelector("button")?.focus();
  }else{
   misses[p.id].power++;
-  setFeedback("Not yet. Find the fact card that matches this clue, then try again.");
+  setFeedback("Not yet. Find the fact card that matches a detail in this clue, then try the new order.");
   renderChoices(shuffle(powers),choosePower);
   clueChoices.querySelector("button")?.focus();
  }
@@ -390,6 +398,7 @@ function chooseWhy(choice){
   clueChoices.replaceChildren();
   $("clue-reveal").hidden=false;
   $("clue-reveal").textContent="Solved! Mystery place #"+(idx+1)+" is "+p.name.toUpperCase()+". You will color it in Part 2.";
+  if(p.note){const n=document.createElement("span");n.className="why-note";n.textContent=p.note;$("clue-reveal").append(n)}
   setFeedback("");
   nextButton.textContent=idx===TOTAL-1?"Finish Part 1":"Next mystery place";
   nextButton.hidden=false;updateProgress();nextButton.focus();
@@ -508,11 +517,11 @@ function scoreInfo(){
 $("turn-in-button").addEventListener("click",async()=>{
  const name=$("student-name").value.trim(),status=$("turn-in-status"),button=$("turn-in-button");
  status.className="turn-in-status";
- if(!name){status.textContent="Enter your name at the top of the page.";$("student-name").focus();return}
+ if(!name||!/ [A-Z]\.$/.test(window.classShortName?window.classShortName(name):name)){status.textContent="Type your first name + last initial (like Jordan M.) at the top of the page.";status.classList.add("error");$("student-name").focus();return}
  if(Object.keys(whySolved).length!==TOTAL){status.textContent="Solve all ten mystery places before turning in.";return}
  if(Object.keys(mapAssignments).length!==TOTAL){status.textContent="Color all ten places correctly before turning in.";return}
  const s=scoreInfo();
- const answers={"Score (right on first try)":s.first+" of "+s.max+" ("+s.pct+"%)"};
+ const answers={"Standard":"SS.9-12.WH.24","Score (right on first try)":s.first+" of "+s.max+" ("+s.pct+"%)"};
  places.forEach((p,i)=>{
   const tries=m=>m?("took "+(m+1)+" tries"):"first try";
   answers[(i+1)+". "+p.name]=p.power+" | power: "+tries(misses[p.id].power)+" · why: "+tries(misses[p.id].why)+" · map: "+tries(mapMisses[p.id]);

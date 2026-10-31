@@ -13,20 +13,25 @@
 @media(max-width:430px){.task-head{flex-direction:column}.actions{align-items:stretch;flex-direction:column}.actions .btn{width:100%}.tile{min-height:124px;padding:8px}.steps{gap:5px}.step{font-size:.68rem;padding:6px 8px}}
 
 .turnin-box{margin-top:14px;padding:12px;border-radius:12px;background:#fffdf7;color:#172733}.turnin-box label{display:block;color:#173344;font-weight:800;margin:8px 0 4px}.turnin-box input,.turnin-box textarea{display:block;width:100%;padding:9px;border:1px solid #b9b2a5;border-radius:8px;font:inherit}.turnin-box textarea{min-height:66px}.turnin-status{min-height:1.2em;color:#39755b;font-size:.82rem;margin:7px 0 0}
+.std-line{font-size:.92rem;margin:8px 0 4px;line-height:1.35}.goal-line{font-size:.95rem;margin:0 0 6px}.welcome-back{background:#e4f3e9;color:#14532d;border:1px solid #83b394;border-radius:10px;padding:9px 12px;margin:8px 0;font-weight:700}.clue{display:block;font-size:.88rem;margin:2px 0 8px;font-weight:600;opacity:.9}.stem{font-size:.88rem;margin:2px 0 6px;color:#3d4b55}.stem b{color:#172733}.why-note{display:block;font-size:.85rem;margin-top:4px}.restart-row{margin:10px 0 0}
 </style>
 <script src="../shared/assignments.js?v=20261030d"></script><script src="../shared/turnin.js?v=20261030d"></script></head>
 <body>
-<header class="top"><div class="brand">World History · Day 4</div><div class="tag">SS.9–12.WH.29</div></header>
+<header class="top"><div class="brand">World History · Day 4</div><div class="tag">SS.9-12.WH.29</div></header>
 <main>
 <section class="hero">
  <span class="eyebrow">A four-step history game</span>
  <h1>Build the World War I domino chain.</h1>
  <p>Put real events in order, match what happened next, sort the alliances, and topple the finished chain.</p>
+ <p class="std-line"><b>Standard SS.9-12.WH.29</b> — Analyze the causes that led to the outbreak of World War I and World War II.</p>
+ <p class="goal-line"><b>Today's goal:</b> Explain how one killing in 1914 turned into a war across the world.</p>
+ <p class="goal-line">Do the 4 steps in order. <b>Done</b> = the chain falls and you write one sentence, then press <b>Turn in</b>. About 15 minutes. Your progress saves on this device.</p>
+ <div class="welcome-back" id="welcomeBack" hidden></div>
 </section>
 <div class="causebar"><b>Why Europe was tense:</b> nationalism (some groups wanted self-rule) · militarism (bigger armies) · alliances (promises to help) · imperialism (competition for land)</div>
 <nav class="steps" aria-label="Game steps"><span class="step active" id="step1">1 · Order</span><span class="step" id="step2">2 · Match</span><span class="step" id="step3">3 · Sort alliances</span><span class="step" id="step4">4 · Topple</span></nav>
 <section class="task" id="orderTask" aria-labelledby="orderTitle">
- <div class="task-head"><div><h2 id="orderTitle">1. Put events in order</h2><p>Tap a tile, then tap the spot where it goes. Use the dates to help.</p></div><span class="counter" id="orderCount">0 of 7 placed</span></div>
+ <div class="task-head"><div><h2 id="orderTitle">1. Put events in order</h2><p>Tap a tile, then tap the spot where it goes. Use the dates and what caused what.</p></div><span class="counter" id="orderCount">0 of 7 placed</span></div>
  <div class="playarea">
   <div class="panel"><h3>Event order</h3><div class="slots" id="slots"></div><p class="message" style="margin:7px 0 0">To move a tile, tap its spot.</p></div>
   <div class="panel"><h3>Mixed-up history tiles</h3><div class="pile" id="pile"></div></div>
@@ -35,7 +40,7 @@
  <div class="result" id="orderResult" aria-live="polite"></div>
 </section>
 <section class="task hidden" id="matchTask" aria-labelledby="matchTitle">
- <div class="task-head"><div><h2 id="matchTitle">2. Match what happened next</h2><p>Tap an event on the left. Then tap what happened next.</p></div><span class="counter" id="matchCount">0 of 4 matched</span></div>
+ <div class="task-head"><div><h2 id="matchTitle">2. Match what happened next</h2><p>Tap an event on the left. Then tap the result it caused.</p></div><span class="counter" id="matchCount">0 of 4 matched</span></div>
  <div class="match-board">
   <div class="match-column"><h3>First event</h3><div class="match-list" id="matchLeft"></div></div>
   <div class="match-column"><h3>What happened next?</h3><div class="match-list" id="matchRight"></div></div>
@@ -44,7 +49,7 @@
  <div class="match-result" id="matchResult"></div>
 </section>
 <section class="task hidden" id="allianceTask" aria-labelledby="allianceTitle">
- <div class="task-head"><div><h2 id="allianceTitle">3. Sort the 1914 alliances</h2><p>Choose the side each country joined when the war began.</p></div><span class="counter" id="allianceCount">0 of 4 sorted</span></div>
+ <div class="task-head"><div><h2 id="allianceTitle">3. Sort the 1914 alliances</h2><p>Use each clue from the event tiles to choose the side that country joined in 1914.</p></div><span class="counter" id="allianceCount">0 of 4 sorted</span></div>
  <div class="alliance-grid" id="allianceGrid"></div>
  <p class="match-message" id="allianceMessage" aria-live="polite">Sort all four countries to continue.</p>
  <div class="match-result" id="allianceResult"></div>
@@ -56,29 +61,29 @@
  <div class="match-result" id="finishResult"></div>
 </section>
 </main>
-<footer class="foot"><span>Real events · No what-if choices</span><span>World War I · 1914–1917</span></footer>
+<footer class="foot"><span>Real events</span><span>World War I · 1914–1917</span></footer>
 <script>
 const events=[
- {id:"assassination",date:"June 28, 1914",title:"Killing in Sarajevo",text:"Gavrilo Princip killed Franz Ferdinand and Sophie. Some Black Hand members helped the attackers get weapons. Serbia’s government did not order the killing."},
- {id:"ultimatum",date:"July 5–25, 1914",title:"A deadline for Serbia",text:"Germany promised to help Austria-Hungary. Austria-Hungary gave Serbia 48 hours to agree to its demands. Serbia agreed to most, but said no to Austrian officials investigating in Serbia."},
+ {id:"assassination",date:"June 28, 1914",title:"Killing in Sarajevo",text:"Gavrilo Princip killed Franz Ferdinand (next in line to rule Austria-Hungary) and his wife Sophie. Members of the Black Hand (a secret Serbian nationalist group) helped the attackers get weapons. Serbia’s government did not order the killing."},
+ {id:"ultimatum",date:"July 5–25, 1914",title:"A deadline for Serbia",text:"Germany promised to help Austria-Hungary. Austria-Hungary gave Serbia an ultimatum (a final list of demands): agree in 48 hours or face war. Serbia agreed to most, but said no to Austrian officials investigating in Serbia."},
  {id:"serbia-war",date:"July 28–30, 1914",title:"Austria-Hungary declares war",text:"Austria-Hungary declared war on Serbia. Russia chose to help Serbia and called up its army on July 30."},
  {id:"germany-war",date:"August 1–3, 1914",title:"Germany declares war",text:"Germany declared war on Russia, then France. Germany planned to attack France through Belgium."},
- {id:"belgium",date:"August 4, 1914",title:"Germany enters Belgium",text:"Germany invaded Belgium, a country that had promised to stay out of wars. Britain declared war on Germany that day, partly to protect Belgium."},
+ {id:"belgium",date:"August 4, 1914",title:"Germany enters Belgium",text:"Germany invaded Belgium, a neutral country (it stayed out of wars, and Britain had promised to protect it). Britain declared war on Germany that day, partly to protect Belgium."},
  {id:"world",date:"1914–1916",title:"The war spreads overseas",text:"Japan joined the Allies. The Ottoman Empire joined Germany and Austria-Hungary. Italy stayed out in 1914, then joined the Allies. Soldiers from colonies fought in the war."},
  {id:"united-states",date:"April 6, 1917",title:"The U.S. joins the war",text:"Germany restarted submarine attacks. The Zimmermann Telegram was a secret message asking Mexico to fight the U.S. The U.S. joined in 1917. The Lusitania sank in 1915, but the U.S. stayed out then."}
 ];
 const orderIds=events.map(e=>e.id);
 const allianceCountries=[
- {id:"germany",name:"Germany",side:"central"},
- {id:"austria-hungary",name:"Austria-Hungary",side:"central"},
- {id:"britain",name:"Britain",side:"allies"},
- {id:"russia",name:"Russia",side:"allies"}
+ {id:"germany",name:"Germany",side:"central",clue:"Clue: In July 1914, it promised to help Austria-Hungary.",why:"Germany backed Austria-Hungary from the start."},
+ {id:"austria-hungary",name:"Austria-Hungary",side:"central",clue:"Clue: It declared war on Serbia after its deadline ran out.",why:"Austria-Hungary started the fight with Serbia, with Germany behind it."},
+ {id:"britain",name:"Britain",side:"allies",clue:"Clue: It declared war on Germany the day Belgium was invaded.",why:"Britain fought Germany, so it joined France and Russia."},
+ {id:"russia",name:"Russia",side:"allies",clue:"Clue: It called up its army to help Serbia.",why:"Russia backed Serbia against Austria-Hungary, so it joined the Allies."}
 ];
 const pairs=[
- {id:"serbia",first:"Serbia rejected part of Austria-Hungary’s demands.",next:"Austria-Hungary declared war on Serbia."},
- {id:"russia",first:"Russia called up its army.",next:"Germany declared war on Russia and France."},
- {id:"belgium",first:"Germany invaded Belgium.",next:"Britain declared war on Germany."},
- {id:"usa",first:"Germany restarted submarine attacks; the Zimmermann Telegram became public.",next:"The U.S. declared war on Germany in 1917."}
+ {id:"serbia",first:"Serbia rejected part of Austria-Hungary’s demands.",next:"Austria-Hungary declared war, sure that Germany would back it up.",why:"Germany’s promise of help made Austria-Hungary ready to fight."},
+ {id:"russia",first:"Russia called up its army to help Serbia.",next:"Germany saw a threat and declared war on it, then on its ally France.",why:"Calling up an army looked like a threat, and alliances pulled France in."},
+ {id:"belgium",first:"Germany invaded Belgium.",next:"Britain declared war, partly to protect a neutral country.",why:"Britain had promised to protect Belgium, so the war got bigger."},
+ {id:"usa",first:"Germany restarted submarine attacks; the Zimmermann Telegram became public.",next:"The U.S. joined the war against Germany in 1917.",why:"Attacks on ships and the secret telegram turned Americans toward war."}
 ];
 let shuffled=[];
 let placed=Array(events.length).fill(null);
@@ -89,6 +94,8 @@ let allianceAnswers={};
 let allianceOrder=shuffle(allianceCountries);
 let selectedFirst=null;
 let gameComplete=false;
+let orderChecked=false;
+let stage=1;
 const $=id=>document.getElementById(id);
 function shuffle(list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function setStep(n){
@@ -98,7 +105,7 @@ function renderOrder(){
  $("orderCount").textContent=placed.filter(Boolean).length+" of 7 placed";
  $("slots").innerHTML=placed.map((id,i)=>{
   const e=events.find(x=>x.id===id);
-  const mark=orderComplete?" correct":(id&&placed.findIndex((x,j)=>x!==orderIds[j])>=0?(id===orderIds[i]?" correct":" incorrect"):"");
+  const mark=orderComplete?" correct":(orderChecked&&id&&id!==orderIds[i]?" incorrect":"");
   return '<button class="slot'+(id?" filled":"")+mark+'" data-slot="'+i+'"><span class="slot-num">'+(i+1)+'</span><span class="slot-text">'+(e?e.date+"<br><b>"+e.title+"</b>":"Tap to place")+'</span></button>';
  }).join("");
  $("pile").innerHTML=shuffled.map(e=>'<button class="tile'+(placed.includes(e.id)?" placed":"")+(selected===e.id?" selected":"")+'" data-tile="'+e.id+'"><span class="tile-date">'+e.date+'</span><strong>'+e.title+'</strong><span>'+e.text+'</span></button>').join("");
@@ -118,16 +125,16 @@ function tapSlot(i){
  else if(selected){placed[i]=selected;selected=null}
  else{$("orderMessage").textContent="Choose a tile first.";return}
  $("orderMessage").textContent=selected?"Now tap a numbered spot.":"Choose a tile, then choose a numbered spot.";
- $("orderResult").classList.remove("show");renderOrder();
+ orderChecked=false;$("orderResult").classList.remove("show");renderOrder();save();
 }
 $("checkOrder").addEventListener("click",()=>{
  const wrong=placed.findIndex((id,i)=>id!==orderIds[i]);
- if(wrong>=0){$("orderMessage").textContent="Check spot "+(wrong+1)+". Use the dates to fix the order.";renderOrder();return}
- orderComplete=true;setStep(2);renderOrder();
+ if(wrong>=0){orderChecked=true;const n=placed.filter((id,i)=>id!==orderIds[i]).length;$("orderMessage").textContent=n+" spot"+(n>1?"s are":" is")+" out of order (marked). Read the dates and ask: what had to happen first?";renderOrder();return}
+ orderComplete=true;renderOrder();save();
  $("orderMessage").textContent="That’s the right order!";
  $("orderResult").innerHTML='<strong>Good work!</strong><p>Now match four events to what happened next.</p><button class="btn secondary" id="goMatch">Go to task 2 →</button>';
  $("orderResult").classList.add("show");
- $("goMatch").addEventListener("click",()=>{$("orderTask").classList.add("hidden");$("matchTask").classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})});
+ $("goMatch").addEventListener("click",()=>showStage(2));
 });
 function renderMatches(){
  $("matchCount").textContent=matched.size+" of 4 matched";
@@ -139,54 +146,54 @@ function renderMatches(){
 function chooseMatch(id){
  if(!selectedFirst){$("matchMessage").textContent="Tap an event on the left first.";return}
  if(id===selectedFirst){
-  matched.add(id);selectedFirst=null;$("matchMessage").textContent=matched.size===4?"All four matches are right!":"Good match. Keep going.";
+  matched.add(id);selectedFirst=null;const pr=pairs.find(p=>p.id===id);$("matchMessage").textContent=(matched.size===4?"All four matches are right! ":"Right. ")+pr.why;save();
   renderMatches();
   if(matched.size===4){
-   setStep(3);
    $("matchResult").innerHTML='<strong>All matched!</strong><p>One more quick step: sort four countries by their side in 1914.</p><button class="btn secondary" id="goAlliances">Go to task 3 →</button>';
    $("matchResult").classList.add("show");
-   $("goAlliances").addEventListener("click",()=>{$("matchTask").classList.add("hidden");$("allianceTask").classList.remove("hidden");renderAlliances();window.scrollTo({top:0,behavior:"smooth"})});
+   $("goAlliances").addEventListener("click",()=>showStage(3));
   }
- }else{$("matchMessage").textContent="Not that one. Try a different match."}
+ }else{rightOrder=shuffle(pairs);renderMatches();$("matchMessage").textContent="Not that one. Reread the event tiles: what did this event directly cause? The results moved."}
 }
 function renderAlliances(){
  const grid=$("allianceGrid");
  $("allianceCount").textContent=Object.keys(allianceAnswers).length+" of 4 sorted";
  grid.innerHTML=allianceOrder.map(country=>{
   const solved=Boolean(allianceAnswers[country.id]);
-  return '<div class="alliance-card'+(solved?" solved":"")+'"><h3>'+country.name+'</h3><div class="alliance-choices"><button class="alliance-choice" data-country="'+country.id+'" data-side="central" '+(solved?"disabled":"")+'>Central Powers</button><button class="alliance-choice" data-country="'+country.id+'" data-side="allies" '+(solved?"disabled":"")+'>Allies</button></div>'+(solved?'<small>Correct ✓</small>':'')+'</div>';
+  return '<div class="alliance-card'+(solved?" solved":"")+'"><h3>'+country.name+'</h3><span class="clue">'+country.clue+'</span><div class="alliance-choices"><button class="alliance-choice" data-country="'+country.id+'" data-side="central" '+(solved?"disabled":"")+'>Central Powers</button><button class="alliance-choice" data-country="'+country.id+'" data-side="allies" '+(solved?"disabled":"")+'>Allies</button></div>'+(solved?'<small>Correct ✓ <span class="why-note">'+country.why+'</span></small>':'')+'</div>';
  }).join("");
  grid.querySelectorAll("[data-country]").forEach(button=>button.addEventListener("click",()=>chooseAlliance(button.dataset.country,button.dataset.side)));
 }
 function chooseAlliance(id,side){
  const country=allianceCountries.find(item=>item.id===id);
  if(side===country.side){
-  allianceAnswers[id]=side;
+  allianceAnswers[id]=side;save();
   $("allianceMessage").textContent=country.name+" is on the "+(side==="central"?"Central Powers":"Allied")+" side. Keep sorting.";
   renderAlliances();
   if(Object.keys(allianceAnswers).length===4){
    $("allianceMessage").textContent="All four are right. Now finish the chain.";
    $("allianceResult").innerHTML='<strong>All four countries sorted!</strong><p>Germany and Austria-Hungary were Central Powers. Britain and Russia fought with the Allies in 1914.</p><button class="btn secondary" id="goTopple">Go to task 4 →</button>';
    $("allianceResult").classList.add("show");
-   setStep(4);
-   $("goTopple").addEventListener("click",()=>{$("allianceTask").classList.add("hidden");$("toppleTask").classList.remove("hidden");renderFinalChain();window.scrollTo({top:0,behavior:"smooth"})});
+   $("goTopple").addEventListener("click",()=>showStage(4));
   }
  }else{
-  $("allianceMessage").textContent="Not quite. Think about which countries promised to support each other in 1914.";
+  $("allianceMessage").textContent="Not quite. Read the clue on the "+country.name+" card again: who was it helping or fighting?";
  }
 }
 function renderFinalChain(){
  $("finalChain").innerHTML=orderIds.map((id,i)=>{const e=events.find(x=>x.id===id);return '<div class="slot filled"><span class="slot-num">'+(i+1)+'</span><span class="slot-text">'+e.title+'</span></div>'}).join("");
 }
 function finishGame(){
- gameComplete=true;$("toppleMessage").textContent="Chain complete!";$("topple").hidden=true;
+ gameComplete=true;stage=5;save();$("toppleMessage").textContent="Chain complete!";$("topple").hidden=true;
  $("finalChain").querySelectorAll(".slot").forEach((e,i)=>{e.classList.add("falling");e.style.animationDelay=(i*.18)+"s"});
- $("finishResult").innerHTML='<strong>You finished all three tasks!</strong><p>Alliances helped spread the war. Each country’s leaders chose whether to join. No single alliance made every country fight.</p><div class="turnin-box"><b>Turn in your work</b><label for="studentName">Your first and last name</label><input id="studentName" maxlength="100" autocomplete="name" placeholder="First and last name"><label for="warReflection">What made the war spread to more countries?</label><textarea id="warReflection" placeholder="The war spread because..."></textarea><button class="btn" id="submitAlliance" style="margin-top:8px">Turn in assignment</button><p class="turnin-status" id="submitStatus" role="status" aria-live="polite"></p></div><button class="btn secondary" id="restart" style="margin-top:8px">Play again</button>';
+ $("finishResult").innerHTML='<strong>You finished all four steps!</strong><p>Alliances helped spread the war. Each country’s leaders chose whether to join. No single alliance made every country fight.</p><div class="turnin-box"><b>Turn in your work</b><label for="studentName">First name + last initial (like Jordan M.)</label><input id="studentName" maxlength="100" autocomplete="off" placeholder="First name + last initial (like Jordan M.)"><label for="warReflection">A fight between Austria-Hungary and Serbia became a world war. What made it spread? Use one event from the chain.</label><p class="stem">Sentence starter: <b>The war spread because ___. For example, ___.</b></p><textarea id="warReflection" placeholder="The war spread because ___. For example, ___."></textarea><button class="btn" id="submitAlliance" style="margin-top:8px">Turn in assignment</button><p class="turnin-status" id="submitStatus" role="status" aria-live="polite"></p></div><button class="btn secondary" id="restart" style="margin-top:8px">Play again</button>';
  $("finishResult").classList.add("show");$("topple").disabled=true;
- $("restart").addEventListener("click",restart);$("submitAlliance").addEventListener("click",submitAlliance);
+ $("restart").addEventListener("click",()=>{if(confirm("Start over from step 1? Your saved progress will reset."))restart()});$("submitAlliance").addEventListener("click",submitAlliance);
+ ["studentName","warReflection"].forEach(id=>{const f=$(id);f.value=localStorage.getItem("wwi-chain-"+id)||"";f.addEventListener("input",()=>{try{localStorage.setItem("wwi-chain-"+id,f.value)}catch(e){}})});
 }
-async function submitAlliance(){const name=$("studentName").value.trim(),reflection=$("warReflection").value.trim(),button=$("submitAlliance"),status=$("submitStatus");if(!name){status.textContent="Write your first and last name.";return}if(!reflection){status.textContent="Write one sentence before turning in your work.";return}button.disabled=true;status.textContent="Sending your work…";const sequence=placed.map((id,i)=>{const event=events.find(e=>e.id===id);return {position:i+1,date:event?.date||"",event:event?.title||""}});const matches=[...matched].map(id=>{const pair=pairs.find(p=>p.id===id);return {event:pair?.first||id,happenedNext:pair?.next||""}});try{const response=await classTurnIn("https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"wwi-alliance-chain-reaction",answers:{sequence,matches,alliances:allianceAnswers,reflection,completed:gameComplete}})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not turn in your work.");status.textContent="Turned in! Your teacher has your work.";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not turn in your work. Try again.";button.disabled=false}}
+async function submitAlliance(){const name=$("studentName").value.trim(),reflection=$("warReflection").value.trim(),button=$("submitAlliance"),status=$("submitStatus");const short=window.classShortName?window.classShortName(name):name;if(!name||!/ [A-Z]\.$/.test(short)){status.textContent="Type your first name + last initial (like Jordan M.).";$("studentName").focus();return}if(/_{2,}/.test(reflection)||reflection.split(/\s+/).filter(Boolean).length<8){status.textContent="Finish the sentence: fill in every ___ and write at least 8 words.";$("warReflection").focus();return}button.disabled=true;status.textContent="Sending your work…";const sequence=placed.map((id,i)=>{const event=events.find(e=>e.id===id);return {position:i+1,date:event?.date||"",event:event?.title||""}});const matches=[...matched].map(id=>{const pair=pairs.find(p=>p.id===id);return {event:pair?.first||id,happenedNext:pair?.next||""}});try{const response=await classTurnIn("https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"wwi-alliance-chain-reaction",answers:{"Standard":"SS.9-12.WH.29",sequence,matches,alliances:allianceAnswers,reflection,completed:gameComplete}})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not turn in your work.");status.textContent="Turned in! Your teacher has your work. You're done.";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not turn in your work. Try again.";button.disabled=false}}
 function restart(){
+ try{localStorage.removeItem(SAVE_KEY);localStorage.removeItem("wwi-chain-studentName");localStorage.removeItem("wwi-chain-warReflection")}catch(e){}stage=1;orderChecked=false;$("welcomeBack").hidden=true;
  shuffled=shuffle(events);placed=Array(events.length).fill(null);selected=null;orderComplete=false;matched=new Set();allianceAnswers={};allianceOrder=shuffle(allianceCountries);selectedFirst=null;gameComplete=false;rightOrder=shuffle(pairs);
  $("matchResult").classList.remove("show");$("matchResult").innerHTML="";$("finishResult").classList.remove("show");$("finishResult").innerHTML="";$("topple").disabled=false;$("topple").hidden=false;
  $("orderTask").classList.remove("hidden");$("matchTask").classList.add("hidden");$("allianceTask").classList.add("hidden");$("toppleTask").classList.add("hidden");
@@ -196,7 +203,30 @@ function restart(){
 $("topple").addEventListener("click",finishGame);
 let rightOrder=shuffle(pairs);
 shuffled=shuffle(events);
+const SAVE_KEY="wwi-chain-progress";
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({stage,placed,orderComplete,matched:[...matched],allianceAnswers}))}catch(e){}}
+function showStage(n){
+ stage=n;setStep(Math.min(n,4));$("welcomeBack").hidden=true;
+ [["orderTask",1],["matchTask",2],["allianceTask",3],["toppleTask",4]].forEach(([id,k])=>$(id).classList.toggle("hidden",k!==Math.min(n,4)));
+ if(n===2)renderMatches();if(n===3)renderAlliances();if(n>=4)renderFinalChain();
+ save();window.scrollTo({top:0,behavior:"smooth"});
+}
 renderOrder();renderMatches();renderFinalChain();
+(function restore(){
+ let d=null;try{d=JSON.parse(localStorage.getItem(SAVE_KEY)||"null")}catch(e){}
+ if(!d)return;
+ if(Array.isArray(d.placed)&&d.placed.length===events.length)placed=d.placed.map(x=>orderIds.includes(x)?x:null);
+ orderComplete=!!d.orderComplete&&placed.every((id,i)=>id===orderIds[i]);
+ matched=new Set((d.matched||[]).filter(id=>pairs.some(p=>p.id===id)));
+ allianceAnswers={};Object.entries(d.allianceAnswers||{}).forEach(([k,v])=>{const c=allianceCountries.find(x=>x.id===k);if(c&&c.side===v)allianceAnswers[k]=v});
+ let st=Number(d.stage)||1;
+ if(!orderComplete)st=1;else if(st>2&&matched.size<4)st=2;else if(st>3&&Object.keys(allianceAnswers).length<4)st=3;
+ renderOrder();renderMatches();
+ if(orderComplete&&st===1){$("orderMessage").textContent="That’s the right order!"}
+ if(st===1&&orderComplete){st=2}
+ if(st>1){showStage(Math.min(st,4));if(st>=5)finishGame();window.scrollTo(0,0)}
+ if(placed.some(Boolean)||st>1){const box=$("welcomeBack");box.hidden=false;box.textContent=st>=5?"Welcome back! You finished the game. Scroll down to turn in your work.":"Welcome back — you're on step "+Math.min(st,4)+" of 4.";}
+})();
 </script>
 </body>
 </html>

@@ -22,13 +22,15 @@ input{flex:1;min-width:0;border:2px solid #cfc5b3;border-radius:8px;background:w
 button{border:0;border-radius:8px;background:var(--red);color:white;font:800 .95rem system-ui;padding:11px 15px;cursor:pointer}
 button.secondary{background:#e7e0d1;color:var(--navy)}button:disabled{opacity:.5;cursor:not-allowed}
 .status{min-height:1.35em;color:var(--muted);font-size:.9rem;margin:9px 0 0}
+.std{font-size:.86rem;line-height:1.4;background:#ffffff14;border-left:4px solid var(--gold);padding:7px 10px;border-radius:6px;margin-top:10px}.directions p{margin:4px 0}.welcome{background:#eef3f7;border-left:5px solid var(--navy);padding:9px 12px;border-radius:7px;margin:8px 0 0;display:none}
 @media(max-width:650px){body{font-size:16px}header{padding:21px 14px}main.wrap{padding:13px 10px 38px}.directions,.part,.turnin{padding:14px}.part-intro{margin-left:0}.row{flex-wrap:wrap}.row input{flex-basis:100%}.part-frame{min-height:650px}}
 @media print{header{padding:10px}.directions,.turnin button{display:none!important}.part{break-inside:avoid}.part-frame{min-height:0}}
 </style>
 <script src="../shared/assignments.js?v=20261030d"></script><script src="../shared/turnin.js?v=20261030d"></script></head>
 <body>
-<header><div class="wrap"><div class="kicker">World History · Day 8</div><h1>World War II: Decisions &amp; Warning Signs</h1><p>Two parts. One assignment. Turn in your work once at the end.</p></div></header>
+<header><div class="wrap"><div class="kicker">World History · Day 8</div><h1>World War II: Decisions &amp; Warning Signs</h1><p>Two parts. One assignment. Turn in your work once at the end. <b>About 20–25 minutes.</b></p><p class="std"><b>Standard SS.9-12.WH.29</b> — Analyze the causes that led to the outbreak of World War I and World War II.<br><b>Standard SS.9-12.WH.30</b> — Compare and contrast the rise of dictators including their methods of repression and persecution, specifically addressing the causes and impact of the Holocaust.<br><b>Today's goal:</b> Explain how dictators' attacks started World War II, and spot the tools dictators used to take control.</p></div></header>
 <main class="wrap">
+<section class="directions"><h2>Exactly three things to do</h2><ol><li><b>Part 1:</b> At all 4 stops, pick a choice, write one sentence, and open the history card.</li><li><b>Part 2:</b> Get a green check on all 4 warning-sign cases.</li><li>Type your name at the bottom and press <b>Turn in both parts</b>.</li></ol><p class="welcome" id="welcome"></p></section>
 <section class="part" aria-labelledby="part1title">
 <div class="part-head"><span class="part-num">1</span><h2 id="part1title">World War II Decision Map</h2></div>
 <p class="part-intro">Follow the invasions. Choose a response, explain your choice, and open each history card.</p>
@@ -36,19 +38,20 @@ button.secondary{background:#e7e0d1;color:var(--navy)}button:disabled{opacity:.5
 </section>
 <section class="part" aria-labelledby="part2title">
 <div class="part-head"><span class="part-num">2</span><h2 id="part2title">Spot the Warning Signs</h2></div>
-<p class="part-intro">Look at four cases about dictators. Choose the warning sign that fits each one.</p>
+<p class="part-intro">Look at four pictures about dictators. Pick the warning sign each picture shows. If you miss one, the choices mix up and you can try again in a few seconds.</p>
 <div class="frame-wrap"><iframe class="part-frame" id="warningPart" src="../day7-warning-signs/" title="Part 2: Spot the Warning Signs"></iframe></div>
 </section>
 <section class="turnin">
 <h2>Turn in both parts</h2>
 <p>Finish every stop and case above. Your choices and reasons will be sent together as one assignment.</p>
-<label for="studentName"><b>Your first and last name</b></label>
-<div class="row"><input id="studentName" type="text" maxlength="100" autocomplete="name" placeholder="First and last name"><button id="submitWork">Turn in both parts</button><button id="clearWork" class="secondary" type="button">Start over</button></div>
+<label for="studentName"><b>First name + last initial (like Jordan M.)</b></label>
+<div class="row"><input id="studentName" type="text" maxlength="100" autocomplete="off" placeholder="First name + last initial (like Jordan M.)"><button id="submitWork">Turn in both parts</button><button id="clearWork" class="secondary" type="button">Start over</button></div>
 <p class="status" id="status" role="status" aria-live="polite"></p>
 </section>
 </main>
 <script>
 const API="https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit";
+const STANDARD="SS.9-12.WH.29, SS.9-12.WH.30";
 const part1=document.getElementById("decisionPart"),part2=document.getElementById("warningPart");
 const nameInput=document.getElementById("studentName"),status=document.getElementById("status");
 nameInput.value=localStorage.getItem("day8-wwii-combined-studentName")||"";
@@ -57,7 +60,7 @@ function prepareFrame(frame){
 try{
 const doc=frame.contentDocument;if(!doc||!doc.body)return;
 if(!doc.getElementById("combined-embed-style")){
-const style=doc.createElement("style");style.id="combined-embed-style";style.textContent='header,#studentName,label[for="studentName"],.actions,#submitStatus,#saved,main > section.card:last-of-type,footer{display:none!important}body{margin:0!important}.wrap{max-width:1100px!important;padding:13px!important}';
+const style=doc.createElement("style");style.id="combined-embed-style";style.textContent='header,#studentName,label[for="studentName"],.actions.no-print,#submitStatus,#welcome,#saved,main > section.card:last-of-type,footer{display:none!important}body{margin:0!important}.wrap{max-width:1100px!important;padding:13px!important}';
 doc.head.appendChild(style);
 }
 const resize=()=>{try{frame.style.height=Math.max(850,doc.documentElement.scrollHeight,doc.body.scrollHeight)+"px"}catch{}};
@@ -65,11 +68,17 @@ resize();new ResizeObserver(resize).observe(doc.documentElement);
 doc.addEventListener("click",()=>setTimeout(resize,80));doc.addEventListener("input",()=>setTimeout(resize,80));doc.addEventListener("change",()=>setTimeout(resize,80));
 }catch(error){status.textContent="A part did not load. Refresh the page and try again."}
 }
-[part1,part2].forEach(frame=>frame.addEventListener("load",()=>prepareFrame(frame)));
+[part1,part2].forEach(frame=>frame.addEventListener("load",()=>{prepareFrame(frame);showWelcome()}));
+// Welcome-back line built from what each part saved on this device.
+function showWelcome(){try{const d=part1.contentDocument,w=part2.contentDocument;if(!d||!w||!d.getElementById("outcome1")||!w.getElementById("method1"))return;
+const stops=[1,2,3,4].filter(i=>d.getElementById("outcome"+i).classList.contains("show")).length;
+const cases=[1,2,3,4].filter(i=>/^✓/.test(w.getElementById("fb"+i)?.textContent||"")).length;
+const box=document.getElementById("welcome");if(stops+cases===0)return;box.style.display="block";
+box.textContent="Welcome back — your work was saved. Part 1: "+stops+" of 4 stops done. Part 2: "+cases+" of 4 cases done.";}catch(e){}}
 function partDocs(){return[part1.contentDocument,part2.contentDocument]}
 function requiredValues(){
 const [d,w]=partDocs();if(!d||!w)throw new Error("Both parts are still loading. Wait a moment and try again.");
-const answers={};
+const answers={Standard:STANDARD};
 for(let i=1;i<=4;i++){
 const choice=d.getElementById("choice"+i)?.value||"",reason=d.getElementById("reason"+i)?.value.trim()||"",outcome=d.getElementById("outcome"+i);
 if(!choice||!reason)throw new Error("Finish all four Decision Map choices and reasons in Part 1.");
@@ -78,23 +87,23 @@ answers["Part 1 · Decision "+i]=choice;answers["Part 1 · Reason "+i]=reason;
 }
 for(let i=1;i<=4;i++){
 const warning=w.getElementById("method"+i)?.value||"";
-if(!warning)throw new Error("Choose a warning sign for all four cases in Part 2.");
+if(!warning||!w.getElementById("method"+i).disabled||!/^✓/.test(w.getElementById("fb"+i)?.textContent||""))throw new Error("Get a green check on all four warning-sign cases in Part 2.");
 answers["Part 2 · Case "+i+" warning sign"]=warning;
 }
 return answers;
 }
 async function submitWork(){
-const studentName=nameInput.value.trim();if(!studentName){status.textContent="Enter your first and last name.";nameInput.focus();return}
+const studentName=nameInput.value.trim();if(!studentName){status.textContent="Type your first name + last initial (like Jordan M.).";nameInput.focus();return}
 let answers;try{answers=requiredValues()}catch(error){status.textContent=error.message;return}
 const button=document.getElementById("submitWork");button.disabled=true;status.textContent="Sending both parts…";
 try{
 const response=await classTurnIn(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName,assignmentId:"day8-wwii-combined",answers})});
 const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not turn in your work.");
-status.textContent="Both parts were turned in together.";button.textContent="Turned in ✓";
+status.textContent="Turned in! Both parts were sent to your teacher together. You're done.";button.textContent="Turned in ✓";
 }catch(error){status.textContent=error instanceof Error?error.message:"Could not send your work. Try again.";button.disabled=false}
 }
 document.getElementById("submitWork").addEventListener("click",submitWork);
-document.getElementById("clearWork").addEventListener("click",()=>{if(confirm("Clear answers from both parts on this device?")){["choice1","choice2","choice3","choice4","reason1","reason2","reason3","reason4","studentName"].forEach(id=>localStorage.removeItem("day8-decision-"+id));["method1","method2","method3","method4","studentName"].forEach(id=>localStorage.removeItem("day7-warning-"+id));localStorage.removeItem("day8-wwii-combined-studentName");location.reload()}});
+document.getElementById("clearWork").addEventListener("click",()=>{if(confirm("Clear answers from both parts on this device?")){["choice1","choice2","choice3","choice4","reason1","reason2","reason3","reason4","studentName","outcome1","outcome2","outcome3","outcome4"].forEach(id=>localStorage.removeItem("day8-decision-"+id));["method1","method2","method3","method4","studentName"].forEach(id=>localStorage.removeItem("day7-warning-"+id));localStorage.removeItem("day8-wwii-combined-studentName");location.reload()}});
 </script>
 </body>
 </html>
