@@ -98,3 +98,37 @@
 .captain-log .stem{font-size:13px;color:var(--gold);margin-bottom:4px}
 .captain-log textarea{width:100%;background:#0b2026;color:var(--ink);border:1px solid #ffffff30;border-radius:8px;padding:9px;font:inherit;font-size:14px}
 #continue:disabled{opacity:.45;cursor:not-allowed}
+/* Round 2: survivors counter, BREAKING news, disaster flash, body count */
+.people{display:flex;gap:8px;margin:14px 0 0}
+.people .pc{flex:1;background:#ffffff06;border:1px solid #ffffff18;border-radius:7px;padding:7px 8px;text-align:center}
+.people .pc b{display:block;font:700 26px/1 'Barlow Condensed',Impact,sans-serif;color:var(--ink);font-variant-numeric:tabular-nums}
+.people .pc span{font-size:8.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.people .pc.lost b{color:#9fb6b2}.people .pc.lost.hit{border-color:#e5604f88;background:#e5604f14}.people .pc.lost.hit b{color:#ff7a66}
+.breaking{margin:4px 0 14px;border:1px solid #e5604f;border-left:5px solid #e5604f;border-radius:6px;background:#3a1612;padding:10px 13px;color:#ffd9d2}
+.breaking>b{display:inline-block;background:#e5604f;color:#fff;font-size:10px;letter-spacing:2px;padding:2px 7px;border-radius:3px}
+.breaking ul{margin:7px 0 6px;padding-left:18px;font-size:15px;font-weight:700;line-height:1.4}
+.breaking span{font-size:11.5px;color:#f3b6aa}.breaking strong{color:#fff}
+.result-symbol.dead{background:#e5604f22;color:#ff7a66}
+.deltas{grid-template-columns:repeat(6,1fr)}
+.delta.ppl{background:#e5604f0d}
+.event-card.surprise{border-color:#e5604f;box-shadow:0 0 0 2px #e5604f55,0 25px 100px #0009}
+.event-card.surprise .event-top{background:#3a1612}
+.event-card.surprise #eventLocation{color:#ff8a76}
+.event-card.surprise #eventType{color:#ff8a76}
+body.disaster::after,body.alarm::after{content:'';position:fixed;inset:0;z-index:60;pointer-events:none;background:radial-gradient(circle,#e5604f00 40%,#e5604f88);animation:redflash .9s ease-out forwards}
+body.alarm::after{background:radial-gradient(circle,#e5604f00 55%,#e5604f55)}
+body.disaster .result-card,body.alarm .event-card{animation:shake .45s}
+@keyframes redflash{from{opacity:1}to{opacity:0}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(2px)}}
+@media(prefers-reduced-motion:reduce){body.disaster::after,body.alarm::after{display:none}}
+.ending-card p.body-count{font:700 18px 'Barlow Condensed',Impact,sans-serif;letter-spacing:.5px;color:var(--mint);margin:0 0 6px}
+.ending-card p.body-count.hit{color:#ff7a66}
+.dead-stat strong{color:#ff7a66!important}
+.score-row{display:flex;justify-content:center;align-items:flex-end;gap:26px}
+.lives-big{text-align:center;padding-bottom:12px}.lives-big b{display:block;font:800 64px/1 'Barlow Condensed',Impact,sans-serif;color:var(--mint)}.lives-big span{font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.lives-big.hit b{color:#ff7a66}
+.score-parts{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:10px 0 2px}
+.score-parts span{font-size:11px;color:var(--muted);background:#ffffff08;border:1px solid #ffffff14;border-radius:4px;padding:4px 8px}
+.score-parts b{color:var(--mint)}.score-parts .neg b{color:#ff7a66}
+.log-entry p.log-dead{color:#ff8a76;font-weight:700}
+@media(max-width:650px){.people{grid-column:1/3;margin:6px 0 0;gap:6px}.people .pc{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 6px}.people .pc b{font-size:18px;display:inline}.people .pc span{font-size:8px}.deltas{grid-template-columns:repeat(3,1fr)}.score-row{gap:16px}.lives-big b{font-size:48px}.breaking ul{font-size:14px}}

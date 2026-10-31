@@ -1,142 +1,199 @@
 'use strict';
 /* ===== STRANDED: GOVERN OR COLLAPSE — story data and rules =====
    Meters: 0 Supplies, 1 Safety, 2 Trust, 3 Freedom. Ren = rival power (0-100).
+   People: 30 survivors. "die" = lives lost; "flee" = people who leave the island.
    Everything here is a fictional game outcome, not a claim about real events. */
-const START_STATS=[55,50,50,50], START_REN=30, TOTAL_STEPS=10;
+const START_STATS=[60,50,50,50], START_REN=30, TOTAL_STEPS=10, START_PEOPLE=30, MAX_EVENTS=5;
 const labels=['Supplies','Safety','Trust','Freedom'];
-const judgeName=s=>({council:'Ash, your elected judge,',direct:'The whole camp',ren:'Ren'}[s.flags.model]||'Ash');
+const judgeName=s=>({council:'Ash, your judge,',direct:'The whole camp',ren:'Ren'}[s.flags.model]||'Ash');
 const BEATS=[
 {id:'barrel',loc:'water',title:'The Last Barrel',tag:'WHY HAVE A GOVERNMENT?',concept:'Social contract',
- story:()=>'Day 1 on the island. Ren grabs the only barrel of fresh water: “I decide who drinks.” Thirty thirsty people start shouting.',
+ story:()=>'Day 1. Ren grabs the only barrel of fresh water: “I decide who drinks.” Thirty thirsty people start shouting.',
  choices:[
- {t:'Make water rules together',sub:'Everyone gives up a little freedom',d:[0,5,6,-8],ren:-5,say:'Fine. Talk all you want. I’m still thirsty.',head:'A deal everyone agrees to',res:'Two cups each a day, and nobody grabs. Everyone gave up some freedom to get safety.',learn:'You just made a <b>social contract</b>: people agree to give up some freedom so a government can protect them.',key:'Made water rules together',flags:{water:1,power:'Shared rules'}},
- {t:'Let Ren guard the barrel',sub:'Fast order, one person in charge',d:[5,10,-8,-10],ren:15,say:'Smart. Somebody has to be in charge.',head:'Ren holds the ladle',res:'Ren’s crew hands out water. The line is calm, but Ren’s friends drink first.',learn:'You traded freedom for order. That trade is the heart of a <b>social contract</b>. But nobody set <b>limits</b> on Ren’s power. That will matter.',key:'Let Ren guard the water',flags:{water:1,power:'Ren’s crew'}},
- {t:'No rules. Take your share',sub:'Total freedom, no one in charge',d:[-15,-10,-5,10],ren:5,say:'See? Without me, it’s chaos.',head:'The barrel tips over',res:'A shoving match knocks the barrel over. Half the water soaks into the sand.',learn:'Thinker Thomas Hobbes called life with no government the <b>state of nature</b>: a free-for-all where the strong win. Avoiding it is one reason people create government. Agreeing to rules to escape it is called a <b>social contract</b>.',key:'No rules, everyone grabbed',flags:{water:0},art:'fight'}]},
+ {t:'Make water rules together',sub:'Everyone gives up some freedom',d:[0,5,6,-8],ren:-5,say:'Talk all you want. I’m still thirsty.',head:'A deal everyone signs',res:'Two cups each a day. Nobody grabs. Everyone gave up a little freedom.',learn:'You made a <b>social contract</b>: people give up some freedom so a government can protect them.',key:'Made water rules together',flags:{water:1,power:'Shared rules'}},
+ {t:'Let Ren guard the barrel',sub:'Fast order, one boss',d:[5,10,-8,-10],ren:15,say:'Smart. Somebody has to be in charge.',head:'Ren holds the ladle',res:'The line is calm. Ren’s friends drink first. Nobody limits his power.',learn:'You traded freedom for order (a <b>social contract</b>) but put no <b>limits</b> on Ren.',key:'Let Ren guard the water',flags:{water:1,power:'Ren’s crew'}},
+ {t:'No rules. Grab your share',sub:'Total freedom, nobody in charge',d:[-15,-10,-5,10],ren:5,die:2,news:'2 dead in water brawl',say:'See? Without me, it’s chaos.',head:'Brawl at the barrel',res:'The barrel tips and the water soaks into the sand. Two men die in the brawl.',learn:'Thomas Hobbes called life with no government the <b>state of nature</b>: “nasty, brutish, and short.”',key:'No rules: brawl (2 died)',flags:{water:0},art:'fight'}]},
 {id:'power',loc:'hall',title:'Who Holds the Power?',tag:'THREE POWERS',concept:'Three powers',
- story:()=>'Every camp needs three jobs done: make the rules, carry them out, and settle fights about them. Who gets those jobs?',
+ story:()=>'Three jobs need doing: make the rules, carry them out, and judge who broke them. Who gets them?',
  choices:[
- {t:'Elect a council; split the jobs',sub:'Slower, but power is shared',d:[-5,-5,6,5],ren:-10,say:'A committee? We’ll starve waiting for a vote.',head:'Three jobs, three hands',res:'A 5-person council writes rules. Jo carries them out. Ash judges disputes.',learn:'Every government has three powers: <b>legislative</b> (make rules), <b>executive</b> (carry them out), and <b>judicial</b> (settle disputes). You split them up, and you elected leaders: a <b>representative democracy</b> (republic).',key:'Elected council, split the 3 powers',flags:{model:'council',rules:1,power:'Elected council'}},
- {t:'All 30 vote on every rule',sub:'Everyone has a say; meetings run long',d:[-8,-8,4,10],ren:-5,say:'Thirty people arguing? Good luck.',head:'Everybody votes',res:'Every rule gets a camp-wide vote. Meetings run until dark, and chores wait.',learn:'That’s a <b>direct democracy</b>, like ancient Athens or New England town meetings. The whole group shares <b>legislative</b> power (making rules). Someone still needs <b>executive</b> (carry out) and <b>judicial</b> (settle disputes) power.',key:'Direct democracy: all 30 vote',flags:{model:'direct',rules:1,power:'Whole camp votes'}},
- {t:'Ren does all three jobs',sub:'Quick decisions, no one checks him',d:[5,10,-10,-12],ren:20,say:'Finally, someone with sense.',head:'One man, three jobs',res:'Ren makes the rules, enforces them, and decides who broke them. Things move fast.',learn:'When one person holds all three powers, <b>legislative</b> (make rules), <b>executive</b> (carry them out), and <b>judicial</b> (settle disputes), that’s an <b>autocracy</b>: rule by one person.',key:'Autocracy: Ren holds all 3 powers',flags:{model:'ren',rules:1,power:'Ren rules alone'}}]},
+ {t:'Elect a council; split the jobs',sub:'Slower, but power is shared',d:[-5,-5,6,5],ren:-10,say:'A committee? We’ll starve waiting for a vote.',head:'Three jobs, three hands',res:'The council writes rules. Jo carries them out. Ash judges.',learn:'You split <b>legislative</b> (make), <b>executive</b> (carry out), and <b>judicial</b> (judge) power among elected leaders: a <b>representative democracy</b>.',key:'Elected council, split the 3 powers',flags:{model:'council',rules:1,power:'Elected council'}},
+ {t:'All 30 vote on every rule',sub:'Everyone has a say; very slow',d:[-8,-8,4,10],ren:-5,say:'Thirty people arguing? Good luck.',head:'Everybody votes',res:'Meetings run until dark. Nobody fishes. Chores pile up.',learn:'Everyone voting on every rule is <b>direct democracy</b>: the people hold <b>legislative</b> power (making rules) themselves.',key:'Direct democracy: all 30 vote',flags:{model:'direct',rules:1,power:'Whole camp votes'}},
+ {t:'Ren does all three jobs',sub:'Fast, and nobody checks him',d:[5,10,-10,-12],ren:20,say:'Finally, someone with sense.',head:'One man, three jobs',res:'Ren makes the rules, enforces them, and judges who broke them.',learn:'One person holding <b>legislative</b>, <b>executive</b>, and <b>judicial</b> power is <b>autocracy</b>: rule by one.',key:'Autocracy: Ren holds all 3 powers',flags:{model:'ren',rules:1,power:'Ren rules alone'}}]},
 {id:'thief',loc:'camp',title:'The Night Thief',tag:'KEEPING ORDER',concept:'Justice & order',
- story:s=>`Food vanished from the store last night. Jo caught Kai with the empty bag. Kai says, “My little brother was starving.” ${judgeName(s).replace(/,$/,'').replace(/^Ash, your elected judge/,'Ash, your judge')} must decide.`,
+ story:s=>`Food vanished overnight. Jo caught Kai with the empty bag: “My little brother was starving.” ${judgeName(s)} must decide.`,
  choices:[
- {t:'Hold a fair hearing first',sub:'Both sides speak; takes a day',d:[-5,0,6,5],ren:-5,say:'A trial for a thief? You’re soft.',head:'Both sides are heard',res:s=>`${judgeName(s)} hears Kai and Jo. Kai must work extra shifts to pay the food back.`,learn:'Deciding what a rule means and settling disputes is <b>judicial power</b>. Fair hearings <b>establish justice</b>, a purpose of government in the U.S. Preamble.',key:'Fair hearing for the thief'},
- {t:'Punish Kai in front of everyone',sub:'Scares others; some call it cruel',d:[5,10,-10,-8],ren:10,say:'Now they’ll think twice.',head:'A public punishment',res:'Kai gets no food for three days while everyone watches. Thefts stop. Whispers start.',learn:'Enforcing rules is <b>executive power</b>. Skipping the hearing means no one used <b>judicial power</b> to check if the punishment was fair.',key:'Public punishment, no hearing'},
- {t:'Let it go. People are hungry',sub:'Kind, but rules mean less',d:[-10,-10,5,5],ren:0,say:'A rule nobody enforces isn’t a rule.',head:'Two more bags gone',res:'Kai is grateful. By morning, two more bags of food are missing.',learn:'A rule only keeps order if someone carries it out (<b>executive power</b>) and settles fights about it (<b>judicial power</b>). Keeping order is a main job of government.',key:'Let the thief go',art:'raid'}]},
+ {t:'Hold a fair hearing first',sub:'Both sides speak; takes a day',d:[-5,0,6,5],ren:-5,say:'A trial for a thief? You’re soft.',head:'Both sides heard',res:s=>`${judgeName(s)} hears both sides. Kai works extra shifts to pay it back.`,learn:'Settling disputes fairly is <b>judicial power</b>, and it helps <b>establish justice</b>, a Preamble purpose.',key:'Fair hearing for the thief'},
+ {t:'Punish Kai in public',sub:'Scares others; some call it cruel',d:[5,10,-10,-8],ren:10,say:'Now they’ll think twice.',head:'Public punishment',res:'Kai gets no food for three days. Thefts stop. Whispers start.',learn:'Enforcing rules is <b>executive power</b>, but with no hearing, no <b>judicial power</b> checked if it was fair.',key:'Public punishment, no hearing'},
+ {t:'Let it go. People are hungry',sub:'Kind, but rules mean less',d:[-12,-10,5,5],ren:0,say:'A rule nobody enforces isn’t a rule.',head:'More food gone',res:'Kai is grateful. By morning, two more bags of food are missing.',learn:'A rule keeps order only if someone enforces it (<b>executive power</b>) and judges it (<b>judicial power</b>).',key:'Let the thief go',art:'raid',flags:{theft:1}}]},
 {id:'ship',loc:'watch',title:'Ship on the Horizon',tag:'WHAT MAKES A STATE?',concept:'Four features of a state',
- story:()=>'A ship anchors offshore. Its captain shouts: “This island belongs to the Coral Trading Company. Hand over half your food, or leave.”',
+ story:()=>'A company ship anchors offshore. The captain shouts: “This island is ours. Hand over half your food, or leave.”',
  choices:[
- {t:'We rule ourselves here',sub:'Stand firm, risk a fight',d:[0,-10,6,5],ren:-5,say:'Brave. Let’s hope they don’t come back angry.',head:'A flag on the ridge',res:'You raise a flag and post a watch. The ship circles, then sails away. For now.',learn:'You claimed <b>sovereignty</b>: final say over your own land. A <b>state</b> needs four things: people (population), land (territory), a government, and sovereignty. Your island has all four.',key:'Declared independence',flags:{guard:1}},
- {t:'Pay the company to leave us be',sub:'Safer, but outsiders get a say',d:[-12,10,-5,-5],ren:0,say:'Paying strangers? Weak.',head:'Protection money',res:'The company takes food every month. In return, its ship keeps pirates away.',learn:'You still have people, land, and a government. But the company now controls your choices, so you lost <b>sovereignty</b> (final say over your own land), one of the four features of a <b>state</b>.',key:'Paid the company'},
- {t:'Send Ren to cut a deal',sub:'Ren talks; you stay out of it',d:[5,5,-10,0],ren:15,say:'Leave the talking to me.',head:'Ren’s side deal',res:'Ren lets the company use the north beach. In return he gets tools only his crew can use.',learn:'Ren gave away part of your <b>territory</b> (land). A <b>state</b> needs four things: population, territory, government, and sovereignty (final say over its land).',key:'Ren made a deal (gave up land)'}]},
+ {t:'We rule ourselves here',sub:'Stand firm; they may come back',d:[0,-10,6,5],ren:-5,say:'Brave. Let’s hope they don’t come back angry.',head:'A flag on the ridge',res:'You raise a flag. The ship sails off. The captain yells, “We’ll be back.”',learn:'You claimed <b>sovereignty</b> (final say over your land); a <b>state</b> needs people, land, a government, and sovereignty.',key:'Declared independence',flags:{guard:1,defied:1}},
+ {t:'Pay them to leave us alone',sub:'Safer, but outsiders get a say',d:[-12,10,-5,-5],ren:0,say:'Paying strangers? Weak.',head:'Protection money',res:'The company takes food every month. Its ship keeps pirates away.',learn:'You still have people, land, and a government, but outsiders now control you, so you lost <b>sovereignty</b>.',key:'Paid the company',flags:{paid:1}},
+ {t:'Send Ren to cut a deal',sub:'Ren talks; you stay out',d:[5,5,-10,0],ren:15,say:'Leave the talking to me.',head:'Ren’s side deal',res:'Ren gives the company the north beach. In return, his crew gets weapons.',learn:'Ren gave away <b>territory</b> (land), one of the four things every <b>state</b> needs.',key:'Ren made a deal (gave up land)',flags:{renArms:1}}]},
 {id:'claim',loc:'grove',title:'Who Has the Right to Rule?',tag:'WHERE DOES POWER COME FROM?',concept:'Origins of government',
- story:()=>'Ren climbs on a crate: “God spared me in that shipwreck. I was chosen to lead.” Old Mara says her big family has always led. Others want a vote.',
+ story:()=>'Ren: “God spared me in the wreck. I was chosen to lead.” Old Mara says her family always led. Others want a vote.',
  choices:[
- {t:'Hold an election for leader',sub:'Power comes from the people',d:[-5,-5,6,5],ren:-15,say:'Votes? Fine. I won’t forget this.',head:'The people choose',res:'Everyone votes. Jo wins. Ren gets 6 votes, all from his own crew.',learn:'That’s <b>social contract theory</b>: government gets its power from the people’s agreement (consent). Other theories: <b>evolutionary</b> (grew out of families), <b>divine right</b> (God chose the ruler), <b>force</b> (taken by strength).',key:'Election (social contract)'},
- {t:'Let Mara’s family lead',sub:'Tradition: families grow into tribes',d:[5,5,-5,-5],ren:-5,say:'An old woman and her cousins? Really?',head:'The family takes charge',res:'Mara’s family runs the grove and farms well. People outside the family feel left out.',learn:'That’s <b>evolutionary theory</b>: government slowly grew from families into clans, then tribes. Other theories: <b>social contract</b> (people agree), <b>divine right</b> (God chose the ruler), <b>force</b> (taken by strength).',key:'Mara’s family (evolutionary)'},
- {t:'Accept Ren as “chosen”',sub:'No vote, no questions',d:[0,10,-10,-10],ren:20,say:'At last, you see it.',head:'Ren, the chosen one',res:'Ren’s crew cheers. Anyone who questions him is told they are questioning God.',learn:'That’s <b>divine right</b>: a ruler claims God gave them the right to rule, so no one may question them. European kings used this claim for centuries. Watch for the fourth theory, <b>force</b>.',key:'Ren is “chosen” (divine right)',flags:{power:'Ren, “chosen”'}}]},
+ {t:'Hold an election',sub:'Power comes from the people',d:[-5,-5,6,5],ren:-15,say:'Votes? Fine. I won’t forget this.',head:'The people choose',res:'Jo wins. Ren gets 6 votes, all from his own crew.',learn:'Power from the people’s agreement is <b>social contract theory</b>; the others are <b>evolutionary</b>, <b>divine right</b>, and <b>force</b>.',key:'Election (social contract)'},
+ {t:'Let Mara’s family lead',sub:'Tradition: families grow into tribes',d:[5,5,-5,-5],ren:-5,say:'An old woman and her cousins? Really?',head:'The family takes charge',res:'Mara’s family farms well. Everyone else feels left out.',learn:'Government that grew from families into clans and tribes is <b>evolutionary theory</b>.',key:'Mara’s family (evolutionary)'},
+ {t:'Accept Ren as “chosen”',sub:'No vote, no questions',d:[0,10,-10,-10],ren:20,say:'At last, you see it.',head:'Ren, the chosen one',res:'Ren’s crew cheers. Questioning Ren now means questioning God.',learn:'A ruler claiming God chose them is <b>divine right</b>, used by European kings for centuries.',key:'Ren is “chosen” (divine right)',flags:{power:'Ren, “chosen”'}}]},
 {id:'storm',loc:'water',title:'The Storm',tag:'PURPOSES OF GOVERNMENT',concept:'Purposes of government',
- story:()=>'A storm smashes the water station and knocks down the lookout. You only have enough for one big repair.',
+ story:()=>'A storm smashes the water station and the lookout. Two fishers are lost at sea. You can only fix one thing.',
  choices:[
- {t:'Fix the water for everyone',sub:'Costs 15 supplies',need:15,d:[-15,0,8,0],ren:0,say:'Water won’t stop the next ship.',head:'Clean water flows',res:'Jo rebuilds the station. Everyone drinks, but the lookout lies in pieces.',learn:'You chose to <b>promote the general welfare</b>: help with needs everyone shares. It’s one of six purposes of government in the U.S. Preamble.',key:'Fixed water (general welfare)',flags:{water:2}},
- {t:'Rebuild the lookout',sub:'Costs 15 supplies',need:15,d:[-15,15,-5,0],ren:5,say:'Good. Eyes on the water.',head:'Eyes on the sea',res:'The lookout stands again. People drink muddy rainwater for a week.',learn:'You chose to <b>provide for the common defense</b>: protect against outside threats. It’s one of six purposes of government in the U.S. Preamble.',key:'Rebuilt lookout (common defense)',flags:{guard:2}},
- {t:'Save supplies, fix nothing',sub:'Keep supplies for later',d:[5,-10,-10,0],ren:0,say:'So the leaders just… wait? Interesting.',head:'Waiting it out',res:'You keep your supplies. Three people get sick from bad water, and nobody watches the sea.',learn:'Doing nothing is still a <b>public policy</b> (a government’s plan for a problem). People feel it when shared needs go unmet. Meeting shared needs is called <b>promoting the general welfare</b>, a purpose in the U.S. Preamble.',key:'Saved supplies, fixed nothing',art:'storm'}]},
+ {t:'Fix the water for everyone',sub:'Costs 15 supplies',need:15,d:[-15,0,8,0],ren:0,die:2,news:'2 fishers drown',say:'Water won’t stop the next ship.',head:'Clean water, two lost',res:'Everyone drinks. With no lookout, nobody spots the fishers. Both drown.',learn:'Meeting shared needs like water is <b>promoting the general welfare</b>, a Preamble purpose.',key:'Fixed water (2 fishers drowned)',flags:{water:2}},
+ {t:'Rebuild the lookout',sub:'Costs 15 supplies',need:15,d:[-15,15,-5,0],ren:5,say:'Good. Eyes on the water.',head:'Eyes on the sea',res:'The lookout spots the fishers. Both saved. Everyone drinks muddy rainwater.',learn:'Guarding against danger from outside is <b>providing for the common defense</b>, a Preamble purpose.',key:'Rebuilt lookout (common defense)',flags:{guard:2,badWater:1}},
+ {t:'Save supplies, fix nothing',sub:'Keep supplies for later',d:[5,-10,-10,0],ren:0,die:2,news:'2 fishers drown',say:'So the leaders just… wait? Interesting.',head:'Waiting it out',res:'You keep your supplies. Both fishers drown. People drink bad water.',learn:'Doing nothing is still a <b>public policy</b> (a government’s plan), and people pay when shared needs go unmet.',key:'Fixed nothing (2 drowned)',art:'storm',flags:{badWater:1}}]},
 {id:'emergency',loc:'camp',title:'Emergency Powers',tag:'LIMITS ON POWER',concept:'Limited government',
- story:s=>(s.flags.model==='ren'||s.renControl)?'Ash posts notes mocking Ren. Ren wants more: “Ban criticism. Let my crew search any tent, any time.”':'Ash posts notes mocking the leaders. Ren sees his chance: “Give me emergency powers. Ban criticism. Let my crew search any tent.”',
+ story:s=>(s.flags.model==='ren'||s.renControl)?'Ash posts notes mocking Ren. Ren wants more: “Ban criticism. My crew searches any tent, any time.”':'Ash posts notes mocking the leaders. Ren: “Give me emergency powers. Ban criticism. Let my crew search any tent.”',
  choices:[
- {t:'No. Leaders follow rules too',sub:'Protects rights; Ren’s crew is angry',d:[0,-10,5,12],ren:-15,say:'You’ll regret tying my hands.',head:'Rights stay protected',res:'Ash keeps posting notes. Ren’s crew stops helping with the night watch.',learn:'That’s <b>limited government</b>: leaders’ power has limits, and people keep rights like free speech. The U.S. Constitution and Bill of Rights work this way.',key:'Refused: leaders have limits'},
- {t:'Yes, until the crisis ends',sub:'More order, fewer freedoms',d:[0,15,-10,-20],ren:20,say:'Finally. Now I can keep order.',head:'Ren’s crew moves in',res:'Ash’s notes are torn down. Ren’s crew searches tents at night. No end date is set.',learn:'Emergency powers can bring order. But power with no limits and no end date goes against <b>limited government</b>: the idea that leaders’ power must have limits.',key:'Gave Ren emergency powers',art:'riot',flags:{power:'Ren’s emergency rule'}},
- {t:'Searches only with a judge’s OK',sub:'Middle path; slower and costly',d:[-8,5,0,-5],ren:0,say:'Paperwork. Fine. I can be patient.',head:'A check on power',res:'Ash can keep criticizing. Ren’s crew can search a tent only if a judge agrees there’s good reason.',learn:'Needing a judge’s OK is a check on power, like the <b>warrants</b> in the U.S. Fourth Amendment. It’s an example of <b>limited government</b>.',key:'Searches need a judge’s OK'}]},
+ {t:'No. Leaders follow rules too',sub:'Rights stay; Ren’s crew quits watch',d:[0,-10,5,12],ren:-15,say:'You’ll regret tying my hands.',head:'Rights protected',res:'Ash keeps posting. Ren’s crew walks off the night watch.',learn:'Limits on leaders, while people keep rights like free speech, is <b>limited government</b>.',key:'Refused: leaders have limits',flags:{noWatch:1}},
+ {t:'Yes, until the crisis ends',sub:'More order, fewer freedoms',d:[0,15,-10,-20],ren:20,die:1,news:'Man dies in night search',say:'Finally. Now I can keep order.',head:'Ren’s crew moves in',res:'Ash’s notes are torn down. A man fights a night search and dies. No end date.',learn:'Power with no limits and no end date breaks <b>limited government</b>.',key:'Gave Ren emergency powers (1 died)',art:'riot',flags:{power:'Ren’s emergency rule',searches:1}},
+ {t:'Searches only with a judge’s OK',sub:'Middle path; slow and costly',d:[-8,5,0,-5],ren:0,say:'Paperwork. Fine. I can be patient.',head:'A check on power',res:'Ash keeps posting. Ren’s crew needs a judge’s OK to search a tent.',learn:'Needing a judge’s OK, like a <b>warrant</b> in the Fourth Amendment, is <b>limited government</b> at work.',key:'Searches need a judge’s OK'}]},
 {id:'charter',loc:'hall',title:'The Charter',tag:'YOUR FINAL CALL',concept:'Preamble purposes',pick2:true,
- story:()=>'Rescue may never come. Write your island’s charter (founding plan). It only has room for two promises.',
+ story:()=>'Rescue may never come. Write your charter (founding plan). There is room for only two promises.',
  choices:[
- {t:'Form a more perfect union',sub:'Unite everyone as one community',d:[0,0,8,0],ren:-3},
+ {t:'Form a more perfect union',sub:'Unite everyone as one',d:[0,0,8,0],ren:-3},
  {t:'Establish justice',sub:'Fair rules and fair trials',d:[0,0,5,3],ren:-3},
- {t:'Insure domestic tranquility',sub:'Keep peace inside the camp',d:[0,8,0,0],ren:3},
+ {t:'Insure domestic tranquility',sub:'Keep peace inside camp',d:[0,8,0,0],ren:3},
  {t:'Provide for the common defense',sub:'Protect against outsiders',d:[-3,8,0,0],ren:3},
- {t:'Promote the general welfare',sub:'Care for shared needs like food',d:[8,0,0,0],ren:0},
+ {t:'Promote the general welfare',sub:'Care for needs like food',d:[8,0,0,0],ren:0},
  {t:'Secure the blessings of liberty',sub:'Protect people’s freedoms',d:[0,0,0,8],ren:-5}]}
 ];
 
 /* "Prove it" checks: one per decision. A NEW situation, so students must apply the idea, not just remember the story. */
 const PROVE={
-barrel:{q:'A new town forms. People agree to pay taxes and obey traffic laws so the town will keep its roads safe. What is this?',opts:[['sc','A social contract: giving up some freedom for protection'],['sn','The state of nature: no rules, so the strongest wins'],['dr','Divine right: a ruler says God chose them to lead'],['dd','Direct democracy: every person votes on every law']],ans:'sc',hint:'Look at “What you just did.” What do people trade, and what do they get back?'},
-power:{q:'A city council bans texting while driving. Police start writing tickets. A judge decides if one driver broke the ban. Which power did the POLICE use?',opts:[['exe','Executive power: carrying out and enforcing the rules'],['leg','Legislative power: writing and passing the rules'],['jud','Judicial power: deciding what the rules mean'],['sov','Sovereignty: having the final say over the land']],ans:'exe',hint:'The police didn’t write the ban or judge the case. What did they do with it?'},
-thief:{q:'Two neighbors fight over where the fence line is. They go to court, and a judge hears both sides and decides. Which power settled it?',opts:[['jud','Judicial power: settling disputes about what rules mean'],['exe','Executive power: enforcing rules and running services'],['leg','Legislative power: making brand-new rules and laws'],['sov','Sovereignty: deciding who controls the territory']],ans:'jud',hint:'Who decided the case, and what kind of job is deciding a dispute?'},
-ship:{q:'A new country has people, land, and a government. But a stronger neighbor’s army decides all of its laws. Which feature of a state is missing?',opts:[['sov','Sovereignty: the final say over its own land and laws'],['pop','Population: the people who live inside the country'],['ter','Territory: the land and borders the country claims'],['gov','Government: a group that makes and enforces rules']],ans:'sov',hint:'It has people, land, and leaders. Who really has the final say?'},
-claim:{q:'An army general and his soldiers seize the capital and announce, “We are the government now.” Which theory explains where their power came from?',opts:[['for','Force theory: power taken by strength and fear'],['sc','Social contract: power given by the people’s agreement'],['evo','Evolutionary theory: power that grew out of families'],['div','Divine right: power that a ruler says came from God']],ans:'for',hint:'Did the people agree, did it grow from a family, or did someone take it?'},
-storm:{q:'A town spends its money on a water treatment plant so every family has clean water. Which Preamble purpose is that?',opts:[['gw','Promote the general welfare: care for shared needs'],['cd','Provide for the common defense: protect from attack'],['ej','Establish justice: make laws and trials fair to all'],['bl','Secure the blessings of liberty: protect freedoms']],ans:'gw',hint:'Clean water is a need everyone shares. Which purpose is about shared needs?'},
-emergency:{q:'A mayor wants to cancel next year’s election “until things calm down.” A court says no, because the city charter requires elections. Which idea did the court protect?',opts:[['lim','Limited government: leaders must follow the rules too'],['dr','Divine right: leaders get their power straight from God'],['for','Force theory: whoever is strongest gets to rule'],['dd','Direct democracy: citizens vote on every single law']],ans:'lim',hint:'The court stopped a leader from going past the rules. What is that idea called?'},
-charter:{q:'The Preamble says government should “insure domestic tranquility.” What does that mean in plain words?',opts:[['dt','Keep peace and order inside the country'],['cd','Protect the country from outside attacks'],['ej','Make sure courts and trials are fair'],['gw','Help people with needs they all share']],ans:'dt',hint:'“Domestic” means at home, inside the country. “Tranquility” means calm.'}};
+barrel:{q:'A new town forms. People agree to pay taxes and obey laws so the town keeps them safe. What is that?',opts:[['sc','Social contract: trade some freedom for safety'],['sn','State of nature: no rules, strongest wins'],['dr','Divine right: God picked the ruler'],['dd','Direct democracy: all vote on every law']],ans:'sc',hint:'What do people give up, and what do they get back?'},
+power:{q:'A city bans texting while driving. Police write tickets. A judge hears one case. Which power did the POLICE use?',opts:[['exe','Executive: carrying out the rules'],['leg','Legislative: writing the rules'],['jud','Judicial: judging what rules mean'],['sov','Sovereignty: final say over land']],ans:'exe',hint:'The police didn’t write the ban or judge the case.'},
+thief:{q:'Two neighbors fight over a fence line. A judge hears both sides and decides. Which power settled it?',opts:[['jud','Judicial: settling disputes over rules'],['exe','Executive: enforcing rules each day'],['leg','Legislative: making brand-new laws'],['sov','Sovereignty: control over the land']],ans:'jud',hint:'Who decided, and what kind of job is deciding a dispute?'},
+ship:{q:'A country has people, land, and leaders. But a neighbor’s army decides all its laws. What is it missing?',opts:[['sov','Sovereignty: final say over its laws'],['pop','Population: people living inside it'],['ter','Territory: land inside its borders'],['gov','Government: leaders who run it']],ans:'sov',hint:'It has people, land, and leaders. Who has the final say?'},
+claim:{q:'A general and his soldiers seize the capital: “We are the government now.” Where did their power come from?',opts:[['for','Force: taken by strength and fear'],['sc','Social contract: the people agreed'],['evo','Evolutionary: grew out of families'],['div','Divine right: God chose the ruler']],ans:'for',hint:'Did the people agree, or did someone take it?'},
+storm:{q:'A town builds a water plant so every family has clean water. Which Preamble purpose is that?',opts:[['gw','General welfare: meeting shared needs'],['cd','Common defense: stopping attacks'],['ej','Justice: fair laws and trials'],['bl','Liberty: protecting freedoms']],ans:'gw',hint:'Clean water is a need everyone shares.'},
+emergency:{q:'A mayor cancels the election “until things calm down.” A court says the city charter forbids it. What idea did the court protect?',opts:[['lim','Limited government: leaders obey rules too'],['dr','Divine right: leaders answer only to God'],['for','Force theory: the strongest gets to rule'],['dd','Direct democracy: citizens vote on all laws']],ans:'lim',hint:'The court stopped a leader from going past the rules.'},
+charter:{q:'The Preamble says government should “insure domestic tranquility.” What does that mean?',opts:[['dt','Keep peace inside the country'],['cd','Protect it from outside attacks'],['ej','Make courts and trials fair'],['gw','Meet needs everyone shares']],ans:'dt',hint:'“Domestic” means at home. “Tranquility” means calm.'}};
 const PROVE_TOTAL=Object.keys(PROVE).length, CHECK_TOTAL=PROVE_TOTAL+4;
-/* Surprise events: checked in this order after beats 1-7. Max 3 per game, never two in a row. */
+
+/* Surprise events. Up to 5 per game, at most one between decisions.
+   "when" = caused by the student's meters/choices (chain reactions). "chance" = can also strike at random. */
 const EVENTS=[
-{id:'coup',title:'Ren Seizes the Ridge',art:'riot',min:2,when:s=>s.ren>=65&&!s.renControl,cause:'Ren’s power got too high.',
+{id:'coup',title:'Ren Seizes the Ridge',art:'riot',loc:'watch',min:2,when:s=>s.ren>=65&&!s.renControl,cause:()=>'Ren’s power hit 65.',
  story:'At dawn, Ren’s crew takes the lookout and the food store. “From now on, I give the orders.”',
  choices:[
- {t:'Rally the camp against Ren',sub:'Works only if people trust you',fn:s=>s.stats[2]>=50?{d:[0,-10,5,0],ren:-30,head:'The camp stands up',res:'Thirty people march up the ridge. Ren’s crew backs down and hands over the store.',say:'This isn’t over.',key:'Rallied the camp (won)'}:{d:[0,-10,-10,-10],ren:10,head:'Not enough followers',res:'Only a few people trust you enough to follow. Ren’s crew pushes you back down the hill.',say:'Nobody follows you. They follow me.',key:'Rallied the camp (failed)',flags:{power:'Ren took control'},control:true}},
- {t:'Cut a deal: Ren runs the guards',sub:'Avoids a fight; Ren gets stronger',d:[0,10,-5,-10],ren:10,say:'Now we understand each other.',head:'A deal with Ren',res:'No one gets hurt. Ren’s crew now guards the store and the ridge.',key:'Deal: Ren runs the guards',flags:{power:'Ren runs the guards'},control:true}],
- learn:'This is the <b>force theory</b>: a person or group takes power by strength and makes everyone obey.'},
-{id:'rebels',title:'Rebels in the Night',art:'fire',min:2,when:s=>s.stats[3]<=30,cause:'Freedom dropped very low.',
+ {t:'Rally the camp against Ren',sub:'Only works if Trust is 50+',fn:s=>s.stats[2]>=50?{d:[0,-10,5,0],ren:-30,die:1,news:'1 dead retaking the ridge',head:'The camp fights back',res:'Thirty people storm the ridge. Ren’s crew runs. One man falls from the rocks.',say:'This isn’t over.',key:'Rallied vs Ren (won, 1 died)'}:{d:[0,-10,-10,-10],ren:10,die:3,news:'3 dead as Ren crushes rally',head:'The rally fails',res:'Too few follow you. Ren’s crew drives you back. Three die on the hill.',say:'Nobody follows you. They follow me.',key:'Rallied vs Ren (lost, 3 died)',flags:{power:'Ren took control'},control:true}},
+ {t:'Deal: Ren runs the guards',sub:'No fight; Ren gets stronger',d:[0,10,-5,-10],ren:10,say:'Now we understand each other.',head:'A deal with Ren',res:'Nobody gets hurt today. Ren’s crew now holds the store and the ridge.',key:'Deal: Ren runs the guards',flags:{power:'Ren runs the guards'},control:true}],
+ learn:'Taking power by strength is the <b>force theory</b> of government.'},
+{id:'starve',title:'The Food Is Gone',art:'raid',loc:'camp',min:1,when:s=>s.stats[0]<=12,cause:()=>'Supplies fell to almost zero.',
+ story:'The crates are empty. People are too weak to work. The oldest are dying first.',
+ choices:[
+ {t:'Send divers to the reef',sub:'Could find food; could drown',fn:()=>Math.random()<.5?{d:[20,0,5,0],ren:0,head:'Fish for everyone',res:'The divers come back with fish and crabs. Everyone eats tonight.',say:'Lucky. Luck runs out.',key:'Divers found food'}:{d:[5,0,-5,0],ren:0,die:2,news:'2 divers drown',head:'The reef takes two',res:'The current is too strong. Two divers drown. They bring back a little food.',say:'You sent them. Remember that.',key:'Divers (2 drowned)'}},
+ {t:'Take Ren’s hidden food',sub:'Food now; Ren fights back',d:[15,-10,0,0],ren:-10,die:1,news:'1 dead in food-stash fight',head:'Raid on Ren’s stash',res:'You find Ren’s secret food stash. In the scuffle, one man dies.',say:'You’ll pay for that.',key:'Took Ren’s stash (1 died)'}],
+ learn:'<b>Promoting the general welfare</b> starts with basic needs, like food, that keep people alive.'},
+{id:'raiders',title:'The Company Ship Is Back',art:'raid',loc:'dock',min:6,when:s=>s.flags.defied&&!s.flags.paid,cause:()=>'You told the company no.',
+ story:'The company ship returns with armed sailors. They land on the beach and march toward your food.',
+ choices:[
+ {t:'Fight them on the beach',sub:'Much better with a lookout',fn:s=>s.flags.guard>=2?{d:[0,-5,8,5],ren:-5,die:1,news:'1 dead defending the beach',head:'Driven back to sea',res:'The lookout saw them coming. You drive them off. One defender dies.',say:'Not bad. For amateurs.',key:'Fought raiders (won, 1 died)'}:{d:[-10,-15,0,0],ren:5,die:4,news:'4 dead in company raid',head:'Caught off guard',res:'No lookout, no warning. They hit before you’re ready. Four die.',say:'Should have listened to me.',key:'Fought raiders (4 died)'}},
+ {t:'Hand over the food',sub:'Nobody dies; you lose control',d:[-20,0,-10,-5],ren:5,head:'A company flag',res:'They take half your food and plant their flag on your beach.',say:'You fold too easy.',key:'Gave raiders the food',flags:{paid:1}}],
+ learn:'Defending your land is <b>common defense</b>; giving in costs <b>sovereignty</b>.'},
+{id:'squeeze',title:'The Company Wants More',art:'raid',loc:'dock',min:6,when:s=>s.flags.paid&&!s.flags.defied,cause:()=>'You paid the company once.',
+ story:'The company doubles its price: “Pay double, or we take it.” Your crates are already thin.',
+ choices:[
+ {t:'Pay double',sub:'Safe now; people go hungry',d:[-20,5,-8,-5],ren:5,head:'The ship leaves full',res:'The company takes double. Your camp goes to bed hungry.',say:'They own you now.',key:'Paid double'},
+ {t:'Refuse to pay',sub:'Take back control; risk a raid',fn:s=>({d:[0,-10,8,8],ren:-5,die:s.flags.guard>=2?1:3,news:s.flags.guard>=2?'1 dead in company raid':'3 dead in company raid',head:'They come for it',res:s.flags.guard>=2?'The lookout warns you. You hold the beach. One defender dies.':'Sailors storm the camp at night. Three die before they leave.',say:'Freedom costs blood. Told you.',key:`Refused the company (${s.flags.guard>=2?1:3} died)`})}],
+ learn:'Once outsiders control your choices, you have lost <b>sovereignty</b>.'},
+{id:'purge',title:'Ren’s Crew Goes Hunting',art:'riot',loc:'camp',min:4,when:s=>s.ren>=55&&(s.renControl||s.flags.searches||s.flags.renArms||s.flags.model==='ren'),cause:()=>'Ren has power and nobody limits it.',
+ story:'Ren’s crew drags two critics out of their tents at night. Their families beg you to act.',
+ choices:[
+ {t:'Stand up to Ren’s crew',sub:'Only works if Trust is 45+',fn:s=>s.stats[2]>=45?{d:[0,-5,8,5],ren:-20,head:'The camp says no',res:'The whole camp surrounds Ren’s crew. They let the critics go.',say:'You got lucky tonight.',key:'Stood up to Ren (critics saved)'}:{d:[0,-5,-10,-5],ren:5,die:2,news:'2 critics vanish',head:'Too few stood up',res:'Only a handful stand with you. The two critics are never seen again.',say:'Anyone else want to complain?',key:'Stood up to Ren (2 lost)'}},
+ {t:'Stay out of it',sub:'Safe for you, not for them',d:[0,5,-12,-10],ren:10,die:2,news:'2 critics vanish',head:'You looked away',res:'You stay in your tent. The two critics are never seen again.',say:'Smart. Keep your head down.',key:'Looked away (2 lost)'}],
+ learn:'Without <b>limited government</b>, rulers can silence critics with no trial.'},
+{id:'rebels',title:'Rebels in the Night',art:'fire',loc:'watch',min:2,when:s=>s.stats[3]<=30,cause:()=>'Freedom fell to 30 or less.',
  story:'Someone cuts the lookout ropes and leaves a note: “We never agreed to this.”',
  choices:[
- {t:'Listen to the rebels’ demands',sub:'Give back some freedoms',d:[0,-5,5,15],ren:-10,say:'You’re rewarding criminals.',head:'Talks at the fire',res:'The rebels come out of hiding. You give back the right to meet and speak freely.',key:'Listened to rebels'},
- {t:'Hunt down the rebels',sub:'Order now; anger later',d:[0,5,-15,-5],ren:10,say:'Finally, some backbone.',head:'Tents torn apart',res:'Guards search every tent. Two rebels are caught. Many more are now angry.',key:'Hunted the rebels'}],
- learn:'Thinker John Locke argued that when a government abuses its power, people have the right to change it. That idea shaped the Declaration of Independence.'},
-{id:'mutiny',title:'Nobody Shows Up',art:'riot',min:1,when:s=>s.stats[2]<=35,cause:'Trust dropped low.',
- story:'Nobody shows up for work duty. A sign on the meeting circle reads: “Why follow rules we never agreed to?”',
+ {t:'Listen to their demands',sub:'Give back some freedoms',d:[0,-5,5,15],ren:-10,say:'You’re rewarding criminals.',head:'Talks at the fire',res:'The rebels come out of hiding. You give back the right to meet and speak.',key:'Listened to rebels'},
+ {t:'Hunt down the rebels',sub:'Order now; anger later',d:[0,5,-15,-5],ren:10,die:2,news:'2 rebels killed',say:'Finally, some backbone.',head:'Tents torn apart',res:'Guards tear through every tent. Two rebels die fighting. Many more are furious.',key:'Hunted rebels (2 died)',flags:{anger:1}}],
+ learn:'John Locke said people may change a government that abuses its power, an idea in the Declaration of Independence.'},
+{id:'mutiny',title:'Nobody Shows Up',art:'riot',loc:'hall',min:1,when:s=>s.stats[2]<=35,cause:()=>'Trust fell to 35 or less.',
+ story:'Nobody shows up for work. A sign reads: “Why follow rules we never agreed to?”',
  choices:[
- {t:'Call an open meeting',sub:'Listen first; work waits',d:[-5,-5,15,0],ren:-5,say:'Meetings. Always meetings.',head:'Everyone gets a say',res:'People air their anger. By nightfall, most agree to go back to work.',key:'Open meeting'},
- {t:'Order guards to force work',sub:'Gets work done; people resent it',d:[10,5,-10,-10],ren:10,say:'See? Fear works.',head:'Work at spear-point',res:'The guards march people to the fields. The work gets done in silence.',key:'Forced work'}],
- learn:'A government works best with the <b>consent of the governed</b>: people’s agreement to its power.'},
-{id:'raid',title:'Raid on the Storehouse',art:'raid',min:1,when:s=>s.stats[0]<=25,cause:'Supplies ran low.',
- story:'Hungry people break into the storehouse at night. Two get hurt in the scramble.',
+ {t:'Call an open meeting',sub:'Listen first; work waits',d:[-5,-5,15,0],ren:-5,say:'Meetings. Always meetings.',head:'Everyone gets a say',res:'People shout it out. By nightfall, most agree to go back to work.',key:'Open meeting'},
+ {t:'Force them to work',sub:'Work gets done; people resent it',d:[10,5,-10,-10],ren:10,die:1,news:'Worker dies on forced crew',say:'See? Fear works.',head:'Work under guard',res:'Guards march people to the fields. One worker collapses in the heat and dies.',key:'Forced work (1 died)'}],
+ learn:'Government works best with the <b>consent of the governed</b>: the people’s agreement.'},
+{id:'raid',title:'Storehouse Break-In',art:'raid',loc:'camp',min:1,when:s=>s.stats[0]<=25||s.flags.theft&&s.stats[1]<=40,cause:s=>s.flags.theft?'You let the first thief go.':'Supplies fell to 25 or less.',
+ story:'Hungry people break into the storehouse at night. Knives come out in the dark.',
  choices:[
- {t:'Post a night guard',sub:'Protects food; fewer freedoms',d:[5,10,-5,-5],ren:5,say:'Put my crew on it.',head:'Locked and guarded',res:'Guards watch the store all night. The raids stop, and so do late-night walks.',key:'Posted a night guard'},
- {t:'Split what’s left equally',sub:'Fair, but food runs out sooner',d:[-5,-5,10,0],ren:0,say:'Sharing won’t fill empty crates.',head:'Equal shares',res:'Every person gets the same small share. Fights stop, but the crates are almost empty.',key:'Split food equally'}],
- learn:'When resources run out, keeping order gets harder. <b>Maintaining order</b> is one of government’s main jobs.'},
-{id:'chaos',title:'Free-for-All on the Beach',art:'fight',min:2,when:s=>s.stats[3]>=60&&s.stats[1]<=40,cause:'Lots of freedom, not much order.',
- story:'With few rules and nobody enforcing them, two groups fight over the only boat. Someone gets hurt.',
+ {t:'Post an armed guard',sub:'Protects food; fewer freedoms',d:[5,10,-5,-5],ren:5,die:1,news:'Raider killed at storehouse',say:'Put my crew on it.',head:'Locked and guarded',res:'The guard catches a raider. He fights back and dies. The raids stop.',key:'Armed guard (1 died)'},
+ {t:'Split what’s left equally',sub:'Fair, but food runs out sooner',d:[-8,-5,10,0],ren:0,say:'Sharing won’t fill empty crates.',head:'Equal shares',res:'Everyone gets the same small share. Fights stop. The crates are nearly empty.',key:'Split food equally'}],
+ learn:'When food runs out, <b>maintaining order</b>, one of government’s main jobs, gets much harder.'},
+{id:'chaos',title:'Brawl Over the Boat',art:'fight',loc:'dock',min:2,when:s=>s.stats[3]>=60&&s.stats[1]<=40,cause:()=>'High freedom, low safety.',
+ story:'With few rules and nobody enforcing them, two groups fight over the only boat.',
  choices:[
- {t:'Set a curfew and boat rules',sub:'Order returns; freedom shrinks',d:[0,15,0,-10],ren:5,say:'Rules. Told you so.',head:'Rules for the boat',res:'The boat gets a sign-up sheet and a curfew. People grumble, but the fighting stops.',key:'Curfew and boat rules'},
- {t:'Let them work it out',sub:'Freedom stays; risk grows',d:[-10,-10,0,5],ren:5,say:'Enjoy your freedom. I’ll wait.',head:'The boat is wrecked',res:'The fight ends when the boat hits the rocks. Nobody gets to use it now.',key:'Let them fight it out'}],
- learn:'Freedom needs some order to feel safe. <b>Maintaining order</b> is a main job of government, and too little can be as dangerous as too much.'},
-{id:'fever',title:'Fever in Camp',art:'storm',min:3,when:s=>!s.events.length,cause:'Bad luck, and a crowded camp.',
- story:'A fever spreads through the tents. Five people are sick, and medicine is low.',
+ {t:'Set a curfew and boat rules',sub:'Order returns; freedom shrinks',d:[0,15,0,-10],ren:5,say:'Rules. Told you so.',head:'Rules for the boat',res:'The boat gets a sign-up sheet and a curfew. People grumble. The fighting stops.',key:'Curfew and boat rules'},
+ {t:'Let them work it out',sub:'Freedom stays; risk grows',d:[-10,-10,0,5],ren:5,die:2,news:'2 drown in boat brawl',say:'Enjoy your freedom.',head:'The boat goes down',res:'Mid-fight, the boat hits the rocks and flips. Two drown.',key:'Let them fight (2 drowned)'}],
+ learn:'Freedom with no order can turn deadly; <b>maintaining order</b> is a main job of government.'},
+{id:'raft',title:'Six Try to Escape',art:'storm',loc:'dock',min:3,when:s=>s.stats[2]<=40,cause:()=>'Trust fell to 40 or less.',
+ story:'Six people build a raft. “We never agreed to your rules.” They plan to push off at dawn.',
  choices:[
- {t:'Use medicine on everyone',sub:'Costs supplies',d:[-10,0,10,0],ren:0,say:'Waste it all, then.',head:'Medicine for all',res:'The sick recover. The medicine box is nearly empty.',key:'Medicine for everyone'},
- {t:'Quarantine the sick tents',sub:'Saves supplies; limits freedom',d:[0,5,-5,-10],ren:5,say:'Smart. Keep the sick away.',head:'Tents roped off',res:'Sick tents are roped off and guarded. The fever slows, but families can’t visit.',key:'Quarantined sick tents'}],
- learn:'<b>Promoting the general welfare</b> (public health) sometimes means limiting freedom. Governments face this trade-off for real.'}
+ {t:'Let them go',sub:'Their choice; the sea is rough',d:[5,0,5,10],ren:0,flee:6,say:'Six fewer mouths. Fine by me.',head:'The raft drifts away',res:'The raft drifts out of sight. Nobody knows if they will make it.',key:'Let 6 leave on a raft',flags:{raft:1}},
+ {t:'Stop them at the shore',sub:'Everyone stays; freedom shrinks',d:[0,5,-10,-15],ren:5,say:'Nobody leaves my island.',head:'Raft burned',res:'Guards drag the raft ashore and burn it. The six are furious.',key:'Stopped the raft'}],
+ learn:'People who no longer <b>consent</b> to a government may try to leave it.'},
+{id:'fever',title:'Fever in Camp',art:'storm',loc:'camp',min:2,when:s=>s.flags.badWater===1,chance:.25,cause:s=>s.flags.badWater?'Your camp drank bad water.':'Crowded tents, and bad luck.',
+ story:'Fever spreads through the tents. Eight people are sick. Medicine is low.',
+ choices:[
+ {t:'Use medicine on everyone',sub:'Costs 10 supplies',need:10,d:[-10,0,8,0],ren:0,die:1,news:'Fever: 1 dead',say:'Waste it all, then.',head:'Medicine for all',res:'Most recover. One doesn’t. The medicine box is nearly empty.',key:'Medicine for all (1 died)',flags:{badWater:2}},
+ {t:'Quarantine the sick tents',sub:'Saves supplies; limits freedom',d:[0,5,-5,-10],ren:5,die:3,news:'Fever: 3 dead',say:'Smart. Keep the sick away.',head:'Tents roped off',res:'The sick are roped off. The fever stops spreading, but three die.',key:'Quarantine (3 died)',flags:{badWater:2}}],
+ learn:'<b>Promoting the general welfare</b> (public health) sometimes means limiting freedom.'},
+{id:'fire',title:'Fire in the Tents',art:'fire',loc:'camp',min:3,when:s=>!!(s.flags.anger||s.flags.noWatch),chance:.35,cause:s=>s.flags.anger?'Angry rebels wanted revenge.':s.flags.noWatch?'Nobody was on night watch.':'Dry tents, and bad luck.',
+ story:'Fire races through the tents at night. People are trapped. The food store is next.',
+ choices:[
+ {t:'Save the people first',sub:'The food store may burn',d:[-12,0,8,0],ren:0,die:1,news:'Fire: 1 dead',say:'No food. Smart move.',head:'People first',res:'You pull people out. One is lost. The food store burns.',key:'Saved people (1 died)'},
+ {t:'Save the food store',sub:'Food is life, but tents burn',d:[0,-5,-12,0],ren:5,die:3,news:'Fire: 3 dead',say:'Cold. I like it.',head:'Food saved',res:'The food is safe. Three people in the far tents don’t make it out.',key:'Saved food (3 died)'}],
+ learn:'Emergencies like fires are why governments <b>promote the general welfare</b> with rescue and safety services.'}
 ];
+const URGENT=['coup','starve'];
 const ENDINGS={
- dictatorship:{title:'Island Dictatorship',badge:'▲',bonus:0,why:s=>`Ren’s power reached ${s.ren}. ${s.events.includes('coup')?'When his crew seized the ridge, that was the <b>force theory</b> in action.':'Nobody stopped him. Each choice handed him a little more power.'} Now one man makes, enforces, and judges every rule, with no limits. That’s a <b>dictatorship</b>.`},
- collapse:{title:'Collapse',badge:'✕',bonus:2,why:s=>`${worstMeters(s)} fell too low. Without enough order or supplies, your government couldn’t do its basic jobs, and people split into rival camps. This is why societies create government: to <b>maintain order</b> and meet shared needs.`},
- revolution:{title:'Revolution',badge:'✊',bonus:6,why:s=>renOnTop(s)?`Ren grabbed power (${s.ren}), but his crew couldn’t keep order (Safety ${s.stats[1]}). The camp rose up and threw him out. John Locke said people may replace a government that breaks the <b>social contract</b>.`:`${worstMeters(s)} fell too low. People felt the government broke its side of the deal, so they tore it down to start over. John Locke said people may replace a government that breaks the <b>social contract</b>.`},
- republic:{title:'Thriving Republic',badge:'✦',bonus:20,why:s=>`Every meter stayed at 45 or higher, and Ren never gained control. Your people chose their leaders, shared power, and kept limits on it. That’s the <b>social contract</b> and <b>limited government</b> working together.`},
- fragile:{title:'Fragile Peace',badge:'◇',bonus:12,why:s=>`Your camp held together, but ${worstMeters(s)} stayed weak. Every government balances order, freedom, trust, and resources. You kept most of them, but not all.`}
+ dictatorship:{title:'Island Dictatorship',badge:'▲',bonus:0,why:s=>`Ren’s power hit ${s.ren}. ${s.events.includes('coup')?'His crew took the ridge by <b>force</b>.':'Your choices kept handing him more.'} One man now makes, enforces, and judges every rule: a <b>dictatorship</b>.`},
+ collapse:{title:'Collapse',badge:'✕',bonus:0,why:s=>`${alive(s)<=15?`Only ${alive(s)} of 30 are left.`:`${worstMeters(s)} fell too low.`} Your government couldn’t do its basic jobs, so the camp broke apart. That’s why people create government: to <b>maintain order</b> and keep people alive.`},
+ revolution:{title:'Revolution',badge:'✊',bonus:3,why:s=>`${renOnTop(s)?'Ren grabbed power but couldn’t keep order, so the camp threw him out.':`${worstMeters(s)} fell too low, so people tore the government down.`} John Locke said people may replace a government that breaks the <b>social contract</b>.`},
+ republic:{title:'Thriving Republic',badge:'✦',bonus:15,why:s=>`Every meter stayed 45+ and Ren never took over. People chose leaders and kept limits on them: the <b>social contract</b> and <b>limited government</b> at work.`},
+ fragile:{title:'Fragile Peace',badge:'◇',bonus:8,why:s=>`Your camp held, but ${worstMeters(s)} stayed weak${s.dead>6?` and ${s.dead} people died`:''}. Every government trades off order, freedom, trust, and supplies.`}
 };
+function alive(s){return START_PEOPLE-s.dead-s.fled}
 function worstMeters(s){const idx=[0,1,2,3].sort((a,b)=>s.stats[a]-s.stats[b]);const low=idx.filter(i=>s.stats[i]<=25);const pick=(low.length?low:[idx[0]]).slice(0,2);return pick.map(i=>labels[i]+' ('+s.stats[i]+')').join(' and ')}
 function renOnTop(s){return s.ren>=75||(s.renControl&&s.ren>=60)}
 function endingFor(s){const st=s.stats,min=Math.min(...st);
- if(st[0]<=10||st[1]<=15)return 'collapse';
+ if(alive(s)<=15||st[0]<=10||st[1]<=15)return 'collapse';
  if(renOnTop(s))return st[1]>=45?'dictatorship':'revolution';
  if(st.filter(n=>n<=20).length>=2)return 'collapse';
  if(st[3]<=25||st[2]<=20)return 'revolution';
- if(min>=45&&s.ren<=45)return 'republic';
+ if(min>=45&&s.ren<=45&&s.dead<=6)return 'republic';
  return 'fragile';}
-function scoreFor(s,firstTry){const avg=s.stats.reduce((a,b)=>a+b,0)/4;return Math.max(0,Math.min(100,Math.round(avg*0.5+firstTry/CHECK_TOTAL*30+ENDINGS[endingFor(s)].bonus-Math.max(0,s.ren-50)*0.2)))}
-const RANKS=[[85,'Founder of a Free Republic'],[72,'Trusted Island Leader'],[58,'Steady Survivor'],[45,'Shaky Chief'],[30,'Castaway in Chaos'],[0,'Lost at Sea']];
-function rankFor(score,ending){if(ending==='dictatorship')return 'Island Tyrant’s Sidekick';const r=RANKS.find(r=>score>=r[0])[1];return (r===RANKS[0][1]&&ending!=='republic')?RANKS[1][1]:r}
+/* Score: meters (up to 35) + first-try checks (up to 30) + ending bonus (up to 15) + lives (20, minus 3 per death, minus 1 per person who fled) − Ren penalty. */
+function scoreParts(s,firstTry){const avg=s.stats.reduce((a,b)=>a+b,0)/4;return {meters:Math.round(avg*.35),checks:Math.round(firstTry/CHECK_TOTAL*30),ending:ENDINGS[s.ending||endingFor(s)].bonus,lives:20-3*s.dead-s.fled,ren:-Math.round(Math.max(0,s.ren-50)*.3)}}
+function scoreFor(s,firstTry){const p=scoreParts(s,firstTry);return Math.max(0,Math.min(100,p.meters+p.checks+p.ending+p.lives+p.ren))}
+const RANKS=[[72,'Island Legend'],[58,'Steady Survivor'],[45,'Shaky Chief'],[30,'Captain of the Wreck'],[15,'Shark Bait'],[0,'Lost at Sea']];
+function rankFor(score,ending,s){if(ending==='dictatorship')return 'Ren’s Puppet';if(score>=85&&ending==='republic')return 'Founder of a Free Republic';if(s&&s.dead>=12)return 'Captain of a Ghost Camp';if(s&&s.dead===0&&score>=72)return 'Nobody Left Behind';return RANKS.find(r=>score>=r[0])[1]}
 function clamp(n){return Math.max(0,Math.min(100,n))}
+/* People die or flee. Each death also costs Trust (people blame the leaders): a chain reaction. */
+function applyLoss(s,die=0,flee=0){die=Math.min(die,Math.max(0,alive(s)-3));s.dead+=die;flee=Math.min(flee,alive(s));s.fled+=flee;if(die)s.stats[2]=clamp(s.stats[2]-Math.min(8,die*2));return {die,flee}}
 /* Applies a choice to a state object; returns the resolved outcome. */
 function resolveChoice(s,c){const o=c.fn?c.fn(s):c;const before=[...s.stats],rb=s.ren;
  s.stats=s.stats.map((n,i)=>clamp(n+(o.d||[0,0,0,0])[i]));s.ren=clamp(s.ren+(o.ren||0));
  if(o.flags)Object.assign(s.flags,o.flags);if(c.flags&&c.fn)Object.assign(s.flags,c.flags);if(o.control)s.renControl=true;
- return {...o,delta:s.stats.map((n,i)=>n-before[i]),renDelta:s.ren-rb};}
-function nextEvent(s){if(s.events.length>=3||s.lastWasEvent)return null;return EVENTS.find(e=>!s.events.includes(e.id)&&s.step>=e.min&&e.when(s))||null}
-/* End of each day: people gather food and wood only when camp is safe enough and they trust each other. */
-function dailyGather(s){const g=(s.stats[1]>=40&&s.stats[2]>=40)?6:0;s.stats[0]=clamp(s.stats[0]+g);return g}
+ const loss=applyLoss(s,o.die||0,o.flee||0);const news=[];if(loss.die)news.push(o.news||`${loss.die} dead`);if(loss.flee)news.push(`${loss.flee} people flee the island`);
+ return {...o,die:loss.die,flee:loss.flee,news,delta:s.stats.map((n,i)=>n-before[i]),renDelta:s.ren-rb};}
+/* Picks the next surprise event: urgent first, then a random one of those your choices caused, then maybe a random disaster. */
+function nextEvent(s,rnd=Math.random){if(s.events.length>=MAX_EVENTS)return null;
+ const ok=EVENTS.filter(e=>!s.events.includes(e.id)&&s.step>=e.min);
+ const urgent=ok.find(e=>URGENT.includes(e.id)&&e.when(s));if(urgent)return urgent;
+ const caused=ok.filter(e=>e.when(s));if(caused.length)return caused[Math.floor(rnd()*caused.length)];
+ return ok.filter(e=>e.chance).find(e=>rnd()<e.chance)||null}
+/* End of each day: people gather food when camp is safe and they trust each other. Fewer people, less food. */
+function dailyGather(s){const ok=(s.stats[1]>=40)+(s.stats[2]>=40);const g=Math.round([0,4,8][ok]*(alive(s)>=20?1:.5));s.stats[0]=clamp(s.stats[0]+g);return g}
+/* End of each day: neglected meters kill people, and earlier choices come back (chain reactions). */
+function nightToll(s,rnd=Math.random){const out=[];
+ if(s.stats[0]<=15){const n=applyLoss(s,s.stats[0]<=5?3:2).die;if(n)out.push(`${n} starve to death`)}
+ if(s.stats[1]<=15){const n=applyLoss(s,2).die;if(n)out.push(`${n} killed in camp fights`)}
+ if(s.flags.raft===1){s.flags.raft=2;if(rnd()<.5){s.fled=Math.max(0,s.fled-6);const n=applyLoss(s,6).die;out.push(`The raft washes back empty. ${n} presumed drowned`)}else out.push('A passing boat says the raft made it')}
+ return out}
 function impactArt(kind,label){
  const scenes={
   fire:`<path d="M365 110V66l35-25 36 25v44Z" fill="#443634"/><path d="M378 110q-10-19 3-35 2 11 9 13-4-18 10-35 2 18 14 24 14 8 4 33Z" fill="#e46c44" class="flame"/><path d="M392 110q-5-12 4-22 0 8 6 9 8 5 2 13Z" fill="#ffd06b"/>`,
@@ -146,21 +203,22 @@ function impactArt(kind,label){
   storm:`<path d="M325 52q3-25 31-23 14-27 43-7 29-10 40 16 27-2 32 22h-148Z" fill="#899c9d"/><path d="m358 71-11 23m38-23-11 23m39-23-11 23m39-23-11 23" stroke="#9fd4dc" stroke-width="5"/><path d="M337 111h155" stroke="#557a7d" stroke-width="5"/>`
  };
  const labels={fire:'CAMP ON FIRE',fight:'VIOLENCE AT CAMP',raid:'RAID IN PROGRESS',riot:'MUTINY',storm:'STORM EMERGENCY'};
- return `<svg class="impact-overlay" viewBox="0 0 560 120" aria-hidden="true"><rect x="0" y="0" width="560" height="120" fill="#07191f55"/><path d="M0 108Q100 95 200 107T400 103T560 108v12H0Z" fill="#263b3d"/>${scenes[kind]}<rect x="20" y="14" width="150" height="22" rx="4" fill="#081a20cc"/><text x="32" y="29" fill="#ffd084" font-size="10" font-family="Arial" font-weight="bold" letter-spacing="1.3">${esc(label||labels[kind])}</text></svg>`;
+ return `<svg class="impact-overlay" viewBox="0 0 560 120" aria-hidden="true"><rect x="0" y="0" width="560" height="120" fill="#07191f55"/><path d="M0 108Q100 95 200 107T400 103T560 108v12H0Z" fill="#263b3d"/>${scenes[kind]}<rect x="20" y="14" width="${Math.round(26+String(label||labels[kind]).length*7.6)}" height="22" rx="4" fill="#081a20cc"/><text x="32" y="29" fill="#ffd084" font-size="10" font-family="Arial" font-weight="bold" letter-spacing="1.3">${esc(label||labels[kind])}</text></svg>`;
 }
 
 /* ===== Game state, screens and turn-in ===== */
-const $=s=>document.querySelector(s), KEY='stranded-gov-day1-v3', ASSIGNMENT_ID='gov-stranded-day1', STANDARD='SS.9-12.Gov.1, SS.9-12.Gov.5';
+const $=s=>document.querySelector(s), KEY='stranded-gov-day1-v4', ASSIGNMENT_ID='gov-stranded-day1', STANDARD='SS.9-12.Gov.1, SS.9-12.Gov.5';
 const SUBMIT_URL='https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit';
 const locations={water:{x:680,y:460,name:'Water station',icon:'water'},camp:{x:470,y:560,name:'Main camp',icon:'camp'},hall:{x:480,y:365,name:'Meeting circle',icon:'hall'},watch:{x:745,y:320,name:'Lookout ridge',icon:'watch'},dock:{x:290,y:440,name:'Wreck beach',icon:'dock'},grove:{x:305,y:670,name:'Family grove',icon:'grove'}};
-const EVENT_LOC={coup:'watch',rebels:'watch',mutiny:'hall',raid:'camp',chaos:'dock',fever:'camp'};
 const colors=['#e1ba77','#8dc4cc','#90ccb0','#c5a7de'];
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function plain(html){return String(html).replace(/<[^>]+>/g,'')}
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function freshState(){return {v:3,proof:{},logNote:'',started:false,name:'Drift Island',color:'#ffbd69',player:{x:420,y:650},collected:[],step:0,phase:'map',stats:[...START_STATS],ren:START_REN,renControl:false,flags:{water:0,rules:0,guard:0,shelter:0,power:'Unclaimed',model:''},picks:{},eventPicks:{},log:[],events:[],lastWasEvent:false,pending:null,openEvent:null,renSay:'Someone has to take charge. Why not me?',concepts:[],ending:null,check:null,sentence:'',score:null,rank:'',submitted:false,studentName:''}}
+/* After a miss, the answers must land in a NEW order. */
+let lastOrder={};function reshuffle(key,opts){const prev=lastOrder[key];let o=shuffle(opts),n=0;while(prev&&o.map(x=>x[0]).join()===prev&&n++<20)o=shuffle(opts);lastOrder[key]=o.map(x=>x[0]).join();return o}
+function freshState(){return {v:4,dead:0,fled:0,openCause:'',proof:{},logNote:'',started:false,name:'Drift Island',color:'#ffbd69',player:{x:420,y:650},collected:[],step:0,phase:'map',stats:[...START_STATS],ren:START_REN,renControl:false,flags:{water:0,rules:0,guard:0,shelter:0,power:'Unclaimed',model:''},picks:{},eventPicks:{},log:[],events:[],pending:null,openEvent:null,renSay:'Someone has to take charge. Why not me?',concepts:[],ending:null,check:null,sentence:'',score:null,rank:'',submitted:false,studentName:''}}
 let state=freshState();
-try{const old=JSON.parse(localStorage.getItem(KEY));if(old&&old.v===3)state={...state,...old,flags:{...state.flags,...old.flags}};}catch{}
+try{const old=JSON.parse(localStorage.getItem(KEY));if(old&&old.v===4)state={...state,...old,flags:{...state.flags,...old.flags}};}catch{}
 let target=null,keys={},sound=false,actx=null,toastTimeout,choiceLocked=false,charterPicks=[];
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));$('#saved').textContent='Saved on this device';}catch{$('#saved').textContent='Saving unavailable in this browser';}}
 function beep(freq=400,duration=.09){if(!sound)return;try{actx??=new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(.04,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+duration);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+duration);}catch{}}
@@ -172,23 +230,24 @@ function renStatus(){return state.ren>=75||state.renControl?['IN CONTROL','#ef8f
 /* ---------- side panels ---------- */
 function render(){
  $('#islandName').textContent=state.name;
+ const al=alive(state);$('#people').innerHTML=`<div class="pc"><b>${al}</b><span>Survivors</span></div><div class="pc lost ${state.dead?'hit':''}"><b>${state.dead}</b><span>Lives lost</span></div>${state.fled?`<div class="pc"><b>${state.fled}</b><span>Fled</span></div>`:''}`;
  const b=BEATS[state.step],done=state.phase!=='map';
  $('#roundLabel').textContent=`STEP ${stepNum()} OF ${TOTAL_STEPS}`;
  $('#stepTag').textContent=state.started?`Step ${stepNum()} of ${TOTAL_STEPS}`:'About 30 minutes';
  $('#missionTitle').textContent=done?'Your ending':b.title;
- $('#missionGoal').textContent=done?'See your ending, take the final check, and turn it in.':`Decision ${state.step+1} of 8. Every choice costs something.`;
+ $('#missionGoal').textContent=done?'See your ending, then turn it in.':`Decision ${state.step+1} of 8. Every choice costs something.`;
  $('#objective').textContent=done?'Island story complete':`Go to: ${locations[b.loc].name}`;
  $('#travel').innerHTML=done?'Open my ending <span>↗</span>':'Go to mission <span>↗</span>';
  $('#meters').innerHTML=state.stats.map((n,i)=>`<div class="meter ${n<=25?'low':''}" style="--c:${n<=25?'#ee9b83':colors[i]}"><div class="meter-head"><span>${labels[i]}</span><strong>${n}<small> /100</small></strong></div><div class="meter-track" role="meter" aria-label="${labels[i]}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${n}"><div class="meter-fill" style="width:${n}%"></div></div></div>`).join('');
  const [rs,rc]=renStatus();
- $('#rival').innerHTML=`<div class="rival-head"><div class="portrait ren-face" style="--c:#d7a272"></div><div><div class="eyebrow" style="color:${rc}">RIVAL · ${rs}</div><strong>Ren</strong></div><b class="ren-num" style="color:${rc}">${state.ren}</b></div><div class="meter-track ren-track" role="meter" aria-label="Ren's power" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${state.ren}"><div class="meter-fill" style="width:${state.ren}%;--c:${rc}"></div><i class="ren-line" title="Takeover line"></i></div><p class="ren-quote">“${esc(state.renSay)}”</p><small class="ren-warn">Ren’s power. At 75, Ren can take over.</small>`;
- $('#progressBar').style.width=((stepNum()-1)/TOTAL_STEPS*100)+'%';$('#progressText').textContent=`${state.phase==='map'?state.step:8} of 8 decisions made · ${state.events.length} surprise event${state.events.length===1?'':'s'}`;
+ $('#rival').innerHTML=`<div class="rival-head"><div class="portrait ren-face" style="--c:#d7a272"></div><div><div class="eyebrow" style="color:${rc}">RIVAL · ${rs}</div><strong>Ren</strong></div><b class="ren-num" style="color:${rc}">${state.ren}</b></div><div class="meter-track ren-track" role="meter" aria-label="Ren's power" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${state.ren}"><div class="meter-fill" style="width:${state.ren}%;--c:${rc}"></div><i class="ren-line" title="Takeover line"></i></div><p class="ren-quote">“${esc(state.renSay)}”</p><small class="ren-warn">At 75, Ren can take over.</small>`;
+ $('#progressBar').style.width=((stepNum()-1)/TOTAL_STEPS*100)+'%';$('#progressText').textContent=`${state.phase==='map'?state.step:8} of 8 decisions · ${state.events.length} disaster${state.events.length===1?'':'s'}`;
  $('#cacheCount').textContent=`${state.collected.length} / 6 crates found`;$('#logCount').textContent=state.log.length;$('#weather').textContent=stormy()?'• Storm':'• Clear skies';
  $('#waterTag').textContent=`Water • ${['Unmanaged','Shared rules','Repaired'][state.flags.water]||'Unmanaged'}`;$('#rulesTag').textContent=`Rules • ${state.flags.rules?'In place':'None'}`;$('#powerTag').textContent=`Power • ${state.flags.power}`;
  const low=Math.min(...state.stats),li=state.stats.indexOf(low);
  $('#campCondition').textContent=low<=20?'Camp in crisis':low<=35?'Under pressure':low>=55?'Holding together':'A fragile balance';
- $('#campDetail').textContent=low>=55?'Every meter is steady. Keep the balance.':`Weakest: ${labels[li]} (${low}). Low meters can trigger surprise events.`;
- $('#radio').innerHTML=[['Jo','#a3c5a3',state.stats[0]<=25?'Stores are almost empty. Look for green crates.':state.flags.water===2?'Water’s flowing again. Let’s keep it that way.':'Safe camp, steady work. That’s how we eat.'],['Ash','#b9a4d3',state.stats[3]<=30?'We need our voice back.':state.stats[3]>=70?'Free to speak. Let’s not waste it.':'A rule needs a reason.'],['Ren','#d7a272',state.renSay]].map(([n,c,t])=>`<div class="message"><div class="portrait" style="--c:${c}"></div><div><strong>${n}</strong><p>${esc(t)}</p></div></div>`).join('');
+ $('#campDetail').textContent=low>=55?'Steady. Keep the balance.':low<=15&&li<2?`${labels[li]} ${low}. People will die tonight.`:`Weakest: ${labels[li]} (${low}). Low meters cause disasters.`;
+ $('#radio').innerHTML=[['Jo','#a3c5a3',state.stats[0]<=25?'Food’s almost gone. Grab green crates.':state.dead>=8?`We’ve buried ${state.dead}. We can’t lose more.`:state.dead?`We lost ${state.dead}. Keep the rest alive.`:'Safe camp, steady work. That’s how we eat.'],['Ash','#b9a4d3',state.stats[3]<=30?'We need our voice back.':state.stats[3]>=70?'Free to speak. Let’s use it.':'A rule needs a reason.'],['Ren','#d7a272',state.renSay]].map(([n,c,t])=>`<div class="message"><div class="portrait" style="--c:${c}"></div><div><strong>${n}</strong><p>${esc(t)}</p></div></div>`).join('');
  $('#blueprintItems').innerHTML=BEATS.map(x=>x.concept).map(n=>`<div class="blueprint-step ${state.concepts.includes(n)?'done':''}"><b>${state.concepts.includes(n)?'✓':'○'}</b>${n}</div>`).join('');
 }
 
@@ -197,6 +256,7 @@ function choiceButton(c,i){const short=c.need&&state.stats[0]<c.need;return `<bu
 
 /* Read first: choices unlock after a few seconds so nobody can click through without reading. Pauses while the tab is hidden. */
 let readTimer=null;
+function readSecs(...t){const w=t.join(' ').split(/\s+/).filter(Boolean).length;return Math.max(5,Math.min(8,Math.round(w/5)))}
 function readLock(sec){clearInterval(readTimer);const btns=()=>document.querySelectorAll('#choiceList [data-choice], #choiceList [data-purpose]');const keep=new Set([...btns()].filter(b=>b.disabled));btns().forEach(b=>b.disabled=true);const foot=$('#eventFoot'),orig=foot.textContent;let left=sec;const tick=()=>{foot.textContent=`Read the story first. Choices open in ${left}…`};tick();
  readTimer=setInterval(()=>{if(document.hidden)return;left--;if(left<=0){clearInterval(readTimer);btns().forEach(b=>{if(!keep.has(b))b.disabled=false});foot.textContent=orig;const f=document.querySelector('#choiceList button:not([disabled])');if(f)f.focus()}else tick()},1000)}
 function openBeat(){
@@ -206,48 +266,56 @@ function openBeat(){
  $('#eventLocation').textContent=locations[b.loc].name.toUpperCase();$('#eventDay').textContent=`STEP ${state.step+1} OF ${TOTAL_STEPS}`;
  $('#eventArt').innerHTML=sceneArt(b.loc)+(b.id==='storm'?impactArt('storm','STORM DAMAGE'):'');
  $('#eventType').textContent=b.tag;$('#eventTitle').textContent=b.title;$('#eventStory').textContent=b.story(state);$('#decisionEcho').hidden=true;
- if(b.pick2){charterPicks=[];$('#choiceList').innerHTML=`<div class="charter-grid">${b.choices.map((c,i)=>`<button class="purpose" data-purpose="${i}" aria-pressed="false"><b>${esc(c.t)}</b><small>${esc(c.sub)}</small><em>${c.d.map((n,j)=>n?`${labels[j]} ${n>0?'+':''}${n}`:'').filter(Boolean).join(' · ')}</em></button>`).join('')}</div><button class="primary wide" id="signCharter" disabled>Pick 2 promises</button>`;$('#eventFoot').textContent='These are the six purposes in the U.S. Preamble. You can only keep two.';}
- else{$('#choiceList').innerHTML=b.choices.map(choiceButton).join('');$('#eventFoot').textContent='Every choice costs something. Tip: press 1, 2, or 3.';}
- $('#event').hidden=false;readLock(state.step===0?8:6);beep(440);
+ if(b.pick2){charterPicks=[];$('#choiceList').innerHTML=`<div class="charter-grid">${b.choices.map((c,i)=>`<button class="purpose" data-purpose="${i}" aria-pressed="false"><b>${esc(c.t)}</b><small>${esc(c.sub)}</small><em>${c.d.map((n,j)=>n?`${labels[j]} ${n>0?'+':''}${n}`:'').filter(Boolean).join(' · ')}</em></button>`).join('')}</div><button class="primary wide" id="signCharter" disabled>Pick 2 promises</button>`;$('#eventFoot').textContent='The six purposes in the U.S. Preamble. Keep two.';}
+ else{$('#choiceList').innerHTML=b.choices.map(choiceButton).join('');$('#eventFoot').textContent='Every choice costs something. Keys 1, 2, 3 work.';}
+ $('#event').hidden=false;readLock(state.step===0?8:readSecs(b.story(state),...b.choices.map(c=>c.t)));beep(440);
 }
 function openSurprise(){
  const e=EVENTS.find(x=>x.id===state.openEvent);if(!e)return;target=null;keys={};
  $('#eventCard').classList.add('surprise');
- $('#eventLocation').textContent='⚡ SURPRISE EVENT';$('#eventDay').textContent=locations[EVENT_LOC[e.id]].name.toUpperCase();
- $('#eventArt').innerHTML=sceneArt(EVENT_LOC[e.id])+impactArt(e.art,e.title.toUpperCase());
- $('#eventType').textContent='YOUR EARLIER CHOICES CAUGHT UP WITH YOU';$('#eventTitle').textContent=e.title;$('#eventStory').textContent=e.story;
- $('#decisionEcho').hidden=false;$('#decisionEchoText').textContent=e.cause;
- $('#choiceList').innerHTML=e.choices.map(choiceButton).join('');$('#eventFoot').textContent='You must deal with this before you move on.';
- $('#event').hidden=false;readLock(5);beep(250,.25);
+ $('#eventLocation').textContent=`⚡ BREAKING · DISASTER ${state.events.length+1}`;$('#eventDay').textContent=locations[e.loc].name.toUpperCase();
+ $('#eventArt').innerHTML=sceneArt(e.loc)+impactArt(e.art,e.title.toUpperCase());
+ const caused=state.openCause&&!/luck/i.test(state.openCause);
+ $('#eventType').textContent=caused?'BREAKING · YOUR CHOICES DID THIS':'BREAKING · BAD LUCK STRIKES';$('#eventTitle').textContent=e.title;$('#eventStory').textContent=e.story;
+ $('#decisionEcho').hidden=false;$('#decisionEchoText').textContent=state.openCause||e.cause(state);
+ $('#choiceList').innerHTML=e.choices.map(choiceButton).join('');$('#eventFoot').textContent='Deal with it. Lives are on the line.';
+ $('#event').hidden=false;readLock(readSecs(e.story,...e.choices.map(c=>c.t+' '+c.sub)));beep(250,.25);flash(false);
 }
 function choose(i){
  if(choiceLocked||state.pending)return;const isEvent=!!state.openEvent;
  const src=isEvent?EVENTS.find(e=>e.id===state.openEvent):BEATS[state.step];const c=src&&src.choices[i];if(!c||src.pick2)return;
  if(c.need&&state.stats[0]<c.need){toast('Not enough supplies for that.');return}
- choiceLocked=true;const out=resolveChoice(state,c);let gather=null;
- if(isEvent){state.events.push(src.id);state.eventPicks[src.id]=i;}else{state.picks[src.id]=i;gather=dailyGather(state);if(!state.concepts.includes(src.concept))state.concepts.push(src.concept);if(state.flags.water===2)state.flags.shelter=Math.max(state.flags.shelter,1);}
+ choiceLocked=true;const snap=snapshot();const out=resolveChoice(state,c);let gather=null,toll=[];
+ if(isEvent){state.events.push(src.id);state.eventPicks[src.id]=i;}else{state.picks[src.id]=i;gather=dailyGather(state);toll=nightToll(state);if(!state.concepts.includes(src.concept))state.concepts.push(src.concept);if(state.flags.water===2)state.flags.shelter=Math.max(state.flags.shelter,1);}
  const res=typeof out.res==='function'?out.res(state):out.res,learn=isEvent?src.learn:out.learn;state.renSay=out.say;
- const entry={kind:isEvent?'event':'beat',id:src.id,title:src.title,choice:c.t,key:out.key||c.t,result:res,learn:plain(learn),delta:out.delta,renDelta:out.renDelta,gather};
- state.log.push(entry);state.pending={...entry,head:out.head,learnHtml:learn,say:out.say};if(isEvent)state.openEvent=null;
+ const entry={kind:isEvent?'event':'beat',id:src.id,title:src.title,choice:c.t,key:out.key||c.t,result:res,learn:plain(learn),gather,toll,...changes(snap,[...out.news,...toll])};
+ state.log.push(entry);state.pending={...entry,head:out.head,learnHtml:learn,say:out.say};if(isEvent){state.openEvent=null;state.openCause=''}
  save();$('#event').hidden=true;showResult();render();setTimeout(()=>choiceLocked=false,300);
 }
+/* Before/after a decision: meter changes, Ren change, deaths, people who fled. */
+function snapshot(){return {stats:[...state.stats],ren:state.ren,dead:state.dead,fled:state.fled,alive:alive(state)}}
+function changes(a,news){return {delta:state.stats.map((n,i)=>n-a.stats[i]),renDelta:state.ren-a.ren,die:state.dead-a.dead,lost:a.alive-alive(state),news}}
+/* Red flash on disasters (just a color change when reduced motion is on). */
+function flash(big=true){const b=document.body;b.classList.remove('disaster','alarm');void b.offsetWidth;b.classList.add(big?'disaster':'alarm');setTimeout(()=>b.classList.remove('disaster','alarm'),900)}
 function signCharter(){
- if(choiceLocked||charterPicks.length!==2)return;choiceLocked=true;const b=BEATS[7],before=[...state.stats],rb=state.ren;
- charterPicks.forEach(i=>resolveChoice(state,b.choices[i]));const names=charterPicks.map(i=>b.choices[i].t);state.picks.charter=[...charterPicks];
+ if(choiceLocked||charterPicks.length!==2)return;choiceLocked=true;const b=BEATS[7],snap=snapshot();
+ charterPicks.forEach(i=>resolveChoice(state,b.choices[i]));const toll=nightToll(state);const names=charterPicks.map(i=>b.choices[i].t);state.picks.charter=[...charterPicks];
  const say=charterPicks.some(i=>i===2||i===3)?'Order and defense. Now you’re learning.':charterPicks.some(i=>i===1||i===5)?'Fancy words. Words don’t stop pirates.':'Promises are easy. Keeping them is hard.';state.renSay=say;
  if(!state.concepts.includes(b.concept))state.concepts.push(b.concept);
- const learn='Those promises come from the <b>Preamble</b> (opening) of the U.S. Constitution. It lists six purposes of government. Every government has to choose what comes first.';
- const entry={kind:'beat',id:'charter',title:b.title,choice:names.join(' + '),key:names.join(' + '),result:`Your charter promises to ${names[0].toLowerCase()} and ${names[1].toLowerCase()}.`,learn:plain(learn),delta:state.stats.map((n,i)=>n-before[i]),renDelta:state.ren-rb,gather:null};
+ const learn='Those promises are from the <b>Preamble</b> (opening) of the U.S. Constitution, which lists six purposes of government.';
+ const entry={kind:'beat',id:'charter',title:b.title,choice:names.join(' + '),key:names.join(' + '),result:`Your charter promises to ${names[0].toLowerCase()} and ${names[1].toLowerCase()}.`,learn:plain(learn),gather:null,toll,...changes(snap,toll)};
  state.log.push(entry);state.pending={...entry,head:'The charter is signed',learnHtml:learn,say};save();$('#event').hidden=true;showResult();render();setTimeout(()=>choiceLocked=false,300);
 }
-function showResult(){const p=state.pending;if(!p)return;
- $('#resultSymbol').textContent=p.kind==='event'?'⚡':'✓';$('#resultEyebrow').textContent=p.kind==='event'?'SURPRISE EVENT · RESULT':'YOUR DECISION';
+function showResult(){const p=state.pending;if(!p)return;const hit=!!(p.news&&p.news.length);
+ $('#resultSymbol').textContent=hit?'✕':p.kind==='event'?'⚡':'✓';$('#resultSymbol').classList.toggle('dead',hit);$('#resultEyebrow').textContent=p.kind==='event'?'DISASTER · RESULT':'YOUR DECISION';
  $('#resultTitle').textContent=p.head;$('#resultText').textContent=p.result;
- const cells=p.delta.map((n,i)=>[n,labels[i]]).concat([[p.renDelta,'Ren’s power']]);
- $('#deltas').innerHTML=cells.map(([n,l],i)=>{const bad=i===4?n>0:n<0;return `<div class="delta ${i===4?'ren':''}"><b class="${n===0?'zero':bad?'negative':''}">${n>0?'+':''}${n}</b>${l}</div>`}).join('');
- $('#gather').hidden=p.gather===null;$('#gather').textContent=p.gather?`End of day: people felt safe and trusted each other, so they gathered +${p.gather} supplies (included above).`:'End of day: camp felt too unsafe or divided to gather supplies (+0). Safety and Trust of 40+ bring in supplies.';
+ const bk=$('#breaking');bk.hidden=!hit;if(hit)bk.innerHTML=`<b>BREAKING</b><ul>${p.news.map(n=>`<li>${esc(n)}.</li>`).join('')}</ul><span>Survivors left: <strong>${alive(state)}</strong> of 30 · Lives lost: <strong>${state.dead}</strong></span>`;
+ const cells=p.delta.map((n,i)=>[n,labels[i],'']).concat([[p.renDelta,'Ren’s power','ren'],[-(p.lost||0),'Survivors','ppl']]);
+ $('#deltas').innerHTML=cells.map(([n,l,k])=>{const bad=k==='ren'?n>0:n<0;return `<div class="delta ${k}"><b class="${n===0?'zero':bad?'negative':''}">${n>0?'+':''}${n}</b>${l}</div>`}).join('');
+ $('#gather').hidden=p.gather===null;$('#gather').textContent=p.gather?`End of day: +${p.gather} supplies gathered (included above).${p.gather<8?' Safety and Trust 40+ bring more.':''}`:'End of day: +0 supplies. Camp too unsafe and divided to gather.';
+ if(hit)flash(true);
  $('#renSays').innerHTML=`<div class="portrait" style="--c:#d7a272"></div><p><b>REN:</b> “${esc(p.say)}”</p>`;
- $('#learning').innerHTML=`<strong>WHAT YOU JUST DID</strong><br>${p.learnHtml}`;
+ $('#learning').innerHTML=`<strong>THE IDEA</strong><br>${p.learnHtml}`;
  $('#continue').textContent=(p.kind==='beat'&&p.id==='charter')?'See your ending →':'Back to the island →';
  $('#result').hidden=false;beep(p.kind==='event'?300:660,.15);
  if(p.kind==='beat'&&PROVE[p.id])renderProof(p.id);else{$('#continue').disabled=false;$('#continue').focus();}
@@ -260,43 +328,43 @@ function renderProof(id,feedback){
  const needLog=id==='emergency';const logOk=()=>!needLog||(state.logNote||'').trim().split(/\s+/).filter(Boolean).length>=8;
  const cont=$('#continue');const setCont=()=>{cont.disabled=!(st.done&&logOk());cont.title=cont.disabled?'Answer the question first':''};
  if(st.done){box.innerHTML=`<div class="proof-head">✓ PROVE IT</div><p class="proof-ok">${esc(q.q)}<br><b>✓ ${esc(q.opts.find(o=>o[0]===q.ans)[1])}</b></p>`+(needLog?logHtml():'');wireLog();setCont();if(!cont.disabled)cont.focus();return}
- const opts=shuffle(q.opts);
- box.innerHTML=`<div class="proof-head">PROVE IT · use what you just learned</div><p class="proof-q">${esc(q.q)}</p><div class="proof-opts">${opts.map(([k,t])=>`<button class="choice proof-opt" data-proof="${k}"><span class="ct">${esc(t)}</span></button>`).join('')}</div><div id="proofHint" class="task-hint ${feedback?'try-again':''}" role="status">${feedback?esc(feedback):''}</div>`;
+ const opts=reshuffle('p-'+id,q.opts);
+ box.innerHTML=`<div class="proof-head">PROVE IT · new situation, same idea</div><p class="proof-q">${esc(q.q)}</p><div class="proof-opts">${opts.map(([k,t])=>`<button class="choice proof-opt" data-proof="${k}"><span class="ct">${esc(t)}</span></button>`).join('')}</div><div id="proofHint" class="task-hint ${feedback?'try-again':''}" role="status">${feedback?esc(feedback):''}</div>`;
  setCont();
  box.querySelectorAll('[data-proof]').forEach(b=>b.onclick=()=>{
   if(b.dataset.proof===q.ans){if(st.first===null)st.first=true;st.done=true;if(window.classFirstTry)classFirstTry.right('prove-'+id);save();beep(700);renderProof(id)}
   else{if(st.first===null)st.first=false;if(window.classFirstTry)classFirstTry.wrong();save();beep(220);renderProof(id,'Not quite. '+q.hint+' The answers moved.');lockProof(8)}
  });
  if(!feedback){const f=box.querySelector('[data-proof]');if(f)f.focus()}
- function logHtml(){return `<div class="captain-log"><label for="logNote"><b>Captain’s log:</b> Why did you make that call? Try to use the word <i>limits</i> or <i>rights</i>. (8+ words)</label><div class="stem">I made that call because…</div><textarea id="logNote" rows="3" maxlength="300">${esc(state.logNote||'')}</textarea><div id="logHint" class="task-hint" role="status"></div></div>`}
+ function logHtml(){return `<div class="captain-log"><label for="logNote"><b>Captain’s log:</b> Why that call? Use <i>limits</i> or <i>rights</i>. (8+ words)</label><div class="stem">I made that call because…</div><textarea id="logNote" rows="3" maxlength="300">${esc(state.logNote||'')}</textarea><div id="logHint" class="task-hint" role="status"></div></div>`}
  function wireLog(){const t=$('#logNote');if(!t)return;const upd=()=>{state.logNote=t.value;save();const n=t.value.trim().split(/\s+/).filter(Boolean).length;$('#logHint').textContent=n>=8?'✓ Saved to your captain’s log.':`${n} of 8 words`;setCont()};t.oninput=upd;upd();if(cont.disabled)t.focus()}
 }
 function lockProof(sec){clearInterval(proofTimer);const bs=()=>document.querySelectorAll('[data-proof]');bs().forEach(b=>b.disabled=true);let left=sec;const h=$('#proofHint'),base=h.textContent;const tick=()=>{h.textContent=base+` Try again in ${left}…`};tick();proofTimer=setInterval(()=>{if(document.hidden)return;left--;if(left<=0){clearInterval(proofTimer);bs().forEach(b=>b.disabled=false);h.textContent=base}else tick()},1000)}
 
 function next(){const p=state.pending;if(!p)return;if(p.kind==='beat'&&PROVE[p.id]&&!(state.proof&&state.proof[p.id]&&state.proof[p.id].done))return;if(p.id==='emergency'&&p.kind==='beat'&&(state.logNote||'').trim().split(/\s+/).filter(Boolean).length<8)return;const pr=$('#proof');if(pr)pr.remove();state.pending=null;$('#result').hidden=true;
- if(p.kind==='event')state.lastWasEvent=true;
- else{state.step++;if(state.step<BEATS.length){const ev=nextEvent(state);if(ev){state.openEvent=ev.id;save();render();setTimeout(openSurprise,300);return}}state.lastWasEvent=false;}
+ if(p.kind!=='event'){state.step++;if(state.step<BEATS.length){const ev=nextEvent(state);if(ev){state.openEvent=ev.id;state.openCause=ev.cause(state);save();render();setTimeout(openSurprise,300);return}}}
  if(state.step>=BEATS.length){state.phase='ending';state.ending=endingFor(state);save();render();showEnding();return}
  save();render();toast(`Next: ${BEATS[state.step].title} · ${locations[BEATS[state.step].loc].name}`);
 }
 
 /* ---------- ending, final check, sentence, score, turn-in ---------- */
 const OPTS={
- power:[['leg','Legislative: making the rules'],['exe','Executive: carrying out the rules'],['jud','Judicial: deciding what rules mean'],['sov','Sovereignty: final say over the land']],
- state:[['pop','Population: the people who live there'],['ter','Territory: the land and its borders'],['sov','Sovereignty: final say over its own land'],['gov','Government: the group that runs things']],
- origin:[['sc','Social contract: people agree to it'],['evo','Evolutionary: grew out of families'],['div','Divine right: God chose the ruler'],['for','Force: taken by strength and fear']],
- limits:[['lim','Limited government: leaders’ power has limits'],['div','Divine right: leaders’ power comes from God'],['dir','Direct democracy: everyone votes on rules'],['def','Common defense: protecting against outsiders']]};
+ power:[['leg','Legislative: making the rules'],['exe','Executive: carrying out the rules'],['jud','Judicial: judging what rules mean'],['sov','Sovereignty: final say over land']],
+ state:[['pop','Population: the people living there'],['ter','Territory: the land and borders'],['sov','Sovereignty: final say over itself'],['gov','Government: the group in charge']],
+ origin:[['sc','Social contract: people agreed'],['evo','Evolutionary: grew from families'],['div','Divine right: God chose the ruler'],['for','Force: taken by strength']],
+ limits:[['lim','Limited government: leaders have limits'],['div','Divine right: leaders answer to God'],['dir','Direct democracy: all vote on rules'],['def','Common defense: guarding from outsiders']]};
 function questions(){const p=state.picks,Q={};
- const pw=[['In your camp, Jo’s job was to carry out the council’s rules and run the night watch. Which power is that?','exe','Executive power carries out and enforces rules.','Jo didn’t write the rules or judge anyone. Jo put them into action.'],['In your camp, all 30 people voted to write each new rule. Which power were they using?','leg','Legislative power makes the rules.','Voting to write a rule is about creating it.'],['In your camp, Ren decided who broke the rules and what the rules meant. Which power is that?','jud','Judicial power interprets rules and settles disputes.','Think about deciding cases, not writing or enforcing rules.']][p.power??0];
+ const pw=[['Jo carried out the council’s rules and ran the night watch. Which power is that?','exe','Executive power carries out rules.','Jo didn’t write rules or judge anyone.'],['All 30 of you voted to write each rule. Which power was that?','leg','Legislative power makes rules.','Voting to write a rule creates it.'],['Ren decided who broke the rules and what they meant. Which power is that?','jud','Judicial power judges rules and disputes.','Think judging, not writing or enforcing.']][p.power??0];
  Q.power={q:pw[0],opts:OPTS.power,ans:pw[1],why:pw[2],clue:pw[3]};
- const st=[['You told the ship captain, “We rule ourselves here.” Which feature of a state were you claiming?','sov','Sovereignty means your state has the final say over its own land.','You already had people and land. What were you saying no outsider could take?'],['You paid the company, and now it controls some of your choices. Which feature of a state did your island lose?','sov','Sovereignty is the final say. Paying outsiders who control you weakens it.','You still have people, land, and leaders. What did the company take from you?'],['Ren let the company use the north beach. Which feature of a state did he give part of away?','ter','Territory is a state’s land and borders. Ren gave some away.','What physical thing did the company get to use?']][p.ship??0];
+ const st=[['You told the ship, “We rule ourselves here.” Which feature of a state did you claim?','sov','Sovereignty is the final say over your own land.','You already had people and land. What did you refuse to give up?'],['You paid the company, and now it controls your choices. What did your island lose?','sov','Outsiders controlling you weakens sovereignty.','You still have people, land, and leaders.'],['Ren gave the company the north beach. What part of your state did he give away?','ter','Territory is a state’s land.','What physical thing did the company get?']][p.ship??0];
  Q.state={q:st[0],opts:OPTS.state,ans:st[1],why:st[2],clue:st[3]};
- const og=state.events.includes('coup')?['Ren’s crew grabbed the lookout and the food store and made everyone obey. Which origin of government matches that?','for','Force theory: a person or group takes power by strength.','How did Ren get control: a vote, a family line, God, or strength?']:[['Your camp held an election to choose its leader. Which origin of government matches that?','sc','Social contract theory: power comes from the people’s agreement.','Who gave the leader power in an election?'],['Your camp let Mara’s family lead because big families had always led. Which origin of government matches that?','evo','Evolutionary theory: government grew out of families, clans, and tribes.','Think about why Mara’s family got to lead.'],['Ren said God spared him, so he was chosen to rule. Which origin of government matches that?','div','Divine right: the ruler claims God gave them the right to rule.','Listen to what Ren said about where his power came from.']][p.claim??0];
+ const og=state.events.includes('coup')?['Ren’s crew grabbed the ridge and made everyone obey. Which origin theory is that?','for','Force theory: power taken by strength.','Did Ren win a vote, or take it?']:[['Your camp elected its leader. Which origin theory is that?','sc','Social contract: power comes from the people.','Who gave the leader power in an election?'],['Mara’s family led because big families always had. Which origin theory is that?','evo','Evolutionary theory: government grew from families.','Why did Mara’s family get to lead?'],['Ren said God chose him to rule. Which origin theory is that?','div','Divine right: the ruler claims God chose them.','Where did Ren say his power came from?']][p.claim??0];
  Q.origin={q:og[0],opts:OPTS.origin,ans:og[1],why:og[2],clue:og[3]};
- const lm=[['You told Ren that leaders must follow rules too, and people keep free speech. Which idea is that?','You kept limits on leaders. That’s limited government.'],['You let Ren ban criticism and search any tent, with no end date. Which idea did that break?','Power with no limits breaks the idea of limited government.'],['You said Ren’s crew needs a judge’s OK before searching a tent. Which idea does that protect?','A judge’s OK is a limit on power. That’s limited government.']][p.emergency??0];
- Q.limits={q:lm[0],opts:OPTS.limits,ans:'lim',why:lm[1],clue:'Think about what your choice did to the leaders’ power.'};
+ const lm=[['You told Ren leaders follow rules too, and speech stays free. Which idea is that?','You kept limits on leaders.'],['You let Ren ban criticism and search any tent, with no end date. Which idea did that break?','Power with no limits breaks limited government.'],['You said Ren’s crew needs a judge’s OK to search. Which idea does that protect?','A judge’s OK is a limit on power.']][p.emergency??0];
+ Q.limits={q:lm[0],opts:OPTS.limits,ans:'lim',why:lm[1],clue:'What did your choice do to the leaders’ power?'};
  return Q;}
-function finalScore(){const end=state.check?Object.values(state.check.first).filter(Boolean).length:0;const pf=Object.values(state.proof||{}).filter(x=>x&&x.first).length;const first=end+pf;return {first,score:scoreFor(state,first)}}
+function finalScore(){const end=state.check?Object.values(state.check.first).filter(Boolean).length:0;const pf=Object.values(state.proof||{}).filter(x=>x&&x.first).length;const first=end+pf;return {first,score:scoreFor(state,first),parts:scoreParts(state,first)}}
+function bodyCount(){const a=alive(state);return state.dead===0?`Everyone made it. ${a} of 30 alive.`:`${state.dead} dead${state.fled?` · ${state.fled} fled`:''} · ${a} of 30 left`}
 function endingArt(kind){
  const base=(sky,ground)=>`<rect width="560" height="170" fill="${sky}"/><path d="M0 130Q140 112 280 126T560 120V170H0Z" fill="${ground}"/>`;
  const people=(x,n,c)=>Array.from({length:n},(_,i)=>`<circle cx="${x+i*18}" cy="${116-(i%2)*4}" r="6" fill="#dbb48b"/><path d="M${x+i*18-8} ${136-(i%2)*4}q8-16 16 0Z" fill="${c}"/>`).join('');
@@ -308,24 +376,25 @@ function endingArt(kind){
   fragile:base('#2f5c63','#5f7f56')+`<path d="m110 132 45-52 45 52Z" fill="#c59b61"/><path d="m360 132 45-52 45 52Z" fill="#9aaa8a"/><path d="M200 112Q280 140 360 112" stroke="#d9c79a" stroke-width="3" fill="none" stroke-dasharray="6 5"/><circle cx="280" cy="40" r="20" fill="#f6d68a" opacity=".7"/><path d="M260 40h40" stroke="#2f5c63" stroke-width="22"/>`};
  return `<svg viewBox="0 0 560 170" aria-hidden="true">${art[kind]}</svg>`}
 function keyMoments(){const ren=state.ending==='dictatorship'||(state.ending==='revolution'&&renOnTop(state));const w=state.stats.indexOf(Math.min(...state.stats));let list,fmt;
- if(ren){list=[...state.log].filter(l=>l.renDelta>0).sort((a,b)=>b.renDelta-a.renDelta);fmt=l=>`Ren +${l.renDelta}`}
+ if(state.dead>=6&&!ren){list=[...state.log].filter(l=>l.die>0).sort((a,b)=>b.die-a.die);fmt=l=>`${l.die} died`}
+ else if(ren){list=[...state.log].filter(l=>l.renDelta>0).sort((a,b)=>b.renDelta-a.renDelta);fmt=l=>`Ren +${l.renDelta}`}
  else if(state.ending==='republic'){list=[...state.log].filter(l=>l.renDelta<0).sort((a,b)=>a.renDelta-b.renDelta);fmt=l=>`Ren ${l.renDelta}`}
  else{list=[...state.log].filter(l=>l.delta[w]<0).sort((a,b)=>a.delta[w]-b.delta[w]);fmt=l=>`${labels[w]} ${l.delta[w]}`}
  list=list.slice(0,2);if(!list.length)return '';return `<p class="key-moments"><b>Choices that led here:</b> ${list.map(l=>`“${esc(l.key)}” (${fmt(l)})`).join(' · ')}</p>`}
 function showEnding(){
  if(state.phase==='map')return;target=null;keys={};const e=ENDINGS[state.ending];const box=$('#endingBody');$('#ending').hidden=false;
  if(state.phase==='ending'){
-  box.innerHTML=`<div class="ending-art">${endingArt(state.ending)}</div><div class="eyebrow">STEP 9 OF 10 · YOUR ENDING</div><h2 class="ending-title">${e.badge} ${esc(e.title)}</h2><p class="ending-why">${e.why(state)}</p>${keyMoments()}<div id="endingStats">${state.stats.map((n,i)=>`<span><strong>${n}</strong>${labels[i]}</span>`).join('')}<span class="ren-stat"><strong>${state.ren}</strong>Ren’s power</span></div><p class="fine-note">This is a game outcome, not a prediction about real countries.</p><button class="primary wide" id="toCheck">Next: final check (4 quick questions) →</button>`;
+  box.innerHTML=`<div class="ending-art">${endingArt(state.ending)}</div><div class="eyebrow">STEP 9 OF 10 · YOUR ENDING</div><h2 class="ending-title">${e.badge} ${esc(e.title)}</h2><p class="body-count ${state.dead?'hit':''}">${bodyCount()}</p><p class="ending-why">${e.why(state)}</p>${keyMoments()}<div id="endingStats">${state.stats.map((n,i)=>`<span><strong>${n}</strong>${labels[i]}</span>`).join('')}<span class="ren-stat"><strong>${state.ren}</strong>Ren</span><span class="dead-stat"><strong>${state.dead}</strong>Lives lost</span></div><p class="fine-note">A game outcome, not a prediction about real countries.</p><button class="primary wide" id="toCheck">Next: 4 quick questions →</button>`;
   $('#toCheck').onclick=()=>{state.phase='check';if(!state.check)state.check={order:shuffle(['power','state','origin','limits']),idx:0,first:{}};save();render();showEnding()};$('#toCheck').focus();
  }else if(state.phase==='check')renderCheck();
  else if(state.phase==='write'){
-  box.innerHTML=`<div class="eyebrow">STEP 9 OF 10 · ONE SENTENCE</div><h2 class="stage-title">Explain your island</h2><p class="stage-help">Finish the sentence. Name one real choice from your game. (At least 8 more words.)</p><label class="stem" for="sentence">Our island needed a government because…</label><textarea id="sentence" rows="4" maxlength="400" placeholder="…people kept fighting over water, and when we…">${esc(state.sentence)}</textarea><div id="writeHint" class="task-hint" role="status"></div><button class="primary wide" id="toScore">See my score →</button>`;
+  box.innerHTML=`<div class="eyebrow">STEP 9 OF 10 · ONE SENTENCE</div><h2 class="stage-title">Explain your island</h2><p class="stage-help">Name one real moment from your game. (8+ words.)</p><label class="stem" for="sentence">Our island needed a government because…</label><textarea id="sentence" rows="4" maxlength="400" placeholder="…people were dying over water, and when we…">${esc(state.sentence)}</textarea><div id="writeHint" class="task-hint" role="status"></div><button class="primary wide" id="toScore">See my score →</button>`;
   $('#sentence').oninput=e=>{state.sentence=e.target.value;save()};
-  $('#toScore').onclick=()=>{const w=state.sentence.trim().split(/\s+/).filter(Boolean);if(w.length<8){$('#writeHint').textContent=`Add a little more. You have ${w.length} words. Write at least 8.`;$('#writeHint').className='task-hint try-again';$('#sentence').focus();return}const f=finalScore();state.score=f.score;state.rank=rankFor(f.score,state.ending);state.phase='score';save();render();showEnding();beep(880,.3)};
+  $('#toScore').onclick=()=>{const w=state.sentence.trim().split(/\s+/).filter(Boolean);if(w.length<8){$('#writeHint').textContent=`Add a little more. You have ${w.length} words. Write at least 8.`;$('#writeHint').className='task-hint try-again';$('#sentence').focus();return}const f=finalScore();state.score=f.score;state.rank=rankFor(f.score,state.ending,state);state.phase='score';save();render();showEnding();beep(880,.3)};
   $('#sentence').focus();
  }else if(state.phase==='score'){
-  const f=finalScore(),avg=Math.round(state.stats.reduce((a,b)=>a+b,0)/4);
-  box.innerHTML=`<div class="eyebrow">STEP 10 OF 10 · FINAL SCORE</div><div class="score-big"><b>${state.score}</b><span>/100</span></div><div class="rank">${esc(state.rank)}</div><p class="ending-line">${e.badge} ${esc(e.title)} · ${f.first} of ${CHECK_TOTAL} checks right on the first try</p><p class="compare">Compare your score with your class.</p><p class="fine-note">Score = your four meters (average ${avg}) + first-try checks (up to 30 points) + an ending bonus${state.ren>50?' − a penalty for Ren’s power':''}.</p>
+  const f=finalScore(),pt=f.parts,sg=n=>(n>=0?'+':'−')+Math.abs(n);
+  box.innerHTML=`<div class="eyebrow">STEP 10 OF 10 · FINAL SCORE</div><div class="score-row"><div class="score-big"><b>${state.score}</b><span>/100</span></div><div class="lives-big ${state.dead?'hit':''}"><b>${state.dead}</b><span>lives lost</span></div></div><div class="rank">${esc(state.rank)}</div><p class="ending-line">${e.badge} ${esc(e.title)} · ${alive(state)} of 30 survived · ${f.first} of ${CHECK_TOTAL} first-try</p><p class="compare">Compare with your class: highest score, fewest deaths.</p><div class="score-parts"><span>Meters <b>${sg(pt.meters)}</b></span><span>Questions <b>${sg(pt.checks)}</b></span><span>Ending <b>${sg(pt.ending)}</b></span><span class="${pt.lives<0?'neg':''}">Lives <b>${sg(pt.lives)}</b></span>${pt.ren?`<span class="neg">Ren <b>${sg(pt.ren)}</b></span>`:''}</div><p class="fine-note">Lives: start at +20, −3 per death, −1 per person who fled.</p>
   <div class="turnin"><label for="studentName">First name + last initial (like Jordan M.)</label><input id="studentName" maxlength="40" autocomplete="off" value="${esc(state.studentName)}" placeholder="Jordan M."><button class="primary wide" id="turnIn">Turn in to my teacher</button><div id="turnStatus" role="status" class="turn-status ${state.submitted?'ok':''}">${state.submitted?'✓ Turned in! Your teacher can see your work. You can send it again if you need to.':''}</div></div>
   <div class="end-actions"><button class="text-button" id="finalDownload">Download my island report ↓</button><button class="text-button" id="journalEnd">Read my captain’s log</button><button class="text-button" id="replay">Play again</button></div>`;
   $('#studentName').oninput=e=>{state.studentName=e.target.value;save()};$('#turnIn').onclick=turnIn;$('#finalDownload').onclick=download;$('#journalEnd').onclick=journal;$('#replay').onclick=restart;
@@ -333,7 +402,7 @@ function showEnding(){
 }
 function renderCheck(feedback){
  const c=state.check,Q=questions();if(c.idx>=c.order.length){state.phase='write';save();render();showEnding();return}
- const id=c.order[c.idx],q=Q[id];const opts=shuffle(q.opts);
+ const id=c.order[c.idx],q=Q[id];const opts=reshuffle('c-'+id,q.opts);
  $('#endingBody').innerHTML=`<div class="eyebrow">STEP 9 OF 10 · FINAL CHECK · QUESTION ${c.idx+1} OF ${c.order.length}</div><h2 class="stage-title">About your game</h2><p class="check-q">${esc(q.q)}</p><div class="check-opts">${opts.map(([k,t])=>`<button class="choice check-opt" data-opt="${k}"><span class="ct">${esc(t)}</span></button>`).join('')}</div><div id="checkHint" class="task-hint ${feedback?'try-again':''}" role="status">${feedback?esc(feedback):''}</div><button class="primary wide" id="checkNext" hidden>Next →</button>`;
  document.querySelectorAll('[data-opt]').forEach(b=>b.onclick=()=>{
   if(b.dataset.opt===q.ans){if(!(id in c.first))c.first[id]=true;if(window.classFirstTry)classFirstTry.right('stranded-'+id);save();document.querySelectorAll('[data-opt]').forEach(x=>{x.disabled=true});b.classList.add('right');$('#checkHint').className='task-hint';$('#checkHint').textContent='✓ Right. '+q.why;$('#checkNext').hidden=false;$('#checkNext').focus();beep(700);}
@@ -343,7 +412,7 @@ function renderCheck(feedback){
  if(!feedback)$('.check-opt').focus();
 }
 function decisionAnswers(){const names={barrel:'1. Water barrel',power:'2. Who holds power',thief:'3. Food thief',ship:'4. The ship',claim:'5. Right to rule',storm:'6. The storm',emergency:'7. Emergency powers',charter:'8. Charter promises'};const out={};state.log.filter(l=>l.kind==='beat').forEach(l=>{out[names[l.id]]=l.key});return out}
-function buildAnswers(){const f=finalScore();return {Standard:STANDARD,'First-try correct':`${f.first} of ${CHECK_TOTAL}`,Score:`${state.score??f.score} / 100`,Rank:state.rank||rankFor(f.score,state.ending),Ending:ENDINGS[state.ending]?.title||'',...decisionAnswers(),'Surprise events':state.log.filter(l=>l.kind==='event').map(l=>`${l.title} → ${l.key}`).join('; ')||'None','Final meters':`Supplies ${state.stats[0]} · Safety ${state.stats[1]} · Trust ${state.stats[2]} · Freedom ${state.stats[3]} · Ren ${state.ren}`,'Captain’s log (emergency powers)':state.logNote?('I made that call because '+state.logNote.trim()):'—','My sentence':'Our island needed a government because '+state.sentence.trim()}}
+function buildAnswers(){const f=finalScore();return {Standard:STANDARD,'First-try correct':`${f.first} of ${CHECK_TOTAL}`,Score:`${state.score??f.score} / 100`,Rank:state.rank||rankFor(f.score,state.ending,state),Ending:ENDINGS[state.ending]?.title||'','Lives lost':`${state.dead} of 30 (survivors left: ${alive(state)}${state.fled?`, fled: ${state.fled}`:''})`,...decisionAnswers(),'Disasters':state.log.filter(l=>l.kind==='event').map(l=>`${l.title} → ${l.key}`).join('; ')||'None','Captain’s log (emergency powers)':state.logNote?('I made that call because '+state.logNote.trim()):'—','My sentence':'Our island needed a government because '+state.sentence.trim(),'Final meters':`Supplies ${state.stats[0]} · Safety ${state.stats[1]} · Trust ${state.stats[2]} · Freedom ${state.stats[3]} · Ren ${state.ren}`}}
 async function turnIn(){
  const name=$('#studentName').value.trim(),st=$('#turnStatus'),btn=$('#turnIn');const say=(t,ok)=>{st.textContent=t;st.className='turn-status '+(ok?'ok':'bad')};
  if(!name){say('Type your first name + last initial (like Jordan M.).');$('#studentName').focus();return}
@@ -353,8 +422,8 @@ async function turnIn(){
   if(res.ok){state.submitted=true;state.studentName=name;save();say('✓ Turned in! Your teacher can see your work now.',true);beep(900,.2)}else say(data.error||'That didn’t go through. Check your name and try again.');}
  catch{say('Could not reach the class site. Keep this page open and try again.')}finally{btn.disabled=false}
 }
-function journal(){$('#journalTitle').textContent=`${state.name}: captain’s log`;$('#journalEntries').innerHTML=state.log.length?state.log.map((l,n)=>`<article class="log-entry"><span>${l.kind==='event'?'⚡ SURPRISE EVENT':'DECISION'}</span><h3>${esc(l.title)}</h3><p>You chose: ${esc(l.choice)}</p><p>${esc(l.result)}</p><small>${esc(l.learn)}</small></article>`).join(''):'<p>Your first decision is waiting at the water station.</p>';$('#journalDialog').showModal();}
-function download(){const e=ENDINGS[state.ending],f=finalScore();const lines=[`STRANDED: GOVERN OR COLLAPSE · ISLAND REPORT`,`Island: ${state.name}`,`Standards: ${STANDARD}`,`Ending: ${e?e.title:'In progress'}`,state.score!=null?`Score: ${state.score}/100 · Rank: ${state.rank} · Final check first try: ${f.first} of 4`:'',`Meters: ${labels.map((n,i)=>`${n} ${state.stats[i]}`).join(' | ')} | Ren's power ${state.ren}`,'',...state.log.map(l=>`${l.kind==='event'?'SURPRISE EVENT':'DECISION'}: ${l.title}\n  Choice: ${l.choice}\n  Result: ${l.result}\n  Concept: ${l.learn}\n`),state.sentence?`My sentence: Our island needed a government because ${state.sentence.trim()}`:'','','Game outcomes are fictional. They are not facts about real countries.'];const blob=new Blob([lines.filter(x=>x!==undefined).join('\n')],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='stranded-island-report.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
+function journal(){$('#journalTitle').textContent=`${state.name}: captain’s log`;$('#journalEntries').innerHTML=state.log.length?state.log.map((l,n)=>`<article class="log-entry"><span>${l.kind==='event'?'⚡ DISASTER':'DECISION'}</span><h3>${esc(l.title)}</h3><p>You chose: ${esc(l.choice)}</p><p>${esc(l.result)}</p>${l.news&&l.news.length?`<p class="log-dead">BREAKING: ${esc(l.news.join('. '))}.</p>`:''}<small>${esc(l.learn)}</small></article>`).join(''):'<p>Your first decision is waiting at the water station.</p>';$('#journalDialog').showModal();}
+function download(){const e=ENDINGS[state.ending],f=finalScore();const lines=[`STRANDED: GOVERN OR COLLAPSE · ISLAND REPORT`,`Island: ${state.name}`,`Standards: ${STANDARD}`,`Ending: ${e?e.title:'In progress'}`,state.score!=null?`Score: ${state.score}/100 · Rank: ${state.rank} · First try: ${f.first} of ${CHECK_TOTAL}`:'',`Lives lost: ${state.dead} of 30 · Survivors: ${alive(state)}${state.fled?` · Fled: ${state.fled}`:''}`,`Meters: ${labels.map((n,i)=>`${n} ${state.stats[i]}`).join(' | ')} | Ren's power ${state.ren}`,'',...state.log.map(l=>`${l.kind==='event'?'DISASTER':'DECISION'}: ${l.title}\n  Choice: ${l.choice}\n  Result: ${l.result}${l.news&&l.news.length?`\n  Breaking: ${l.news.join('. ')}`:''}\n  Concept: ${l.learn}\n`),state.sentence?`My sentence: Our island needed a government because ${state.sentence.trim()}`:'','','Game outcomes are fictional. They are not facts about real countries.'];const blob=new Blob([lines.filter(x=>x!==undefined).join('\n')],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='stranded-island-report.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
 function restart(){if(confirm('Start over? Your island on this device will be erased.')){localStorage.removeItem(KEY);try{window.classFirstTry&&classFirstTry.reset()}catch{}location.reload()}}
 const canvas=$('#map'),ctx=canvas.getContext('2d');let vw=0,vh=0,dpr=1,scale=1,ox=0,oy=0,clock=0,lastTime=0;
 const land=[ [152,464],[184,372],[267,304],[337,238],[420,225],[471,177],[564,195],[614,245],[711,230],[764,278],[808,362],[854,409],[860,492],[815,566],[808,643],[733,690],[687,753],[599,775],[537,812],[447,779],[368,794],[292,748],[236,683],[207,612],[166,560] ];
@@ -398,7 +467,7 @@ for(let i=0;i<62;i++){const x=220+rand(i+112)*570,y=260+rand(i+55)*475;if(inside
 Object.keys(locations).sort((a,b)=>locations[a].y-locations[b].y).forEach(drawLocation);
 cacheSpots.forEach((p,i)=>{if(!state.collected.includes(i))crate(p.x,p.y,true)});
 // Residents react to camp condition.
-for(let i=0;i<13;i++){const p=Object.values(locations)[i%6],x=p.x+Math.sin(clock*.3+i*2)*25+18,y=p.y+Math.cos(clock*.25+i*3)*16+24;if(state.stats[2]<=25&&i>6)continue;person(x,y,['#bd9864','#9bb3a0','#bd999e','#829eb0'][i%4],.8,true)}
+const walkers=Math.round(13*alive(state)/START_PEOPLE);for(let i=0;i<walkers;i++){const p=Object.values(locations)[i%6],x=p.x+Math.sin(clock*.3+i*2)*25+18,y=p.y+Math.cos(clock*.25+i*3)*16+24;if(state.stats[2]<=25&&i>6)continue;person(x,y,['#bd9864','#9bb3a0','#bd999e','#829eb0'][i%4],.8,true)}
 // Mission beacon.
 if(state.phase==='map'&&state.started&&BEATS[state.step]){const p=locations[BEATS[state.step].loc],r=34+Math.sin(clock*3)*3;ctx.strokeStyle='#f3c77c';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(p.x,p.y+9,r,r*.55,0,0,7);ctx.stroke();ctx.save();ctx.translate(p.x,p.y-68+Math.sin(clock*3)*3);polygon([[0,-11],[9,0],[0,11],[-9,0]],'#f6c477');ellipse(0,0,2,2,'#274544');ctx.restore();}
 // Location chips, away from buildings.
