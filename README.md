@@ -4,7 +4,6 @@ Classroom websites for U.S. History, World History, Sociology, and Government.
 
 - **Home page:** https://neotboy.github.io/socialstudies1800/ (activities sorted by class)
 - **Teacher dashboard:** https://neotboy.github.io/socialstudies1800/teacher-submissions/ (one code, a tab per class)
-- **The original Power & Social Stratification Quest game** now lives in `power-quest/`.
 
 ## Where student work goes
 Every activity that turns in work uses `shared/turnin.js`. The address of the Google Sheet saver is at the top of that file.
