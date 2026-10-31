@@ -29,7 +29,7 @@ window.CLASS_UNITS = {
     2: "Political Beliefs, Linkage Institutions & Citizenship"
   },
   "civics": {
-    1: "The Missing Constitution"
+    1: "Founders' Files (Civics Test Section 1)"
   }
 };
 
@@ -83,6 +83,7 @@ window.CLASS_ASSIGNMENTS = {
   "gov-unit2-day2-lobby-day":         { course: "government", unit: 2, day: 2, title: "Day 2 · Lobby Day: Interest Groups & Media", path: "civics/unit2-day2-lobby-day/" },
 
   // ---- Civics (Iowa civics test prep) · Friday 1 ----
+  "civics-test-s1-presentation":     { course: "civics", unit: 1, title: "Founders' Files (Slides)", path: "civics/civics-test-s1-presentation/", turnIn: false },
   "civics-test-s1-founders-defense":  { course: "civics", unit: 1, title: "Founders' Defense", path: "civics/civics-test-s1-founders-defense/" }
 };
 
