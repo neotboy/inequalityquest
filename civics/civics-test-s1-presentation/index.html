@@ -18,6 +18,19 @@ body:hover #bar,#bar:focus-within{opacity:1}
 #bar button{font:inherit;background:#1d3f73;color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer}
 #notes{position:fixed;left:0;right:0;bottom:0;max-height:30vh;overflow:auto;background:#fffaf0;color:#1b2430;padding:14px 18px;font-size:17px;line-height:1.45;display:none;border-top:4px solid #e0a526}
 #notes.on{display:block}
+#exitOpen{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:20;font:800 20px Nunito,system-ui,sans-serif;background:#c8402f;color:#fff;border:0;border-radius:14px;padding:14px 22px;box-shadow:0 6px 20px #0005;cursor:pointer}
+#exitOverlay{position:fixed;inset:0;z-index:30;background:#0e1626cc;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:24px 12px}
+#exitOverlay[hidden]{display:none}
+.xp{position:relative;background:#fbf8f1;color:#1b2430;font-family:Nunito,system-ui,sans-serif;max-width:640px;width:100%;border-radius:16px;padding:22px;box-shadow:0 20px 60px #0008}
+.xp h2{margin:0 0 4px;color:#1d3f73;font-size:26px}.xsub{margin:0 0 10px;color:#5b6574}
+.xclose{position:absolute;right:10px;top:8px;border:0;background:none;font-size:30px;cursor:pointer;color:#1d3f73}
+.xq{border-top:1px solid #e3dccb;padding:12px 0}.xq b{display:block;font-size:18px;line-height:1.35;margin-bottom:8px}
+.xch{display:grid;grid-template-columns:1fr 1fr;gap:8px}.xch button{font:700 16px Nunito,system-ui,sans-serif;background:#fff;border:2px solid #1d3f73;color:#1d3f73;border-radius:10px;padding:10px;cursor:pointer;text-align:left}
+.xch button:hover{background:#eef1f6}.xok{color:#1f6b3a;font-weight:800;margin:4px 0}.xmsg{color:#a3341f;font-weight:800;margin:8px 0 0;min-height:1.2em}
+.xp textarea,.xp input{width:100%;box-sizing:border-box;font:16px Nunito,system-ui,sans-serif;padding:10px;border:2px solid #9fb0c8;border-radius:10px;margin:4px 0 6px}
+.xp label{display:block;margin-top:8px}.xgo{width:100%;margin-top:8px;font:800 18px Nunito,system-ui,sans-serif;background:#1d3f73;color:#fff;border:0;border-radius:12px;padding:12px;cursor:pointer}
+.xp :focus-visible{outline:3px solid #2b6cb0;outline-offset:2px}
+@media(max-width:520px){.xch{grid-template-columns:1fr}}
 </style></head><body>
 <div id="stage">
 <section id="cover" data-transition="fade" style="background:#1d3f73;color:#fbf8f1;font-family:'Nunito', sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:32px">
@@ -514,4 +527,46 @@ document.getElementById('prev').onclick=function(){show(i-1);};document.getEleme
 document.getElementById('nbtn').onclick=function(){nt.classList.toggle('on');};
 function full(){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();else document.exitFullscreen();}
 document.getElementById('fs').onclick=full;
-</script></body></html>
+</script><script src="../../shared/assignments.js?v=20261031h"></script><script src="../../shared/turnin.js?v=20261030f"></script>
+<script>
+// ---- Online exit ticket (sends to the teacher dashboard) ----
+(function(){
+var STANDARD='SS.9-12.Gov.3; SS.9-12.Gov.4 — founding documents and the Constitution’s principles (Iowa civics test Q7, Q11, Q13)';
+var Q=[{id:'q1',text:'★ How many amendments does the U.S. Constitution have?',choices:['27','10','33','50'],right:'27'},
+{id:'q2',text:'“Life, Liberty, and the pursuit of Happiness” are in what founding document?',choices:['Declaration of Independence','U.S. Constitution','Bill of Rights','Articles of Confederation'],right:'Declaration of Independence'}];
+var W='A governor ignores a court order and says, “I’m in charge, so the rules don’t apply to me.” What idea is he breaking? Explain in one sentence.';
+var KEY='s1-exit-ticket',st={done:{},turnedIn:[]};try{st=Object.assign(st,JSON.parse(localStorage.getItem(KEY))||{})}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var open=document.createElement('button');open.id='exitOpen';open.textContent='✍️ Answer the exit ticket online';document.body.appendChild(open);
+var ov=document.createElement('div');ov.id='exitOverlay';ov.hidden=true;ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','Exit ticket');document.body.appendChild(ov);
+function draw(msg){var html='<div class="xp"><button class="xclose" aria-label="Close exit ticket">×</button><h2>Exit ticket · Founders’ Files</h2><p class="xsub">Answer all 3. Then type your name and turn in.</p>';
+Q.forEach(function(q,n){var ok=st.done[q.id];html+='<div class="xq"><b>'+(n+1)+'. '+esc(q.text)+'</b>'+(ok?'<p class="xok">✓ '+esc(q.right)+'</p>':'<div class="xch">'+shuffle(q.choices).map(function(c){return '<button data-q="'+q.id+'" data-c="'+esc(c)+'">'+esc(c)+'</button>'}).join('')+'</div>')+(msg&&msg.q===q.id?'<p class="xmsg">'+msg.t+'</p>':'')+'</div>'});
+var done=st.turnedIn||[];
+html+='<div class="xq"><b>3. '+esc(W)+'</b><textarea id="xAns" rows="3" placeholder="He is breaking ___ because…">'+esc(st.draft||'')+'</textarea></div>'+
+(done.length?'<p class="xok">✓ Turned in for '+done.map(esc).join(', ')+(/\.$/.test(done[done.length-1])?'':'.')+' Partner? Type their name and answer, then turn in again.</p>':'')+
+'<label for="xName"><b>Your name (first name + last initial)</b></label><input id="xName" type="text" autocomplete="off" placeholder="Jordan M."><button id="xTurn" class="xgo">Turn in</button><p id="xStatus" class="xmsg" role="status" aria-live="polite"></p></div>';
+ov.innerHTML=html;ov.querySelector('.xclose').onclick=function(){ov.hidden=true};
+document.getElementById('xAns').oninput=function(e){st.draft=e.target.value;save()};
+ov.querySelectorAll('[data-q]').forEach(function(b){b.onclick=function(){var q=Q.filter(function(x){return x.id===b.dataset.q})[0];
+ if(b.dataset.c===q.right){if(window.classFirstTry)classFirstTry.right(q.id);st.done[q.id]=true;save();draw()}
+ else{if(window.classFirstTry)classFirstTry.wrong();draw({q:q.id,t:'Not quite. The choices moved. Think back to the slides and try again.'})}}});
+document.getElementById('xTurn').onclick=turnIn}
+function turnIn(){var s=document.getElementById('xStatus'),ans=document.getElementById('xAns').value.trim(),name=document.getElementById('xName').value.trim(),btn=document.getElementById('xTurn');
+ if(!st.done.q1||!st.done.q2){s.textContent='Answer questions 1 and 2 first.';return}
+ if(ans.split(/\s+/).filter(Boolean).length<8){s.textContent='Write one full sentence (8+ words) that names the idea and explains it.';document.getElementById('xAns').focus();return}
+ if(!name){s.textContent='Type your first name and last initial, like Jordan M.';document.getElementById('xName').focus();return}
+ if(!window.classTurnIn){s.textContent='Turn-in only works on the class website. Tell your teacher.';return}
+ btn.disabled=true;s.textContent='Turning in…';
+ classTurnIn('https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({studentName:name,assignmentId:'civics-test-s1-presentation',answers:{Standard:STANDARD,'Q1 · Amendments':'27','Q2 · Life, Liberty…':'Declaration of Independence','Q3 · Governor ignores court':ans}})})
+ .then(function(r){return r.json().catch(function(){return{}}).then(function(d){if(!r.ok)throw new Error(d.error||'Your work did not save. Try again.')})})
+ .then(function(){st.turnedIn=(st.turnedIn||[]).concat([window.classShortName?classShortName(name):name]);st.draft='';save();draw();document.getElementById('xStatus').textContent='Turned in! Nice work.'})
+ .catch(function(e){s.textContent=e.message;btn.disabled=false})}
+open.onclick=function(){draw();ov.hidden=false};
+var exitIx=S.indexOf(document.getElementById('exit'));
+function sync(){open.hidden=(i!==exitIx)}
+var oldShow=show;show=function(n){oldShow(n);sync()};sync();
+})();
+</script>
+</body></html>
