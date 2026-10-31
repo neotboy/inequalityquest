@@ -1,153 +1,47 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Feed · Where Political Beliefs Come From | Government Unit 2 Day 1</title>
-<meta name="description" content="Scroll through one first-time Iowa voter's life to see how political beliefs, ideologies, and parties connect people to government.">
-<style>
-:root{--ink:#1d2731;--muted:#52606b;--paper:#f3f5f7;--card:#fff;--line:#d6dde3;--slate:#2b3a4a;--amber:#d99a21;--violet:#5b4b8a;--green:#26694a;--bad:#a2392f}
-*{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.5 system-ui,Segoe UI,Arial,sans-serif}
-header{background:var(--slate);color:#fff;padding:16px max(16px,calc((100vw - 900px)/2)) 12px;border-bottom:5px solid var(--amber)}
-.k{font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#f6d38d;margin:0}
-h1{margin:2px 0 4px;font-size:clamp(1.7rem,3.4vw,2.3rem)}
-.std{margin:2px 0;font-size:.92rem;color:#dfe6ec}.std b{color:#fff}
-.hud{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:8px max(16px,calc((100vw - 900px)/2));display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-weight:800;font-size:.92rem;box-shadow:0 2px 8px #1d273112}
-.hud .bar{flex:1;min-width:120px;height:10px;background:#e3e8ec;border-radius:9px;overflow:hidden}.hud .bar span{display:block;height:100%;width:0;background:var(--amber);transition:width .4s}
-.meters{display:flex;gap:14px;flex-wrap:wrap;width:100%}
-.meter{flex:1;min-width:250px}.meter .lab{display:flex;justify-content:space-between;font-size:.74rem;color:var(--muted);font-weight:800}
-.track{position:relative;height:12px;background:linear-gradient(90deg,#e9e4f5,#eef1f4,#e6f2ec);border-radius:9px;border:1px solid var(--line)}
-.dot{position:absolute;top:50%;width:20px;height:20px;border-radius:50%;background:var(--violet);border:3px solid #fff;box-shadow:0 1px 4px #0005;transform:translate(-50%,-50%);transition:left .6s}
-.meter .name{font-size:.78rem;font-weight:900;color:var(--ink)}
-main{max-width:900px;margin:auto;padding:14px 16px 60px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 3px 12px #1d27310d}
-.kicker{font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--violet);margin:0}
-h2{margin:2px 0 10px;font-size:1.45rem}
-.teach{background:#f2effa;border-left:5px solid var(--violet);border-radius:9px;padding:10px 14px;margin:0 0 12px}.teach p{margin:4px 0}.teach b{color:var(--violet)}
-.block{margin:14px 0;padding:14px;border-radius:12px;border:2px solid var(--line);background:#fff}
-.block.current{border-color:var(--slate);box-shadow:0 0 0 4px #d99a2140}
-.block h3{margin:0 0 10px;font-size:1.06rem;line-height:1.35;font-weight:700}
-.post{display:flex;gap:10px;align-items:flex-start;background:#f7f9fb;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 10px}
-.ava{flex:0 0 40px;height:40px;border-radius:50%;background:var(--slate);color:#fff;display:grid;place-items:center;font-weight:900;font-size:.85rem}
-.post .meta{font-size:.78rem;color:var(--muted);font-weight:800}.post p{margin:2px 0}
-.qlabel{font-size:.75rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--violet);margin:0 0 4px}
-.civics{display:inline-block;background:#fdf2dc;color:#7a5410;border:1px solid #efd39a;border-radius:12px;padding:2px 9px;font-size:.75rem;font-weight:900;margin-bottom:6px}
-.choices{display:grid;gap:8px}
-@media(min-width:700px){.q .choices{grid-template-columns:1fr 1fr}}
-button{font:inherit;cursor:pointer;border-radius:10px;min-height:46px}
-.choice{text-align:left;background:#fff;color:var(--ink);border:2px solid #c9d2da;padding:10px 12px;font-weight:650;line-height:1.3}
-.choice:hover:not(:disabled){border-color:var(--slate);background:#fafbfc}.choice:disabled{opacity:.5;cursor:not-allowed}
-.go{margin-top:12px;background:var(--slate);color:#fff;border:0;padding:11px 18px;font-weight:900}
-button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #2f7dbd;outline-offset:2px}
-.answered{font-weight:800;color:var(--green);margin:4px 0}.why{margin:2px 0;color:var(--muted)}
-.msg{min-height:1.3em;font-weight:750;margin:8px 0 0}.msg.bad{color:var(--bad)}.msg.good{color:var(--green)}
-label{display:block;font-weight:850;margin:14px 0 4px}.stem{margin:0 0 4px;color:var(--muted);font-size:.92rem}
-input,textarea{width:100%;font:inherit;border:2px solid #c9d2da;border-radius:9px;padding:10px;background:#fff;color:var(--ink)}
-.steps{display:grid;gap:6px;margin:10px 0;padding:0;list-style:none}.steps li{background:#eef1f4;border-radius:9px;padding:8px 12px;font-weight:700}
-.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin:8px 0}.grid4 div{background:#f7f9fb;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.92rem}.grid4 b{display:block;color:var(--violet)}
-.welcome{background:#e6f1ea;color:var(--green);font-weight:800;border-radius:9px;padding:8px 12px;margin:0 0 10px}
-.foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px;color:var(--muted);font-size:.85rem}
-.foot button{background:#e3e8ec;border:0;padding:8px 12px;font-weight:800;color:var(--ink)}
-.src{font-size:.8rem;color:var(--muted)}
-@media print{.hud,.foot,.go{display:none}}
-</style>
-<script src="../../shared/assignments.js?v=20261031a"></script>
-<script src="../../shared/turnin.js?v=20261031a"></script>
-<script src="../../shared/unit-game.js?v=20261031a"></script>
+<title>District 101 · Run for the Iowa House | Government Unit 2 Day 1</title>
+<meta name="description" content="It's 2030. You're 21 and running for the Iowa House. Build a coalition across six neighborhoods and beat your rival.">
+<link rel="stylesheet" href="style.css?v=6">
+<script src="../../shared/assignments.js?v=20261031d"></script>
+<script src="../../shared/turnin.js?v=20261031d"></script>
+<script src="../../shared/arena.js?v=20261031d"></script>
 </head><body>
 <header>
-  <p class="k">Government · Unit 2 · Day 1</p>
-  <h1>The Feed: Where Do Political Beliefs Come From?</h1>
-  <p class="std"><b>SS.9-12.Gov.12</b> Critique the influence of intermediary institutions on government and policy.</p>
-  <p class="std"><b>Goal:</b> Explain how people form political beliefs, how ideology differs from a party, and how parties, interest groups, and media influence government. · About 25 minutes.</p>
-</header>
-<div class="hud" aria-label="Progress and Riley's beliefs">
-  <span id="progressText">0 checks done</span>
-  <div class="bar" aria-hidden="true"><span id="progressFill"></span></div>
-  <div class="meters" id="meters" hidden>
-    <div class="meter"><div class="name">Riley's view: government's role in the economy</div><div class="lab"><span>More government action</span><span>Less government action</span></div><div class="track"><span class="dot" id="dotEcon" style="left:50%"></span></div></div>
-    <div class="meter"><div class="name">Riley's view: government rules on personal choices</div><div class="lab"><span>More rules</span><span>Fewer rules</span></div><div class="track"><span class="dot" id="dotPers" style="left:50%"></span></div></div>
+  <a class="brand" href="#" aria-label="District 101"><span class="brand-badge">101</span><span>DISTRICT 101<small>RUN FOR THE IOWA HOUSE</small></span></a>
+  <div class="status" aria-live="polite">
+    <span class="pill" id="weekPill">Getting started</span>
+    <span class="pill money" id="moneyPill">$0</span>
+    <span class="pill" id="energyPill" title="Moves left this week">Moves ●●●</span>
   </div>
-</div>
+  <div class="head-actions"><span id="saved">Saved on this device</span><button id="helpBtn" class="small">Directions</button><button id="resetBtn" class="small">Start over</button></div>
+</header>
 <main>
-  <p class="welcome" id="welcome" hidden></p>
-  <div id="app"></div>
-  <div class="foot"><span>Progress saves on this device. Your teacher sees your work after you turn it in.</span><button type="button" id="restartBtn">Start over</button></div>
+  <aside class="panel" aria-label="Your campaign">
+    <div class="panel-top"><div class="progress" aria-hidden="true"><i id="progressFill"></i></div><span id="stepLabel">Step 1</span></div>
+    <div id="panel"></div>
+  </aside>
+  <section class="world" aria-label="District 101 map">
+    <div class="pollbar" id="pollbar"></div>
+    <div class="map-wrap">
+      <canvas id="map" width="960" height="600" aria-label="Map of District 101. Click a neighborhood to campaign there."></canvas>
+      <div class="map-caption">HOUSE DISTRICT 101 · MARION &amp; CEDAR RAPIDS · <span>made-up district, real places</span></div>
+      <div id="mapHint" class="map-hint">Click a neighborhood</div>
+      <div id="toast" role="status" aria-live="polite"></div>
+    </div>
+    <div id="board" class="board" aria-label="Class leaderboard"></div>
+    <div class="talk"><b>DISTRICT TALK</b><div id="talk"></div></div>
+  </section>
 </main>
-<script>
-// How each life moment nudges Riley (shows on the meters after the check is answered).
-// econ: + = less government action in the economy; pers: + = fewer rules on personal choices
-const NUDGE = { a1: [0, 0], a2: [0, 0], a3: [-10, 0], a4: [26, 0], a5: [0, 24], a6: [0, 0] };
-const post = (ini, meta, body) => `<div class="post"><div class="ava" aria-hidden="true">${ini}</div><div><div class="meta">${meta}</div>${body}</div></div>`;
-UnitGame.start({
-  key: "gov-u2d1-the-feed-v1",
-  assignmentId: "gov-unit2-day1-the-feed",
-  title: "Government Unit 2 · Day 1 · The Feed",
-  standard: "SS.9-12.Gov.12",
-  oldApi: "https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",
-  hud: st => {
-    const show = st.scene >= 0;
-    document.getElementById("meters").hidden = !show;
-    let e = 50, p = 50;
-    Object.keys(NUDGE).forEach(id => { if (st.done[id]) { e += NUDGE[id][0]; p += NUDGE[id][1]; } });
-    document.getElementById("dotEcon").style.left = Math.max(4, Math.min(96, e)) + "%";
-    document.getElementById("dotPers").style.left = Math.max(4, Math.min(96, p)) + "%";
-  },
-  startLabel: "Start scrolling",
-  introHtml: `<p class="kicker">Meet Riley</p><h2>Riley, 18, Linn County, Iowa</h2>
-    <p>Riley turned 18 just in time to vote in Iowa's general election on November 3, 2026. Nobody is born with political beliefs, so where did Riley's come from?</p>
-    <p>You'll scroll through moments from Riley's life. Watch the two meters at the top move as Riley's beliefs form.</p>
-    <ul class="steps"><li>1. Read each moment and answer the check.</li><li>2. Learn how ideologies and parties are different.</li><li>3. Write 2 short answers and turn in.</li></ul>
-    <p class="src">Riley is a made-up person. The election date, the parties, the groups, and the civics test question are real.</p>`,
-  scenes: [
-    { kicker: "Part 1 of 4", title: "Where Beliefs Come From",
-      teach: `<p><b>Political socialization</b> is how people learn their political beliefs from the people and experiences around them.</p>
-        <p>Big influences: <b>family, school, peers</b> (friends), <b>media</b>, <b>religion and community</b>, and <b>work and money</b>.</p>`,
-      blocks: [
-        { type: "q", id: "a1", std: "Gov.12", label: "Moment 1 of 6", short: "Age 9: grandpa on voting", prompt: post("G", "Riley, age 9", `<p>Grandpa says: <b>"Always vote. People fought hard for that right."</b> Riley remembers it every election.</p>`) + "Which influence is shaping Riley here?", options: ["Family", "Media", "Peers", "School"], hint: "Who is at the dinner table?", why: "Family is usually the first influence on political beliefs. Riley learned that voting matters." },
-        { type: "q", id: "a2", std: "Gov.12", label: "Moment 2 of 6", short: "Age 14: algorithm feed", prompt: post("▶", "Riley, age 14", `<p>Riley watches one video about a political issue. The app's <b>algorithm</b> (the computer rules that pick what you see) shows more just like it. Soon the feed shows <b>only one side</b> of that issue.</p>`) + "Which influence is shaping Riley here?", options: ["Media", "Family", "Religion and community", "Work and money"], hint: "Where is the information coming from?", why: "Media shapes beliefs, and algorithms can keep showing one side." },
-        { type: "q", id: "a3", std: "Gov.12", label: "Moment 3 of 6", short: "Age 15: food pantry", prompt: post("C", "Riley, age 15", `<p>Riley's youth group packs meals for families. The leader says: <b>"We can't feed everyone. Programs like SNAP feed far more families than we ever could."</b></p>`) + "Which influence is shaping Riley here?", options: ["Religion and community", "School", "Media", "Work and money"], hint: "Which group is Riley volunteering with?", why: "Religion and community groups teach ideas about who should solve problems. This one made Riley see a bigger role for government help." },
-        { type: "q", id: "a4", std: "Gov.12", label: "Moment 4 of 6", short: "Age 16: first paycheck", prompt: post("$", "Riley, age 16", `<p>Riley's first paycheck from a grocery job: 40 hours, <b>$410</b>. About <b>$55</b> was taken out for Social Security, Medicare, and income tax. Riley thinks: "That's a lot of my money."</p>`) + "Which influence is shaping Riley here?", options: ["Work and money", "Family", "Peers", "Religion and community"], hint: "What experience made Riley start thinking about taxes?", why: "Real experiences with work and money shape beliefs. This one made Riley want lower taxes. Someone else could see the same paycheck and decide those programs are worth it." },
-        { type: "q", id: "a5", std: "Gov.12", label: "Moment 5 of 6", short: "Age 17: class debate on cameras", prompt: post("✎", "Riley, age 17", `<p>The class debates: <b>Should cities use license-plate cameras to help police?</b> One side says they solve crimes. The other says they track people who did nothing wrong. Riley worries about privacy.</p>`) + "Which influence is shaping Riley here?", options: ["School", "Media", "Family", "Work and money"], hint: "Where is the debate happening?", why: "School teaches about government and gives practice hearing both sides. Riley ended up wanting fewer rules that track people." },
-        { type: "q", id: "a6", std: "Gov.12", label: "Moment 6 of 6", short: "Age 18: friend group chat", prompt: post("✉", "Riley, age 18 · election week", `<p>Riley's friends all plan to vote the same way. Riley isn't sure, but <b>doesn't want to be the odd one out.</b></p>`) + "Which influence is shaping Riley here?", options: ["Peers", "Family", "School", "Religion and community"], hint: "Who is in the group chat?", why: "Peers (friends your age) can pressure people to fit in, even about voting." },
-        { type: "q", id: "a7", std: "Gov.12", short: "What is political socialization", prompt: "Which sentence best explains <b>political socialization</b>?", options: ["People learn political beliefs from those around them", "People are born already knowing their political side", "People get their political beliefs from one test", "People must join a party before they can vote"], hint: "Think about all six moments together.", why: "Beliefs are learned over time from family, media, school, friends, community, and life experiences." }
-      ] },
-    { kicker: "Part 2 of 4", title: "Mapping Beliefs: Ideology",
-      teach: `<p>A <b>political ideology</b> is a set of beliefs about what government should do.</p>
-        <div class="grid4"><div><b>Liberal</b>tends to want more government action in the economy (programs, regulations) and fewer government rules on many personal choices.</div><div><b>Conservative</b>tends to want less government action in the economy (lower taxes) and more support for laws that protect traditional values.</div><div><b>Libertarian</b>tends to want less government in <i>both</i> the economy and personal choices.</div><div><b>Moderate</b>mixes ideas from different sides and often favors compromise.</div></div>
-        <p>These are general patterns. Real people mix and match. For example, many conservatives want fewer rules on owning guns, and many liberals want more.</p>`,
-      blocks: [
-        { type: "q", id: "b1", std: "Gov.12", label: "Who would say it? 1 of 4", short: "Ideology: expand health coverage", prompt: "\"The government should use programs, like expanding health coverage, to help people who are struggling.\"", options: ["Liberal", "Conservative", "Libertarian", "Moderate"], hint: "This asks for MORE government action in the economy.", why: "Wanting more government programs in the economy fits liberal ideology." },
-        { type: "q", id: "b2", std: "Gov.12", label: "Who would say it? 2 of 4", short: "Ideology: low taxes, tradition", prompt: "\"Keep taxes low so businesses can grow, and pass laws that protect traditional values.\"", options: ["Conservative", "Liberal", "Libertarian", "Moderate"], hint: "Less government in the economy PLUS traditional values.", why: "Lower taxes plus traditional values fits conservative ideology." },
-        { type: "q", id: "b3", std: "Gov.12", label: "Who would say it? 3 of 4", short: "Ideology: gov out of both", prompt: "\"Government should stay out of the economy AND out of people's personal choices.\"", options: ["Libertarian", "Conservative", "Liberal", "Moderate"], hint: "Less government in BOTH areas.", why: "Less government in both areas fits libertarian ideology." },
-        { type: "q", id: "b4", std: "Gov.12", label: "Who would say it? 4 of 4", short: "Ideology: mix and compromise", prompt: "\"I agree with some ideas from each side. I want leaders to work together and compromise.\"", options: ["Moderate", "Libertarian", "Liberal", "Conservative"], hint: "This person doesn't pick one side.", why: "Mixing views and favoring compromise fits a moderate." },
-        { type: "q", id: "b5", std: "Gov.12", short: "Riley's ideology", prompt: "Look at Riley's two meters at the top. Which ideology label fits Riley best right now?", options: ["Libertarian", "Liberal", "Conservative", "Moderate"], hint: "Read both meters, then compare them to the four boxes above.", why: "Less government in both areas is the libertarian pattern. A different life could have led Riley somewhere else." }
-      ] },
-    { kicker: "Part 3 of 4", title: "Ideology vs. Party",
-      teach: `<p>A <b>political party</b> is an organized group that runs candidates, writes a <b>platform</b> (list of goals), and tries to win elections to control government.</p>
-        <p>An ideology is a <i>set of beliefs</i>. A party is a <i>group that acts</i>. The two major U.S. parties are the <b>Democratic</b> and <b>Republican</b> parties. Going into the 2026 election, Iowa law recognized only those two as official political parties. Other groups, like the Libertarian Party, can still run candidates.</p>
-        <p>A <b>voting bloc</b> is a group of voters who tend to vote alike. A <b>coalition</b> is several blocs a party brings together to win.</p>`,
-      blocks: [
-        { type: "q", id: "c1", std: "Gov.12", short: "Ideology vs party difference", prompt: "What is the difference between an ideology and a political party?", options: ["Ideology is beliefs; a party is a group running candidates", "Ideology runs candidates; a party is a set of shared beliefs", "Ideology is a law; a party is one branch of the government", "Ideology and party are two words for the very same thing"], hint: "One is ideas. The other is people organizing to win.", why: "Ideology = beliefs. Party = an organized group that runs candidates to put beliefs into action." },
-        { type: "q", id: "c2", std: "Gov.12", short: "Voting bloc", prompt: "Many rural Iowa farmers tend to vote the same way because they share similar concerns. They are an example of a…", options: ["Voting bloc", "Political platform", "Party coalition", "Interest group"], hint: "One group of voters with something in common.", why: "A group of voters with shared traits who tend to vote alike is a voting bloc." },
-        { type: "q", id: "c3", std: "Gov.12", short: "Party coalition", prompt: "A party wins by getting young voters, union workers, and suburban parents to support it together. This is a…", options: ["Party coalition", "Voting bloc", "Political ideology", "Primary election"], hint: "Several different groups joined together.", why: "Several voting blocs joined behind one party is a coalition." },
-        { type: "q", id: "c4", std: "Gov.12", short: "Why third parties struggle", prompt: "Why do third parties, like the Libertarian or Green Party, rarely win big U.S. elections?", options: ["Winner-take-all elections favor the two big parties", "The Constitution allows only two political parties", "Third-party candidates are not allowed to campaign", "Voters must belong to a party before they can vote"], hint: "Nothing BANS third parties. Think about how winners are picked.", why: "In most U.S. elections, the candidate with the most votes wins everything, which makes it hard for smaller parties." }
-      ] },
-    { kicker: "Part 4 of 4", title: "Do Parties and Media Connect You to Government?",
-      teach: `<p>Parties, <b>interest groups</b>, and media are <b>linkage institutions</b> (your standard calls them <i>intermediary institutions</i>). They connect regular people to government. They can help, and they can cause problems.</p><p>An <b>interest group</b> doesn't run candidates. It tries to influence laws, often by <b>lobbying</b> (meeting with lawmakers). Iowa examples: the Iowa Farm Bureau and the Iowa State Education Association.</p>`,
-      blocks: [
-        { type: "q", id: "d0", std: "Gov.12", short: "Interest group lobbying", prompt: "Leaders from the Iowa Farm Bureau meet with state lawmakers to push for a farm bill. What is happening?", options: ["An interest group is lobbying lawmakers", "A political party is running a candidate", "A news outlet is reporting on a new law", "A voting bloc is choosing a party leader"], hint: "The group isn't running anyone for office. What is it trying to do?", why: "The Farm Bureau is an interest group. Meeting with lawmakers to influence a bill is lobbying." },
-        { type: "q", id: "d1", std: "Gov.12", short: "Strength of parties", prompt: "Which is a <b>strength</b> of political parties?", options: ["They give voters a quick idea of what candidates stand for", "They make sure every voter hears both sides of each issue", "They stop candidates from ever raising money for ads", "They let the president skip Congress to pass new laws"], hint: "Think about how a party label helps a busy voter.", why: "A party label is a shortcut that tells voters a candidate's general goals." },
-        { type: "q", id: "d2", std: "Gov.12", short: "Weakness of media", prompt: "Which is a <b>weakness</b> of how media connects people to government?", options: ["Algorithms can keep showing people only one side", "Party leaders can pressure members to vote together", "Interest groups spend money to influence new laws", "Reporters can ask leaders hard questions in public"], hint: "The question is about MEDIA. Remember Moment 2 in Riley's life.", why: "Feeds that show only one side can leave people less informed. The party and interest-group choices are real problems, but they aren't about media." },
-        { type: "q", id: "d3", std: "Gov.12", label: "Iowa civics test practice", short: "Civics test Q69: civic participation", prompt: `<span class="civics">Civics test · Question 69</span><br>"What are two examples of civic participation in the United States?" Which choice below is one correct answer?`, options: ["Join a political party", "Get a driver's license", "Open a bank account", "Follow a celebrity online"], hint: "Civic participation means taking part in democracy.", why: "Joining a political party is on the official list. Others include voting, running for office, helping with a campaign, and contacting elected officials." }
-      ] }
-  ],
-  finale: {
-    title: "Explain It",
-    report: () => `<p>Riley's beliefs came from family, media, community, work, school, and friends. A different life could have led to different beliefs. Now show what you know.</p><p>Answer both in 1–2 sentences each.</p>`,
-    prompts: [
-      { id: "infl", short: "How parties or media influence government", label: "1. Pick political parties OR media. Explain one way it influences what government does or which laws pass. Give an example.", stem: "(Parties / Media) influence government by ___. For example, ___.", min: 90, mustInclude: ["part", "media", "news", "feed", "algorithm", "social media", "reporter"], mustMsg: "In answer 1, say whether you picked parties or media." },
-      { id: "crit", short: "Helpful or harmful? (critique)", label: "2. Is that influence mostly helpful or mostly harmful to democracy? Give one reason it helps and one problem it causes.", stem: "I think it is mostly (helpful / harmful) because ___. One problem is ___.", min: 90, mustAll: [["help", "harm", "good", "bad"], ["problem", "but", "however", "although", "hurt", "risk"]], mustMsg: "In answer 2, say if it is mostly helpful or harmful AND name one problem." }
-    ]
-  }
-});
-</script>
+
+<div id="overlay" class="overlay" hidden><article class="card" id="card"></article></div>
+
+<dialog id="helpDialog"><button class="close" data-close="helpDialog" aria-label="Close">×</button>
+  <p class="eyebrow">HOW TO PLAY</p><h2>Win District 101.</h2>
+  <ol class="howto"><li><b>Pick your side</b> on 6 hot takes. That's your platform.</li><li><b>Pick a party</b> (or run without one).</li><li><b>Campaign 5 weeks.</b> Click a neighborhood, then use your 3 moves. Money buys ads.</li><li><b>Handle the drama</b> each week. Every choice costs something.</li><li><b>Election night.</b> Win the most votes. Then write 2 short answers and turn in.</li></ol>
+  <p class="note">No single neighborhood has enough votes. You need several of them on your side. Once a week, click a classmate in the <b>Class Race</b> bar to steal a donor or team up. Polls are game estimates, not real data.</p>
+  <p class="note">Standard <b>SS.9-12.Gov.12</b>: Critique the influence of intermediary institutions on government and policy.</p>
+</dialog>
+
+<script src="game.js?v=8"></script>
 </body></html>
