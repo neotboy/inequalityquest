@@ -61,7 +61,7 @@ window.CLASS_ASSIGNMENTS = {
   "sociology-day-4-perspectives":             { course: "sociology", unit: 1, day: 4, title: "Day 4 · Sociological Perspectives (Reading)", path: "sociology/day-4-perspectives/" },
   "sociology-theory-casebook":                { course: "sociology", unit: 1, day: 4, title: "Day 4 · Theory Casebook", path: "day-4-theory-casebook/" },
   "sociology-day-7-research-ethics":          { course: "sociology", unit: 1, day: 7, title: "Day 7 · Ethics in Sociological Research (Reading)", path: "sociology/day-7-research-ethics/" },
-  "sociology-unit1-review-seahaven":          { course: "sociology", unit: 1, title: "Unit 1 Review · Escape from Seahaven", path: "sociology-ethics-review/", turnIn: false },
+  "sociology-unit1-review-seahaven":          { course: "sociology", unit: 1, title: "Unit 1 Review · Escape from Seahaven", path: "sociology-ethics-review/" },
 
   // ---- Sociology · Unit 2 ----
   "sociology-unit2-day1-first-shift":         { course: "sociology", unit: 2, day: 1, title: "Day 1 · First Shift: Status, Roles & Norms", path: "sociology/unit2-day1-first-shift/" },
