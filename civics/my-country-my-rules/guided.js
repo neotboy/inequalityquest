@@ -10,7 +10,7 @@ const G=state.guide&&state.guide.version===1?state.guide:{version:1,task:0,furth
 state.guide=G;G.decorating=false;G.lawDrafts=G.lawDrafts||{};G.task=Math.max(0,Math.min(LAST,Number(G.task)||0));G.furthest=Math.max(0,Math.min(LAST,Number(G.furthest)||0));
 let viewingInstructions=false,placePage=0,savedPlaceMode=false,editingRound=null,historyPage=0,replacingSlot=-1,chosenPlace=null,pendingChoice=null,choiceGoal='',mapPurpose='',lawDraft='',lawReason='',lawTask=-1,flagPurpose=G.flagPurpose||'';
 const longEnough=t=>String(t||'').trim().split(/\s+/).filter(Boolean).length>=3&&String(t||'').trim().length>=12;
-const hasFlag=()=>state.flag.length>0||state.flagBg!=='#16364a';
+const hasFlag=()=>!!state.flagSet||state.flag.length>0||state.flagBg!=='#16364a';
 const hasName=t=>String(t||'').trim().length>=2;
 const placeFor=i=>G.places[i]&&state.marks.find(m=>m.id===G.places[i].id);
 const K=CountryKnowledge;
@@ -141,7 +141,48 @@ function bindFooter(){if($('#guideNext'))$('#guideNext').onclick=advance;if($('#
 function updateNext(ready){const b=$('#guideNext');if(b)b.disabled=!ready;const h=$('#guideHelp');if(h)h.textContent=ready?'✓ Ready to continue.':'Finish this task to continue.';}
 function pickButtons(items,selected,attr){return `<div class="guided-options">${items.map(([k,t,d])=>`<button type="button" ${attr}="${esc(k)}" class="guided-choice ${selected===k?'selected':''}" aria-pressed="${selected===k}"><b>${esc(t)}</b>${d?`<span>${esc(d)}</span>`:''}</button>`).join('')}</div>`;}
 function names(){const key=G.task===0?'name':'leader',name=key==='name';$('#tools').innerHTML=intro(name?'Name your country. Funny names are welcome.':'Who is in charge? Give your leader a name or title.')+`<label for="guidedName">${name?'Country name':'Leader name'}</label><input id="guidedName" maxlength="${name?40:30}" autocomplete="off" placeholder="${name?'Example: The Republic of Chaos':'Example: President Pickles'}" value="${esc(state[key])}"><p class="guided-help">Use at least 2 characters. You can change it later.</p>`+footer(taskValid(G.task));$('#guidedName').oninput=e=>{state[key]=e.target.value;$(name?'#countryName':'#leaderName').value=e.target.value;save();updateNext(taskValid(G.task));};$('#guidedName').onkeydown=e=>{if(e.key==='Enter'&&taskValid(G.task))advance();};bindFooter();}
-function flagTask(){const purposes=[['freedom','Freedom'],['strength','Strength'],['community','Community'],['nature','Nature'],['humor','Something funny'],['own','My own meaning']];$('#tools').innerHTML=intro('Draw a flag or change its color. Then click “Use this flag”.')+`<button id="guidedFlag" class="primary wide">${G.flagConfirmed?'Edit your flag ✎':'Open the flag editor ✎'}</button><p class="guided-question">What does your flag stand for?</p>`+pickButtons(purposes,G.flagPurpose,'data-flag-purpose')+footer(taskValid(2));$('#guidedFlag').onclick=openFlag;document.querySelectorAll('[data-flag-purpose]').forEach(b=>b.onclick=()=>{G.flagPurpose=b.dataset.flagPurpose;refresh();});bindFooter();}
+/* ---------- Quick flag maker: pick a design, two colors, a symbol. Drawing on top is optional. ---------- */
+const FLAG_PAL=['#c8102e','#1f4e9c','#2e7d4f','#f2c230','#222222','#f7f4ea','#e8772e','#6a3d9a'];
+const FLAG_PATTERNS=[['bands-v','Bands'],['bands-h','Stripes'],['cross','Cross'],['diag','Diagonal'],['canton','Corner box'],['circle','Circle']];
+const FLAG_SYMBOLS=[['none','None'],['star','Star'],['sun','Sun'],['stars3','3 stars']];
+function starPath(c,x,y,r){c.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.42:r;c.lineTo(x+rr*Math.cos(a),y+rr*Math.sin(a));}c.closePath();c.fill();}
+function paintFlag(c,w,h,f){
+ const a=f.c1,b=f.c2;c.save();c.fillStyle=a;c.fillRect(0,0,w,h);c.fillStyle=b;let cx=w/2,cy=h/2,size=h*.22;
+ if(f.p==='bands-v')c.fillRect(w/3,0,w/3,h);else if(f.p==='bands-h')c.fillRect(0,h/3,w,h/3);
+ else if(f.p==='cross'){c.fillRect(w*.3,0,h*.2,h);c.fillRect(0,h*.4,w,h*.2);cx=w*.3+h*.1;}
+ else if(f.p==='diag'){c.beginPath();c.moveTo(w,0);c.lineTo(w,h);c.lineTo(0,h);c.closePath();c.fill();}
+ else if(f.p==='canton'){for(let i=1;i<7;i+=2)c.fillRect(0,i*h/7,w,h/7);c.fillStyle=a;c.fillRect(0,0,w*.42,h*4/7);c.strokeStyle=b;c.lineWidth=h*.02;c.strokeRect(0,0,w*.42,h*4/7);cx=w*.21;cy=h*2/7;size=h*.15;}
+ else if(f.p==='circle'){c.beginPath();c.arc(w/2,h/2,h*.3,0,Math.PI*2);c.fill();}
+ const light=x=>['#f7f4ea','#f2c230'].includes(x),behind={'bands-v':b,'bands-h':b,cross:b,diag:a,canton:a,circle:b}[f.p]||a;
+ const symColor=f.p==='circle'&&a!==b?a:light(behind)?'#222222':'#f7f4ea';c.fillStyle=symColor;c.strokeStyle=symColor;
+ if(f.sym==='star')starPath(c,cx,cy,size);
+ else if(f.sym==='sun'){c.beginPath();c.arc(cx,cy,size*.55,0,Math.PI*2);c.fill();c.lineWidth=Math.max(1.5,size*.12);for(let i=0;i<12;i++){const t=i*Math.PI/6;c.beginPath();c.moveTo(cx+Math.cos(t)*size*.75,cy+Math.sin(t)*size*.75);c.lineTo(cx+Math.cos(t)*size*1.05,cy+Math.sin(t)*size*1.05);c.stroke();}}
+ else if(f.sym==='stars3')[-1,0,1].forEach(k=>starPath(c,cx+k*size*1.15,cy,size*.5));
+ c.restore();
+}
+drawFlag=function(){if(state.flagSet)paintFlag(fc,600,360,state.flagSet);else{fc.fillStyle=state.flagBg;fc.fillRect(0,0,600,360);}state.flag.forEach(s=>stroke(fc,s));tc.clearRect(0,0,150,90);tc.drawImage(flag,0,0,150,90);};
+function flagTask(){
+ if(!state.flagSet)state.flagSet={p:'bands-v',c1:FLAG_PAL[Math.floor(Math.random()*4)],c2:FLAG_PAL[5],sym:'star'};
+ G.flagConfirmed=true;const f=state.flagSet;
+ const purposes=[['freedom','Freedom'],['strength','Strength'],['community','Community'],['nature','Nature'],['humor','Something funny'],['own','My own meaning']];
+ $('#tools').innerHTML=intro('Tap a design, two colors, and a symbol. Then pick what it stands for.')+`<div class="flag-maker"><div class="flag-preview"><canvas id="flagBig" width="300" height="180" aria-label="Your flag"></canvas></div>
+ <p class="maker-label">Design</p><div class="flag-patterns">${FLAG_PATTERNS.map(([k,n])=>`<button type="button" data-pattern="${k}" class="${f.p===k?'selected':''}" aria-pressed="${f.p===k}" aria-label="${n}"><canvas width="60" height="36" data-mini="${k}"></canvas><small>${n}</small></button>`).join('')}</div>
+ <p class="maker-label">Main color</p><div class="swatches">${FLAG_PAL.map(c=>`<button type="button" class="swatch ${f.c1===c?'selected':''}" data-c1="${c}" style="--sw:${c}" aria-label="Main color ${c}" aria-pressed="${f.c1===c}"></button>`).join('')}</div>
+ <p class="maker-label">Second color</p><div class="swatches">${FLAG_PAL.map(c=>`<button type="button" class="swatch ${f.c2===c?'selected':''}" data-c2="${c}" style="--sw:${c}" aria-label="Second color ${c}" aria-pressed="${f.c2===c}"></button>`).join('')}</div>
+ <p class="maker-label">Symbol</p><div class="flag-symbols">${FLAG_SYMBOLS.map(([k,n])=>`<button type="button" data-sym="${k}" class="${f.sym===k?'selected':''}" aria-pressed="${f.sym===k}">${n}</button>`).join('')}</div>
+ <button id="guidedFlag" type="button" class="wide guide-back">Draw on it (optional) ✎</button></div>
+ <p class="guided-question">What does your flag stand for?</p>`+pickButtons(purposes,G.flagPurpose,'data-flag-purpose')+footer(taskValid(2));
+ const paintAll=()=>{drawFlag();const big=$('#flagBig').getContext('2d');big.clearRect(0,0,300,180);big.drawImage(flag,0,0,300,180);document.querySelectorAll('[data-mini]').forEach(cv=>paintFlag(cv.getContext('2d'),60,36,{...f,p:cv.dataset.mini}));};
+ paintAll();
+ const setF=(k,v)=>{f[k]=v;const y=window.scrollY;refresh();window.scrollTo(0,y);};
+ document.querySelectorAll('[data-pattern]').forEach(x=>x.onclick=()=>setF('p',x.dataset.pattern));
+ document.querySelectorAll('[data-c1]').forEach(x=>x.onclick=()=>setF('c1',x.dataset.c1));
+ document.querySelectorAll('[data-c2]').forEach(x=>x.onclick=()=>setF('c2',x.dataset.c2));
+ document.querySelectorAll('[data-sym]').forEach(x=>x.onclick=()=>setF('sym',x.dataset.sym));
+ $('#guidedFlag').onclick=openFlag;
+ document.querySelectorAll('[data-flag-purpose]').forEach(b=>b.onclick=()=>{G.flagPurpose=b.dataset.flagPurpose;const y=window.scrollY;refresh();window.scrollTo(0,y);});
+ if(!taskValid(2))$('#guideHelp').textContent='Pick what your flag stands for to continue.';
+ bindFooter();}
 function mapTask(){
  const slot=G.task-3,record=G.places[slot],saved=placeFor(slot),used=G.places.filter((p,i)=>i!==slot).map(p=>p.id);
  const usedNames=G.places.filter((p,i)=>i!==slot).map(p=>state.marks.find(m=>m.id===p.id)?.text);
@@ -289,7 +330,7 @@ function instructions(){
 }
 $('#instructionsBtn').onclick=()=>{viewingInstructions=true;refresh();focusTask();};
 renderTools=function(){shell();if(G.instructionsSeen!==true||viewingInstructions){instructions();return;}if(G.decorating&&finished()){view='build';freeTools();$('#tools').querySelector('.step-intro').innerHTML='<h2>Keep decorating</h2><p>Your required work is complete. Add places, draw, or edit your flag.</p>';$('#tools').querySelector('[data-next-step]')?.remove();const b=document.createElement('button');b.className='primary wide step-next';b.textContent='Return to my finished country →';b.onclick=()=>{G.decorating=false;moveTask(LAST);};$('#tools').append(b);return;}if(G.task<2)names();else if(G.task===2)flagTask();else if(G.task<=7)mapTask();else if(G.task<=12)government();else if(G.task===13)crisis();else if(G.task<=15)law();else review();};
-$('#flagDone').onclick=()=>{if(G.task===2&&!hasFlag()){toast('Draw a symbol or change the flag background first.');return;}G.flagConfirmed=hasFlag();originalFlagDone();save();};
+$('#flagDone').onclick=()=>{G.flagConfirmed=true;originalFlagDone();save();refresh();};
 let profileDownloadUrl='';
 $('#saveImage').onclick=null;
 $('#finishBtn').onclick=()=>{
