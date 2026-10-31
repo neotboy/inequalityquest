@@ -200,10 +200,15 @@ function mapTask(){
  }else if(selected){
   content=`<p class="guided-success"><b>Your place:</b> ${esc(selected.name||selected.text)}</p><p class="guided-question">What will this place help people do?</p>`+pickButtons(purposes,mapPurpose,'data-place-purpose')+`<button id="buildGuidedPlace" class="primary wide step-next" ${purposes.some(p=>p[0]===mapPurpose)?'':'disabled'}>Build this place →</button><button id="changePlace" class="wide guide-back">← Choose a different place</button>`;
  }else{
-  const shown=pool.slice(placePage*3,placePage*3+3);
-  content=pickButtons(shown.map((p,i)=>[String(placePage*3+i),(p.icon||'📍')+' '+(p.name||p.text)]),null,savedPlaceMode?'data-existing-place':'data-new-place')+`<div class="place-pager">${placePage>0?'<button id="placePrevious">← Back</button>':''}${placePage<pages-1?'<button id="placeMore">Three other places →</button>':''}</div>${old.length?`<button id="toggleSavedPlaces" class="wide guide-back">${savedPlaceMode?'Choose a new place instead':'Use a place already on my map'}</button>`:''}`;
+  if(savedPlaceMode){content=pickButtons(old.map((p,i)=>[String(i),(p.icon||'📍')+' '+p.text]),null,'data-existing-place')+`<button id="toggleSavedPlaces" class="wide guide-back">Choose a new place instead</button>`;}
+  else{
+   /* One big board: every place at once, grouped. No paging arrows. */
+   const builtNames=G.places.map(p=>state.marks.find(m=>m.id===p.id)?.text).filter(Boolean);
+   content=`<div class="place-board">${stickerGroups.map(g=>`<div class="board-group"><p class="board-label">${esc(g.label.replace(/ \(.*\)/,''))}</p><div class="board-grid">${g.items.map(([icon,name])=>{const idx=freshPlaces.findIndex(f=>f.name===name);const built=builtNames.includes(name);return `<button type="button" class="board-tile${built?' built':''}" ${idx<0?'disabled':`data-new-place="${idx}"`} aria-label="${esc(name)}${built?' (already built)':''}"><span class="board-icon">${icon}</span><span class="board-name">${esc(name)}</span>${built?'<span class="board-check">✓</span>':''}</button>`}).join('')}</div></div>`).join('')}</div>${old.length?`<button id="toggleSavedPlaces" class="wide guide-back">Use a place already on my map</button>`:''}`;
+  }
  }
- $('#tools').innerHTML=intro(`Place ${slot+1} of 5. Pick one place. Then choose one of its two purposes.`)+content+(saved&&!chosenPlace&&replacingSlot!==slot?footer(taskValid(G.task)):'<button id="guideBack" class="wide guide-back">← Back to the last task</button>');
+ const tracker=`<div class="place-slots" aria-label="Your five places">${[0,1,2,3,4].map(i=>{const m=placeFor(i);return `<span class="place-slot${i===slot?' current':''}${m?' filled':''}" title="${m?esc(m.text):'Place '+(i+1)}">${m?(m.icon||'📍'):(i+1)}</span>`}).join('')}</div>`;
+ $('#tools').innerHTML=intro(`Place ${slot+1} of 5. Tap any place on the board. Then pick its purpose.`)+tracker+content+(saved&&!chosenPlace&&replacingSlot!==slot?footer(taskValid(G.task)):'<button id="guideBack" class="wide guide-back">← Back to the last task</button>');
  document.querySelectorAll('[data-new-place]').forEach(b=>b.onclick=()=>{chosenPlace=freshPlaces[+b.dataset.newPlace];mapPurpose='';refresh();});
  document.querySelectorAll('[data-existing-place]').forEach(b=>b.onclick=()=>{chosenPlace={saved:old[+b.dataset.existingPlace].id};mapPurpose='';refresh();});
  if($('#placeMore'))$('#placeMore').onclick=()=>{placePage++;refresh();};
