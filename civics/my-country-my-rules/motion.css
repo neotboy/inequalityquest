@@ -1,0 +1,77 @@
+/* Motion layer for My Country, My Rules.
+   One loud moment (the BREAKING card); everything else is quick and quiet.
+   Reduced motion: no movement, only short fades. */
+:root{--mo-ease:cubic-bezier(.2,.8,.2,1);--mo-spring:cubic-bezier(.3,1.4,.5,1)}
+
+/* Buttons feel pressed */
+.guided button{transition:background-color .16s,border-color .16s,color .16s,box-shadow .14s,transform .14s var(--mo-ease)}
+.guided button:not(:disabled):active{transform:translateY(2px) scale(.985)}
+.guided button.primary:not(:disabled):active,.guided .primary:not(:disabled):active,.guided button.finish:not(:disabled):active{box-shadow:0 1px 0 #9d3f30}
+.guided .studio nav button.active:not(:disabled):active{box-shadow:0 1px 0 #155c60}
+
+/* Bars glide to their new value */
+.meter-track i,.chaos-strip .cs-bar i,.guided-progress i{transition:width .85s var(--mo-ease)}
+.meter.mo-up>div:first-child b{animation:moUp 1.4s ease-out}
+.meter.mo-down>div:first-child b{animation:moDown 1.4s ease-out}
+.meter.mo-up .meter-track i,.meter.mo-down .meter-track i{animation:moBarGlow 1.4s ease-out}
+@keyframes moUp{0%,100%{color:inherit}15%,55%{color:#23855d}}
+@keyframes moDown{0%,100%{color:inherit}15%,55%{color:#c0402a}}
+@keyframes moBarGlow{0%,100%{filter:none}25%{filter:brightness(1.18) saturate(1.2)}}
+
+/* Numbers that count: the real text stays put for screen readers */
+.guided .final-score .fs-big,.guided .final-score .fs-dead b,.chaos-strip .cs-item b,.meter b{font-variant-numeric:tabular-nums}
+.mo-counting{position:relative;color:transparent!important}
+mo-num.mo-ghost{position:absolute;left:0;top:0;white-space:nowrap;pointer-events:none;color:var(--mo-ink)!important;font:inherit!important;letter-spacing:inherit!important;text-transform:none!important;display:block;margin:0;padding:0}
+
+/* Moving between tasks */
+#tools.mo-enter{animation:moRise .4s var(--mo-ease) both}
+#tools.mo-fade{animation:moFade .25s ease-out both}
+.mo-reveal{animation:moReveal .45s var(--mo-ease) both}
+.mo-picked{animation:moPick .34s var(--mo-spring)}
+@keyframes moRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes moFade{from{opacity:0}to{opacity:1}}
+@keyframes moReveal{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes moPick{0%{transform:scale(.975)}60%{transform:scale(1.012)}100%{transform:none}}
+
+/* BREAKING: a live news card that drops in, wipes a red rule across, and types its headline */
+.guided .breaking{position:relative;overflow:hidden;box-shadow:0 10px 26px #2a171424}
+.guided .breaking::before{content:'';position:absolute;left:0;top:0;width:100%;height:3px;background:linear-gradient(90deg,#e0412a,#ff9a7d 65%,#ff9a7d00);transform-origin:left center}
+.guided .breaking .breaking-kicker::before{content:'';display:inline-block;width:8px;height:8px;margin:0 8px 2px 0;border-radius:50%;background:#ff5a3c;vertical-align:middle;animation:moLive 1.7s ease-out infinite}
+@keyframes moLive{0%{box-shadow:0 0 0 0 #ff5a3c99}70%,100%{box-shadow:0 0 0 7px #ff5a3c00}}
+.guided .breaking.mo-breaking-in{animation:moBreakIn .6s cubic-bezier(.18,.9,.25,1.04) both}
+.guided .breaking.mo-breaking-in::before{animation:moWipe .75s .2s var(--mo-ease) both}
+.guided .breaking.mo-breaking-in h2{animation:moType .7s .22s cubic-bezier(.5,0,.2,1) both}
+.guided .breaking.mo-breaking-in .breaking-toll{animation:moToll .9s .62s ease-out both}
+.guided .breaking.mo-breaking-in p:not(.breaking-toll){animation:moFade .45s .8s ease-out both}
+#tools.mo-after-breaking>:not(.breaking){animation:moFade .45s .95s ease-out both}
+@keyframes moBreakIn{from{opacity:0;transform:translateY(-18px) scale(.965);box-shadow:0 0 0 #2a171400}60%{opacity:1}to{opacity:1;transform:none;box-shadow:0 10px 26px #2a171424}}
+@keyframes moWipe{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes moType{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes moToll{0%{opacity:0;transform:translateY(5px)}35%{opacity:1;transform:none;text-shadow:0 0 14px #ff6a4acc}100%{opacity:1;text-shadow:0 0 0 #ff6a4a00}}
+
+/* Lives lost: a red pulse while the number ticks up, plus a soft edge darkening */
+.chaos-strip .cs-dead{position:relative}
+.chaos-strip.mo-hit .cs-dead{animation:moDeadPulse 1.8s ease-out}
+.chaos-strip.mo-hit .cs-dead b{transform-origin:left center;animation:moDeadNum 1.6s ease-out}
+@keyframes moDeadPulse{0%{box-shadow:0 0 0 0 #d1361b80}12%{background:#ffd7c9;border-color:#d1361b}55%{box-shadow:0 0 0 11px #d1361b00}100%{background:#fff0ea;border-color:#e3a58f;box-shadow:0 0 0 0 #d1361b00}}
+@keyframes moDeadNum{0%,100%{transform:none}18%{transform:scale(1.2)}40%{transform:scale(1)}}
+body.mo-vignette::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;background:radial-gradient(ellipse 78% 72% at 50% 50%,#8c1a0a00 58%,#8c1a0a40 100%);animation:moVignette 1.9s ease-out both}
+@keyframes moVignette{0%{opacity:0}16%{opacity:1}100%{opacity:0}}
+
+/* Final score: the number climbs, then the rank lands */
+.guided .final-score.mo-score-in{animation:moReveal .5s var(--mo-ease) both}
+.guided .final-score.mo-score-in .fs-rank{animation:moRank .55s 1.55s var(--mo-spring) both}
+.guided .final-score.mo-score-in .fs-ending,.guided .final-score.mo-score-in .fs-parts{animation:moFade .5s 1.8s ease-out both}
+@keyframes moRank{from{opacity:0;transform:translateY(8px) scale(.94)}to{opacity:1;transform:none}}
+
+@media (prefers-reduced-motion:reduce){
+ .guided button{transition:background-color .16s,border-color .16s,color .16s}
+ .guided button:not(:disabled):active{transform:none}
+ .meter-track i,.chaos-strip .cs-bar i,.guided-progress i{transition:none}
+ .meter.mo-up>div:first-child b,.meter.mo-down>div:first-child b,.meter.mo-up .meter-track i,.meter.mo-down .meter-track i,
+ #tools.mo-enter,.mo-reveal,.mo-picked,.guided .breaking .breaking-kicker::before,
+ .guided .breaking.mo-breaking-in,.guided .breaking.mo-breaking-in::before,.guided .breaking.mo-breaking-in *,#tools.mo-after-breaking>*,
+ .chaos-strip.mo-hit .cs-dead,.chaos-strip.mo-hit .cs-dead b,.guided .final-score.mo-score-in,.guided .final-score.mo-score-in *{animation:none!important}
+ body.mo-vignette::after{display:none}
+ #tools.mo-fade{animation:moFade .2s ease-out both}
+}

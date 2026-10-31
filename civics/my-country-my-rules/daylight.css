@@ -138,13 +138,7 @@ body.guided{color:#263b50;background:radial-gradient(ellipse at 8% 5%,#ffe4ab88,
 .chaos-strip .cs-protests{background:#fff6e1;border-color:#e2c27c}.chaos-strip .cs-protests b{color:#8a5a00}
 .chaos-strip .cs-rebellion{background:#ffe9e4;border-color:#d98471}.chaos-strip .cs-rebellion b{color:#a3321c}
 .chaos-strip .cs-warn{grid-column:1/-1;margin:0;font-size:13px;font-weight:700;color:#a3321c;background:#fff0ea;border-radius:8px;padding:6px 10px}
-.chaos-strip.cs-hit .cs-dead{animation:csPulse .9s ease}
-@keyframes csPulse{0%{transform:scale(1)}30%{transform:scale(1.12);background:#f9c6b6}100%{transform:scale(1)}}
-body.chaos-flash::after{content:'';position:fixed;inset:0;background:#d1361b;opacity:0;pointer-events:none;z-index:999;animation:csFlash .9s ease}
-body.chaos-flash .studio{animation:csShake .45s ease}
-@keyframes csFlash{0%{opacity:.28}100%{opacity:0}}
-@keyframes csShake{0%,100%{transform:none}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
-@media(prefers-reduced-motion:reduce){body.chaos-flash .studio,.chaos-strip.cs-hit .cs-dead{animation:none}body.chaos-flash::after{animation:none;opacity:0}}
+/* Crisis hit animation lives in motion.css (pulse, ticker, vignette). */
 .guided .breaking{background:#2a1714;color:#fff;border-radius:14px;padding:16px 18px;margin:0 0 14px;border-left:8px solid #e0412a}
 .guided .breaking .breaking-kicker{font-size:12px;font-weight:900;letter-spacing:.14em;color:#ff8f78}
 .guided .breaking h2{font-size:27px;line-height:1.15;margin:6px 0 8px;color:#fff}

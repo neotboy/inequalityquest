@@ -115,9 +115,8 @@
 .event-card.surprise .event-top{background:#3a1612}
 .event-card.surprise #eventLocation{color:#ff8a76}
 .event-card.surprise #eventType{color:#ff8a76}
-body.disaster::after,body.alarm::after{content:'';position:fixed;inset:0;z-index:60;pointer-events:none;background:radial-gradient(circle,#e5604f00 40%,#e5604f88);animation:redflash .9s ease-out forwards}
+body.disaster::after,body.alarm::after{content:'';position:fixed;inset:0;z-index:60;pointer-events:none;background:radial-gradient(circle,#e5604f00 45%,#e5604f66);animation:redflash 1.1s ease-out forwards}
 body.alarm::after{background:radial-gradient(circle,#e5604f00 55%,#e5604f55)}
-body.disaster .result-card,body.alarm .event-card{animation:shake .45s}
 @keyframes redflash{from{opacity:1}to{opacity:0}}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(2px)}}
 @media(prefers-reduced-motion:reduce){body.disaster::after,body.alarm::after{display:none}}
@@ -132,3 +131,116 @@ body.disaster .result-card,body.alarm .event-card{animation:shake .45s}
 .score-parts b{color:var(--mint)}.score-parts .neg b{color:#ff7a66}
 .log-entry p.log-dead{color:#ff8a76;font-weight:700}
 @media(max-width:650px){.people{grid-column:1/3;margin:6px 0 0;gap:6px}.people .pc{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 6px}.people .pc b{font-size:18px;display:inline}.people .pc span{font-size:8px}.deltas{grid-template-columns:repeat(3,1fr)}.score-row{gap:16px}.lives-big b{font-size:48px}.breaking ul{font-size:14px}}
+
+/* v10 motion pass: one easing family, entrances that answer what just happened, nothing looping that competes with reading. */
+:root{--ease:cubic-bezier(.16,1,.3,1);--ease-io:cubic-bezier(.65,0,.35,1)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+@keyframes veil{from{opacity:0}}
+.overlay{animation:veil .28s ease-out}
+.meter-fill{transition:width .9s var(--ease)}
+.choice{transition:background .2s,border-color .2s,opacity .35s}
+/* Decision cards */
+.event-card{animation:cardIn .55s var(--ease) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(26px) scale(.97)}}
+.event-art svg:first-child{transform-origin:50% 70%;will-change:transform;animation:kenburns 16s ease-in-out infinite alternate}
+@keyframes kenburns{to{transform:scale(1.07) translateX(-10px)}}
+.event-body>*{animation:rise .5s var(--ease) both}
+.event-body>:nth-child(2){animation-delay:.08s}.event-body>:nth-child(3),.event-body>:nth-child(4){animation-delay:.16s}.event-body>:nth-child(5){animation-delay:.24s}.event-body>:nth-child(6){animation-delay:.32s}
+#choiceList>.choice{animation:rise .45s var(--ease) both}
+#choiceList>.choice:nth-child(1){animation-delay:.34s}#choiceList>.choice:nth-child(2){animation-delay:.42s}#choiceList>.choice:nth-child(3){animation-delay:.5s}
+.charter-grid .purpose{animation:rise .4s var(--ease) both}
+.charter-grid .purpose:nth-child(2n){animation-delay:.06s}.charter-grid .purpose:nth-child(n+3){animation-delay:.12s}.charter-grid .purpose:nth-child(n+5){animation-delay:.18s}
+.purpose{transition:border-color .2s,background .2s,transform .2s var(--ease)}.purpose.picked{transform:scale(1.015)}
+/* BREAKING cards: slam in, red edge breathes twice, a light sweep crosses the header, the room darkens at the edges. */
+.event-card.surprise{animation:breakIn .65s var(--ease) both,redEdge 1.4s .55s ease-in-out 2}
+@keyframes breakIn{0%{opacity:0;transform:scale(1.07)}40%{opacity:1}100%{transform:none}}
+@keyframes redEdge{50%{box-shadow:0 0 0 5px #e5604f30,0 0 70px #e5604f40,0 25px 100px #0009}}
+.event-card.surprise .event-top{position:relative;overflow:hidden}
+.event-card.surprise .event-top::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,#ff8a7630 50%,transparent 70%);transform:translateX(-100%);animation:sweep 1.6s .5s var(--ease-io) 2;pointer-events:none}
+@keyframes sweep{to{transform:translateX(100%)}}
+#event.is-breaking::before,#result.is-hit::before{content:'';position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 42%,#3a0b07b0 100%);animation:breathe 2.4s ease-in-out 2 alternate both}
+@keyframes breathe{from{opacity:.65}to{opacity:1}}
+.decision-echo{animation:rise .5s .1s var(--ease) both}
+.impact-overlay .impact-label{animation:labelIn .6s .35s var(--ease) both}
+@keyframes labelIn{from{opacity:0;transform:translateX(-14px)}}
+.impact-overlay .rain{stroke-dasharray:9 7;animation:rainFall .5s linear infinite}
+@keyframes rainFall{to{stroke-dashoffset:-16}}
+.impact-overlay .puff{animation:puff 5s ease-in-out infinite alternate}
+@keyframes puff{to{transform:translate(10px,-6px)}}
+.impact-overlay .tape{animation:tape 1.2s linear infinite}
+@keyframes tape{to{stroke-dashoffset:-14}}
+/* Results */
+.result-card{animation:cardIn .5s var(--ease) both}
+#result.is-hit .result-card{animation:hitIn .6s var(--ease) both}
+@keyframes hitIn{0%{opacity:0;transform:translateY(18px) scale(.95)}55%{opacity:1;transform:scale(1.01)}100%{transform:none}}
+.result-symbol{animation:pop .6s .08s var(--ease) both}
+@keyframes pop{0%{opacity:0;transform:scale(.35) rotate(-12deg)}60%{opacity:1;transform:scale(1.12)}100%{transform:none}}
+.result-symbol.dead{animation:pop .6s .08s var(--ease) both,ring 1.6s .6s ease-out 2}
+@keyframes ring{from{box-shadow:0 0 0 0 #e5604f70}to{box-shadow:0 0 0 20px #e5604f00}}
+.result-card>h2,.result-card>p,.result-card>.eyebrow{animation:rise .5s .12s var(--ease) both}
+.breaking{position:relative;overflow:hidden;animation:breakSlide .55s .28s var(--ease) both}
+@keyframes breakSlide{from{opacity:0;transform:translateX(-20px)}}
+.breaking::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#e5604f55,transparent 70%);animation:flashOut 1.4s .4s ease-out both;pointer-events:none}
+@keyframes flashOut{from{opacity:1}to{opacity:0}}
+.breaking strong{display:inline-block;font-variant-numeric:tabular-nums}
+.breaking strong.ticked{animation:numHit .9s ease-out}
+.delta{animation:rise .45s var(--ease) both;animation-delay:calc(.3s + var(--i,0) * .06s)}
+.delta b{font-variant-numeric:tabular-nums}
+.dbar{display:block;height:3px;margin:8px 7px 0;border-radius:3px;background:#ffffff12;overflow:hidden}
+.dbar>i{display:block;height:100%;width:var(--to);border-radius:3px;background:var(--mint);animation:dbar 1s calc(.5s + var(--i,0) * .08s) var(--ease) both}
+.dbar.bad>i{background:#f1a28d}.dbar.zero>i{background:#95b1af66}
+.delta.ren .dbar>i{background:#d7a272}.delta.ren .dbar.bad>i{background:#ef8f7a}
+@keyframes dbar{from{width:var(--from)}to{width:var(--to)}}
+.ren-says,.learning,#gather{animation:rise .5s .7s var(--ease) both}
+.proof{animation:rise .5s .85s var(--ease) both}
+.proof-opts .choice,.check-opts .choice{animation:rise .4s var(--ease) both}
+.proof-opts .choice:nth-child(2),.check-opts .choice:nth-child(2){animation-delay:.05s}.proof-opts .choice:nth-child(3),.check-opts .choice:nth-child(3){animation-delay:.1s}.proof-opts .choice:nth-child(4),.check-opts .choice:nth-child(4){animation-delay:.15s}
+/* Side panel: counters tick, meters flash the direction they moved */
+.people .pc.tick{animation:pcTick 1.2s ease-out}
+@keyframes pcTick{0%{border-color:#e5604f;background:#e5604f30;box-shadow:0 0 0 0 #e5604f80}100%{box-shadow:0 0 0 12px #e5604f00}}
+.people .pc.tick b,.breaking strong.ticked{animation:numHit 1s ease-out}
+@keyframes numHit{0%,35%{color:#ff7a66;transform:scale(1.14)}100%{transform:none}}
+.meter.down .num{animation:numDown 1s ease-out}.meter.up .num{animation:numUp 1s ease-out}
+@keyframes numDown{0%,50%{color:#ff8a76}}@keyframes numUp{0%,50%{color:#a6efc8}}
+.num{display:inline-block;font-variant-numeric:tabular-nums}
+.rival.down{animation:rivalHot 1.2s ease-out}
+@keyframes rivalHot{0%{border-color:#ef8f7a;background:#ef8f7a1c}}
+/* Ending: art settles in, the title lands, the reasons follow in reading order */
+.ending-card{animation:cardIn .6s var(--ease) both}
+.ending-art{animation:artIn 1.2s var(--ease) both}
+@keyframes artIn{from{opacity:0;transform:scale(1.06)}}
+.ending-card>.eyebrow{animation:rise .5s .25s var(--ease) both}
+.ending-card .ending-title{animation:titleIn .8s .35s var(--ease) both}
+@keyframes titleIn{from{opacity:0;transform:translateY(18px);letter-spacing:4px}}
+.ending-card .body-count{animation:rise .5s .55s var(--ease) both}.ending-card .ending-why{animation:rise .5s .68s var(--ease) both}.ending-card .key-moments{animation:rise .5s .8s var(--ease) both}#endingStats{animation:rise .5s .9s var(--ease) both}
+.ending-art svg *{transform-box:fill-box}
+.ending-art .sun{transform-origin:center;animation:sunGlow 4s ease-in-out infinite alternate}
+@keyframes sunGlow{to{transform:scale(1.1);opacity:.82}}
+.ending-art .flag{transform-origin:0 50%;animation:flagWave 1.8s ease-in-out infinite alternate}
+@keyframes flagWave{from{transform:skewY(-4deg) scaleX(.95)}to{transform:skewY(3deg) scaleX(1.02)}}
+.ending-art .pp{animation:bob 2.4s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(-2.5px)}}
+.ending-art .torch{transform-origin:50% 100%;animation:flameFlicker .45s ease-in-out infinite alternate}
+.ending-art .drift{animation:drift 8s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(28px,-6px)}}
+.ending-art .sweep{transform-box:view-box;transform-origin:280px 40px;animation:sweepBeam 7s ease-in-out infinite alternate}
+@keyframes sweepBeam{from{transform:rotate(-8deg)}to{transform:rotate(118deg)}}
+.ending-art .rope{animation:tape 2.6s linear infinite}
+/* Score: the number counts up, lands with a glow, then the rank title arrives */
+.score-row{animation:rise .5s .1s var(--ease) both}
+.score-big b{display:inline-block;font-variant-numeric:tabular-nums}
+.score-big.landed b{animation:land .9s var(--ease)}
+@keyframes land{0%{transform:scale(1.1);text-shadow:0 0 46px #f6be68aa}100%{transform:none;text-shadow:0 0 0 #f6be6800}}
+.lives-big b{font-variant-numeric:tabular-nums}
+.ending-card .rank{animation:titleIn .9s 1.45s var(--ease) both}
+.ending-card p.ending-line{animation:rise .5s 1.65s var(--ease) both}.ending-card p.compare{animation:rise .5s 1.75s var(--ease) both}
+.score-parts span{animation:rise .4s var(--ease) both}
+.score-parts span:nth-child(1){animation-delay:1.8s}.score-parts span:nth-child(2){animation-delay:1.86s}.score-parts span:nth-child(3){animation-delay:1.92s}.score-parts span:nth-child(4){animation-delay:1.98s}.score-parts span:nth-child(5){animation-delay:2.04s}
+.turnin{animation:rise .5s .45s var(--ease) both}
+.score-big b{text-align:right}.ending-card p.fine-note{animation:rise .5s 1s var(--ease) both}.score-parts+.fine-note{animation-delay:2.1s!important}
+/* Welcome */
+.welcome-card{animation:cardIn .7s var(--ease) both}
+.welcome-card>*{animation:rise .55s var(--ease) both}
+.welcome-card>h2{animation-delay:.1s}.welcome-card>.directions{animation-delay:.2s}.welcome-card>.standard{animation-delay:.26s}.welcome-card>label,.welcome-card>input,.welcome-card>.avatar-row{animation-delay:.32s}.welcome-card>#start,.welcome-card>small{animation-delay:.38s}
+.avatar-row button{transition:transform .25s var(--ease),outline-color .2s}.avatar-row button.selected{transform:scale(1.15)}
+@media(prefers-reduced-motion:reduce){#event.is-breaking::before,#result.is-hit::before{animation:none;opacity:1}.event-card.surprise .event-top::after,.breaking::after{display:none}}
