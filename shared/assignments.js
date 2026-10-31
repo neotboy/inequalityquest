@@ -65,6 +65,7 @@ window.CLASS_ASSIGNMENTS = {
   // ---- Sociology · Unit 2 ----
   "sociology-unit2-day1-first-shift":         { course: "sociology", unit: 2, day: 1, title: "Day 1 · First Shift: Status, Roles & Norms", path: "sociology/unit2-day1-first-shift/" },
   "sociology-unit2-arrival-culture":          { course: "sociology", unit: 2, day: 2, title: "Day 2 · The Arrival: A New Culture", path: "sociology/arrival-culture/" },
+  "sociology-unit2-day3-culture-shock":      { course: "sociology", unit: 2, day: 3, title: "Day 3 · Culture Shock Exchange", path: "sociology/unit2-day3-culture-shock-exchange/" },
 
   // ---- Government · Unit 1 ----
   "gov-stranded-day1":                { course: "government", unit: 1, day: 1, title: "Day 1 · Stranded: Govern or Collapse", path: "civics/stranded-government/" },
@@ -76,6 +77,7 @@ window.CLASS_ASSIGNMENTS = {
 
   // ---- Government · Unit 2 ----
   "gov-unit2-day1-the-feed":          { course: "government", unit: 2, day: 1, title: "Day 1 · The Feed: Where Beliefs Come From", path: "civics/unit2-day1-the-feed/" },
+  "gov-unit2-day2-lobby-day":         { course: "government", unit: 2, day: 2, title: "Day 2 · Lobby Day: Interest Groups & Media", path: "civics/unit2-day2-lobby-day/" },
 
   // ---- Civics (Iowa civics test prep) · Friday 1 ----
   "civics-test-s1-founders-defense":  { course: "civics", unit: 1, title: "Founders' Defense", path: "civics/civics-test-s1-founders-defense/" }

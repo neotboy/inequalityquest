@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lobby Day · Interest Groups, Money & Media | Government Unit 2 Day 2</title>
+<meta name="description" content="Run an interest group trying to pass Iowa's farm right-to-repair bill, then check how the media framed it.">
+<style>
+:root{--ink:#1d2731;--muted:#52606b;--paper:#f5f3ee;--card:#fff;--line:#dcd6c8;--navy:#22324a;--gold:#c8962b;--green:#26694a;--bad:#a2392f;--teal:#1f6670}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.5 system-ui,Segoe UI,Arial,sans-serif}
+header{background:var(--navy);color:#fff;padding:16px max(16px,calc((100vw - 900px)/2)) 12px;border-bottom:5px solid var(--gold)}
+.k{font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#f1d38f;margin:0}
+h1{margin:2px 0 4px;font-size:clamp(1.7rem,3.4vw,2.3rem)}
+.std{margin:2px 0;font-size:.92rem;color:#dfe5ec}.std b{color:#fff}
+.hud{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:8px max(16px,calc((100vw - 900px)/2));display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-weight:800;font-size:.92rem;box-shadow:0 2px 8px #1d273112}
+.hud .bar{flex:1;min-width:120px;height:10px;background:#e8e4da;border-radius:9px;overflow:hidden}.hud .bar span{display:block;height:100%;width:0;background:var(--gold);transition:width .4s}
+.pill{background:#f1ede3;border-radius:20px;padding:3px 10px;white-space:nowrap}
+.seats{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.seat{width:16px;height:16px;border-radius:50%;background:#d9d4c8;border:2px solid #fff;box-shadow:0 0 0 1px #b9b2a2}.seat.yes{background:var(--green);box-shadow:0 0 0 1px var(--green)}.seat.need{outline:2px dashed var(--gold);outline-offset:1px}
+main{max-width:900px;margin:auto;padding:14px 16px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 3px 12px #1d27310d}
+.kicker{font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin:0}
+h2{margin:2px 0 10px;font-size:1.45rem}
+.teach{background:#eef5f5;border-left:5px solid var(--teal);border-radius:9px;padding:10px 14px;margin:0 0 12px}.teach p{margin:4px 0}.teach b{color:var(--teal)}
+.block{margin:14px 0;padding:14px;border-radius:12px;border:2px solid var(--line);background:#fff}
+.block.current{border-color:var(--navy);box-shadow:0 0 0 4px #c8962b40}
+.block h3{margin:0 0 10px;font-size:1.06rem;line-height:1.35;font-weight:700}
+.event{background:#fbf8f1;border-style:dashed;border-color:#cdb98a}.event.current{border-style:solid}
+.memo{font-weight:900;color:var(--navy);text-transform:uppercase;font-size:.78rem;letter-spacing:.1em;margin:0 0 4px}
+.memo.opp{color:var(--bad)}
+.event-body p{margin:4px 0}
+.picked{margin:10px 0 4px;color:var(--muted)}.result{background:#f1ede3;border-radius:9px;padding:9px 12px}.result p{margin:4px 0}
+.tag{display:inline-block;font-weight:900;font-size:.8rem;border-radius:12px;padding:2px 9px;margin-right:6px}.tag.up{background:#dcefe2;color:var(--green)}.tag.down{background:#f6dcd8;color:var(--bad)}.tag.flat{background:#e8e4da;color:var(--ink)}
+.cost{font-size:.85rem;color:var(--muted);font-weight:700}
+.qlabel{font-size:.75rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin:0 0 4px}
+.civics{display:inline-block;background:#fdf2dc;color:#7a5410;border:1px solid #efd39a;border-radius:12px;padding:2px 9px;font-size:.75rem;font-weight:900;margin-bottom:6px}
+.headline{font-family:Georgia,"Times New Roman",serif;font-size:1.12rem;font-weight:700;background:#fbfaf7;border:1px solid var(--line);border-left:5px solid var(--navy);padding:8px 12px;margin:6px 0;border-radius:6px}
+.headline small{display:block;font-family:system-ui,Segoe UI,Arial,sans-serif;font-size:.75rem;color:var(--muted);font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+.choices{display:grid;gap:8px}
+@media(min-width:700px){.q .choices{grid-template-columns:1fr 1fr}}
+button{font:inherit;cursor:pointer;border-radius:10px;min-height:46px}
+.choice{text-align:left;background:#fff;color:var(--ink);border:2px solid #cdc6b6;padding:10px 12px;font-weight:650;line-height:1.3}
+.choice:hover:not(:disabled){border-color:var(--navy);background:#fdfcf9}.choice:disabled{opacity:.5;cursor:not-allowed}
+.go{margin-top:12px;background:var(--navy);color:#fff;border:0;padding:11px 18px;font-weight:900}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #2f7dbd;outline-offset:2px}
+.answered{font-weight:800;color:var(--green);margin:4px 0}.why{margin:2px 0;color:var(--muted)}
+.msg{min-height:1.3em;font-weight:750;margin:8px 0 0}.msg.bad{color:var(--bad)}.msg.good{color:var(--green)}
+label{display:block;font-weight:850;margin:14px 0 4px}.stem{margin:0 0 4px;color:var(--muted);font-size:.92rem}
+input,textarea{width:100%;font:inherit;border:2px solid #cdc6b6;border-radius:9px;padding:10px;background:#fff;color:var(--ink)}
+.steps{display:grid;gap:6px;margin:10px 0;padding:0;list-style:none}.steps li{background:#f1ede3;border-radius:9px;padding:8px 12px;font-weight:700}
+.verdict{border-radius:12px;padding:12px 14px;margin:8px 0;font-weight:800}.verdict.pass{background:#dcefe2;color:var(--green)}.verdict.fail{background:#f6dcd8;color:var(--bad)}
+.real{background:#eef1f6;border-left:5px solid var(--navy);border-radius:9px;padding:10px 14px;margin:10px 0}.real p{margin:4px 0}
+.welcome{background:#e6f1ea;color:var(--green);font-weight:800;border-radius:9px;padding:8px 12px;margin:0 0 10px}
+.foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px;color:var(--muted);font-size:.85rem}
+.foot button{background:#e8e4da;border:0;padding:8px 12px;font-weight:800;color:var(--ink)}
+.src{font-size:.8rem;color:var(--muted)}
+@media print{.hud,.foot,.go{display:none}}
+</style>
+<script src="../../shared/assignments.js?v=20261031b"></script>
+<script src="../../shared/turnin.js?v=20261031b"></script>
+<script src="../../shared/unit-game.js?v=20261031b"></script>
+</head><body>
+<header>
+  <p class="k">Government · Unit 2 · Day 2</p>
+  <h1>Lobby Day: Can You Pass the Repair Bill?</h1>
+  <p class="std"><b>SS.9-12.Gov.12</b> Critique the influence of intermediary institutions on government and policy.</p>
+  <p class="std"><b>Goal:</b> Explain how interest groups and media influence lawmakers, and judge whether that influence is fair. · About 25 minutes.</p>
+</header>
+<div class="hud" aria-label="Progress, budget, and votes">
+  <span id="progressText">0 checks done</span>
+  <div class="bar" aria-hidden="true"><span id="progressFill"></span></div>
+  <span class="pill" id="budgetPill">Budget: $8,000</span>
+  <span class="pill" id="votePill">Yes votes: 6 of 15 · need 8</span>
+  <span class="seats" id="seats" aria-hidden="true"></span>
+</div>
+<main>
+  <p class="welcome" id="welcome" hidden></p>
+  <div id="app"></div>
+  <div class="foot"><span>Progress saves on this device. Your teacher sees your work after you turn it in.</span><button type="button" id="restartBtn">Start over</button></div>
+</main>
+<script>
+const T = (cls, txt) => `<span class="tag ${cls}">${txt}</span>`;
+const money = n => "$" + Number(n || 0).toLocaleString("en-US");
+const NEED = 8, SEATS = 15;
+UnitGame.start({
+  key: "gov-u2d2-lobby-day-v1",
+  assignmentId: "gov-unit2-day2-lobby-day",
+  title: "Government Unit 2 · Day 2 · Lobby Day",
+  standard: "SS.9-12.Gov.12",
+  oldApi: "https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",
+  startFx: { votes: 6, budget: 8000 },
+  clampFx: fx => { fx.votes = Math.max(0, Math.min(SEATS, fx.votes)); fx.budget = Math.max(0, fx.budget); },
+  hud: st => {
+    const v = st.fx.votes || 0;
+    document.getElementById("budgetPill").textContent = "Budget: " + money(st.fx.budget);
+    document.getElementById("votePill").textContent = "Yes votes: " + v + " of " + SEATS + " · need " + NEED;
+    document.getElementById("seats").innerHTML = Array.from({ length: SEATS }, (_, i) => `<span class="seat${i < v ? " yes" : ""}${i === NEED - 1 ? " need" : ""}"></span>`).join("");
+  },
+  startLabel: "Start the campaign",
+  introHtml: `<p class="kicker">A real Iowa fight</p><h2>Should farmers be allowed to fix their own tractors?</h2>
+    <p>New tractors and combines run on locked software. When one breaks, many farmers have to wait for a dealer. A <b>right-to-repair</b> bill would make equipment makers share the parts, tools, and software so farmers and local shops can fix machines themselves.</p>
+    <p><b>True story:</b> In April 2026, the Iowa House passed a right-to-repair bill 70–18. The Senate never voted on it, so it did not become law.</p>
+    <p><b>Your game (made up):</b> It's 2027 and the bill is back. You run <b>Fix It Iowa</b>, an interest group of farmers and repair shops. You have <b>3 weeks</b> and <b>$8,000</b>. You have 6 "yes" votes on a 15-senator committee. You need <b>8</b>.</p>
+    <ul class="steps"><li>1. Each week, pick a move and see what happens.</li><li>2. Answer each check.</li><li>3. Read the news coverage, then write 2 short answers and turn in.</li></ul>
+    <p class="src">The committee, the votes, and Fix It Iowa are made up. The 2026 bill, the Iowa campaign-money rules, and the civics test question are real.</p>`,
+  scenes: [
+    { kicker: "Week 1 of 3", title: "Make Your First Move",
+      teach: `<p>An <b>interest group</b> is an organization that tries to influence government. It does <i>not</i> run candidates.</p>
+        <p><b>Lobbying</b> means trying to convince lawmakers to support or oppose a bill. A <b>lobbyist</b> is a person paid to do it. In Iowa, lobbyists must register and publicly say whether they are <b>for</b>, <b>against</b>, or <b>undecided</b> on each bill they work on.</p>
+        <p><b>Grassroots lobbying</b> means getting regular people to contact their <i>own</i> lawmakers.</p>`,
+      blocks: [
+        { type: "event", id: "w1", short: "Week 1 move", html: `<p class="memo">Fix It Iowa · Week 1</p><p>Pick your first move:</p>`,
+          choices: [
+            { label: "Hire a registered lobbyist to meet senators ($3,000)", fx: { budget: -3000, votes: 3 }, result: `<p>${T("up","+3 votes")}Your lobbyist knows the senators and gets meetings fast. She explains how locked software costs farmers money at harvest. <span class="cost">−$3,000</span></p>` },
+            { label: "Get members to call their own senators ($500)", fx: { budget: -500, votes: 2 }, result: `<p>${T("up","+2 votes")}Two hundred farmers call the senators who represent <i>them</i>. Lawmakers pay attention to voters from home. <span class="cost">−$500</span></p>` },
+            { label: "Run online ads across Iowa ($4,000)", fx: { budget: -4000, votes: 1 }, result: `<p>${T("up","+1 vote")}Lots of Iowans see the ads, but most of them don't contact a senator. Awareness went up more than votes did. <span class="cost">−$4,000</span></p>` }
+          ] },
+        { type: "q", id: "q1", std: "Gov.12", short: "What is grassroots lobbying", prompt: "Two hundred farmers call the senators who represent their own towns. What is this called?", options: ["Grassroots lobbying", "Running for office", "A party convention", "A Super PAC ad"], hint: "Regular people contacting their own lawmakers.", why: "When regular people contact their own lawmakers to push a bill, it's grassroots lobbying." },
+        { type: "q", id: "q2", std: "Gov.12", short: "Interest group vs party", prompt: "Fix It Iowa wants to change a law, but it never runs a candidate. That makes it an…", options: ["Interest group", "Political party", "Voting bloc", "Executive agency"], hint: "Which kind of group tries to influence laws without running candidates?", why: "Interest groups influence laws but don't run candidates. Parties run candidates." },
+        { type: "event", id: "o1", short: "Opponent week 1", html: `<p class="memo opp">Meanwhile: the other side</p><p>Equipment makers and dealers send <b>five lobbyists</b> to the Capitol. They argue the bill would let owners switch off emissions systems that federal law requires, would force makers to compete with their own dealers, and isn't needed because repair tools are already sold.</p>`,
+          choices: [ { label: "See what it does to your votes", fx: { votes: -2 }, result: `<p>${T("down","−2 votes")}Two senators switch to "undecided." The other side has more lobbyists at the Capitol, so it gets more meetings.</p>` } ] },
+        { type: "q", id: "q3", std: "Gov.12", short: "Why more lobbyists matters", prompt: "Why did the other side's five lobbyists cost you votes?", options: ["They got more meetings to make their case", "Their lobbyists gave senators money that week", "Senators must side with the most lobbyists", "Lobbyist declarations count as committee votes"], hint: "Lobbyists can't vote, and Iowa bans their contributions during session. So what DO they get?", why: "Lobbyists can't vote, but more lobbyists means more meetings, and more chances to persuade." }
+      ] },
+    { kicker: "Week 2 of 3", title: "Money and the Rules",
+      teach: `<p>A <b>PAC</b> (political action committee) collects money from members and gives it to candidates' campaigns. Companies can't give money to a regular PAC.</p>
+        <p>A <b>Super PAC</b> can collect unlimited money from people, companies, and unions and spend it on its own ads. It can't give money to a candidate or plan ads with the campaign.</p>
+        <p><b>Iowa rule:</b> Iowa has no limits on how much people or PACs give to state candidates. But PACs and lobbyists can't make contributions to legislators while the legislature is in session.</p>`,
+      blocks: [
+        { type: "event", id: "w2", short: "Week 2 move", html: `<p class="memo">Fix It Iowa · Week 2 · the legislature is in session</p><p>A subcommittee takes public comments this week. Pick your move:</p>`,
+          choices: [
+            { label: "Have a farmer speak at the subcommittee meeting ($0)", fx: { votes: 2 }, result: `<p>${T("up","+2 votes")}A farmer from Hudson explains how she lost three days of harvest waiting for a dealer to unlock her combine. Senators remember real stories. <span class="cost">Free</span></p>` },
+            { label: "Have our PAC write a $2,500 check to the committee chair", fx: { votes: -1 }, result: `<p>${T("down","−1 vote")}<b>Stop.</b> Your treasurer says it's against Iowa law: PACs can't give to legislators during the session. You don't send it, but word gets around that you tried. A senator who was leaning yes backs off. <span class="cost">No money spent</span></p>` },
+            { label: "Pitch the story to a local TV station ($0)", fx: { votes: 1 }, result: `<p>${T("up","+1 vote")}The station runs a short story with a farmer and a dealer. Viewers hear both sides, and one senator starts paying attention. <span class="cost">Free</span></p>` }
+          ] },
+        { type: "q", id: "q4", std: "Gov.12", short: "Iowa PAC session rule", prompt: "Why can't an Iowa PAC give money to a state senator in the middle of the legislative session?", options: ["Iowa bans PAC contributions to lawmakers in session", "Iowa bans all campaign contributions all year long", "Senators must return any money given by farmers", "Only political parties may give money in Iowa"], hint: "Reread the Iowa rule in the box above.", why: "Iowa has no dollar limits, but it bans PAC and lobbyist contributions to legislators while the legislature is in session." },
+        { type: "q", id: "q5", std: "Gov.12", short: "PAC vs Super PAC", prompt: "What can a Super PAC do that a regular PAC cannot?", options: ["Take unlimited money from companies and unions", "Give money straight to a candidate's campaign", "Plan its ads together with a candidate's team", "Hide every donor's name from the public eye"], hint: "Look at where a Super PAC's money comes from.", why: "A Super PAC can collect unlimited money, even from companies and unions, but it can't give to candidates or plan with their campaigns, and it must report its donors." },
+        { type: "event", id: "o2", short: "Opponent week 2", html: `<p class="memo opp">Meanwhile: the other side</p><p>Equipment makers run TV ads: <b>"Repair tools are already here. This bill goes too far."</b></p>`,
+          choices: [ { label: "See what it does to your votes", fx: { votes: -1 }, result: `<p>${T("down","−1 vote")}One senator hears from worried voters and wants more time. Ads can shape what voters worry about.</p>` } ] }
+      ] },
+    { kicker: "Week 3 of 3", title: "The Final Push",
+      teach: `<p><b>Misinformation</b> is false information shared by mistake. <b>Disinformation</b> is false information spread <i>on purpose</i> to fool people.</p>
+        <p>A <b>coalition</b> is when different groups team up for the same goal.</p>`,
+      blocks: [
+        { type: "event", id: "w3", short: "Week 3 move", html: `<p class="memo">Fix It Iowa · Week 3 · vote is next week</p><p>Pick your last move:</p>`,
+          choices: [
+            { label: "Team up with repair shops and crop groups ($500)", fx: { budget: -500, votes: 2 }, result: `<p>${T("up","+2 votes")}Independent repair shops and corn and soybean grower groups join you. In real life, the Iowa Corn Growers Association and the Iowa Soybean Association registered in favor of the House's 2026 right-to-repair bill. Senators see support from many directions. <span class="cost">−$500</span></p>` },
+            { label: "Post a viral claim: \"Equipment makers want farmers to go broke\"", fx: { votes: -1 }, result: `<p>${T("down","−1 vote net")}It spreads fast and gets you a vote, until a reporter checks it and finds no proof. Two senators say they won't be pushed by false claims. <span class="cost">No money spent</span></p>` },
+            { label: "Save the money and wait for the vote", fx: {}, result: `<p>${T("flat","No change")}You keep your money, but the other side keeps working. <span class="cost">No money spent</span></p>` }
+          ] },
+        { type: "q", id: "q6", std: "Gov.12", short: "Disinformation", prompt: "A group posts a claim it <b>knows</b> has no proof, to turn people against the other side. This is…", options: ["Disinformation", "Misinformation", "Grassroots lobbying", "Fair news coverage"], hint: "Was the false claim a mistake or on purpose?", why: "False information spread on purpose is disinformation. If it's shared by mistake, it's misinformation." },
+        { type: "q", id: "q7", std: "Gov.12", short: "Misinformation", prompt: "Your neighbor reposts the viral claim because he honestly believes it's true. When <b>he</b> shares it, it's…", options: ["Misinformation", "Disinformation", "A paid lobbying ad", "Testimony at a hearing"], hint: "Does your neighbor know it's false?", why: "He believes it, so when he shares it, it's misinformation: false, but not on purpose." },
+        { type: "q", id: "q8", std: "Gov.12", short: "Coalition", prompt: "Farmers, repair shops, and crop grower groups team up to push one bill. This is a…", options: ["Coalition", "Super PAC", "Primary", "Filibuster"], hint: "Different groups, same goal.", why: "Groups teaming up for the same goal form a coalition." }
+      ] },
+    { kicker: "After the vote", title: "Spin Check: How the News Told It",
+      teach: `<p><b>Framing</b> is how a story is told: which words, facts, and people get the spotlight. Two reports can describe the same event and leave you with different feelings.</p>
+        <p><b>Bias</b> means favoring one side.</p>`,
+      blocks: [
+        { type: "note", html: `<p class="memo">Same real event, three headlines</p><p>All three are about the real April 2026 Iowa House vote. Headline C is the real headline from Iowa Capital Dispatch. A and B are made up to show framing.</p>
+            <div class="headline"><small>Headline A</small>Farmers Finally Win the Right to Fix What They Own</div>
+            <div class="headline"><small>Headline B</small>House Pushes Repair Bill Critics Say Threatens Safety and Dealer Jobs</div>
+            <div class="headline"><small>Headline C</small>Iowa House passes 'right to repair' bill for farm equipment</div>` },
+        { type: "q", id: "m1", std: "Gov.12", short: "Most neutral headline", prompt: "Which headline sticks closest to the facts without taking a side?", options: ["Headline C", "Headline A", "Headline B", "All are equally neutral"], hint: "Which one would both sides agree is true?", why: "C says who did what, with no feeling words. A and B use words that push your feelings toward one side." },
+        { type: "q", id: "m2", std: "Gov.12", short: "Headline A framing", prompt: "Headline A uses words like <i>finally</i> and <i>win</i>. How does that frame the vote?", options: ["As a victory for farmers", "As a danger to drivers", "As a close and unclear vote", "As a loss for repair shops"], hint: "Who sounds like the hero in Headline A?", why: "\"Finally win\" frames the vote as a victory for farmers, which favors supporters." },
+        { type: "q", id: "m3", std: "Gov.12", short: "Effect of framing on lawmakers", prompt: "If most news in Iowa used Headline B's framing, what would most likely happen?", options: ["More voters worry, and some senators back off", "Iowa law would force every senator to vote no", "The bill would become law without any vote", "Nothing, because news never changes any votes"], hint: "Remember how the TV ads affected a senator in Week 2.", why: "Media framing shapes what voters worry about, and lawmakers pay attention to worried voters. That's how media influences government." },
+        { type: "q", id: "m4", std: "Gov.12", short: "Problem with money in lobbying", prompt: "Which is the strongest <b>critique</b> of how interest groups influence government?", options: ["Groups with more money can buy more meetings with lawmakers", "Iowa lobbyists never have to tell which side they are on", "Calls from regular voters never change how senators vote", "Iowa lets PACs give money to lawmakers during the session"], hint: "Which problem actually showed up in today's game?", why: "Money buys more lobbyists and more meetings, so better-funded groups can be heard more. The other three aren't true in Iowa." },
+        { type: "q", id: "m5", std: "Gov.12", label: "Iowa civics test practice", short: "Civics test Q69: civic participation", prompt: `<span class="civics">Civics test · Question 69</span><br>"What are two examples of civic participation in the United States?" Which choice below is one correct answer?`, options: ["Contact elected officials", "Follow a candidate online", "Watch a debate on TV", "Renew your driver's license"], hint: "What did Fix It Iowa's members do in Week 1?", why: "Contacting elected officials is on the official list, along with voting, joining a civic group, and writing to a newspaper." }
+      ] }
+  ],
+  finale: {
+    title: "Committee Vote Results",
+    report: st => {
+      const v = st.fx.votes, pass = v >= NEED;
+      return `<div class="verdict ${pass ? "pass" : "fail"}">${pass ? "PASSED: " + v + " yes votes out of 15. Your bill moves to the full Senate." : "FAILED: only " + v + " yes votes out of 15 (needed 8). The bill dies in committee."} Money left: ${money(st.fx.budget)}.</div>
+        <div class="real"><p><b>What really happened:</b> In 2026 the House passed the bill 70–18 with support from both parties. Farm groups backed it. John Deere and equipment dealers opposed it, saying they already share repair tools. The Senate never took it up, so it died.</p><p>A bill that dies can be brought back in a later session. That's why interest groups keep organizing year after year.</p></div>
+        <p>Answer both in 1–2 full sentences.</p>`;
+    },
+    prompts: [
+      { id: "frame", short: "How framing could change senators' votes", label: "1. Pick Headline A or B. How could that framing change what senators do? Is that fair to voters?", stem: "Headline ___ frames the vote as ___. Senators might ___. That is (fair / unfair) because ___.", min: 90, mustInclude: ["headline", "frame", "framing"], mustMsg: "In answer 1, say which headline (A or B) you picked." },
+      { id: "crit", short: "Critique: money and lobbying", label: "2. Is it fair that groups with more money can hire more lobbyists? Give one way lobbying helps, one problem it causes, and your verdict.", stem: "Lobbying helps because ___. One problem is ___. I think it is (fair / unfair) because ___.", min: 100, mustAll: [["fair", "unfair"], ["help", "voice", "inform", "explain", "good"], ["problem", "money", "rich", "more", "but", "however"]], mustMsg: "In answer 2, give one way lobbying helps, one problem, AND say if it's fair or unfair." }
+    ]
+  },
+  extraAnswers: st => ({ "Committee result": (st.fx.votes >= NEED ? "Passed" : "Failed") + " with " + st.fx.votes + " of 15 votes", "Money left": money(st.fx.budget) })
+});
+</script>
+</body></html>

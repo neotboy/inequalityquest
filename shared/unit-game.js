@@ -156,6 +156,10 @@
           for (const p of prompts) {
             const v = ($("w_" + p.id).value || "").trim();
             if (v.length < (p.min || 40)) { msg.textContent = "Write a little more for: " + p.short + " (1–2 full sentences)."; msg.className = "msg bad"; $("w_" + p.id).focus(); return; }
+            if (/_{2,}/.test(v)) { msg.textContent = "Fill in the blanks with your own words for: " + p.short + "."; msg.className = "msg bad"; $("w_" + p.id).focus(); return; }
+            const stemWords = new Set(String(p.stem || "").toLowerCase().match(/[a-z']+/g) || []);
+            const fresh = new Set((v.toLowerCase().match(/[a-z']{3,}/g) || []).filter(w => !stemWords.has(w)));
+            if (fresh.size < (p.newWords || 6)) { msg.textContent = "Add more of your own ideas for: " + p.short + ". Use details from today."; msg.className = "msg bad"; $("w_" + p.id).focus(); return; }
             const groups = p.mustAll || (p.mustInclude ? [p.mustInclude] : []);
             if (groups.some(g => !g.some(w => new RegExp("\\b" + w, "i").test(v)))) { msg.textContent = p.mustMsg; msg.className = "msg bad"; $("w_" + p.id).focus(); return; }
           }

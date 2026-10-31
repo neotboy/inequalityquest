@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Culture Shock Exchange | Sociology Unit 2 Day 3</title>
+<meta name="description" content="Follow two exchange students, one from Iowa and one from Japan, and see how culture shapes what feels normal.">
+<style>
+:root{--ink:#1f2b33;--muted:#55626b;--paper:#f6f7f4;--card:#fff;--line:#dad9cf;--teal:#1d6a6a;--coral:#b6483a;--gold:#d9a43a;--green:#2a6b45;--bad:#a2392f;--iowa:#245a8a;--osaka:#9a3a4e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.5 system-ui,Segoe UI,Arial,sans-serif}
+header{background:linear-gradient(90deg,#e8f0f7 0 50%,#f7ecee 50% 100%);border-bottom:5px solid var(--teal);padding:16px max(16px,calc((100vw - 900px)/2)) 12px}
+.k{font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin:0}
+h1{margin:2px 0 4px;font-size:clamp(1.7rem,3.4vw,2.3rem)}
+.std{margin:2px 0;font-size:.92rem;color:var(--muted)}.std b{color:var(--ink)}
+.hud{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:8px max(16px,calc((100vw - 900px)/2));display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-weight:800;font-size:.92rem;box-shadow:0 2px 8px #1f2b3312}
+.hud .bar{flex:1;min-width:120px;height:10px;background:#e6e6de;border-radius:9px;overflow:hidden}.hud .bar span{display:block;height:100%;width:0;background:var(--teal);transition:width .4s}
+.pill{background:#f0efe8;border-radius:20px;padding:3px 10px;white-space:nowrap}
+.belong{display:flex;align-items:center;gap:6px}.belong .track{width:120px;height:10px;border-radius:9px;background:#e6e6de;overflow:hidden}.belong .track span{display:block;height:100%;background:var(--coral);transition:width .5s}
+main{max-width:900px;margin:auto;padding:14px 16px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 3px 12px #1f2b330d}
+.kicker{font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin:0}
+h2{margin:2px 0 10px;font-size:1.45rem}
+.teach{background:#eef5f5;border-left:5px solid var(--teal);border-radius:9px;padding:10px 14px;margin:0 0 12px}.teach p{margin:4px 0}.teach b{color:var(--teal)}
+.block{margin:14px 0;padding:14px;border-radius:12px;border:2px solid var(--line);background:#fff}
+.block.current{border-color:var(--ink);box-shadow:0 0 0 4px #1d6a6a30}
+.block h3{margin:0 0 10px;font-size:1.06rem;line-height:1.35;font-weight:700}
+.event{background:#fbf9f4;border-style:dashed;border-color:#cdbf9a}.event.current{border-style:solid}
+.event-body p{margin:4px 0}
+.msgcard{border-radius:14px;padding:10px 12px;margin:0 0 10px;max-width:640px}
+.msgcard .who{font-size:.78rem;font-weight:900;letter-spacing:.04em;margin-bottom:2px}
+.msgcard p{margin:2px 0}
+.maya{background:#e8f0f7;border:1px solid #c7d8e8}.maya .who{color:var(--iowa)}
+.haruto{background:#f7ecee;border:1px solid #e6c9cf;margin-left:auto}.haruto .who{color:var(--osaka)}
+.picked{margin:10px 0 4px;color:var(--muted)}.result{background:#f0efe8;border-radius:9px;padding:9px 12px}.result p{margin:4px 0}
+.tag{display:inline-block;font-weight:900;font-size:.8rem;border-radius:12px;padding:2px 9px;margin-right:6px}.tag.up{background:#dcefe2;color:var(--green)}.tag.down{background:#f6dcd8;color:var(--bad)}.tag.flat{background:#ebe9e0;color:var(--ink)}
+.qlabel{font-size:.75rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin:0 0 4px}
+.choices{display:grid;gap:8px}
+@media(min-width:700px){.q .choices{grid-template-columns:1fr 1fr}}
+button{font:inherit;cursor:pointer;border-radius:10px;min-height:46px}
+.choice{text-align:left;background:#fff;color:var(--ink);border:2px solid #cfcdbf;padding:10px 12px;font-weight:650;line-height:1.3}
+.choice:hover:not(:disabled){border-color:var(--ink);background:#fcfcfa}.choice:disabled{opacity:.5;cursor:not-allowed}
+.go{margin-top:12px;background:var(--teal);color:#fff;border:0;padding:11px 18px;font-weight:900}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #2f7dbd;outline-offset:2px}
+.answered{font-weight:800;color:var(--green);margin:4px 0}.why{margin:2px 0;color:var(--muted)}
+.msg{min-height:1.3em;font-weight:750;margin:8px 0 0}.msg.bad{color:var(--bad)}.msg.good{color:var(--green)}
+label{display:block;font-weight:850;margin:14px 0 4px}.stem{margin:0 0 4px;color:var(--muted);font-size:.92rem}
+input,textarea{width:100%;font:inherit;border:2px solid #cfcdbf;border-radius:9px;padding:10px;background:#fff;color:var(--ink)}
+.steps{display:grid;gap:6px;margin:10px 0;padding:0;list-style:none}.steps li{background:#f0efe8;border-radius:9px;padding:8px 12px;font-weight:700}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.pair div{border-radius:10px;padding:8px 10px;font-size:.93rem}.pair b{display:block}
+.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}.stages div{background:#fff;border:1px solid var(--line);border-radius:9px;padding:6px 8px;font-size:.86rem}.stages b{display:block;color:var(--teal)}
+@media(max-width:640px){.stages{grid-template-columns:1fr 1fr}.pair{grid-template-columns:1fr}}
+.welcome{background:#e6f1ea;color:var(--green);font-weight:800;border-radius:9px;padding:8px 12px;margin:0 0 10px}
+.foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px;color:var(--muted);font-size:.85rem}
+.foot button{background:#ebe9e0;border:0;padding:8px 12px;font-weight:800;color:var(--ink)}
+.src{font-size:.8rem;color:var(--muted)}
+@media print{.hud,.foot,.go{display:none}}
+</style>
+<script src="../../shared/assignments.js?v=20261031b"></script>
+<script src="../../shared/turnin.js?v=20261031b"></script>
+<script src="../../shared/unit-game.js?v=20261031b"></script>
+</head><body>
+<header>
+  <p class="k">Sociology · Unit 2 · Day 3</p>
+  <h1>Culture Shock Exchange</h1>
+  <p class="std"><b>SS.9-12.Soc.6</b> Analyze how culture influences individuals, including themselves. &nbsp;<b>SS.9-12.Soc.5</b> Describe the components of culture.</p>
+  <p class="std"><b>Goal:</b> Explain culture shock, ethnocentrism, and cultural relativity, and how your own culture shapes what feels "normal" to you. · About 25 minutes.</p>
+</header>
+<div class="hud" aria-label="Progress and Maya's belonging">
+  <span id="progressText">0 checks done</span>
+  <div class="bar" aria-hidden="true"><span id="progressFill"></span></div>
+  <span class="pill belong">Maya fits in: <span class="track" aria-hidden="true"><span id="belongFill" style="width:40%"></span></span> <span id="belongNum">4/10</span></span>
+</div>
+<main>
+  <p class="welcome" id="welcome" hidden></p>
+  <div id="app"></div>
+  <div class="foot"><span>Progress saves on this device. Your teacher sees your work after you turn it in.</span><button type="button" id="restartBtn">Start over</button></div>
+</main>
+<script>
+const T = (cls, txt) => `<span class="tag ${cls}">${txt}</span>`;
+const maya = (when, body) => `<div class="msgcard maya"><div class="who">MAYA · in Osaka, Japan · ${when}</div>${body}</div>`;
+const haruto = (when, body) => `<div class="msgcard haruto"><div class="who">HARUTO · in Marion, Iowa · ${when}</div>${body}</div>`;
+UnitGame.start({
+  key: "soc-u2d3-culture-shock-v1",
+  assignmentId: "sociology-unit2-day3-culture-shock",
+  title: "Sociology Unit 2 · Day 3 · Culture Shock Exchange",
+  standard: "SS.9-12.Soc.6, SS.9-12.Soc.5",
+  oldApi: "https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",
+  startFx: { belong: 4 },
+  clampFx: fx => { fx.belong = Math.max(0, Math.min(10, fx.belong)); },
+  hud: st => {
+    const b = st.fx.belong || 0;
+    document.getElementById("belongFill").style.width = (b * 10) + "%";
+    document.getElementById("belongNum").textContent = b + "/10";
+  },
+  startLabel: "Open the messages",
+  introHtml: `<p class="kicker">A semester swap</p><h2>Two students trade places</h2>
+    <div class="pair"><div class="maya"><b>Maya, 17</b>From Marion, Iowa. Spending a semester at a high school in Osaka, Japan.</div><div class="haruto"><b>Haruto, 17</b>From Osaka, Japan. Spending a semester at a high school in Marion, Iowa.</div></div>
+    <p>You'll read their messages to each other. You'll also make choices for Maya. Her choices change how well she fits in (watch the meter at the top).</p>
+    <ul class="steps"><li>1. Read each message and answer the check.</li><li>2. Choose what Maya does.</li><li>3. Write 2 short answers about YOUR culture and turn in.</li></ul>
+    <p class="src">Maya and Haruto are made up. The customs are real and common, but not every person in Japan or Iowa does the same thing.</p>`,
+  scenes: [
+    { kicker: "Part 1 of 3 · Week 1", title: "Everything Is New",
+      teach: `<p><b>Culture shock</b> is the confused, stressed, or homesick feeling people get in an unfamiliar culture.</p>
+        <p><b>Ethnocentrism</b> is judging another culture by your own culture's standards, as if your way is the "normal" or "right" way.</p>
+        <p><b>Cultural relativity</b> (also called cultural relativism) means trying to understand a custom from inside its own culture before judging it.</p>
+        <p>A <b>sanction</b> is a reaction, like stares or praise, that pushes people to follow a norm.</p>`,
+      blocks: [
+        { type: "q", id: "c1", std: "Soc.5", short: "Indoor shoe rule = norm", prompt: maya("Day 2", `<p>Everyone takes off their shoes at the school entrance and puts on indoor shoes. I walked in wearing my sneakers and EVERYONE stared. 😳</p>`) + "Everyone at Maya's school switches to indoor shoes. Which part of culture is this shoe rule?", options: ["A norm", "A value", "A symbol", "A status"], hint: "Think about why everyone stared.", why: "An expected way to act is a norm. The stares were an informal sanction." },
+        { type: "q", id: "c2", std: "Soc.5", short: "Indoor shoes = material culture", prompt: "The indoor shoes themselves are an example of…", options: ["Material culture", "Nonmaterial culture", "A counterculture", "Cultural relativity"], hint: "Is the shoe rule the same thing as the shoes?", why: "Physical objects a culture makes and uses are material culture." },
+        { type: "q", id: "c3", std: "Soc.6", short: "Haruto's lunch = culture shock", prompt: haruto("Day 2", `<p>Lunch here is so loud! People eat fast and walk around. Nobody cleans the school after class. There are janitors? I feel lost and kind of tired.</p>`) + "What is Haruto feeling?", options: ["Culture shock", "Ethnocentrism", "Cultural relativity", "A counterculture"], hint: "Reread how Haruto says he feels.", why: "Feeling lost and tired in an unfamiliar culture is culture shock." },
+        { type: "event", id: "e1", short: "Cleaning time choice", html: maya("Day 5", `<p>After the last class, my teacher handed me a rag. The whole class cleans the classroom and hallways together. They call it <b>o-soji</b> (cleaning time). What do I do??</p>`),
+          choices: [
+            { label: "Ask a classmate why students clean the school", fx: { belong: 2 }, result: `<p>${T("up","+2 fits in")}Her classmate Yui explains: cleaning teaches responsibility and respect for shared spaces, and it's teamwork. Yui shows Maya how to wring the rag.</p>` },
+            { label: "Say: \"Back home we have janitors. This is a waste of time.\"", fx: { belong: -2 }, result: `<p>${T("down","−2 fits in")}The room goes quiet. A few classmates look hurt. Maya cleans anyway, but nobody talks to her.</p>` },
+            { label: "Clean quietly, but text home: \"this is so weird\"", fx: {}, result: `<p>${T("flat","No change")}Maya does the job but doesn't learn why. She still feels like an outsider.</p>` }
+          ] },
+        { type: "q", id: "c4", std: "Soc.6", short: "Janitors comment = ethnocentrism", prompt: "Saying \"Back home we have janitors. This is a waste of time\" is an example of…", options: ["Ethnocentrism", "Cultural relativity", "Culture shock", "Material culture"], hint: "Is Maya trying to understand, or comparing to home?", why: "Judging another culture's custom as wrong because it's different from yours is ethnocentrism." },
+        { type: "q", id: "c5", std: "Soc.6", short: "Asking why = cultural relativity", prompt: "Asking a classmate <b>why</b> students clean, before judging it, shows…", options: ["Cultural relativity", "Ethnocentrism", "Culture shock", "A negative sanction"], hint: "What does Maya do before deciding how she feels?", why: "Trying to understand a custom in its own culture before judging it is cultural relativity." },
+        { type: "q", id: "c6", std: "Soc.5", short: "Respect for shared spaces = value", prompt: "Japanese schools say o-soji teaches students to <b>respect shared spaces</b>. Respect for shared spaces is a…", options: ["Value", "Norm", "Symbol", "Sanction"], hint: "Is it a rule for how to act, or a belief about what matters?", why: "A shared belief about what is important is a value. Cleaning time is the norm that grows out of it." }
+      ] },
+    { kicker: "Part 2 of 3 · Month 1", title: "The Hard Part",
+      teach: `<p>Culture shock often comes in stages:</p>
+        <div class="stages"><div><b>1. Honeymoon</b>Everything is exciting.</div><div><b>2. Frustration</b>Differences feel stressful. Homesick.</div><div><b>3. Adjustment</b>Starting to figure things out.</div><div><b>4. Acceptance</b>Feeling at home in both cultures.</div></div>
+        <p>Not everyone goes through every stage, or in the same order.</p>`,
+      blocks: [
+        { type: "q", id: "s1", std: "Soc.6", short: "Train message = frustration stage", prompt: maya("Week 4", `<p>On the train everyone is SILENT. I called my mom and an older man frowned at me. I keep messing up. I miss home so much.</p>`) + "Which stage of culture shock is Maya in?", options: ["Frustration", "Honeymoon", "Adjustment", "Acceptance"], hint: "Is she excited, stressed, learning, or at home?", why: "Stress, mistakes, and homesickness are the frustration stage." },
+        { type: "q", id: "s2", std: "Soc.5", short: "Tipping = norm", prompt: haruto("Week 4", `<p>At a restaurant my host dad left extra money for the server. In Japan we don't tip. Here, everyone expects it!</p>`) + "In the U.S., leaving a tip for a server is a…", options: ["Norm", "Value", "Status", "Symbol"], hint: "Is tipping a belief, or something people are expected to do?", why: "An expected behavior is a norm. In Japan, the norm is different: tipping usually isn't done." },
+        { type: "q", id: "s3", std: "Soc.6", short: "Relativist view of tipping", prompt: "Which thought about American tipping shows <b>cultural relativity</b>?", options: ["Tipping makes sense here since many servers' pay depends on it", "Tipping is a bad custom because Japan doesn't need it at all", "Americans tip because they want to show off their money", "Tipping is confusing, so I'll skip restaurants for now"], hint: "Which one explains the custom from inside American culture?", why: "Explaining a custom by how it works in its own culture is cultural relativity. Calling it bad because your culture does it differently is ethnocentrism." },
+        { type: "event", id: "e2", short: "Lunch photo choice", html: maya("Week 5", `<p>Most kids bring a <b>bento</b> (packed lunch box) and eat at their desks. Yui's has rice, grilled fish, and pickled vegetables. I brought chips and a sandwich.</p>`),
+          choices: [
+            { label: "Ask Yui what's in her bento and try a bite", fx: { belong: 2 }, result: `<p>${T("up","+2 fits in")}Yui laughs and offers some fish. The next day her mom packs an extra rice ball for Maya.</p>` },
+            { label: "Post a photo: \"weird lunch here lol\"", fx: { belong: -3 }, result: `<p>${T("down","−3 fits in")}A classmate sees the post. Word spreads, and Yui stops sitting with Maya.</p>` },
+            { label: "Eat alone in the hallway so nobody sees my lunch", fx: { belong: -1 }, result: `<p>${T("down","−1 fits in")}Maya avoids the awkward moment, but also misses a chance to connect.</p>` }
+          ] },
+        { type: "q", id: "s4", std: "Soc.6", short: "Why the post hurt", prompt: "Why did the \"weird lunch lol\" post hurt Maya's place in the group?", options: ["It treated Yui's normal food as strange, which is ethnocentrism", "It showed Maya's culture shock, which worried her classmates", "It broke the school's phone rule, which is a written formal norm", "It showed Maya trying to learn, which is cultural relativity"], hint: "What does calling someone's normal lunch \"weird\" do?", why: "Mocking another culture's normal custom treats your way as the right way. That's ethnocentrism, and it pushes people away." }
+      ] },
+    { kicker: "Part 3 of 3 · Month 3", title: "Seeing Your Own Culture",
+      teach: `<p>You usually don't notice your own culture until you're somewhere else.</p>`,
+      blocks: [
+        { type: "q", id: "o1", std: "Soc.6", short: "Month 3 = adjustment/acceptance", prompt: maya("Month 3", `<p>Japan feels like my second home now. I bow without thinking, and I'll miss cleaning time. On a video call, my little brother walked into the kitchen in his muddy sneakers and it looked SO weird to me. Haha.</p>`) + "Which stage is Maya in now?", options: ["Acceptance", "Adjustment", "Frustration", "Honeymoon"], hint: "Is she still figuring things out, or does it feel like home?", why: "Feeling at home in the new culture is acceptance. Now even her home culture looks a little strange to her." },
+        { type: "q", id: "o2", std: "Soc.6", short: "Haruto's 'strange American habits' list", prompt: haruto("Month 3", `<p>I'm making a list of American habits that surprised me.</p>`) + "Which habit could be on <b>Haruto's</b> list?", options: ["Wearing outdoor shoes inside the school", "Cleaning the classroom after the last class", "Staying quiet on a crowded city train", "Not leaving any tip after a restaurant meal"], hint: "Three of these are normal in Japan. Which one is normal in Iowa?", why: "Wearing outdoor shoes inside school is normal in Iowa but surprising to Haruto. The others are normal in Japan." },
+        { type: "q", id: "o3", std: "Soc.6", short: "Why your culture feels normal", prompt: "Why does your own culture usually feel \"normal\" to you?", options: ["You learned it from family, school, and friends", "Your brain is wired for just one set of customs", "Your town's customs are all written into law", "Most people around the world share your habits"], hint: "Where did you learn the rules you follow without thinking?", why: "We learn our culture from the people and places around us, so it feels natural. That's how culture shapes individuals, including you." }
+      ] }
+  ],
+  finale: {
+    title: "Your Culture, Your Lens",
+    report: st => `<p><b>Maya's fit-in meter ended at ${st.fx.belong}/10.</b> Choices built on understanding (cultural relativity) helped her belong. Choices that judged (ethnocentrism) pushed people away.</p><p>Now turn the lens on yourself. Answer both in 1–2 full sentences.</p>`,
+    prompts: [
+      { id: "own", short: "A norm from my own culture", label: "1. Name one norm from YOUR everyday life (school, home, work, or online) that might seem strange to someone from another culture. Why does it feel normal to you?", stem: "In my life, it's normal to ___. Someone from another culture might think it's strange because ___. It feels normal to me because ___.", min: 90, mustInclude: ["because", "since", "learn", "grew up", "taught"], mustMsg: "In answer 1, explain WHY it feels normal to you (use \"because\")." },
+      { id: "lens", short: "Explain an Iowa custom like a cultural relativist", label: "2. Pick one Iowa custom Haruto found strange (loud lunches, janitors cleaning, tipping, or outdoor shoes inside). Explain why it makes sense in Iowa, the way a cultural relativist would.", stem: "Haruto found ___ strange. It makes sense in Iowa because ___.", min: 70, newWords: 4, mustAll: [["lunch", "janitor", "clean", "tip", "shoe"], ["because", "since"]], mustMsg: "In answer 2, name the custom AND explain why it makes sense in Iowa (use \"because\")." }
+    ]
+  },
+  extraAnswers: st => ({ "Maya's fit-in meter": st.fx.belong + " of 10" })
+});
+</script>
+</body></html>
