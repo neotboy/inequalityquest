@@ -79,7 +79,7 @@ window.CLASS_ASSIGNMENTS = {
   "gov-democracy-visualized-day9":    { course: "government", unit: 1, day: 9, title: "Day 9 · Federalism & Iowa Government (Reading)", path: "civics/democracy-visualized/#day9", std: ["SS.9-12.Gov.9"] },
 
   // ---- Government · Unit 2 ----
-  "gov-unit2-day1-the-feed":          { course: "government", unit: 2, day: 1, title: "Day 1 · The Feed: Where Beliefs Come From", path: "civics/unit2-day1-the-feed/", std: ["SS.9-12.Gov.12"] },
+  "gov-unit2-day1-the-feed":          { course: "government", unit: 2, day: 1, title: "Day 1 · Fair Game: Beliefs, Ideology & Parties", path: "civics/unit2-day1-the-feed/", std: ["SS.9-12.Gov.12"] },
   "gov-unit2-day2-lobby-day":         { course: "government", unit: 2, day: 2, title: "Day 2 · Lobby Day: Interest Groups & Media", path: "civics/unit2-day2-lobby-day/", std: ["SS.9-12.Gov.12"] },
 
   // ---- Civics (Iowa civics test prep) · Friday 1 ----

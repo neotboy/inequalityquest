@@ -1,46 +1,41 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>District 101 · Run for the Iowa House | Government Unit 2 Day 1</title>
-<meta name="description" content="It's 2030. You're 21 and running for the Iowa House. Build a coalition across six neighborhoods and beat your rival.">
-<link rel="stylesheet" href="style.css?v=7">
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fair Game · Booth Duty at the Iowa State Fair | Government Unit 2 Day 1</title>
+<link rel="stylesheet" href="style.css?v=fg4">
 <script src="../../shared/assignments.js?v=20261031d"></script>
 <script src="../../shared/turnin.js?v=20261031d"></script>
 <script src="../../shared/arena.js?v=20261031d"></script>
 </head><body>
 <header>
-  <a class="brand" href="#" aria-label="District 101"><span class="brand-badge">101</span><span>DISTRICT 101<small>RUN FOR THE IOWA HOUSE</small></span></a>
-  <div class="status" aria-live="polite">
-    <span class="pill" id="weekPill">Getting started</span>
-    <span class="pill money" id="moneyPill">$0</span>
-    <span class="pill" id="energyPill" title="Moves left this week">Moves ●●●</span>
-    <span class="pill poll" id="pollPill"></span>
+  <div class="brand"><span class="badge">🌽</span><span>FAIR GAME<small>BOOTH DUTY · IOWA STATE FAIR</small></span></div>
+  <div class="hud">
+    <span class="pill" id="shiftPill">Getting started</span>
+    <span class="pill" id="countPill"></span>
+    <span class="pill corn" id="scorePill">🌽 0</span>
   </div>
-  <div class="head-actions"><span id="saved">Saved on this device</span><button id="helpBtn" class="small">Directions</button><button id="resetBtn" class="small">Start over</button></div>
+  <div class="head-actions"><button id="helpBtn" class="small">How to play</button><button id="resetBtn" class="small">Start over</button></div>
 </header>
 <main>
-  <aside class="panel" aria-label="Your campaign">
-    <div class="panel-top"><div class="progress" aria-hidden="true"><i id="progressFill"></i></div><span id="stepLabel">Step 1</span></div>
-    <div id="panel"></div>
-  </aside>
-  <section class="world" aria-label="District 101 map">
-    <div class="map-wrap">
-      <canvas id="map" width="960" height="600" aria-label="Map of District 101. Click a neighborhood to campaign there."></canvas>
-      <div class="map-caption">HOUSE DISTRICT 101 · MARION &amp; CEDAR RAPIDS · <span>made-up district, real places</span></div>
-      <div id="mapHint" class="map-hint">Click a neighborhood</div>
-      <div id="toast" role="status" aria-live="polite"></div>
-    </div>
-    <div id="board" class="board" aria-label="Class leaderboard"></div>
+  <section class="scene" aria-label="Your booth at the fair">
+    <canvas id="scene" width="960" height="400" aria-hidden="true"></canvas>
+    <div id="bubble" class="bubble" hidden></div>
+    <div id="patience" class="patience" hidden><span>Patience</span><i><b id="patienceFill"></b></i></div>
+    <div id="race" class="race" aria-label="Class race"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
   </section>
+  <section class="tray" id="tray" aria-live="polite"></section>
 </main>
 
 <div id="overlay" class="overlay" hidden><article class="card" id="card"></article></div>
 
 <dialog id="helpDialog"><button class="close" data-close="helpDialog" aria-label="Close">×</button>
-  <p class="eyebrow">HOW TO PLAY</p><h2>Win District 101.</h2>
-  <ol class="howto"><li><b>Pick your side</b> on 6 hot takes. That's your platform.</li><li><b>Pick a party</b> (or run without one).</li><li><b>Campaign 5 weeks.</b> Click a neighborhood, then use your 3 moves: knock doors, hold an event, or run an ad.</li><li><b>Handle the drama</b> each week. Every choice costs something.</li><li><b>Election night.</b> Win the most votes. Then write 2 short answers and turn in.</li></ol>
-  <p class="note">No single neighborhood has enough votes. You need several of them on your side. Once a week, click a classmate in the <b>Class Race</b> bar to steal a donor or team up. Polls are game estimates, not real data.</p>
-  <p class="note">Standard <b>SS.9-12.Gov.12</b>: Critique the influence of intermediary institutions on government and policy.</p>
+  <p class="eyebrow">HOW TO PLAY</p><h2>Booth duty at the Iowa State Fair</h2>
+  <p>Your summer job: work a political party's booth. Your boss picks the booth. Halfway through, you switch to the other party's booth.</p>
+  <ol class="howto"><li><b>Listen.</b> Spot what shaped the fairgoer's beliefs.</li><li><b>Map it.</b> Put them on the idea map.</li><li><b>Pitch.</b> Play the card from your hand that fits them. If your party isn't a fit, be honest and send them to the other booth.</li></ol>
+  <p class="note">Faster = more corn 🌽. Beat your classmates. The fairgoers are made up. The fair, the booths, and the party positions are real.</p>
+  <p class="note">Standard <b>SS.9-12.Gov.12</b>: Critique the influence of intermediary institutions (like political parties) on government and policy.</p>
 </dialog>
 
-<script src="game.js?v=11"></script>
+<script src="game.js?v=fg4"></script>
 </body></html>
