@@ -15,7 +15,7 @@
 .turnin-box{margin-top:14px;padding:12px;border-radius:12px;background:#fffdf7;color:#172733}.turnin-box label{display:block;color:#173344;font-weight:800;margin:8px 0 4px}.turnin-box input,.turnin-box textarea{display:block;width:100%;padding:9px;border:1px solid #b9b2a5;border-radius:8px;font:inherit}.turnin-box textarea{min-height:66px}.turnin-status{min-height:1.2em;color:#39755b;font-size:.82rem;margin:7px 0 0}
 .std-line{font-size:.92rem;margin:8px 0 4px;line-height:1.35}.goal-line{font-size:.95rem;margin:0 0 6px}.welcome-back{background:#e4f3e9;color:#14532d;border:1px solid #83b394;border-radius:10px;padding:9px 12px;margin:8px 0;font-weight:700}.clue{display:block;font-size:.88rem;margin:2px 0 8px;font-weight:600;opacity:.9}.stem{font-size:.88rem;margin:2px 0 6px;color:#3d4b55}.stem b{color:#172733}.why-note{display:block;font-size:.85rem;margin-top:4px}.restart-row{margin:10px 0 0}
 </style>
-<script src="../shared/assignments.js?v=20261030d"></script><script src="../shared/turnin.js?v=20261030d"></script></head>
+<script src="../shared/assignments.js?v=20261030f"></script><script src="../shared/turnin.js?v=20261030f"></script></head>
 <body>
 <header class="top"><div class="brand">World History · Day 4</div><div class="tag">SS.9-12.WH.29</div></header>
 <main>
@@ -31,7 +31,7 @@
 <div class="causebar"><b>Why Europe was tense:</b> nationalism (some groups wanted self-rule) · militarism (bigger armies) · alliances (promises to help) · imperialism (competition for land)</div>
 <nav class="steps" aria-label="Game steps"><span class="step active" id="step1">1 · Order</span><span class="step" id="step2">2 · Match</span><span class="step" id="step3">3 · Sort alliances</span><span class="step" id="step4">4 · Topple</span></nav>
 <section class="task" id="orderTask" aria-labelledby="orderTitle">
- <div class="task-head"><div><h2 id="orderTitle">1. Put events in order</h2><p>Tap a tile, then tap the spot where it goes. Use the dates and what caused what.</p></div><span class="counter" id="orderCount">0 of 7 placed</span></div>
+ <div class="task-head"><div><h2 id="orderTitle">1. Put events in order</h2><p>Tap a tile, then tap the spot where it goes. Dates are hidden — use what caused what. (After two tries, the dates appear to help.)</p></div><span class="counter" id="orderCount">0 of 7 placed</span></div>
  <div class="playarea">
   <div class="panel"><h3>Event order</h3><div class="slots" id="slots"></div><p class="message" style="margin:7px 0 0">To move a tile, tap its spot.</p></div>
   <div class="panel"><h3>Mixed-up history tiles</h3><div class="pile" id="pile"></div></div>
@@ -88,7 +88,7 @@ const pairs=[
 let shuffled=[];
 let placed=Array(events.length).fill(null);
 let selected=null;
-let orderComplete=false;
+let orderComplete=false;let orderTries=0;try{orderTries=Number(localStorage.getItem("wwi-chain-orderTries"))||0}catch(e){}
 let matched=new Set();
 let allianceAnswers={};
 let allianceOrder=shuffle(allianceCountries);
@@ -101,14 +101,15 @@ function shuffle(list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=M
 function setStep(n){
  [1,2,3,4].forEach(i=>{$("step"+i).className="step"+(i<n?" done":i===n?" active":"")});
 }
+function showDates(){return orderComplete||orderTries>=2}
 function renderOrder(){
  $("orderCount").textContent=placed.filter(Boolean).length+" of 7 placed";
  $("slots").innerHTML=placed.map((id,i)=>{
   const e=events.find(x=>x.id===id);
   const mark=orderComplete?" correct":(orderChecked&&id&&id!==orderIds[i]?" incorrect":"");
-  return '<button class="slot'+(id?" filled":"")+mark+'" data-slot="'+i+'"><span class="slot-num">'+(i+1)+'</span><span class="slot-text">'+(e?e.date+"<br><b>"+e.title+"</b>":"Tap to place")+'</span></button>';
+  return '<button class="slot'+(id?" filled":"")+mark+'" data-slot="'+i+'"><span class="slot-num">'+(i+1)+'</span><span class="slot-text">'+(e?(showDates()?e.date+"<br>":"")+"<b>"+e.title+"</b>":"Tap to place")+'</span></button>';
  }).join("");
- $("pile").innerHTML=shuffled.map(e=>'<button class="tile'+(placed.includes(e.id)?" placed":"")+(selected===e.id?" selected":"")+'" data-tile="'+e.id+'"><span class="tile-date">'+e.date+'</span><strong>'+e.title+'</strong><span>'+e.text+'</span></button>').join("");
+ $("pile").innerHTML=shuffled.map(e=>'<button class="tile'+(placed.includes(e.id)?" placed":"")+(selected===e.id?" selected":"")+'" data-tile="'+e.id+'">'+(showDates()?'<span class="tile-date">'+e.date+'</span>':'')+'<strong>'+e.title+'</strong><span>'+e.text+'</span></button>').join("");
  $("checkOrder").disabled=orderComplete||placed.some(x=>!x);
  $("slots").querySelectorAll("[data-slot]").forEach(b=>b.addEventListener("click",()=>tapSlot(Number(b.dataset.slot))));
  $("pile").querySelectorAll("[data-tile]").forEach(b=>b.addEventListener("click",()=>tapTile(b.dataset.tile)));
@@ -129,8 +130,8 @@ function tapSlot(i){
 }
 $("checkOrder").addEventListener("click",()=>{
  const wrong=placed.findIndex((id,i)=>id!==orderIds[i]);
- if(wrong>=0){orderChecked=true;const n=placed.filter((id,i)=>id!==orderIds[i]).length;$("orderMessage").textContent=n+" spot"+(n>1?"s are":" is")+" out of order (marked). Read the dates and ask: what had to happen first?";renderOrder();return}
- orderComplete=true;renderOrder();save();
+ if(wrong>=0){window.classFirstTry&&classFirstTry.wrong();orderChecked=true;orderTries++;try{localStorage.setItem("wwi-chain-orderTries",orderTries)}catch(e){}const n=placed.filter((id,i)=>id!==orderIds[i]).length;$("orderMessage").textContent=n+" spot"+(n>1?"s are":" is")+" out of order (marked). Ask: what had to happen first to cause the next thing?"+(orderTries===2?" The dates are showing now to help.":"");renderOrder();return}
+ window.classFirstTry&&classFirstTry.right("order");orderComplete=true;renderOrder();save();
  $("orderMessage").textContent="That’s the right order!";
  $("orderResult").innerHTML='<strong>Good work!</strong><p>Now match four events to what happened next.</p><button class="btn secondary" id="goMatch">Go to task 2 →</button>';
  $("orderResult").classList.add("show");
@@ -146,14 +147,14 @@ function renderMatches(){
 function chooseMatch(id){
  if(!selectedFirst){$("matchMessage").textContent="Tap an event on the left first.";return}
  if(id===selectedFirst){
-  matched.add(id);selectedFirst=null;const pr=pairs.find(p=>p.id===id);$("matchMessage").textContent=(matched.size===4?"All four matches are right! ":"Right. ")+pr.why;save();
+  window.classFirstTry&&classFirstTry.right("match-"+id);matched.add(id);selectedFirst=null;const pr=pairs.find(p=>p.id===id);$("matchMessage").textContent=(matched.size===4?"All four matches are right! ":"Right. ")+pr.why;save();
   renderMatches();
   if(matched.size===4){
    $("matchResult").innerHTML='<strong>All matched!</strong><p>One more quick step: sort four countries by their side in 1914.</p><button class="btn secondary" id="goAlliances">Go to task 3 →</button>';
    $("matchResult").classList.add("show");
    $("goAlliances").addEventListener("click",()=>showStage(3));
   }
- }else{rightOrder=shuffle(pairs);renderMatches();$("matchMessage").textContent="Not that one. Reread the event tiles: what did this event directly cause? The results moved."}
+ }else{window.classFirstTry&&classFirstTry.wrong();rightOrder=shuffle(pairs);renderMatches();$("matchMessage").textContent="Not that one. Reread the event tiles: what did this event directly cause? The results moved."}
 }
 function renderAlliances(){
  const grid=$("allianceGrid");
@@ -167,7 +168,7 @@ function renderAlliances(){
 function chooseAlliance(id,side){
  const country=allianceCountries.find(item=>item.id===id);
  if(side===country.side){
-  allianceAnswers[id]=side;save();
+  window.classFirstTry&&classFirstTry.right("ally-"+id);allianceAnswers[id]=side;save();
   $("allianceMessage").textContent=country.name+" is on the "+(side==="central"?"Central Powers":"Allied")+" side. Keep sorting.";
   renderAlliances();
   if(Object.keys(allianceAnswers).length===4){
@@ -177,7 +178,7 @@ function chooseAlliance(id,side){
    $("goTopple").addEventListener("click",()=>showStage(4));
   }
  }else{
-  $("allianceMessage").textContent="Not quite. Read the clue on the "+country.name+" card again: who was it helping or fighting?";
+  window.classFirstTry&&classFirstTry.wrong();$("allianceMessage").textContent="Not quite. Read the clue on the "+country.name+" card again: who was it helping or fighting?";
  }
 }
 function renderFinalChain(){
@@ -193,7 +194,7 @@ function finishGame(){
 }
 async function submitAlliance(){const name=$("studentName").value.trim(),reflection=$("warReflection").value.trim(),button=$("submitAlliance"),status=$("submitStatus");const short=window.classShortName?window.classShortName(name):name;if(!name||!/ [A-Z]\.$/.test(short)){status.textContent="Type your first name + last initial (like Jordan M.).";$("studentName").focus();return}if(/_{2,}/.test(reflection)||reflection.split(/\s+/).filter(Boolean).length<8){status.textContent="Finish the sentence: fill in every ___ and write at least 8 words.";$("warReflection").focus();return}button.disabled=true;status.textContent="Sending your work…";const sequence=placed.map((id,i)=>{const event=events.find(e=>e.id===id);return {position:i+1,date:event?.date||"",event:event?.title||""}});const matches=[...matched].map(id=>{const pair=pairs.find(p=>p.id===id);return {event:pair?.first||id,happenedNext:pair?.next||""}});try{const response=await classTurnIn("https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"wwi-alliance-chain-reaction",answers:{"Standard":"SS.9-12.WH.29",sequence,matches,alliances:allianceAnswers,reflection,completed:gameComplete}})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not turn in your work.");status.textContent="Turned in! Your teacher has your work. You're done.";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not turn in your work. Try again.";button.disabled=false}}
 function restart(){
- try{localStorage.removeItem(SAVE_KEY);localStorage.removeItem("wwi-chain-studentName");localStorage.removeItem("wwi-chain-warReflection")}catch(e){}stage=1;orderChecked=false;$("welcomeBack").hidden=true;
+ try{localStorage.removeItem(SAVE_KEY);localStorage.removeItem("wwi-chain-orderTries");orderTries=0;window.classFirstTry&&classFirstTry.reset();localStorage.removeItem("wwi-chain-studentName");localStorage.removeItem("wwi-chain-warReflection")}catch(e){}stage=1;orderChecked=false;$("welcomeBack").hidden=true;
  shuffled=shuffle(events);placed=Array(events.length).fill(null);selected=null;orderComplete=false;matched=new Set();allianceAnswers={};allianceOrder=shuffle(allianceCountries);selectedFirst=null;gameComplete=false;rightOrder=shuffle(pairs);
  $("matchResult").classList.remove("show");$("matchResult").innerHTML="";$("finishResult").classList.remove("show");$("finishResult").innerHTML="";$("topple").disabled=false;$("topple").hidden=false;
  $("orderTask").classList.remove("hidden");$("matchTask").classList.add("hidden");$("allianceTask").classList.add("hidden");$("toppleTask").classList.add("hidden");

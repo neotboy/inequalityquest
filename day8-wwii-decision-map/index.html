@@ -26,7 +26,7 @@ button.secondary{background:#e7e0d1;color:var(--navy)}button:disabled{opacity:.5
 @media(max-width:650px){body{font-size:16px}header{padding:21px 14px}main.wrap{padding:13px 10px 38px}.directions,.part,.turnin{padding:14px}.part-intro{margin-left:0}.row{flex-wrap:wrap}.row input{flex-basis:100%}.part-frame{min-height:650px}}
 @media print{header{padding:10px}.directions,.turnin button{display:none!important}.part{break-inside:avoid}.part-frame{min-height:0}}
 </style>
-<script src="../shared/assignments.js?v=20261030d"></script><script src="../shared/turnin.js?v=20261030d"></script></head>
+<script src="../shared/assignments.js?v=20261030f"></script><script src="../shared/turnin.js?v=20261030f"></script></head>
 <body>
 <header><div class="wrap"><div class="kicker">World History · Day 8</div><h1>World War II: Decisions &amp; Warning Signs</h1><p>Two parts. One assignment. Turn in your work once at the end. <b>About 20–25 minutes.</b></p><p class="std"><b>Standard SS.9-12.WH.29</b> — Analyze the causes that led to the outbreak of World War I and World War II.<br><b>Standard SS.9-12.WH.30</b> — Compare and contrast the rise of dictators including their methods of repression and persecution, specifically addressing the causes and impact of the Holocaust.<br><b>Today's goal:</b> Explain how dictators' attacks started World War II, and spot the tools dictators used to take control.</p></div></header>
 <main class="wrap">
@@ -90,6 +90,7 @@ const warning=w.getElementById("method"+i)?.value||"";
 if(!warning||!w.getElementById("method"+i).disabled||!/^✓/.test(w.getElementById("fb"+i)?.textContent||""))throw new Error("Get a green check on all four warning-sign cases in Part 2.");
 answers["Part 2 · Case "+i+" warning sign"]=warning;
 }
+try{const ft=document.getElementById("warningPart").contentWindow.classFirstTry;if(ft&&ft.count().total)answers["First-try correct"]=ft.text()+" (Part 2 warning signs)"}catch(e){}
 return answers;
 }
 async function submitWork(){

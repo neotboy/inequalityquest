@@ -179,7 +179,7 @@ h2{font-size:20px;line-height:1.25;margin:0;color:var(--navy)}
 .turn-in-status.error{color:#9b3932}
 .welcome-back{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;margin:0 0 16px;padding:12px 16px;border-radius:12px;background:#e8f6ef;border:1px solid #9fd3b8;color:#14532d;font-weight:600}.restart-link{background:none;border:none;color:#1d4ed8;text-decoration:underline;font:inherit;font-weight:600;cursor:pointer;padding:4px}
 </style>
-<script src="../shared/assignments.js?v=20261030d"></script><script src="../shared/turnin.js?v=20261030d"></script></head>
+<script src="../shared/assignments.js?v=20261030f"></script><script src="../shared/turnin.js?v=20261030f"></script></head>
 <body>
 <a class="skip-link" href="#activity">Skip to the map and questions</a>
 <header class="site-header"><div class="header-inner"><h1>DIVIDE AFRICA <span aria-hidden="true">|</span> READ, SOLVE &amp; COLOR</h1><div class="work-note"><span class="work-dot" aria-hidden="true"></span>Work on your own</div></div></header>
@@ -521,7 +521,7 @@ $("turn-in-button").addEventListener("click",async()=>{
  if(Object.keys(whySolved).length!==TOTAL){status.textContent="Solve all ten mystery places before turning in.";return}
  if(Object.keys(mapAssignments).length!==TOTAL){status.textContent="Color all ten places correctly before turning in.";return}
  const s=scoreInfo();
- const answers={"Standard":"SS.9-12.WH.24","Score (right on first try)":s.first+" of "+s.max+" ("+s.pct+"%)"};
+ const answers={"Standard":"SS.9-12.WH.24","First-try correct":s.first+" of "+s.max+" ("+s.pct+"%)"};
  places.forEach((p,i)=>{
   const tries=m=>m?("took "+(m+1)+" tries"):"first try";
   answers[(i+1)+". "+p.name]=p.power+" | power: "+tries(misses[p.id].power)+" · why: "+tries(misses[p.id].why)+" · map: "+tries(mapMisses[p.id]);

@@ -32,7 +32,7 @@ footer{max-width:940px;margin:auto;padding:0 16px 22px;color:var(--muted);font-s
 @media(max-width:680px){.casegrid{grid-template-columns:1fr}.visual img{height:230px}.card{padding:15px}}
 @media print{body{background:white;font-size:14pt}header{background:white;color:black;border-bottom:2px solid black;padding:10px 0}header p,.kicker{color:black}.actions,.no-print{display:none!important}.card{box-shadow:none;border:1px solid #888;break-inside:avoid}.wrap{max-width:none}.casegrid{grid-template-columns:1fr 220px}.visual img{height:180px}}
 </style>
-<script src="../shared/assignments.js?v=20261030d"></script><script src="../shared/turnin.js?v=20261030d"></script></head>
+<script src="../shared/assignments.js?v=20261030f"></script><script src="../shared/turnin.js?v=20261030f"></script></head>
 <body>
 <header><div class="wrap"><div class="kicker">World History · Day 7</div><h1>Spot the Warning Signs</h1><p>Look at 4 pictures from the 1920s–1930s. Pick the warning sign each picture shows. <b>About 10 minutes.</b></p><p class="std"><b>Standard SS.9-12.WH.30</b> — Compare and contrast the rise of dictators including their methods of repression and persecution, specifically addressing the causes and impact of the Holocaust.<br><b>Today's goal:</b> Spot the tools dictators used to grab and keep power, and see how different dictators used the same tools.</p></div></header>
 <main class="wrap">
@@ -103,9 +103,9 @@ const $=id=>document.getElementById(id);
 function shuffleSelect(sel){const blank=sel.options[0];const opts=[...sel.options].slice(1);for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]]}sel.innerHTML="";sel.appendChild(blank);opts.forEach(o=>sel.appendChild(o));sel.value=""}
 function markCorrect(id){const sel=$(id),n=id.replace("method","");sel.value=KEY[id].a;sel.disabled=true;const fb=$("fb"+n);fb.className="fb ok";fb.textContent="✓ "+KEY[id].yes}
 function checkCase(id){const sel=$(id),n=id.replace("method",""),fb=$("fb"+n);if(!sel.value)return;
-if(sel.value===KEY[id].a){markCorrect(id);save();updateWelcome(false);return}
+if(sel.value===KEY[id].a){window.classFirstTry&&classFirstTry.right(id);markCorrect(id);save();updateWelcome(false);return}
 // Wrong: clear the choice, mix up the choices, and pause briefly so students look again.
-shuffleSelect(sel);sel.disabled=true;fb.className="fb no";let left=LOCK_SECONDS;
+window.classFirstTry&&classFirstTry.wrong();shuffleSelect(sel);sel.disabled=true;fb.className="fb no";let left=LOCK_SECONDS;
 const tick=()=>{fb.textContent="Not quite. "+KEY[id].hint+" Try again in "+left+"…";};tick();
 const t=setInterval(()=>{left--;if(left<=0){clearInterval(t);sel.disabled=false;fb.textContent="Not quite. "+KEY[id].hint+" Try again now.";}else tick()},1000);save()}
 function save(){allIds.forEach(id=>localStorage.setItem("day7-warning-"+id,$(id).value));saved.textContent="Saved on this device.";setTimeout(()=>saved.textContent="",900)}
@@ -117,7 +117,7 @@ studentName.addEventListener("input",save);
 updateWelcome(true);
 async function submitWork(){const status=$("submitStatus"),name=studentName.value.trim(),button=$("submitWork");if(!name){status.textContent="Type your first name + last initial (like Jordan M.) first.";studentName.focus();return}if(doneCount()<4){status.textContent="Get a green check on all four cases before turning in your choices.";return}const answers={Standard:STANDARD};choiceIds.forEach((id,i)=>answers["Case "+(i+1)+" warning sign"]=$(id).value);button.disabled=true;status.textContent="Sending your choices…";try{const response=await classTurnIn(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:name,assignmentId:"day7-warning-signs",answers})});const result=await response.json();if(!response.ok)throw new Error(result.error||"Could not send your choices.");status.textContent="Turned in! Your teacher got your 4 choices. You're done.";button.textContent="Turned in ✓"}catch(error){status.textContent=error instanceof Error?error.message:"Could not turn in your choices. Try again.";button.disabled=false}}
 $("submitWork").addEventListener("click",submitWork);
-$("clearWork").addEventListener("click",()=>{if(confirm("Start over? This clears your choices on this device.")){allIds.forEach(id=>localStorage.removeItem("day7-warning-"+id));location.reload()}});
+$("clearWork").addEventListener("click",()=>{if(confirm("Start over? This clears your choices on this device.")){allIds.forEach(id=>localStorage.removeItem("day7-warning-"+id));window.classFirstTry&&classFirstTry.reset();location.reload()}});
 </script>
 </body>
 </html>

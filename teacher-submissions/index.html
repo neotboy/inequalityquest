@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Teacher Dashboard · All Classes</title>
-<script src="../shared/assignments.js?v=20261030e"></script>
-<script src="../shared/turnin.js?v=20261030d"></script>
+<script src="../shared/assignments.js?v=20261030f"></script>
+<script src="../shared/turnin.js?v=20261030f"></script>
 <style>
 :root{--navy:#19364b;--red:#a33d36;--green:#2f6b3a;--paper:#f4efe4;--card:#fffdf8;--ink:#22313b;--muted:#536571;--line:#d8cfbd}
 *{box-sizing:border-box}
@@ -46,6 +46,7 @@ th.student,td.student{position:sticky;left:0;background:#fff;text-align:left;fon
 thead th.student{z-index:3;background:#f1ebde}
 td.done button{background:#e3f0e5;color:var(--green);padding:3px 8px;font-size:.85rem}
 td.miss{color:#b9ad97}
+td.done .ft{display:block;font-size:.75rem;font-weight:700;color:var(--muted)}
 .list{display:grid;gap:9px}
 .sub{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff}
 .sub .top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -227,13 +228,14 @@ function renderGrid(list) {
   const cell = (s, id) => {
     const hits = list.filter(r => r.studentName === s && r.assignmentId === id);
     if (!hits.length) return `<td class="miss">—</td>`;
-    return `<td class="done"><button data-s="${safe(s)}" data-a="${safe(id)}" title="Open answers">✓ ${dateShort(hits[0].submittedAt)}${hits.length > 1 ? " ×" + hits.length : ""}</button></td>`;
+    const ft = String((hits[0].answers || {})["First-try correct"] || "").replace(/\s*\(.*$/, "").replace(" of ", "/");
+    return `<td class="done"><button data-s="${safe(s)}" data-a="${safe(id)}" title="Open answers${ft ? " · first-try correct " + safe(ft) : ""}">✓ ${dateShort(hits[0].submittedAt)}${hits.length > 1 ? " ×" + hits.length : ""}${ft ? `<span class="ft">${safe(ft)}</span>` : ""}</button></td>`;
   };
   // One table per unit, Unit 1 first. Each unit only shows students who turned in something in it.
   // Show every day of a unit (not just ones with turn-ins) so missing work stands out.
   const unitsUsed = new Set(list.map(r => unitOf(r.assignmentId)));
   const units = byUnit([...new Set([...activitiesFor(list), ...Object.keys(REG).filter(id => REG[id].course === tab && REG[id].path && unitsUsed.has(unitOf(id)))])], tab);
-  $("out").innerHTML = `<p class="status" style="margin:0 0 8px">${students.length} students · grouped by unit, in day order · click a ✓ to read that student's answers.</p>` +
+  $("out").innerHTML = `<p class="status" style="margin:0 0 8px">${students.length} students · grouped by unit, in day order · the small number under a ✓ is questions right on the first try · click a ✓ to read that student's answers.</p>` +
     units.map(g => {
       const inUnit = list.filter(r => g.ids.includes(r.assignmentId));
       const who = [...new Set(inUnit.map(r => r.studentName))].sort((a, b) => a.localeCompare(b));

@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
-<script src="../../shared/assignments.js?v=20261030d"></script>
-<script src="../../shared/turnin.js?v=20261030d"></script>
+<script src="../../shared/assignments.js?v=20261030f"></script>
+<script src="../../shared/turnin.js?v=20261030f"></script>
 <style>
 :root{--ink:#1b2430;--muted:#5b6574;--bg:#eef1f6;--line:#d6dbe4;--navy:#1d3f73;--navy-d:#122b52;--gold:#e0a526;--gold-d:#b07f12;--gold-l:#fff4d6;--red:#c0392b;--red-d:#8e2a20;--red-l:#fde8e5;--green:#1f8a4c;--green-l:#e2f6ea;--paper:#fffaf0}
 *{box-sizing:border-box}html,body{margin:0}
@@ -345,7 +345,7 @@ function finish(){hud();
  tb.onclick=async function(){
   if(!window.classTurnIn){ts.textContent="Turn-in only works on the class website. Screenshot this screen instead.";ts.style.color="var(--red)";return;}
   tb.disabled=true;ts.textContent="Sending...";ts.style.color="var(--muted)";
-  var answers={"Standard":"SS.9-12.Gov.3, SS.9-12.Gov.4","Completion code":code(),"Rank":rank,"Stars":st+" of 9","First-try score":ft+" of "+total+" ("+pct+"%)","Test questions to review":list.length?list.join(", "):"None",
+  var answers={"Standard":"SS.9-12.Gov.3, SS.9-12.Gov.4","Completion code":code(),"Rank":rank,"Stars":st+" of 9","First-try correct":ft+" of "+total+" ("+pct+"%)","Test questions to review":list.length?list.join(", "):"None",
    "Act I shields lost":String((S.results[0]||{}).lost),"Act II shields lost":String((S.results[1]||{}).lost),"Act III shields lost":String((S.results[2]||{}).lost)};
   try{var r=await window.classTurnIn("https://fynn-class-assignment-submissions-20261024.neotboy.chatgpt.site/api/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({studentName:S.name,assignmentId:"civics-test-s1-founders-defense",assignmentTitle:"Civics Test Section 1 · Founders' Defense",score:pct,answers:answers})});
    var d=await r.json().catch(function(){return{};});if(!r.ok)throw new Error(d.error||"Could not send your results.");

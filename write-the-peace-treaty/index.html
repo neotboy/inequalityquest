@@ -94,7 +94,7 @@ textarea:focus,input:focus{outline:3px solid #6aa5bf;border-color:#28657e}
 @media print{header .directions,.refreshers,.controls,.finish-actions{display:none!important}body{background:white}.game{box-shadow:none}.case-layout{grid-template-columns:1fr 1fr}.cartoon-panel img{max-height:450px}}
 .std-line{font-size:.92rem;margin:0 0 4px;line-height:1.35}.goal-line{margin:0 0 4px}.welcome-back{background:#e4f3e9;color:#14532d;border:1px solid #83b394;border-radius:10px;padding:9px 12px;margin:0 0 12px;font-weight:700}.stem{font-size:.92rem;margin:2px 0 6px}
 </style>
-<script src="../shared/assignments.js?v=20261030d"></script><script src="../shared/turnin.js?v=20261030d"></script></head>
+<script src="../shared/assignments.js?v=20261030f"></script><script src="../shared/turnin.js?v=20261030f"></script></head>
 <body>
 <header>
 <div class="wrap">
@@ -267,12 +267,14 @@ $("caseComplete").className="case-complete";
 }
 function answer(btn,q){
 if(btn.dataset.correct==="true"){
+window.classFirstTry&&classFirstTry.right("c"+state.caseIndex+"q"+state.stepIndex);
 state.responses["Case "+(state.caseIndex+1)+" · Q"+(state.stepIndex+1)+" · "+q.label]=btn.innerText.replace(/^[A-Z]\s*/,"").trim();save();
 btn.classList.add("correct");$("answers").querySelectorAll("button").forEach(b=>b.disabled=true);
 $("feedback").innerHTML="<b>Right.</b> "+q.why;
 $("feedback").className="feedback show good";$("hint").className="hint";
 $("continueBtn").disabled=false;
 }else{
+window.classFirstTry&&classFirstTry.wrong();
 const answers=$("answers"),buttons=Array.from(answers.querySelectorAll(".answer")),previous=buttons.map(b=>b.querySelector(".letter").textContent+":"+b.innerText);for(let i=buttons.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[buttons[i],buttons[j]]=[buttons[j],buttons[i]]}if(buttons.map(b=>b.querySelector(".letter").textContent+":"+b.innerText).every((v,i)=>v===previous[i]))buttons.unshift(buttons.pop());buttons.forEach((b,i)=>{b.disabled=false;b.classList.remove("wrong","correct");b.querySelector(".letter").textContent=String.fromCharCode(65+i);answers.appendChild(b)});$("hint").className="hint show";
 $("feedback").innerHTML="<b>Not quite.</b> Look at the cartoon and the case notes again, then use the clue below. The choices moved.";
 $("feedback").className="feedback show retry";
@@ -291,7 +293,7 @@ save();render();
 });
 $("finalAnswer").addEventListener("input",e=>{state.answerText=e.target.value;save();$("savedStatus").textContent="Saved on this device."});
 $("studentName").addEventListener("input",e=>{state.studentName=e.target.value;save()});
-function startOver(){if(confirm("Start over and clear this activity’s saved answers?")){localStorage.removeItem(stateKey);$("welcomeBack").hidden=true;state={caseIndex:0,stepIndex:0,done:[false,false,false,false],evidenceDone:[false,false,false,false],answerText:"",studentName:"",responses:{}};render();window.scrollTo({top:0,behavior:"smooth"})}}
+function startOver(){if(confirm("Start over and clear this activity’s saved answers?")){localStorage.removeItem(stateKey);window.classFirstTry&&classFirstTry.reset();$("welcomeBack").hidden=true;state={caseIndex:0,stepIndex:0,done:[false,false,false,false],evidenceDone:[false,false,false,false],answerText:"",studentName:"",responses:{}};render();window.scrollTo({top:0,behavior:"smooth"})}}
 async function submitWork(){
 const name=$("studentName").value.trim(),answerText=$("finalAnswer").value.trim(),status=$("submitStatus"),button=$("submitWork");
 state.studentName=name;state.answerText=answerText;save();

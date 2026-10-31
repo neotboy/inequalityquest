@@ -38,10 +38,42 @@ const GOOGLE_SAVER_URL = "https://script.google.com/macros/s/AKfycbwWV93yudtLuny
     }
   }
 
+
+  // --- First-try score -----------------------------------------------------------
+  // Pages call classFirstTry.wrong() on a miss and classFirstTry.right("item-id") when a
+  // question is answered correctly. Each item counts once, even after a refresh.
+  // classTurnIn() then adds "First-try correct: X of Y" to the turn-in automatically.
+  window.classFirstTry = (function () {
+    const key = "firsttry:" + location.pathname;
+    let st;
+    try { st = JSON.parse(localStorage.getItem(key)); } catch (e) {}
+    if (!st || typeof st !== "object" || !st.done) st = { done: {}, miss: false };
+    const save = () => { try { localStorage.setItem(key, JSON.stringify(st)); } catch (e) {} };
+    return {
+      wrong() { st.miss = true; save(); },
+      right(id) { id = String(id); if (!(id in st.done)) st.done[id] = !st.miss; st.miss = false; save(); },
+      count() { const v = Object.values(st.done); return { right: v.filter(Boolean).length, total: v.length }; },
+      text() { const c = this.count(); return c.right + " of " + c.total; },
+      reset() { st = { done: {}, miss: false }; save(); }
+    };
+  })();
+
   // Activities call classTurnIn(oldAddress, fetchOptions) instead of fetch().
   window.classTurnIn = async function (oldUrl, options) {
     let body;
     try { body = JSON.parse(options && options.body || "{}"); } catch (e) { body = {}; }
+
+    // Add the first-try score (second, right after the standard) if the page tracked one.
+    if (body.answers && typeof body.answers === "object" && !Array.isArray(body.answers) && !("First-try correct" in body.answers)) {
+      const c = window.classFirstTry.count();
+      if (c.total) {
+        const out = {};
+        if ("Standard" in body.answers) out.Standard = body.answers.Standard;
+        out["First-try correct"] = c.right + " of " + c.total;
+        Object.keys(body.answers).forEach(k => { if (!(k in out)) out[k] = body.answers[k]; });
+        body.answers = out;
+      }
+    }
 
     const name = shortName(body.studentName);
     if (!name || !/ [A-Z]\.$/.test(name)) return fakeResponse(400, { error: NAME_HELP });
@@ -101,6 +133,46 @@ const GOOGLE_SAVER_URL = "https://script.google.com/macros/s/AKfycbwWV93yudtLuny
       });
     });
   }
+
+  // --- Outside pictures that don't load (blocked by a school filter, site down) ----
+  // Show a short note with a link instead of a broken-image icon.
+  function isOutside(img) {
+    try { return img.currentSrc || img.src ? new URL(img.currentSrc || img.src, location.href).origin !== location.origin : false; }
+    catch (e) { return false; }
+  }
+  function noteFor(img) {
+    let note = img.nextElementSibling;
+    if (note && note.classList.contains("img-fallback")) return note;
+    note = document.createElement("p");
+    note.className = "img-fallback";
+    note.setAttribute("role", "note");
+    note.style.cssText = "margin:8px 0;padding:10px 12px;border:2px dashed #b9ad97;border-radius:10px;background:#fffdf8;color:#22313b;font:600 .95rem/1.4 system-ui,Segoe UI,Arial,sans-serif;text-align:left";
+    img.insertAdjacentElement("afterend", note);
+    return note;
+  }
+  function showFallback(img) {
+    if (!(img instanceof HTMLImageElement) || !isOutside(img)) return;
+    const src = img.currentSrc || img.src, note = noteFor(img);
+    note.textContent = "Picture didn't load" + (img.alt ? " (" + img.alt.slice(0, 90) + ")" : "") + ". ";
+    const a = document.createElement("a");
+    a.href = src; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Open it here ↗";
+    note.appendChild(a);
+    img.dataset.fallbackHidden = "1";
+    img.style.display = "none";
+    note.hidden = false;
+  }
+  document.addEventListener("error", e => { if (e.target && e.target.tagName === "IMG") showFallback(e.target); }, true);
+  document.addEventListener("load", e => {
+    const img = e.target;
+    if (!img || img.tagName !== "IMG" || img.dataset.fallbackHidden !== "1") return;
+    img.style.display = ""; delete img.dataset.fallbackHidden;
+    const note = img.nextElementSibling;
+    if (note && note.classList.contains("img-fallback")) note.hidden = true;
+  }, true);
+  // Same idea when an image's address changes later and it was hidden before.
+  function checkAll() { document.querySelectorAll("img").forEach(img => { if (img.complete && img.src && !img.naturalWidth) showFallback(img); }); }
+  if (document.readyState === "complete") checkAll(); else window.addEventListener("load", checkAll);
+
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fixNameBoxes);
   else fixNameBoxes();
 })();
