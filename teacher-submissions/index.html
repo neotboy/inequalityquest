@@ -87,6 +87,7 @@ td.done .when{display:block;font-size:.68rem;font-weight:600;color:var(--muted);
 td.done.check button{background:#e4ecf5;color:#24496d}
 td.sum{font-size:.85rem;min-width:110px}td.sum .lvl{display:block;font-size:.75rem;font-weight:800}
 td.sum.l3{background:#eef7f0;color:#1f5e2c}td.sum.l2{background:#fff8e2;color:#7a5a00}td.sum.l1{background:#fbecea;color:#8e2a20}
+.lv.l4,td.done.l4 button{background:#dbe8fb;color:#1c3f78}td.sum.l4{background:#eaf1fc;color:#1c3f78}
 </style>
 </head>
 <body>
@@ -229,25 +230,49 @@ function stdsOf(r) { const got = String((r.answers || {}).Standard || "").match(
 function ftOf(r) { const m = String((r.answers || {})["First-try correct"] || "").match(/(\d+)\s*(?:of|\/)\s*(\d+)/); return m && +m[2] ? { right: +m[1], total: +m[2] } : null; }
 function levelOf(pct) { return pct >= 90 ? { n: 3, label: "On track for 3", cls: "l3" } : pct >= 70 ? { n: 2, label: "2", cls: "l2" } : { n: 1, label: "1", cls: "l1" }; }
 function pctClass(ft) { if (!ft) return ""; const p = ft.right / ft.total * 100; return p >= 90 ? "l3" : p >= 70 ? "l2" : "l1"; }
+// AI grade of the written answers (saved into the turn-in by the hourly AI grader): { n, reason, flag }
+function aiOf(r) { const a = r.answers || {}, n = parseInt(a["AI level"], 10); return n >= 1 && n <= 4 ? { n, reason: String(a["AI reason"] || ""), flag: String(a["AI flag"] || "") } : null; }
+// Halves round down: a 3 has to be earned, not reached by rounding (2.5 -> 2, 3.5 -> 3).
+const roundDown = x => Math.ceil(x - 0.5);
+const LCLS = n => n >= 4 ? "l4" : n >= 3 ? "l3" : n >= 2 ? "l2" : "l1";
+// One turn-in's grade: the auto (first-try) level and the written (AI) level, averaged when both exist.
+function dayGrade(r) {
+  const f = ftOf(r), ai = aiOf(r), parts = [];
+  const auto = f ? levelOf(Math.round(f.right / f.total * 100)).n : null;
+  if (auto) parts.push(auto); if (ai) parts.push(ai.n);
+  if (!parts.length) return null;
+  const n = roundDown(parts.reduce((a, b) => a + b, 0) / parts.length);
+  return { n, f, ai, auto, pct: f ? Math.round(f.right / f.total * 100) : null };
+}
+// Level label: a 3+ needs a written (explain) piece to count as a real 3, otherwise it's "On track for 3".
+function levelLabel(n, hasWritten) { return n >= 3 && !hasWritten ? "On track for 3" : String(n); }
 function courseStandards(course) {
   const order = [];
   sortIds(Object.keys(REG).filter(id => REG[id].course === course && REG[id].path)).forEach(id => (REG[id].std || []).forEach(c => { if (!order.includes(c)) order.push(c); }));
   return order;
 }
-// { student: { code: { right, total, items: [{title, ft}], unscored } } } using each student's latest turn-in per assignment.
+// { student: { code: { items: [{title, g}], levels: [], written: bool, unscored } } } using each student's latest turn-in per assignment.
 function masteryData(list) {
   const latest = new Map();
   list.forEach(r => { const k = r.studentName + "|" + r.assignmentId; if (!latest.has(k)) latest.set(k, r); });
   const out = {};
   latest.forEach(r => {
-    const ft = ftOf(r), s = out[r.studentName] = out[r.studentName] || {};
+    const g = dayGrade(r), s = out[r.studentName] = out[r.studentName] || {};
     stdsOf(r).forEach(c => {
-      const cell = s[c] = s[c] || { right: 0, total: 0, items: [], unscored: 0 };
-      cell.items.push({ title: titleOf(r), ft });
-      if (ft) { cell.right += ft.right; cell.total += ft.total; } else cell.unscored++;
+      const cell = s[c] = s[c] || { items: [], levels: [], written: false, unscored: 0 };
+      cell.items.push({ title: titleOf(r), g });
+      if (g) { cell.levels.push(g.n); if (g.ai) cell.written = true; } else cell.unscored++;
     });
   });
+  Object.values(out).forEach(s => Object.values(s).forEach(c => { c.avg = c.levels.length ? c.levels.reduce((a, b) => a + b, 0) / c.levels.length : null; c.n = c.avg === null ? null : roundDown(c.avg); }));
   return out;
+}
+function itemText(x) {
+  if (!x.g) return "turned in, not graded yet";
+  const bits = [];
+  if (x.g.f) bits.push(x.g.f.right + " of " + x.g.f.total + " right on the first try");
+  if (x.g.ai) bits.push("written answer Level " + x.g.ai.n + (x.g.ai.reason ? " (" + x.g.ai.reason + ")" : "") + (x.g.ai.flag ? " ⚠ " + x.g.ai.flag : ""));
+  return bits.join("; ");
 }
 function renderMastery(list) {
   const codes = courseStandards(tab), data = masteryData(list);
@@ -256,14 +281,14 @@ function renderMastery(list) {
   const cellHtml = (s, c) => {
     const d = data[s][c];
     if (!d) return `<td class="lv none" data-s="${safe(s)}" data-c="${safe(c)}" title="No work turned in for this standard yet">—</td>`;
-    const tip = d.items.map(x => x.title + (x.ft ? ": " + x.ft.right + "/" + x.ft.total : ": turned in, no score")).join("\n");
-    if (!d.total) return `<td class="lv check" data-s="${safe(s)}" data-c="${safe(c)}" title="${safe(tip)}">Check<small>${d.items.length} turned in</small></td>`;
-    const pct = Math.round(d.right / d.total * 100), L = levelOf(pct);
-    return `<td class="lv ${L.cls}" data-s="${safe(s)}" data-c="${safe(c)}" title="${safe(tip)}">${L.label}<small>${pct}% · ${d.items.length} ${d.items.length === 1 ? "activity" : "activities"}</small></td>`;
+    const tip = d.items.map(x => x.title + ": " + itemText(x)).join("\n");
+    if (d.n === null) return `<td class="lv check" data-s="${safe(s)}" data-c="${safe(c)}" title="${safe(tip)}">Check<small>${d.items.length} not graded yet</small></td>`;
+    const flag = d.items.some(x => x.g && x.g.ai && x.g.ai.flag);
+    return `<td class="lv ${LCLS(d.n)}" data-s="${safe(s)}" data-c="${safe(c)}" title="${safe(tip)}">${levelLabel(d.n, d.written)}${flag ? " ⚠" : ""}<small>avg ${d.avg.toFixed(1)} · ${d.items.length} ${d.items.length === 1 ? "activity" : "activities"}${d.written ? " · written" : ""}</small></td>`;
   };
   const missing = s => codes.filter(c => !data[s][c]).length;
-  $("out").innerHTML = `<div class="legend"><span class="lv l3">On track for 3</span> 90%+ right on the first try <span class="lv l2">2</span> 70–89% <span class="lv l1">1</span> under 70% <span class="lv none">—</span> no evidence yet <span class="lv check">Check</span> turned in, no auto score</div>
-  <p class="status" style="margin:4px 0 10px">${students.length} students · ${codes.length} standards · Level is figured from first-try answers across every activity for that standard. You confirm a 3 or 4 from written answers and the unit test. Tap any score to see which activities it came from.</p>
+  $("out").innerHTML = `<div class="legend"><span class="lv l4">4</span> beyond proficient <span class="lv l3">3</span> proficient (needs a written answer) <span class="lv l3">On track for 3</span> 90%+ first try, no written answer yet <span class="lv l2">2</span> <span class="lv l1">1</span> <span class="lv none">—</span> no evidence yet <span class="lv check">Check</span> not graded yet · ⚠ flagged written answer</div>
+  <p class="status" style="margin:4px 0 10px">${students.length} students · ${codes.length} standards · Each activity counts as one level: its first-try score (90%+ = 3, 70–89% = 2, under 70% = 1) and its written answers (graded 1–4 by AI against the standard), averaged. Tap any score to see where it came from.</p>
   <div class="gridwrap"><table class="mastery"><thead><tr><th class="student">Student</th>${codes.map(c => `<th title="${safe(STDTXT[c] || "")}">${safe(shortStd(c))}<small>${safe((STDTXT[c] || "").slice(0, 60))}${(STDTXT[c] || "").length > 60 ? "…" : ""}</small></th>`).join("")}<th>No evidence</th></tr></thead>
   <tbody>${students.map(s => `<tr><td class="student">${safe(s)}</td>${codes.map(c => cellHtml(s, c)).join("")}<td class="${missing(s) ? "needs" : ""}">${missing(s) ? missing(s) + " of " + codes.length : "✓"}</td></tr>`).join("")}</tbody></table></div>
   <div id="mdetail" class="mdetail" aria-live="polite"></div>
@@ -274,17 +299,16 @@ function renderMastery(list) {
   $("out").querySelectorAll("td.lv[data-c]").forEach(td => td.onclick = () => {
     const d = data[td.dataset.s][td.dataset.c], c = td.dataset.c;
     $("out").querySelectorAll("td.lv.picked").forEach(x => x.classList.remove("picked")); td.classList.add("picked");
-    $("mdetail").innerHTML = `<b>${safe(td.dataset.s)} · ${safe(shortStd(c))}</b> <span class="status">${safe(STDTXT[c] || "")}</span>` + (d ? `<ul>${d.items.map(x => `<li>${safe(x.title)}: ${x.ft ? x.ft.right + " of " + x.ft.total + " right on the first try" : "turned in, no auto score (check their written answers)"}</li>`).join("")}</ul>` : `<p>No work turned in for this standard yet. They need at least a 1 here for credit.</p>`);
+    $("mdetail").innerHTML = `<b>${safe(td.dataset.s)} · ${safe(shortStd(c))}</b> <span class="status">${safe(STDTXT[c] || "")}</span>` + (d ? `<ul>${d.items.map(x => `<li>${safe(x.title)}: ${safe(itemText(x))}</li>`).join("")}</ul>` : `<p>No work turned in for this standard yet. They need at least a 1 here for credit.</p>`);
   });
 }
 function masteryCsvRows(list) {
   const codes = courseStandards(tab), data = masteryData(list);
-  const rowsOut = [["Student", "Standard", "Standard text", "Level", "First-try right", "First-try total", "Percent", "Activities"]];
+  const rowsOut = [["Student", "Standard", "Standard text", "Level", "Average", "Has written answer", "Activities and scores"]];
   Object.keys(data).sort().forEach(s => codes.forEach(c => {
     const d = data[s][c];
-    if (!d) { rowsOut.push([s, c, STDTXT[c] || "", "No evidence", "", "", "", ""]); return; }
-    const pct = d.total ? Math.round(d.right / d.total * 100) : "";
-    rowsOut.push([s, c, STDTXT[c] || "", d.total ? levelOf(pct).label : "Check", d.right, d.total, pct, d.items.map(x => x.title).join("; ")]);
+    if (!d) { rowsOut.push([s, c, STDTXT[c] || "", "No evidence", "", "", ""]); return; }
+    rowsOut.push([s, c, STDTXT[c] || "", d.n === null ? "Check" : levelLabel(d.n, d.written), d.avg === null ? "" : d.avg.toFixed(1), d.written ? "yes" : "no", d.items.map(x => x.title + ": " + itemText(x)).join(" | ")]);
   }));
   return rowsOut;
 }
@@ -319,24 +343,28 @@ function renderGrid(list) {
   const cell = (s, id) => {
     const hits = list.filter(r => r.studentName === s && r.assignmentId === id);
     if (!hits.length) return `<td class="miss">—</td>`;
-    const f = ftOf(hits[0]), when = dateShort(hits[0].submittedAt) + (hits.length > 1 ? " · ×" + hits.length : "");
-    if (!f) return `<td class="done check"><button data-s="${safe(s)}" data-a="${safe(id)}" title="Turned in with no auto score. Open to read their answers."><b class="grade">Check</b><span class="lvl">no auto score</span><span class="when">${when}</span></button></td>`;
-    const pct = Math.round(f.right / f.total * 100), L = levelOf(pct);
-    return `<td class="done ${L.cls}"><button data-s="${safe(s)}" data-a="${safe(id)}" title="${f.right} of ${f.total} right on the first try. Open to read their answers."><b class="grade">${pct}%</b><span class="lvl">${L.n === 3 ? "On track for 3" : "Level " + L.n} · ${f.right}/${f.total}</span><span class="when">${when}</span></button></td>`;
+    const g = dayGrade(hits[0]), when = dateShort(hits[0].submittedAt) + (hits.length > 1 ? " · ×" + hits.length : "");
+    if (!g) return `<td class="done check"><button data-s="${safe(s)}" data-a="${safe(id)}" title="Not graded yet. Open to read their answers."><b class="grade">Check</b><span class="lvl">not graded yet</span><span class="when">${when}</span></button></td>`;
+    const big = g.f ? g.pct + "%" : "Level " + g.ai.n;
+    const parts = [];
+    if (g.f) parts.push((g.auto === 3 ? "First try L3" : "First try L" + g.auto) + " · " + g.f.right + "/" + g.f.total);
+    if (g.ai && g.f) parts.push("Written L" + g.ai.n + (g.ai.flag ? " ⚠" : ""));
+    const tip = [g.f ? g.f.right + " of " + g.f.total + " right on the first try" : "", g.ai ? "Written answer Level " + g.ai.n + ": " + g.ai.reason + (g.ai.flag ? " ⚠ " + g.ai.flag : "") : "", "Day level: " + levelLabel(g.n, !!g.ai), "Open to read their answers."].filter(Boolean).join("\n");
+    return `<td class="done ${LCLS(g.n)}"><button data-s="${safe(s)}" data-a="${safe(id)}" title="${safe(tip)}"><b class="grade">${big}</b><span class="lvl">${g.f ? safe(levelLabel(g.n, !!g.ai) === "On track for 3" ? "On track for 3" : "Level " + g.n) : "Written answer" + (g.ai.flag ? " ⚠" : "")}</span><span class="when">${safe(parts.join(" · "))}</span><span class="when">${when}</span></button></td>`;
   };
-  // Unit summary for one student: activities done + average first-try % across scored ones.
+  // Unit summary for one student: activities done + average day level.
   const unitSum = (s, ids, inUnit) => {
     const done = new Set(inUnit.filter(r => r.studentName === s).map(r => r.assignmentId));
-    let right = 0, total = 0;
-    ids.forEach(id => { const r = list.find(x => x.studentName === s && x.assignmentId === id); const f = r && ftOf(r); if (f) { right += f.right; total += f.total; } });
-    const pct = total ? Math.round(right / total * 100) : null, L = pct === null ? null : levelOf(pct);
-    return `<td class="sum ${L ? L.cls : ""}"><b>${done.size}/${ids.length}</b> done${pct === null ? "" : `<span class="lvl">${pct}% · ${L.n === 3 ? "On track for 3" : "Level " + L.n}</span>`}</td>`;
+    const lv = []; let written = false;
+    ids.forEach(id => { const r = list.find(x => x.studentName === s && x.assignmentId === id); const g = r && dayGrade(r); if (g) { lv.push(g.n); if (g.ai) written = true; } });
+    const avg = lv.length ? lv.reduce((a, b) => a + b, 0) / lv.length : null, n = avg === null ? null : roundDown(avg);
+    return `<td class="sum ${n ? LCLS(n) : ""}"><b>${done.size}/${ids.length}</b> done${n === null ? "" : `<span class="lvl">${levelLabel(n, written) === "On track for 3" ? "On track for 3" : "Level " + n} · avg ${avg.toFixed(1)}</span>`}</td>`;
   };
   // One table per unit, Unit 1 first. Each unit only shows students who turned in something in it.
   // Show every day of a unit (not just ones with turn-ins) so missing work stands out.
   const unitsUsed = new Set(list.map(r => unitOf(r.assignmentId)));
   const units = byUnit([...new Set([...activitiesFor(list), ...Object.keys(REG).filter(id => REG[id].course === tab && REG[id].path && REG[id].turnIn !== false && unitsUsed.has(unitOf(id)))])], tab);
-  $("out").innerHTML = `<p class="status" style="margin:0 0 8px">${students.length} students · grouped by unit, in day order · each box is that day's grade: percent right on the first try and its level (green = on track for 3 at 90%+, yellow = Level 2 at 70–89%, red = Level 1 under 70%) · “Check” means turned in with no auto score · click any grade to read that student's answers.</p>` +
+  $("out").innerHTML = `<p class="status" style="margin:0 0 8px">${students.length} students · grouped by unit, in day order · each box is that day's grade: first-try percent and/or the AI grade of their written answers, combined into one level (blue = 4, green = 3, yellow = 2, red = 1; ⚠ = flagged written answer) · “Check” means not graded yet · click any grade to read that student's answers.</p>` +
     units.map(g => {
       const inUnit = list.filter(r => g.ids.includes(r.assignmentId));
       const who = [...new Set(inUnit.map(r => r.studentName))].sort((a, b) => a.localeCompare(b));
