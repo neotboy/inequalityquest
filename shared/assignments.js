@@ -70,10 +70,10 @@ window.CLASS_ASSIGNMENTS = {
   // ---- Government · Unit 1 ----
   "gov-stranded-day1":                { course: "government", unit: 1, day: 1, title: "Day 1 · Stranded: Govern or Collapse", path: "civics/stranded-government/" },
   "gov-my-country-day3":              { course: "government", unit: 1, day: 3, title: "Day 3 · My Country, My Rules", path: "civics/my-country-my-rules/" },
-  "gov-democracy-visualized-day1":    { course: "government", unit: 1, day: 1, title: "Day 1 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day1" },
-  "gov-democracy-visualized-day2":    { course: "government", unit: 1, day: 2, title: "Day 2 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day2" },
-  "gov-democracy-visualized-day7":    { course: "government", unit: 1, day: 7, title: "Day 7 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day7" },
-  "gov-democracy-visualized-day9":    { course: "government", unit: 1, day: 9, title: "Day 9 · Democracy Visualized Reading", path: "civics/democracy-visualized/#day9" },
+  "gov-democracy-visualized-day1":    { course: "government", unit: 1, day: 1, title: "Day 1 · Purposes of Government (Reading)", path: "civics/democracy-visualized/#day1" },
+  "gov-democracy-visualized-day2":    { course: "government", unit: 1, day: 2, title: "Day 2 · Social Contract & Rule of Law (Reading)", path: "civics/democracy-visualized/#day2" },
+  "gov-democracy-visualized-day7":    { course: "government", unit: 1, day: 7, title: "Day 7 · The Constitution (Reading)", path: "civics/democracy-visualized/#day7" },
+  "gov-democracy-visualized-day9":    { course: "government", unit: 1, day: 9, title: "Day 9 · Federalism & Iowa Government (Reading)", path: "civics/democracy-visualized/#day9" },
 
   // ---- Government · Unit 2 ----
   "gov-unit2-day1-the-feed":          { course: "government", unit: 2, day: 1, title: "Day 1 · The Feed: Where Beliefs Come From", path: "civics/unit2-day1-the-feed/" },
