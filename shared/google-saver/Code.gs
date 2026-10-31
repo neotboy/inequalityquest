@@ -35,6 +35,8 @@ function doPost(e) {
     if (body.action === "submit") return json(submit(body));
     if (body.action === "list")   return json(list(body));
     if (body.action === "import") return json(importRows(body));
+    if (body.action === "arena_post")  return json(arenaPost(body));
+    if (body.action === "arena_event") return json(arenaEvent(body));
     return json({ ok: false, error: "Unknown request." });
   } catch (err) {
     return json({ ok: false, error: "The turn-in sheet had a problem. Try again in a minute." });
@@ -92,6 +94,57 @@ function importRows(b) {
     if (out.length) sh.getRange(sh.getLastRow() + 1, 1, out.length, HEADERS.length).setValues(out);
   });
   return { ok: true, added: added, skipped: skipped };
+}
+
+// ---------- Class arena (live leaderboard + head-to-head moves) ----------
+// Kept in fast temporary memory (CacheService, up to 6 hours), not in the sheet.
+// Final scores still arrive through normal turn-ins.
+var ARENA_TTL = 21600; // 6 hours
+function arenaKey(b) {
+  var g = String(b.game || "").replace(/[^a-z0-9-]/g, "").slice(0, 80);
+  var r = String(b.room || "").replace(/[^a-z0-9-]/gi, "").slice(0, 40);
+  if (!g || !r) return "";
+  return "arena:" + g + ":" + r;
+}
+function arenaLoad(key) {
+  var raw = CacheService.getScriptCache().get(key);
+  try { return raw ? JSON.parse(raw) : { players: {}, events: [] }; } catch (e) { return { players: {}, events: [] }; }
+}
+function arenaSave(key, st) {
+  var raw = JSON.stringify(st);
+  while (raw.length > 95000 && st.events.length) { st.events.shift(); raw = JSON.stringify(st); }
+  CacheService.getScriptCache().put(key, raw, ARENA_TTL);
+}
+function arenaPost(b) {
+  var key = arenaKey(b), name = clean(b.name, 40);
+  if (!key) return { ok: false, error: "Arena needs a game and room." };
+  if (!/^\S+ [A-Z]\.$/.test(name)) return { ok: false, error: "Type your first name and last initial, like Jordan M." };
+  var now = Date.now(), since = Number(b.since) || 0, out = {};
+  var lock = LockService.getScriptLock(); lock.waitLock(10000);
+  try {
+    var st = arenaLoad(key);
+    var extra = JSON.stringify(b.extra || {}); if (extra.length > 600) extra = "{}";
+    st.players[name] = { score: Math.max(-1e9, Math.min(1e9, Number(b.score) || 0)), stage: clean(b.stage, 60), extra: JSON.parse(extra), t: now };
+    var names = Object.keys(st.players);
+    if (names.length > 60) { names.sort(function (x, y) { return st.players[x].t - st.players[y].t; }); delete st.players[names[0]]; }
+    arenaSave(key, st);
+    out.players = Object.keys(st.players).map(function (n) { var p = st.players[n]; return { name: n, score: p.score, stage: p.stage, extra: p.extra, active: now - p.t < 120000 }; });
+    out.events = st.events.filter(function (e) { return e.t > since && (e.to === name || e.to === "*") && e.from !== name; });
+  } finally { lock.releaseLock(); }
+  return { ok: true, now: now, players: out.players, events: out.events };
+}
+function arenaEvent(b) {
+  var key = arenaKey(b), from = clean(b.from, 40), to = clean(b.to, 40) || "*";
+  if (!key || !/^\S+ [A-Z]\.$/.test(from)) return { ok: false, error: "Arena move not allowed." };
+  var data = JSON.stringify(b.data || {}); if (data.length > 600) data = "{}";
+  var lock = LockService.getScriptLock(); lock.waitLock(10000);
+  try {
+    var st = arenaLoad(key);
+    st.events.push({ t: Date.now(), from: from, to: to, kind: clean(b.kind, 30), data: JSON.parse(data) });
+    if (st.events.length > 300) st.events = st.events.slice(-300);
+    arenaSave(key, st);
+  } finally { lock.releaseLock(); }
+  return { ok: true };
 }
 
 // ---------- Helpers ----------
