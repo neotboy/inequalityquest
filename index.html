@@ -30,7 +30,17 @@ details{margin-top:18px}
 summary{cursor:pointer;color:var(--muted);font-weight:700}
 details .grid{margin-top:10px}
 details .card{opacity:.85}
+.part{border-radius:12px;padding:14px;margin:0 0 16px}
+.part.now{background:#eef5ef;border:1px solid #bcd6c0}
+.part.later{background:#f6f2ea;border:1px solid var(--line)}
+.part .parthead{margin:0 0 6px;font-size:1.15rem;color:var(--navy);letter-spacing:.03em}
+.part.now .parthead{color:#2f6b3a}
+.parthead span{display:inline-block;margin-left:6px;font-size:.85rem;background:#fff;border-radius:99px;padding:0 9px;color:var(--muted);letter-spacing:0}
+.part h3{font-size:.85rem;color:var(--red);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 6px}
+.part.later .card{opacity:.9}
+.none{color:var(--muted);margin:4px 0}
 </style>
+<script src="shared/assignments.js?v=20261031c"></script>
 </head>
 <body>
 <main>
@@ -123,6 +133,11 @@ const CLASSES = {
 const ORDER = ["Games & activities", "Readings", "Slides"];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const card = ([, t, href, note]) => `<a class="card" href="${esc(href)}"><strong>${esc(t)}</strong>${note ? `<small>${esc(note)}</small>` : ""}</a>`;
+const REG = window.CLASS_ASSIGNMENTS || {}, UNITS = window.CLASS_UNITS || {};
+const hubClass = c => c === "civics" ? "government" : c;
+const base = p => String(p || "").split("#")[0].replace(/index\.html$/, "");
+const unitLabel = a => a.course === "civics" ? "Civics Fridays" + (UNITS.civics && UNITS.civics[a.unit] ? " · " + UNITS.civics[a.unit] : "")
+  : a.unit ? "Unit " + a.unit + (UNITS[a.course] && UNITS[a.course][a.unit] ? " · " + UNITS[a.course][a.unit] : "") : "Other";
 let current = location.hash.slice(1);
 try { if (!CLASSES[current]) current = localStorage.getItem("hub-class") || ""; } catch (e) {}
 if (!CLASSES[current]) current = "us-history";
@@ -135,9 +150,23 @@ function show(key) {
     `<button class="tab" role="tab" aria-selected="${k === key}" data-k="${k}">${c.name}</button>`).join("");
   document.querySelectorAll(".tab").forEach(b => b.onclick = () => show(b.dataset.k));
   const items = CLASSES[key].items;
-  let html = ORDER.map(g => { const list = items.filter(i => i[0] === g); return list.length ? `<h2>${g}</h2><div class="grid">${list.map(card).join("")}</div>` : ""; }).join("");
+  // Being used now = the activities on the Schoology day posts (the same list the teacher dashboard uses, in shared/assignments.js).
+  const using = Object.entries(REG).filter(([, a]) => a.path && hubClass(a.course) === key)
+    .sort(([, a], [, b]) => (a.course === b.course ? 0 : a.course === "civics" ? 1 : -1) || (a.unit || 99) - (b.unit || 99) || (a.day || 99) - (b.day || 99));
+  const usedPaths = new Set(using.map(([, a]) => base(a.path)));
+  let html = `<section class="part now"><h2 class="parthead">Being used now <span>${using.length}</span></h2>`;
+  if (using.length) {
+    const groups = [];
+    using.forEach(([, a]) => { const name = unitLabel(a); let g = groups.find(x => x.name === name); if (!g) groups.push(g = { name, list: [] }); g.list.push(a); });
+    html += groups.map(g => `<h3>${esc(g.name)}</h3><div class="grid">${g.list.map(a => card(["", a.title, a.path, ""])).join("")}</div>`).join("");
+  } else html += `<p class="none">Nothing assigned in this class yet.</p>`;
+  html += `</section>`;
+  const spare = items.filter(i => i[0] !== "Older versions" && !usedPaths.has(base(i[2])));
   const old = items.filter(i => i[0] === "Older versions");
+  html += `<section class="part later"><h2 class="parthead">Made, but not being used right now <span>${spare.length}</span></h2>`;
+  html += spare.length ? ORDER.map(g => { const list = spare.filter(i => i[0] === g); return list.length ? `<h3>${g}</h3><div class="grid">${list.map(card).join("")}</div>` : ""; }).join("") : `<p class="none">Nothing extra in this class.</p>`;
   if (old.length) html += `<details><summary>Older versions (${old.length})</summary><div class="grid">${old.map(card).join("")}</div></details>`;
+  html += `</section>`;
   document.getElementById("panel").innerHTML = html;
 }
 show(current);
