@@ -96,11 +96,14 @@ const CLASSES = {
   "government": { name: "Government", items: [
     ["Games & activities", "Unit 2 · Day 1 · The Feed", "civics/unit2-day1-the-feed/", "Where political beliefs come from"],
     ["Games & activities", "Unit 2 · Day 2 · Lobby Day", "civics/unit2-day2-lobby-day/", "Interest groups, money & media"],
-    ["Games & activities", "Founders' Defense", "civics/civics-test-s1-founders-defense/", "Friday 1 · Civics test practice"],
     ["Games & activities", "13 States. One Mess.", "civics/articles-confederation-game/", "Articles of Confederation"],
-    ["Games & activities", "The Missing Constitution", "civics/missing-constitution/", "Investigation game"],
     ["Games & activities", "Day 3 · My Country, My Rules", "civics/my-country-my-rules/", "Build a country, live with the results"],
     ["Games & activities", "Day 1 · Stranded: Govern or Collapse", "civics/stranded-government/", "Why we need government"],
+    ["Readings", "Democracy Visualized", "civics/democracy-visualized/", "Graphic reading"]
+  ]},
+  "civics": { name: "Civics", items: [
+    ["Games & activities", "Founders' Defense", "civics/civics-test-s1-founders-defense/", "Friday 1 · Civics test practice"],
+    ["Games & activities", "The Missing Constitution", "civics/missing-constitution/", "Investigation game"],
     ["Games & activities", "You Are the Government", "civics/you-are-the-government-v2/", "Classroom simulation"],
     ["Games & activities", "Capitol Control", "civics/capitol-control-day2/", "Class simulation"],
     ["Games & activities", "Government Arcade", "civics/day2-government-arcade/", "Friday 2"],
@@ -108,23 +111,19 @@ const CLASSES = {
     ["Games & activities", "The 1776 Files", "civics/friday4-1776-files-game/", "Friday 4"],
     ["Games & activities", "1776 Files: Evidence Lab", "civics/friday4-1776-evidence-lab/", "Friday 4"],
     ["Games & activities", "The 1800s Express", "civics/friday5-1800s-express-game/", "Friday 5"],
-    ["Readings", "Democracy Visualized", "civics/democracy-visualized/", "Graphic reading"],
     ["Slides", "Constitution: Teaching Slides", "civics/constitution-teaching-v4/", ""],
     ["Slides", "Pixel Town: Day 3 Briefing", "civics/pixel-town-day3-presentation/", ""],
     ["Slides", "The 1776 Files: Historical Artwork", "civics/friday4-1776-illustrated-presentation/", ""],
-    ["Slides", "The 1800s: Presentation", "civics/friday5-1800s-presentation/", ""],
-    ["Older versions", "You Are the Government (first version)", "civics/day2-classroom-crisis/", ""],
-    ["Older versions", "Missing Constitution: Teaching Lecture", "civics/constitution-classroom-lecture/", ""],
-    ["Older versions", "Missing Constitution: Slides", "civics/constitution-lecture/", ""]
+    ["Slides", "The 1800s: Presentation", "civics/friday5-1800s-presentation/", ""]
   ]}
 };
 const ORDER = ["Games & activities", "Readings", "Slides"];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const card = ([, t, href, note]) => `<a class="card" href="${esc(href)}"><strong>${esc(t)}</strong>${note ? `<small>${esc(note)}</small>` : ""}</a>`;
 const REG = window.CLASS_ASSIGNMENTS || {}, UNITS = window.CLASS_UNITS || {};
-const hubClass = c => c === "civics" ? "government" : c;
+const hubClass = c => c;
 const base = p => String(p || "").split("#")[0].replace(/index\.html$/, "");
-const unitLabel = a => a.course === "civics" ? "Civics Fridays" + (UNITS.civics && UNITS.civics[a.unit] ? " · " + UNITS.civics[a.unit] : "")
+const unitLabel = a => a.course === "civics" ? "Friday " + (a.unit || "") + (UNITS.civics && UNITS.civics[a.unit] ? " · " + UNITS.civics[a.unit] : "")
   : a.unit ? "Unit " + a.unit + (UNITS[a.course] && UNITS[a.course][a.unit] ? " · " + UNITS[a.course][a.unit] : "") : "Other";
 let current = location.hash.slice(1);
 try { if (!CLASSES[current]) current = localStorage.getItem("hub-class") || ""; } catch (e) {}
@@ -151,10 +150,12 @@ function show(key) {
   html += `</section>`;
   const spare = items.filter(i => i[0] !== "Older versions" && !usedPaths.has(base(i[2])));
   const old = items.filter(i => i[0] === "Older versions");
+  if (spare.length || old.length) {
   html += `<section class="part later"><h2 class="parthead">Made, but not being used right now <span>${spare.length}</span></h2>`;
   html += spare.length ? ORDER.map(g => { const list = spare.filter(i => i[0] === g); return list.length ? `<h3>${g}</h3><div class="grid">${list.map(card).join("")}</div>` : ""; }).join("") : `<p class="none">Nothing extra in this class.</p>`;
   if (old.length) html += `<details><summary>Older versions (${old.length})</summary><div class="grid">${old.map(card).join("")}</div></details>`;
   html += `</section>`;
+  }
   document.getElementById("panel").innerHTML = html;
 }
 show(current);
