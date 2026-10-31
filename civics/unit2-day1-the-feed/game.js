@@ -56,7 +56,7 @@ const CHECKS = {
   c_iv: { prompt: 'You have an ideology. Now you\'re picking a party. Which one describes a political <b>party</b>?', options: ['An organized group that runs candidates for office', 'A person\'s set of beliefs about what government should do', 'A group of voters who share a background and vote alike', 'An organization that lobbies lawmakers but never runs candidates'], hint: 'Which one could put YOUR name on a ballot?', why: 'Ideology = your beliefs. Party = an organized group that recruits candidates, raises money, writes a platform, and tries to win elections.' },
   c_party: { prompt: 'Which statement about the two major parties is TRUE?', options: ['Both want a strong economy but disagree on how', 'Every member of a party agrees on every issue', 'Only one of the two runs Iowa House candidates', 'The U.S. Constitution creates both of the parties'], hint: 'Look again at the "Both parties" box and the map caption.', why: 'Both parties say they want a strong economy, safe towns, and good schools. They disagree about how much government should do. And members of a party don\'t agree on everything.' },
   c_press: { prompt: 'Parties push their lawmakers to vote together. What is the strongest <b>criticism</b> of that pressure?', options: ['Lawmakers may ignore what their own district wants', 'Voters can no longer tell the two parties apart', 'It makes it impossible for parties to raise money', 'It stops third-party candidates from being on the ballot'], hint: 'Who is a state representative supposed to represent?', why: 'Party unity helps a party pass its platform, but it can pull a lawmaker away from what the people back home want. That\'s a real trade-off.' },
-  c_feed: { prompt: 'Your feed ad mostly reached people who <b>already liked you</b>. Why does that happen online?', options: ['Apps pick posts based on what you clicked before', 'Iowa law blocks political ads for some voters', 'Campaigns may only buy ads from their own party', 'People over 30 are not allowed to see paid ads'], hint: 'Think about how your own feed decides what to show you.', why: 'Campaigns aim ads at people likely to click, and apps show people more of what they already click on. Together that can create an "echo chamber," where people mostly hear one side.' },
+  c_feed: { prompt: 'Social media ads mostly reach people who <b>already like</b> a candidate. Why does that happen online?', options: ['Apps pick posts based on what you clicked before', 'Iowa law blocks political ads for some voters', 'Campaigns may only buy ads from their own party', 'People over 30 are not allowed to see paid ads'], hint: 'Think about how your own feed decides what to show you.', why: 'Campaigns aim ads at people likely to click, and apps show people more of what they already click on. Together that can create an "echo chamber," where people mostly hear one side.' },
   c_bloc: { prompt: 'Most retirees in Indian Creek Village back the same candidates on taxes and safety. What is a group like that called?', options: ['Voting bloc', 'Political party', 'Interest group', 'Political action committee'], hint: 'Do the retirees have a leader, dues, or a staff? Or do they just tend to vote alike?', why: 'A voting bloc is a group of voters who share something (age, job, place) and tend to vote alike. It has no leader or office.' },
   c_spoil: { prompt: 'Dakota Vance can\'t win. How can Dakota still change <b>who</b> wins?', options: ['By pulling votes away from one candidate', 'By casting the tie-breaking vote in the race', 'By picking the winner after the votes are in', 'By canceling the results if Dakota loses'], hint: 'Whose voters is Dakota taking?', why: 'In winner-take-all races, a third-party candidate can be a "spoiler": they take votes from the candidate closest to them, and that can flip the result.' },
   c_coal: { prompt: 'To win, a candidate needs farm families AND union workers AND parents on the same side. Bringing different voting blocs together is building a…', options: ['Coalition', 'Platform', 'Constituency', 'Ideology'], hint: 'Different groups, one team.', why: 'A coalition is several groups (voting blocs) that come together behind one candidate or party.' }
@@ -92,7 +92,7 @@ function utility(c, h) {
   let loyal = 0; // in "logit" units: higher = more likely to win this voter
   if (c.party === 'D') loyal = h.loyal.D * 2.2;
   else if (c.party === 'R') loyal = h.loyal.R * 2.2;
-  else loyal = ind * 1.1 - (c.id === 'third' ? 1.3 : 0);
+  else loyal = ind * 0.8 - (c.id === 'third' ? 1.0 : 0);
   if (c.id === 'you') loyal *= st.loyalMult;
   const eff = (st.effort[c.id] && st.effort[c.id][h.id]) || 0;
   return issue * 0.09 + loyal + eff * 0.12;
@@ -132,7 +132,8 @@ function partyFit() {
 /* ---------------- UI HELPERS ---------------- */
 const panel = $('#panel');
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 3200); }
-function talk(who, text) { $('#talk').innerHTML = `<span class="who">${esc(who)}:</span> “${esc(text)}”`; }
+let quote = null;
+function talk(who, text) { quote = { who, text }; }
 function money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
 function header() {
   const P = { intro: 'Getting started', takes: 'Build your platform', ideology: 'Your ideology', party: 'Pick a party', campaign: 'Week ' + st.week + ' of ' + WEEKS, election: 'Election night', final: 'Results' };
@@ -149,8 +150,15 @@ function header() {
   pollbar(); board();
 }
 function pollbar() {
-  const el = $('#pollbar');
-  if (!st.party) { el.innerHTML = '<span class="lab">Polls open when you pick a party.</span>'; return; }
+  const el = $('#pollPill');
+  el.style.visibility = st.party ? 'visible' : 'hidden';
+  if (!st.party) return;
+  const cs0 = candidates(), lead0 = st.phase === 'election' ? countedTotals() : totals().pct;
+  if (st.phase === 'election' && !(st.counted || []).length) { el.textContent = 'Counting votes…'; return; }
+  const top = cs0.filter(c => c.id !== 'you').sort((a, b) => lead0[b.id] - lead0[a.id])[0];
+  el.innerHTML = `${st.phase === 'election' ? 'So far: ' : 'Polls: '}<b style="color:var(--you)">You ${lead0.you.toFixed(0)}%</b> · <b style="color:var(--rival)">${esc(top.name.split(' ')[1] || top.name)} ${lead0[top.id].toFixed(0)}%</b>`;
+  el.className = 'pill poll ' + (lead0.you >= lead0[top.id] ? 'ahead' : 'behind');
+  return;
   const cs = candidates(); const t = st.phase === 'election' ? { pct: countedTotals() } : totals();
   if (st.phase === 'election' && !(st.counted || []).length) { el.innerHTML = '<span class="lab">Votes are being counted…</span>'; return; }
   el.innerHTML = (st.phase === 'election' ? '<span class="lab">Counted so far:</span>' : '') + cs.map(c => `<span class="lab ${c.id === 'you' ? 'y-lab' : c.id === 'third' ? 't-lab' : 'r-lab'}">${esc(c.id === 'you' ? 'You' : c.name)} ${t.pct[c.id].toFixed(0)}%</span>`).join('') +
@@ -173,7 +181,7 @@ function board() {
   const live = liveOthers().length > 0;
   const others = live ? liveOthers().map(p => ({ name: p.name, lead: p.score / 10, live: true })) : st.bots;
   const me = myPct();
-  const rows = others.map(o => ({ name: o.name, lead: o.lead })).concat([{ name: (st.name || 'You') + ' (you)', lead: me, me: true }]).sort((a, b) => (b.lead == null ? -99 : b.lead) - (a.lead == null ? -99 : a.lead));
+  const rows = others.map(o => ({ name: o.name, lead: o.lead })).concat([{ name: 'You', lead: me, me: true }]).sort((a, b) => (b.lead == null ? -99 : b.lead) - (a.lead == null ? -99 : a.lead));
   const canMove = st.phase === 'campaign' && st.classMoves < st.week && !busy;
   $('#board').innerHTML = `<div class="t">🏁 CLASS RACE<span class="tag ${live ? 'live' : ''}">${live ? 'LIVE' : 'practice rivals'}</span></div><ol>${rows.map((r, i) => `<li class="${r.me ? 'me' : canMove ? 'tap' : ''}" ${!r.me && canMove ? `data-who="${esc(r.name)}" role="button" tabindex="0" title="Steal a donor or team up"` : ''}><span class="n">${i + 1}</span><span class="nm">${esc(r.name)}</span><span class="sc">${fmtLead(r.lead)}</span></li>`).join('')}</ol><span class="bhint">${canMove ? '⚔️ Click a classmate: weekly move' : 'Points ahead of your closest rival'}</span>`;
   $('#board').querySelectorAll('[data-who]').forEach(li => { li.onclick = () => classMenu(li.dataset.who); li.onkeydown = e => { if (e.key === 'Enter') classMenu(li.dataset.who); }; });
@@ -256,7 +264,7 @@ function showCheck(id, then) {
 
 /* ---------------- PANELS ---------------- */
 let lastView = '';
-function render() { const view = st.phase + (st.phase === 'campaign' ? st.week + st.selected : st.phase === 'takes' ? st.takeIdx + '' + st.rootAsk : ''); if (view !== lastView) { $('#panel').scrollTop = 0; lastView = view; } header(); const f = { intro: pIntro, takes: pTakes, ideology: pIdeology, party: pParty, campaign: pCampaign, election: pElection, final: pFinal }[st.phase]; f && f(); }
+function render() { const view = st.phase + (st.phase === 'campaign' ? st.week + st.selected : st.phase === 'takes' ? st.takeIdx + '' + st.rootAsk : ''); if (view !== lastView) { $('#panel').scrollTop = 0; quote = null; lastView = view; } header(); const f = { intro: pIntro, takes: pTakes, ideology: pIdeology, party: pParty, campaign: pCampaign, election: pElection, final: pFinal }[st.phase]; f && f(); }
 
 function pIntro() {
   panel.innerHTML = `<p class="kicker">Government · Unit 2 · Day 1</p><h2>It's 2030. You just turned 21.</h2><p class="lead">That's the youngest age the Iowa Constitution allows for the Iowa House. You're running in District 101: Marion and Cedar Rapids.</p><p class="muted">Press <b>Start</b> in the box to begin.</p>`;
@@ -332,80 +340,64 @@ function pParty() {
 /* ---------------- CAMPAIGN ---------------- */
 function addEffort(cid, hid, n) { st.effort[cid] = st.effort[cid] || {}; st.effort[cid][hid] = (st.effort[cid][hid] || 0) + n; }
 const ACT = {
-  doors: { label: '🚪 Knock doors', cost: 0, energy: 1, tip: h => h.inf === 'family' ? 'Works great here: neighbors talk.' : h.inf === 'feed' ? 'Most aren\'t home. Meh.' : 'Solid everywhere.', mult: h => h.inf === 'family' ? 1.6 : h.inf === 'feed' ? .6 : 1 },
-  event: { label: '🎤 Show up', cost: 400, energy: 1, tip: h => 'Speak at ' + h.spot + '.', mult: h => ['community', 'school', 'work'].includes(h.inf) ? 1.7 : .7 },
-  listen: { label: '👂 Listen', cost: 0, energy: 1, tip: () => 'Learn what they care about.', mult: () => .4 },
-  fund: { label: '💵 Fundraiser', cost: 0, energy: 1, tip: () => (st.party === 'I' ? '+$1,800' : '+$2,600') + ' for ads', mult: () => 0 }
+  doors: { label: '🚪 Knock doors', cost: 0, line: 'Free. Best where people listen to family & neighbors.', mult: h => h.inf === 'family' ? 1.6 : h.inf === 'feed' ? .6 : 1 },
+  event: { label: '🎤 Hold an event', cost: 400, line: '$400. Best where people gather: church, school, union hall.', mult: h => ['community', 'school', 'work'].includes(h.inf) ? 1.7 : .7 }
 };
 function hoodCard(h) {
   const s = shares(h), cs = candidates(), known = st.revealed[h.id];
-  const issues = ISSUES.map(i => ({ i, w: h.prefs[i.id] })).filter(x => x.w).sort((a, b) => Math.abs(b.w) - Math.abs(a.w)).slice(0, 4);
-  return `<div class="hood-card"><p class="kicker">${esc(h.who)} · ${h.pop.toLocaleString()} voters</p><h2 style="font-size:20px;margin:0">${esc(h.name)}</h2>
+  const issues = ISSUES.map(i => ({ i, w: h.prefs[i.id] })).filter(x => x.w).sort((a, b) => Math.abs(b.w) - Math.abs(a.w)).slice(0, 2);
+  return `<div class="hood-card"><p class="kicker">${esc(h.who)} · ${h.pop.toLocaleString()} voters</p><h2 style="font-size:21px;margin:0">${esc(h.name)}</h2>
   <div class="bar">${cs.map(c => `<i style="width:${(s[c.id] * 100).toFixed(1)}%;background:${COLORS[c.id]}"></i>`).join('')}</div>
   <p class="mini">${cs.map(c => `<b style="color:${COLORS[c.id]}">${esc(c.id === 'you' ? 'You' : c.name)} ${(s[c.id] * 100).toFixed(0)}%</b>`).join(' · ')}</p>
-  ${known ? `<span class="inf">What shapes their views: ${esc(h.infLabel)}</span><div class="issues">${issues.map(x => `<span>${esc(x.i.short)}</span><span class="w" style="color:${x.w > 0 ? 'var(--good)' : 'var(--bad)'}">${x.w > 0 ? 'FOR' : 'AGAINST'}${Math.abs(x.w) > 1 ? ' !!' : ''}</span>`).join('')}</div>` : `<p class="mini">❓ You don't know what this neighborhood cares about yet. <b>Listen</b> first.</p>`}</div>`;
+  ${known ? `<p class="cares">Cares most about: ${issues.map(x => `<b>${esc(x.i.short)}</b> <span style="color:${x.w > 0 ? 'var(--good)' : 'var(--bad)'}">(${x.w > 0 ? 'for' : 'against'})</span>`).join(' and ')}.<br>Listens to: <b>${esc(h.infLabel)}</b></p>` : `<p class="cares muted">Campaign here once to learn what they care about.</p>`}
+  ${quote ? `<p class="quote">💬 <b>${esc(quote.who)}:</b> “${esc(quote.text)}”</p>` : ''}</div>`;
 }
 function pCampaign() {
   const h = HOOD[st.selected];
-  const flipDone = st.used['flip' + st.week], tvDone = st.used['tv' + st.week], feedDone = st.used['feed' + st.week];
-  const acts = h ? Object.entries(ACT).map(([k, a]) => `<button class="act" data-a="${k}" ${st.energy < a.energy || st.money < a.cost ? 'disabled' : ''}><b>${a.label}${a.cost ? ' · ' + money(a.cost) : ''}</b><small>${esc(a.tip(h))}</small></button>`).join('') : '';
+  const adDone = st.used['ad' + st.week];
+  const best = h && st.revealed[h.id] ? (ACT.doors.mult(h) >= ACT.event.mult(h) ? 'doors' : 'event') : null;
+  const acts = h ? Object.entries(ACT).map(([k, a]) => `<button class="act big" data-a="${k}" ${st.energy < 1 || st.money < a.cost ? 'disabled' : ''}><b>${a.label}${best === k ? ' <span class="best">★ best here</span>' : ''}</b><small>${esc(a.line)}</small></button>`).join('') : '';
   panel.innerHTML = `<p class="kicker">Week ${st.week} of ${WEEKS} · ${st.energy} move${st.energy === 1 ? '' : 's'} left</p>
   ${h ? hoodCard(h) : '<h2>Click a neighborhood on the map.</h2>'}
-  <div class="actions">${acts}
-    <button class="act" data-a="tv" ${tvDone || st.money < 2000 ? 'disabled' : ''}><b>📺 Local TV ad · $2,000</b><small>Whole district. Best with retirees and Uptown.</small></button>
-    <button class="act" data-a="feed" ${feedDone || st.money < 1000 ? 'disabled' : ''}><b>📱 Social feed ad · $1,000</b><small>Whole district. Mostly reaches people who already like you.</small></button>
-    <button class="act wide" data-a="flip" ${flipDone || st.energy < 1 ? 'disabled' : ''}><b>🔄 Change a stance (1 move)</b><small>Win some neighborhoods, lose others. Once a week.</small></button>
+  <div class="actions one">${acts}
+    <button class="act big" data-a="ad" ${adDone || st.money < 1000 ? 'disabled' : ''}><b>📣 Run an ad</b><small>${adDone ? 'Already ran one this week.' : 'Once a week. Reaches the whole district.'}</small></button>
   </div>
   <button class="primary endweek" id="endWeek" ${busy ? 'disabled' : ''}>${st.week < WEEKS ? 'End week ' + st.week + ' →' : 'Go to election night →'}</button>`;
-  panel.querySelectorAll('[data-a]').forEach(b => b.onclick = () => doAction(b.dataset.a));
+  panel.querySelectorAll('[data-a]').forEach(b => b.onclick = () => b.dataset.a === 'ad' ? adPicker() : doAction(b.dataset.a));
   $('#endWeek').onclick = endWeek;
   $('#mapHint').textContent = h ? 'Campaigning in ' + h.name + ' · click another neighborhood to switch' : 'Click a neighborhood';
 }
+function adPicker() {
+  const card = $('#card'); card.className = 'card';
+  card.innerHTML = `<p class="eyebrow">📣 RUN AN AD · ONCE A WEEK</p><h2>Where does your ad run?</h2><div class="choices">
+  <button class="choice" data-ad="tv" ${st.money < 2000 ? 'disabled' : ''}>📺 Local TV news · $2,000<small>Reaches everyone. Strongest with retirees and Uptown business owners.</small></button>
+  <button class="choice" data-ad="feed" ${st.money < 1000 ? 'disabled' : ''}>📱 Social media feeds · $1,000<small>Cheaper. Strong with college students. Elsewhere it mostly reaches people who already like you.</small></button></div><button class="go" id="cx">Never mind</button>`;
+  $('#overlay').hidden = false;
+  $('#cx').onclick = () => { $('#overlay').hidden = true; };
+  card.querySelectorAll('[data-ad]').forEach(b => b.onclick = () => { $('#overlay').hidden = true; doAction(b.dataset.ad); });
+}
 function doAction(k) {
   const h = HOOD[st.selected]; if (!h) return;
-  const before = totals().pct.you, hb = shares(h).you;
-  if (k === 'flip') return flipPicker();
+  const before = {}; HOODS.forEach(x => before[x.id] = shares(x).you);
   if (k === 'tv') {
-    st.money -= 2000; st.used['tv' + st.week] = true;
+    st.money -= 2000; st.used['ad' + st.week] = true;
     HOODS.forEach(x => addEffort('you', x.id, x.media ? 2.2 : .7));
-    MAP.van(null, 'you', '📺'); toast('Your ad runs on local TV all week.'); talk('Indian Creek retiree', 'Saw your ad during the news. Seemed sincere.');
+    toast('Your ad runs on local TV news all week.'); talk('Indian Creek retiree', 'Saw your ad during the news. Seemed sincere.');
   } else if (k === 'feed') {
-    st.money -= 1000; st.used['feed' + st.week] = true; let reached = [];
-    HOODS.forEach(x => { const s = shares(x).you; const m = x.inf === 'feed' ? 2.6 : s > .5 ? 1.4 : .2; addEffort('you', x.id, m); if (m >= 1.4) reached.push(x.name.split(' ')[0]); });
-    MAP.van(null, 'you', '📱'); toast('Feed ad posted. It mostly reached: ' + (reached.join(', ') || 'almost nobody new')); talk('Kirkwood student', 'Your ad was all over my feed lol.');
+    st.money -= 1000; st.used['ad' + st.week] = true; let reached = [];
+    HOODS.forEach(x => { const s = shares(x).you; const m = x.inf === 'feed' ? 2.6 : s > .5 ? 1.4 : .2; addEffort('you', x.id, m); if (m >= 1.4) reached.push(x.name.replace(' Neighborhoods', '')); });
+    toast('Your feed ad mostly reached: ' + (reached.join(', ') || 'almost nobody new')); talk('Kirkwood student', 'Your ad was all over my feed lol.');
   } else {
     const a = ACT[k];
-    st.energy -= a.energy; st.money -= a.cost;
-    if (k === 'fund') { st.money += st.party === 'I' ? 1800 : 2600; toast('Fundraiser at a backyard cookout: +' + (st.party === 'I' ? '$1,800' : '$2,600')); MAP.van(h.id, 'you', '💵'); }
-    else {
-      if (k === 'listen') { if (!st.revealed[h.id]) st.revealed[h.id] = true; else toast('You already know them. Small boost.'); }
-      addEffort('you', h.id, 3 * a.mult(h)); MAP.van(h.id, 'you', k === 'doors' ? '🚪' : k === 'event' ? '🎤' : '👂');
-      if (k === 'listen') talk(h.who, 'Here\'s what matters to us...');
-      else talk(h.who, shares(h).you > .5 ? h.like : h.meh);
-    }
+    st.energy -= 1; st.money -= a.cost;
+    const first = !st.revealed[h.id]; st.revealed[h.id] = true;
+    addEffort('you', h.id, 3 * a.mult(h));
+    talk(h.who, first ? 'Here\'s what matters to us: ' + ISSUES.map(i => ({ i, w: h.prefs[i.id] })).filter(x => x.w).sort((a, b) => Math.abs(b.w) - Math.abs(a.w))[0].i.short.toLowerCase() + '.' : shares(h).you > .5 ? h.like : h.meh);
   }
-  const after = totals().pct.you, ha = shares(h).you;
-  if (k !== 'fund') MAP.float(h.id, (ha - hb >= 0 ? '+' : '') + ((ha - hb) * 100).toFixed(1) + '%');
+  HOODS.forEach(x => { const d = shares(x).you - before[x.id]; if (Math.abs(d) >= .005) { MAP.float(x.id, (d >= 0 ? '+' : '') + (d * 100).toFixed(1) + '%'); MAP.flash(x.id); } });
   st.log.push('W' + st.week + ' ' + k + (k === 'tv' || k === 'feed' ? '' : ' @ ' + h.id));
   save(); render();
 }
-function flipPicker() {
-  const card = $('#card'); card.className = 'card';
-  card.innerHTML = `<p class="eyebrow">CHANGE A STANCE · 1 MOVE</p><h2>Which stance do you flip?</h2><p class="muted">Each flip wins some neighborhoods and loses others. The polls update right away.</p><div class="choices">${ISSUES.map(i => `<button class="choice" data-i="${i.id}">${esc(i.short)}: <b>${st.stances[i.id] === 1 ? 'FOR → AGAINST' : 'AGAINST → FOR'}</b></button>`).join('')}</div><button class="go" id="cx">Never mind</button>`;
-  $('#overlay').hidden = false;
-  $('#cx').onclick = () => { $('#overlay').hidden = true; };
-  card.querySelectorAll('[data-i]').forEach(b => b.onclick = () => {
-    const before = {}; HOODS.forEach(h => before[h.id] = shares(h).you);
-    st.stances[b.dataset.i] *= -1; st.energy--; st.used['flip' + st.week] = true;
-    HOODS.forEach(h => addEffort('you', h.id, -0.4)); // flip-flop costs a little trust everywhere
-    const moves = HOODS.map(h => ({ h, d: shares(h).you - before[h.id] })).sort((a, c) => c.d - a.d);
-    card.className = 'card';
-    card.innerHTML = `<p class="eyebrow">STANCE CHANGED</p><h2>You flipped on ${esc(ISSUES.find(i => i.id === b.dataset.i).short)}.</h2><div class="deltas">${moves.map(m => `<span class="delta ${m.d >= 0 ? 'up' : 'down'}">${esc(m.h.name.split(' ').slice(-1)[0] === 'Neighborhoods' ? 'Thomas Park' : m.h.name)} ${m.d >= 0 ? '+' : ''}${(m.d * 100).toFixed(1)}%</span>`).join('')}</div><p class="reveal">That's the trade-off of building a coalition (a team of different voter groups): moving toward one group can push another away. Rivals will call it a "flip-flop."</p><button class="primary go" id="cx2">Back to the map →</button>`;
-    $('#cx2').onclick = () => { $('#overlay').hidden = true; save(); render(); };
-    st.log.push('W' + st.week + ' flip ' + b.dataset.i); save();
-  });
-}
-
 /* ---------------- DRAMA EVENTS ---------------- */
 function eventFor(week) {
   const party = st.party;
@@ -489,8 +481,8 @@ function rivalTurn() {
   const notes = [];
   cs.forEach(c => {
     const targets = HOODS.map(h => { const s = shares(h); return { h, gap: Math.abs((s[c.id] || 0) - (s.you || 0)) }; }).sort((a, b) => a.gap - b.gap).slice(0, 3);
-    targets.forEach(t => { addEffort(c.id, t.h.id, 3.2); MAP.van(t.h.id, c.id, '📣'); });
-    HOODS.forEach(h => addEffort(c.id, h.id, .6));
+    targets.forEach(t => { addEffort(c.id, t.h.id, 3.8); MAP.flash(t.h.id); });
+    HOODS.forEach(h => addEffort(c.id, h.id, 1.4));
     notes.push(c.name + ' campaigned in ' + targets.map(t => t.h.name.replace(' Neighborhoods', '')).join(', '));
   });
   if (st.thirdActive) HOODS.forEach(h => addEffort('third', h.id, 1));
@@ -514,7 +506,7 @@ function afterRival() {
     if (st.week !== wk) return render();
     st.history.push(totals().pct.you);
     if (st.week >= WEEKS) { st.phase = 'election'; save(); render(); runElection(); return; }
-    st.week++; st.energy = 3; save(); render();
+    st.week++; st.energy = 3; const gift = st.party === 'I' ? 1000 : 1500; st.money += gift; save(); render(); toast('New week. Donations came in: +' + money(gift));
   };
   if (st.checks[checkId] && st.checks[checkId].done) next(); else showCheck(checkId, next);
 }
@@ -648,25 +640,19 @@ const MAP = (() => {
       for (let i = 0; i < 7; i++) { ctx.fillStyle = i % 2 ? '#c4d98e' : '#e8d98a'; ctx.fillRect(x + 22, y + 52 + i * 11, 130, 9); }
       ctx.fillStyle = '#b8473b'; ctx.fillRect(x + 180, y + 66, 46, 34); ctx.beginPath(); ctx.moveTo(x + 176, y + 66); ctx.lineTo(x + 203, y + 46); ctx.lineTo(x + 230, y + 66); ctx.fill(); ctx.fillStyle = '#fff'; ctx.fillRect(x + 197, y + 80, 12, 20);
       ctx.fillStyle = '#c9cfd4'; ctx.fillRect(x + 236, y + 44, 18, 56); ctx.beginPath(); ctx.arc(x + 245, y + 44, 9, Math.PI, 0); ctx.fill();
-      tree(x + 266, y + 96, 11); tree(x + 162, y + 60, 9);
     } else if (h.id === 'thomas') {
       [0, 1, 2, 3].forEach(i => home(x + 36 + i * 38, y + 72, ['#e58b60', '#7aa6c2', '#d9a441', '#8fb37a'][i]));
       ctx.fillStyle = '#e9c27c'; ctx.fillRect(x + 196, y + 56, 76, 44); ctx.fillStyle = '#b5523f'; ctx.fillRect(x + 196, y + 50, 76, 8); ctx.fillStyle = '#fff'; ctx.font = 'bold 9px Arial'; ctx.textAlign = 'center'; ctx.fillText('SCHOOL', x + 234, y + 82);
       ctx.fillStyle = '#555'; ctx.fillRect(x + 278, y + 40, 2, 60); ctx.fillStyle = '#c8473f'; ctx.fillRect(x + 280, y + 40 + Math.sin(now / 400) * 1.5, 14, 9);
-      tree(x + 30, y + 112, 9); tree(x + 180, y + 112, 9);
     } else if (h.id === 'creek') {
       ctx.strokeStyle = '#7cc3d6'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(x + w - 30, y + 10); ctx.bezierCurveTo(x + w - 70, y + 70, x + w - 10, y + 120, x + w - 60, y + 240); ctx.stroke();
       ctx.fillStyle = '#2f6f86'; ctx.font = 'bold 9px Arial'; ctx.fillText('Indian Creek', x + w - 112, y + 150);
       ctx.fillStyle = '#efe4f6'; ctx.fillRect(x + 30, y + 50, 96, 58); ctx.strokeStyle = '#a58dc0'; ctx.lineWidth = 2; ctx.strokeRect(x + 30, y + 50, 96, 58);
       for (let r = 0; r < 3; r++) for (let c = 0; c < 5; c++) { ctx.fillStyle = (r + c + Math.floor(now / 3000)) % 4 ? '#ffe9a6' : '#9fb7c9'; ctx.fillRect(x + 38 + c * 18, y + 57 + r * 16, 10, 9); }
-      ctx.fillStyle = '#8fc79a'; ctx.beginPath(); ctx.arc(x + 160, y + 92, 22, 0, 7); ctx.fill(); ['#f28b8b', '#f7d26a', '#c79ae0'].forEach((cl, i) => { ctx.fillStyle = cl; ctx.beginPath(); ctx.arc(x + 150 + i * 10, y + 88 + (i % 2) * 8, 4, 0, 7); ctx.fill(); });
-      ctx.fillStyle = '#9c7a52'; ctx.fillRect(x + 192, y + 98, 30, 5);
     } else if (h.id === 'kirkwood') {
       ctx.fillStyle = '#f0e2c4'; ctx.fillRect(x + 30, y + 62, 130, 50); ctx.fillStyle = '#c9a14e'; ctx.beginPath(); ctx.moveTo(x + 24, y + 62); ctx.lineTo(x + 95, y + 38); ctx.lineTo(x + 166, y + 62); ctx.fill();
       for (let i = 0; i < 5; i++) { ctx.fillStyle = '#fff'; ctx.fillRect(x + 40 + i * 24, y + 66, 6, 44); }
       ctx.fillStyle = '#7a5a22'; ctx.font = 'bold 9px Arial'; ctx.textAlign = 'center'; ctx.fillText('COLLEGE', x + 95, y + 58);
-      ctx.strokeStyle = '#4e6e86'; ctx.lineWidth = 2; [0, 1].forEach(i => { const bx = x + 196 + i * 34 + Math.sin(now / 700 + i) * 3; ctx.beginPath(); ctx.arc(bx, y + 104, 7, 0, 7); ctx.arc(bx + 18, y + 104, 7, 0, 7); ctx.stroke(); });
-      tree(x + 260, y + 70, 11);
     } else if (h.id === 'riverside') {
       ctx.fillStyle = '#b6c4cf'; ctx.fillRect(x + 30, y + 58, 120, 52); ctx.fillStyle = '#93a5b3'; for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.moveTo(x + 30 + i * 30, y + 58); ctx.lineTo(x + 45 + i * 30, y + 44); ctx.lineTo(x + 60 + i * 30, y + 58); ctx.fill(); }
       ctx.fillStyle = '#7d8c97'; ctx.fillRect(x + 128, y + 22, 14, 40);
@@ -674,17 +660,15 @@ const MAP = (() => {
       ctx.fillStyle = '#e7d3a8'; ctx.fillRect(x + 186, y + 66, 76, 44); ctx.fillStyle = '#9d3f30'; ctx.fillRect(x + 186, y + 60, 76, 8); ctx.fillStyle = '#5a3a20'; ctx.font = 'bold 9px Arial'; ctx.textAlign = 'center'; ctx.fillText('UNION HALL', x + 224, y + 92);
     } else if (h.id === 'uptown') {
       ['#e07a5f', '#5f9ea0', '#e9b85f', '#8d7bc0', '#7fb069'].forEach((cl, i) => { const sx = x + 24 + i * 50; ctx.fillStyle = '#f7ead6'; ctx.fillRect(sx, y + 52, 44, 50); ctx.fillStyle = cl; ctx.beginPath(); ctx.moveTo(sx - 2, y + 62); for (let k = 0; k < 6; k++) { ctx.lineTo(sx + k * 8.8, y + 52); ctx.lineTo(sx + k * 8.8 + 4.4, y + 64); } ctx.lineTo(sx + 46, y + 52); ctx.fill(); ctx.fillStyle = '#7fb3c9'; ctx.fillRect(sx + 6, y + 72, 32, 16); });
-      ctx.fillStyle = '#263b50'; ctx.font = 'bold 10px Arial'; ctx.textAlign = 'center'; ctx.fillText('UPTOWN MARION', x + w / 2, y + 116);
     }
     ctx.restore();
   }
   function people(h) {
-    const s = shares(h), cs = candidates(); const n = 10, [x, y, w, hh] = h.box;
+    const s = shares(h), cs = candidates(); const n = 5, [x, y, w, hh] = h.box;
     const counts = cs.map(c => ({ c, k: Math.round((s[c.id] || 0) * n) }));
     let seq = []; counts.forEach(o => { for (let i = 0; i < o.k; i++) seq.push(o.c.id); }); while (seq.length < n) seq.push(cs[cs.length > 1 ? 1 : 0].id); seq = seq.slice(0, n);
     const started = !!st.party && !(st.phase === 'election' && !(st.counted || []).includes(h.id));
-    seq.forEach((cid, i) => { const px = x + 36 + (i % 5) * 50 + (i >= 5 ? 22 : 0), py = y + hh - 64 + (i >= 5 ? 30 : 0); face(px, py, !started ? 0 : cid === 'you' ? 1 : -1, !started ? '#b9c3c8' : COLORS[cid]); });
-    if (started) { const yours = Math.round(s.you * 6); for (let i = 0; i < 6; i++) sign(x + w - 26 - i * 22, y + hh - 92, i < yours ? COLORS.you : COLORS[cs[1] ? cs[1].id : 'r1']); }
+    seq.forEach((cid, i) => { ctx.save(); const px = x + w / 2 + (i - 2) * 50, py = y + hh - 50; ctx.translate(px, py); ctx.scale(1.35, 1.35); face(0, 0, !started ? 0 : cid === 'you' ? 1 : -1, !started ? '#b9c3c8' : COLORS[cid]); ctx.restore(); });
   }
   function draw(now) {
     const dt = now - t0; t0 = now;
@@ -693,7 +677,6 @@ const MAP = (() => {
     // roads
     ctx.fillStyle = '#c9c4b8'; ctx.fillRect(314, 0, 18, H - 40); ctx.fillRect(0, 290, W, 14); ctx.fillRect(630, 0, 18, H - 40);
     ctx.strokeStyle = '#fff8'; ctx.setLineDash([10, 10]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(323, 0); ctx.lineTo(323, H - 40); ctx.moveTo(0, 297); ctx.lineTo(W, 297); ctx.stroke(); ctx.setLineDash([]);
-    for (let i = 0; i < 3; i++) { const p = ((now / 5200) + i / 3) % 1; ctx.fillStyle = ['#e07a5f', '#5f9ea0', '#e9b85f'][i]; ctx.fillRect(316 + (i % 2) * 8, p * (H - 60), 7, 12); const q = ((now / 7000) + i / 3) % 1; ctx.fillRect(q * W, 292 + (i % 2) * 5, 13, 6); }
     // river
     ctx.fillStyle = '#9fd3e3'; ctx.beginPath(); ctx.moveTo(0, H - 34); for (let x = 0; x <= W; x += 40) ctx.lineTo(x, H - 30 + Math.sin(x / 90 + now / 1500) * 4); ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.fill();
     ctx.fillStyle = '#2f6f86'; ctx.font = 'bold 12px system-ui,Arial'; ctx.textAlign = 'left'; ctx.fillText('CEDAR RIVER', 30, H - 10);
@@ -709,13 +692,10 @@ const MAP = (() => {
       if (flashes[h.id] && now - flashes[h.id] < 900) { ctx.fillStyle = `rgba(255,255,255,${.6 * (1 - (now - flashes[h.id]) / 900)})`; ctx.fill(paths[h.id]); }
       deco(h, now); people(h);
       const [x, y, w] = h.box;
-      capsule(h.name, x + w / 2, y + 22, 200, 13);
-      if (st.party && !(st.phase === 'election' && !(st.counted || []).includes(h.id))) { const s = shares(h); capsule('You ' + (s.you * 100).toFixed(0) + '%', x + w / 2, y + 48 + 4, 92, 12, s.you >= Math.max(...Object.values(s)) - 1e-9 ? COLORS.you : '#fff', s.you >= Math.max(...Object.values(s)) - 1e-9 ? '#fff' : COLORS.you); }
-      if (st.phase === 'campaign' && !st.revealed[h.id]) { ctx.fillStyle = '#e9b85f'; ctx.beginPath(); ctx.arc(x + w - 18, y + 22, 11, 0, 7); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = 'bold 14px Arial'; ctx.textAlign = 'center'; ctx.fillText('?', x + w - 18, y + 27); }
+      const showPct = st.party && !(st.phase === 'election' && !(st.counted || []).includes(h.id));
+      if (showPct) { const s = shares(h), lead = s.you >= Math.max(...Object.values(s)) - 1e-9; capsule(h.name.replace(' Neighborhoods', '') + '  ·  You ' + (s.you * 100).toFixed(0) + '%', x + w / 2, y + 24, 250, 14, lead ? COLORS.you : '#fffdf3f2', lead ? '#fff' : '#284f59'); }
+      else capsule(h.name.replace(' Neighborhoods', ''), x + w / 2, y + 24, 210, 14);
     });
-    capsule('I-380', 323, 352, 52, 11, '#2f6f86', '#fff');
-    // HQ
-    ctx.fillStyle = COLORS.you; ctx.beginPath(); for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? 7 : 15; ctx.lineTo(HQ[0] + Math.cos(a) * r, HQ[1] + Math.sin(a) * r); } ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
     // vans
     for (let i = vans.length - 1; i >= 0; i--) { const v = vans[i]; v.t += dt; const p = Math.min(1, v.t / v.dur), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2; const vx = v.from[0] + (v.to[0] - v.from[0]) * e, vy = v.from[1] + (v.to[1] - v.from[1]) * e - Math.sin(p * Math.PI) * 30; ctx.fillStyle = v.color; ctx.beginPath(); ctx.roundRect(vx - 16, vy - 10, 32, 18, 6); ctx.fill(); ctx.fillStyle = '#263b50'; ctx.beginPath(); ctx.arc(vx - 9, vy + 9, 4, 0, 7); ctx.arc(vx + 9, vy + 9, 4, 0, 7); ctx.fill(); ctx.font = '15px "Segoe UI Emoji","Apple Color Emoji",sans-serif'; ctx.textAlign = 'center'; ctx.fillText(v.icon, vx, vy + 4); if (v.t > v.dur + 500) vans.splice(i, 1); }
     // floating numbers

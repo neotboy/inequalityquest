@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>District 101 · Run for the Iowa House | Government Unit 2 Day 1</title>
 <meta name="description" content="It's 2030. You're 21 and running for the Iowa House. Build a coalition across six neighborhoods and beat your rival.">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=7">
 <script src="../../shared/assignments.js?v=20261031d"></script>
 <script src="../../shared/turnin.js?v=20261031d"></script>
 <script src="../../shared/arena.js?v=20261031d"></script>
@@ -13,6 +13,7 @@
     <span class="pill" id="weekPill">Getting started</span>
     <span class="pill money" id="moneyPill">$0</span>
     <span class="pill" id="energyPill" title="Moves left this week">Moves ●●●</span>
+    <span class="pill poll" id="pollPill"></span>
   </div>
   <div class="head-actions"><span id="saved">Saved on this device</span><button id="helpBtn" class="small">Directions</button><button id="resetBtn" class="small">Start over</button></div>
 </header>
@@ -22,7 +23,6 @@
     <div id="panel"></div>
   </aside>
   <section class="world" aria-label="District 101 map">
-    <div class="pollbar" id="pollbar"></div>
     <div class="map-wrap">
       <canvas id="map" width="960" height="600" aria-label="Map of District 101. Click a neighborhood to campaign there."></canvas>
       <div class="map-caption">HOUSE DISTRICT 101 · MARION &amp; CEDAR RAPIDS · <span>made-up district, real places</span></div>
@@ -30,7 +30,6 @@
       <div id="toast" role="status" aria-live="polite"></div>
     </div>
     <div id="board" class="board" aria-label="Class leaderboard"></div>
-    <div class="talk"><b>DISTRICT TALK</b><div id="talk"></div></div>
   </section>
 </main>
 
@@ -38,10 +37,10 @@
 
 <dialog id="helpDialog"><button class="close" data-close="helpDialog" aria-label="Close">×</button>
   <p class="eyebrow">HOW TO PLAY</p><h2>Win District 101.</h2>
-  <ol class="howto"><li><b>Pick your side</b> on 6 hot takes. That's your platform.</li><li><b>Pick a party</b> (or run without one).</li><li><b>Campaign 5 weeks.</b> Click a neighborhood, then use your 3 moves. Money buys ads.</li><li><b>Handle the drama</b> each week. Every choice costs something.</li><li><b>Election night.</b> Win the most votes. Then write 2 short answers and turn in.</li></ol>
+  <ol class="howto"><li><b>Pick your side</b> on 6 hot takes. That's your platform.</li><li><b>Pick a party</b> (or run without one).</li><li><b>Campaign 5 weeks.</b> Click a neighborhood, then use your 3 moves: knock doors, hold an event, or run an ad.</li><li><b>Handle the drama</b> each week. Every choice costs something.</li><li><b>Election night.</b> Win the most votes. Then write 2 short answers and turn in.</li></ol>
   <p class="note">No single neighborhood has enough votes. You need several of them on your side. Once a week, click a classmate in the <b>Class Race</b> bar to steal a donor or team up. Polls are game estimates, not real data.</p>
   <p class="note">Standard <b>SS.9-12.Gov.12</b>: Critique the influence of intermediary institutions on government and policy.</p>
 </dialog>
 
-<script src="game.js?v=8"></script>
+<script src="game.js?v=11"></script>
 </body></html>

@@ -151,3 +151,10 @@ dialog::backdrop{background:#26303a66}
 .board li.tap:hover,.board li.tap:focus-visible{background:#ffe3d6;outline:2px solid var(--coral)}
 .board .bhint{font-size:11px;color:var(--muted);font-weight:700;margin-left:auto;flex-shrink:0}
 .board li.tap ~ .bhint{color:var(--coral)}
+
+.pill.poll{background:#fff}.pill.poll.ahead{border-color:#8fd0bf;background:#e6f6f0}.pill.poll.behind{border-color:#ebb6a5;background:#fdeee8}
+.actions.one{grid-template-columns:1fr !important}
+.act.big{padding:12px 14px}.act.big b{font-size:16px}.act.big small{font-size:12.5px}
+.act .best{font-size:11px;background:#fff1c9;color:#8a5a00;border-radius:20px;padding:1px 8px;margin-left:6px;vertical-align:2px}
+.cares{font-size:13.5px;margin:8px 0 0;line-height:1.45}
+.quote{font-size:13px;margin:8px 0 0;background:#f4f8f5;border-radius:9px;padding:7px 9px}
